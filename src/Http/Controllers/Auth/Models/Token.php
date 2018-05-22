@@ -2,8 +2,8 @@
 
 namespace Karla\Http\Controllers\Auth\Models;
 
+use Karla\Database\Eloquent\Model;
 use Karla\User;
-use Illuminate\Database\Eloquent\Model;
 
 class Token extends Model
 {

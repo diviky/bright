@@ -3,7 +3,7 @@
 namespace Karla\Http\Controllers\Auth\Models;
 
 use Karla\User;
-use Illuminate\Database\Eloquent\Model;
+use Karla\Database\Eloquent\Model;
 
 class Activation extends Model
 {

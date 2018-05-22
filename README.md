@@ -28,3 +28,9 @@ add in auth.php guards array
         ],
     ],
 ```
+
+```php
+    //app.php
+    
+    Karla\View\ViewServiceProvider::class,
+```
