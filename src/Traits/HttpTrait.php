@@ -292,7 +292,7 @@ trait HttpTrait
      *
      * @return JsonResponse
      */
-    public function json($data = [], $status = 200, array $headers = [])
+    public function toJson($data = [], $status = 200, array $headers = [])
     {
         return new JsonResponse($data, $status, $headers);
     }

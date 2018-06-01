@@ -5,10 +5,16 @@
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
+```php
+    php artisan vendor:publish --provider="Karla\KarlaServiceProvider" --tag="config"
+    php artisan vendor:publish --provider="Karla\KarlaServiceProvider" --tag="assets"
+    php artisan vendor:publish --provider="Karla\KarlaServiceProvider" --tag="views"
+```
+
 add in kernal.php route middleware
 ```php
 
-'auth.verified' => \App\Http\Controllers\Auth\Middlewares\IsUserActivate::class,
+'auth.verified' => \Karla\Http\Controllers\Auth\Middlewares\IsUserActivate::class,
 ```
 
 add in auth.php guards array
@@ -33,4 +39,24 @@ add in auth.php guards array
     //app.php
     
     Karla\View\ViewServiceProvider::class,
+```
+
+###Sorting task
+
+```html
+<tbody ajax-content class="table_sortable_body">
+    ...
+    <td sortable>
+        <i class="fa fa-arrows-v fa-lg"></i>
+        <input type="hidden" name="sorting[{{ $row->id }}]" value="{{ $row->ordering }}">
+    </td>
+```
+
+```php
+    if ($task == 'sorting') {
+        $sorting = $this->input('sorting');
+        $this->get('resolver')->getHelper('speed')->sorting('table', $sorting, 'id');
+
+        return [];
+    }
 ```

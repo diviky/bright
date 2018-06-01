@@ -2,9 +2,9 @@
 
 namespace Karla\Routing;
 
-use Karla\Traits\CapsuleManager;
 use Exception;
 use Illuminate\Contracts\Container\Container;
+use Karla\Traits\CapsuleManager;
 
 class Resolver
 {
@@ -151,6 +151,10 @@ class Resolver
             $paths[] = [
                 'class' => $this->app->getNamespace() . $helperClass,
             ];
+
+            $paths[] = [
+                'class' => 'Karla\\' . $helperClass,
+            ];
         }
 
         foreach ($paths as $path) {
@@ -161,7 +165,7 @@ class Resolver
 
             if ($exists) {
                 $helperClass = $path['class'];
-                $instance = new $helperClass();
+                $instance = $this->app->make($helperClass);
 
                 if (method_exists($instance, 'setContainer')) {
                     $instance->setContainer($this->getContainer());
@@ -178,6 +182,6 @@ class Resolver
             }
         }
 
-        throw new Exception($helper . ' helper not found', 500);
+        throw new Exception($helper . ' helper not found');
     }
 }

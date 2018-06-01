@@ -14,7 +14,7 @@ return [
             'smart_links' => ['user_id'],
         ],
         'select' => [],
-        'save' => [],
+        'insert' => [],
         'delete' => [],
         'update' => [],
     ],

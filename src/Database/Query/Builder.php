@@ -42,13 +42,25 @@ class Builder extends BaseBuilder
      */
     public function delete($id = null)
     {
+        $this->atomicEvent('delete');
         return parent::delete($id);
     }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function exists()
+    {
+        $this->atomicEvent('select');
+        return parent::exists();
+    }
+
     /**
      * @{inheritdoc}
      */
     public function find($id, $columns = ['*'])
     {
+        $this->atomicEvent('select');
         return parent::find($id, $columns);
     }
 
@@ -61,6 +73,8 @@ class Builder extends BaseBuilder
             $values['updated_at'] = $this->freshTimestamp();
         }
 
+        $values = $this->updateEvent($values);
+
         return parent::update($values);
     }
     /**
@@ -68,11 +82,14 @@ class Builder extends BaseBuilder
      */
     public function get($columns = ['*'])
     {
+        $this->atomicEvent('select');
+
         return parent::get($columns);
     }
 
     public function first($columns = ['*'])
     {
+        $this->atomicEvent('select');
         return parent::first($columns);
     }
 

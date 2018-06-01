@@ -22,9 +22,9 @@ class ControllerDispatcher extends BaseControllerDispatcher
     {
         $action = $route->getActionName();
 
-        if (!$this->isAuthorized($action)) {
-            abort(401, 'Access denied');
-        }
+        // if (!$this->isAuthorized($action)) {
+        //     abort(401, 'Access denied');
+        // }
 
         $parameters = $this->resolveClassMethodDependencies(
             $route->parametersWithoutNulls(),

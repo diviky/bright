@@ -1,11 +1,10 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Middlewares;
+namespace Karla\Middlewares;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
 
-class IsUserActivate
+class Ajax
 {
     /**
      * Handle an incoming request.
@@ -18,14 +17,6 @@ class IsUserActivate
     {
         if ($request->input('_request') == 'iframe') {
             $request->headers->add(['Accept' => 'application/json']);
-        }
-
-        if (Auth::check() && Auth::user()->status == 0) {
-            return redirect()->route('user.activate');
-        }
-
-        if (Auth::check() && Auth::user()->status != 1) {
-            return view('auth.disabled');
         }
 
         return $next($request);

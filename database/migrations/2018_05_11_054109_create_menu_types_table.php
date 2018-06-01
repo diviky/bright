@@ -18,7 +18,6 @@ class CreateMenuTypesTable extends Migration
             $table->string('name', 50);
             $table->string('title', 50);
             $table->timestamps();
-            $table->boolean('status')->default(1)->index();
         });
     }
 

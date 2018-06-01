@@ -2,13 +2,13 @@
 
 namespace Karla\Http\Controllers\Auth;
 
-use Karla\Http\Controllers\Auth\Models\Activation;
-use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Http\Controllers\Controller;
-use Karla\Notifications\SendActivationToken;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Karla\Http\Controllers\Auth\Models\Activation;
+use Karla\Http\Controllers\Auth\Traits\Token;
+use Karla\Notifications\SendActivationToken;
+use Karla\Routing\Controller;
 
 class ActivationController extends Controller
 {

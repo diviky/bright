@@ -2,28 +2,53 @@
 
 namespace Karla;
 
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\ServiceProvider;
+use Karla\Extensions\TokenUserProvider;
+use Karla\Listeners\EmailLogger;
 use Karla\Routing\Redirector;
 use Karla\Routing\Resolver;
+use Karla\Services\Auth\AccessTokenGuard;
 use Karla\Traits\Provider;
 
 class KarlaServiceProvider extends ServiceProvider
 {
     use Provider;
 
+    /**
+     * The event listener mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        'Illuminate\Mail\Events\MessageSent' => [
+            EmailLogger::class,
+        ],
+    ];
+
     public function boot()
     {
+        parent::boot();
+
         $this->publishes([
             __DIR__ . '/../config/permission.php' => config_path('permission.php'),
             __DIR__ . '/../config/karla.php' => config_path('karla.php'),
+            __DIR__ . '/../config/theme.php' => config_path('theme.php'),
+            __DIR__ . '/../config/auth.php' => config_path('auth.php'),
+            __DIR__ . '/../config/app.php' => config_path('app.php'),
         ], 'config');
 
         $this->publishes([
             __DIR__ . '/../resources/assets/js' => resource_path('assets/js'),
-        ], 'resources');
+            __DIR__ . '/../webpack.mix.js' => base_path('webpack.mix.js'),
+            __DIR__ . '/../bower.json' => base_path('bower.json'),
+        ], 'assets');
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/');
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views'),
+        ], 'views');
+
         $this->loadViewsFrom(__DIR__ . '/../resources/views/', 'karla');
 
         Schema::defaultStringLength(191);
@@ -35,8 +60,10 @@ class KarlaServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/permission.php', 'permission');
         $this->mergeConfigFrom(__DIR__ . '/../config/karla.php', 'karla');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/');
 
         $this->redirect();
+        $this->auth();
         $this->app->bind('Illuminate\Routing\Contracts\ControllerDispatcher', 'Karla\Routing\ControllerDispatcher');
 
         $this->app->singleton('resolver', function ($app) {
@@ -55,6 +82,16 @@ class KarlaServiceProvider extends ServiceProvider
                 $redirector->setSession($app['session.store']);
             }
             return $redirector;
+        });
+    }
+
+    protected function auth()
+    {
+        Auth::extend('access_token', function ($app, $name, array $config) {
+            // automatically build the DI, put it as reference
+            $userProvider = app(TokenUserProvider::class);
+            $request = app('request');
+            return new AccessTokenGuard($userProvider, $request, $config);
         });
     }
 }

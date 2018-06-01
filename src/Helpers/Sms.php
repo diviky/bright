@@ -1,25 +1,17 @@
 <?php
 
-/*
- * This file is part of the Speedwork package.
- *
- * (c) Sankar <sankar.suda@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code
- */
-
-namespace Speedwork\Helpers;
+namespace Karla\Helpers;
 
 use Exception;
-use Speedwork\Core\Helper;
+use Illuminate\Support\Carbon;
+use Karla\Routing\Capsule;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
  */
-class Sms extends Helper
+class Sms extends Capsule
 {
-    public function sendSms($data = [])
+    public function send(array $data = [])
     {
         $config = $this->config('sms');
 
@@ -29,7 +21,7 @@ class Sms extends Helper
 
         if ($data['template']) {
             $name = strtolower($data['template']);
-            $name = str_replace(['.tpl', '.html', '.txt'], '', $name);
+            $name = str_replace(['.txt'], '', $name);
             $from = $config['from_list'];
 
             if (is_array($from) && $from[$name]) {
@@ -44,7 +36,7 @@ class Sms extends Helper
         }
 
         $data['message'] = $this->replace($tags, $data['message']);
-        $data['to']      = $this->formatMobileNumber($data['to']);
+        $data['to'] = $this->formatMobileNumber($data['to']);
 
         //if disable
         if (!$config['enable']) {
@@ -70,18 +62,18 @@ class Sms extends Helper
             return true;
         }
 
-        $provider  = $config['provider'];
+        $provider = $config['provider'];
         $providers = $config['providers'];
-        $config    = $providers[$provider];
-        $config    = array_merge(['from' => $data['from']], $config);
-        $driver    = $config['driver'];
+        $config = $providers[$provider];
+        $config = array_merge(['from' => $data['from']], $config);
+        $driver = $config['driver'];
 
         try {
-            $sms  = $this->get('resolver')->helper($driver);
+            $sms = $this->get('resolver')->getHelper($driver);
             $sent = $sms->send($data, $config);
         } catch (Exception $e) {
-            $sent            = [];
-            $sent['status']  = 'FAILED';
+            $sent = [];
+            $sent['status'] = 'FAILED';
             $sent['message'] = $e->getMessage();
         }
 
@@ -125,10 +117,10 @@ class Sms extends Helper
 
     private function checkBlackList($mobiles = [])
     {
-        $blacklist = $this->get('database')->find('#__addon_sms_blacklist', 'list', [
-            'conditions' => ['mobile' => $mobiles],
-            'fields'     => ['mobile'],
-        ]);
+        $blacklist = $this->get('db')
+            ->table('addon_sms_blacklist')
+            ->whereIn('mobile', $mobiles)
+            ->pluck('mobile');
 
         return array_diff($mobiles, $blacklist);
     }
@@ -136,9 +128,9 @@ class Sms extends Helper
     public function getContent($filename)
     {
         $message = null;
-        $path    = path('email').'en'.DS;
+        $path = resource_path('email') . '/en/';
 
-        $filename = $path.$filename;
+        $filename = $path . $filename;
 
         if (file_exists($filename)) {
             $message = file_get_contents($filename);
@@ -175,14 +167,14 @@ class Sms extends Helper
             return true;
         }
 
-        $save            = [];
-        $save['sender']  = $data['from'];
-        $save['mobile']  = implode(', ', $data['to']);
-        $save['message'] = $data['message'];
-        $save['created'] = time();
-        $save['reason']  = $data['reason'];
-        $save['status']  = ($status) ? 1 : 0;
+        $values = [];
+        $values['sender'] = $data['from'];
+        $values['mobile'] = implode(', ', $data['to']);
+        $values['message'] = $data['message'];
+        $values['created_at'] = new Carbon;
+        $values['reason'] = $data['reason'];
+        $values['status'] = ($status) ? 1 : 0;
 
-        $this->get('database')->save('#__addon_sms_logs', $save);
+        $this->get('db')->table('addon_sms_logs')->insert($values);
     }
 }

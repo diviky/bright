@@ -4,7 +4,7 @@ namespace Karla\Http\Controllers\Auth;
 
 use Karla\Http\Controllers\Auth\Models\Activation;
 use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Http\Controllers\Controller;
+use Karla\Routing\Controller;
 use Karla\Notifications\SendActivationToken;
 use Karla\User;
 use Illuminate\Auth\Events\PasswordReset;

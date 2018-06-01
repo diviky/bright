@@ -34,12 +34,13 @@ class Permission extends BasePermission
         ];
 
         $permissions = static::getPermissions();
+
         $granted = null;
 
         foreach ($permissions as $permission) {
             if ($permission->guard_name === $guardName) {
                 foreach ($matches as $match) {
-                    if (Str::is($match, $permission->name)) {
+                    if (Str::is($permission->name, $match)) {
                         $granted = $permission;
                         break 2;
                     }

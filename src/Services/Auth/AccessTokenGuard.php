@@ -1,4 +1,6 @@
-<?php namespace Karla\Services\Auth;
+<?php
+
+namespace Karla\Services\Auth;
 
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Guard;

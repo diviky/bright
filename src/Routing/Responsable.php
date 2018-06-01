@@ -2,11 +2,11 @@
 
 namespace Karla\Routing;
 
-use Karla\Traits\Themable;
 use Closure;
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
+use Karla\Traits\Themable;
 
 class Responsable implements BaseResponsable
 {

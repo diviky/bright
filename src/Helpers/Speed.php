@@ -2,12 +2,12 @@
 
 namespace Karla\Helpers;
 
-use Speedwork\Core\Helper;
+use Karla\Routing\Capsule;
 
 /**
  * @author Sankar <sankar.suda@gmail.com>
  */
-class Speed extends Helper
+class Speed extends Capsule
 {
     public function formatToSave($save, $required = null)
     {
@@ -120,61 +120,55 @@ class Speed extends Helper
 
     public function nextOrder($tbl, $where = [])
     {
-        $row = $this->get('database')->find($tbl, 'first', [
-            'fields' => ['MAX(ordering) as morder'],
-            'conditions' => $where,
-        ]);
+        $max = $this->get('db')->table($tbl)
+            ->where($where)
+            ->max('ordering');
 
-        $maxord = $row['morder'];
-
-        return $maxord + 1;
+        return $max + 1;
     }
 
     public function reOrder($table, $where = [], $field = 'id')
     {
-        $rows = $this->get('database')->find($table, 'all', [
-            'order' => ['ordering'],
-            'conditions' => $where,
-            'fields' => [$field, 'ordering'],
-        ]);
+        $rows = $this->get('db')->table($table)
+            ->where($where)
+            ->orderBy('ordering', 'asc')
+            ->get([$field, 'ordering']);
 
         // compact the ordering numbers
         $i = 0;
         foreach ($rows as $row) {
             ++$i;
-            if ($row['ordering'] != $i) {
-                $this->get('database')->update(
-                    $table,
-                    ['ordering' => $i],
-                    [$field => $row[$field]]
-                );
+            if ($row->ordering != $i) {
+                $this->get('db')->table($table)
+                    ->where($field, $row->$field)
+                    ->update(['ordering' => $i]);
             }
         }
 
         return true;
     }
 
-    public function sorting($table, $data = [], $field = 'id')
+    public function sorting($table, $values = [], $field = 'id')
     {
-        if (empty($data)) {
+        if (empty($values)) {
             return true;
         }
 
         $i = 0;
-        foreach ($data as $id => $order) {
-            if (is_array($order)) {
-                $this->sorting($table, $order, $field);
+        foreach ($values as $id => $value) {
+            if (is_array($value)) {
+                $this->sorting($table, $value, $field);
             } else {
                 ++$i;
-                if ($order != $i) {
-                    $update = [
-                        'ordering' => $i,
-                    ];
-                    $this->get('database')->update($table, $update, [
-                        $field => $id,
-                    ]);
+                if ($value != $i) {
+                    $update = ['ordering' => $i];
+                    $this->get('db')->table($table)
+                        ->where($field, $id)
+                        ->update($update);
                 }
             }
         }
+
+        return true;
     }
 }

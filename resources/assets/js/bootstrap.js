@@ -2,23 +2,31 @@ jQuery.fn.bstooltip = jQuery.fn.tooltip;
 
 jQuery(document).ready(function ($) {
 
-    $('[data-toggle="tooltip"]').bstooltip();
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+        }
+    });
 
-    $('[role="tabs"],[data-toggle="tabs"]').on('click', 'a', function (e) {
+    $('[data-toggle="tooltip"]').bstooltip();
+    $('[data-toggle="popover"]').popover();
+
+    $(document).on('click', '[data-toggle="tabs"] a', function (e) {
         e.preventDefault();
         $(this).tab('show');
+        window.location.hash = this.hash;
+        var scrollmem = $('body').scrollTop() || $('html').scrollTop();
+        $('html,body').scrollTop(scrollmem);
     });
 
     var hash = window.location.hash;
-    hash && $('[role="tabs"] a[href="' + hash + '"]').tab('show');
+    if (hash) {
+        $('[data-toggle="tabs"] a[href="' + hash + '"]').tab('show');
+    }
 
     $(window).on('hashchange', function () {
         var hash = window.location.hash;
-        hash && $('[role="tabs"] a[href="' + hash + '"]').tab('show');
-    });
-
-    $('[role="popover"],[data-toggle="popover"]').livequery(function () {
-        $(this).popover();
+        hash && $('[data-toggle="tabs"], a[href="' + hash + '"]').tab('show');
     });
 
     $(document).on('click', '[data-toggle="sidebar"]', function () {
@@ -59,19 +67,19 @@ jQuery(document).ready(function ($) {
     }
 
     if (typeof ClipboardJS === 'function') {
-       var clipboard = new ClipboardJS('[data-clipboard]');
-       clipboard.on('success', function(e) {
-        e.clearSelection();
-        console.info('Action:', e.action);
-        console.info('Text:', e.text);
-        console.info('Trigger:', e.trigger);
-        //showTooltip(e.trigger, 'Copied!');
-      });
-      clipboard.on('error', function(e) {
-        console.error('Action:', e.action);
-        console.error('Trigger:', e.trigger);
-        //showTooltip(e.trigger, fallbackMessage(e.action));
-      });
+        var clipboard = new ClipboardJS('[data-clipboard]');
+        clipboard.on('success', function (e) {
+            e.clearSelection();
+            console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            console.info('Trigger:', e.trigger);
+            //showTooltip(e.trigger, 'Copied!');
+        });
+        clipboard.on('error', function (e) {
+            console.error('Action:', e.action);
+            console.error('Trigger:', e.trigger);
+            //showTooltip(e.trigger, fallbackMessage(e.action));
+        });
     }
 
     $('[data-bootstrap-select]').find('li').click(function (e) {
@@ -111,5 +119,13 @@ jQuery(document).ready(function ($) {
         });
         return false;
     });
+
+    if ($.fn.chosen) {
+        $('[data-chosen]').chosen();
+    }
+
+    if ($.fn.tokenfield) {
+        $('[data-tokenfield]').tokenfield();
+    }
 });
 

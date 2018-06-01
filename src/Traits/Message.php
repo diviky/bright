@@ -19,12 +19,12 @@ trait Message
         ];
     }
 
-    public function delected($result = true, $name = 'row')
+    public function deleted($result = true, $name = 'row')
     {
         return $this->message($result, 'delete', $name);
     }
 
-    public function saved($result = true, $name = 'row')
+    public function inserted($result = true, $name = 'row')
     {
         return $this->message($result, 'save', $name);
     }

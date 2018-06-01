@@ -2,16 +2,16 @@
 
 namespace Karla\Http\Controllers\Auth;
 
-use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Http\Controllers\Controller;
-use Karla\Notifications\SendActivationToken;
-use Karla\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Karla\Http\Controllers\Auth\Traits\Token;
+use Karla\Notifications\SendActivationToken;
+use Karla\Routing\Controller;
+use Karla\User;
 
 class RegisterController extends Controller
 {
@@ -48,7 +48,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => 'required|string|max:100',
             //'username' => 'required|string|regex:([0-9A-Za-z]+)|max:50|unique:auth_users',
-            'mobile' => 'required|string|regex:([789][0-9]{9})|unique:auth_users',
+            'mobile' => 'required|string|regex:([789][0-9]{9})|unique:auth_users,username',
             'password' => 'required|string|min:6',
         ]);
     }

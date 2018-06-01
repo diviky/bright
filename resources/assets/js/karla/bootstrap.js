@@ -79,9 +79,7 @@ jQuery(document).ready(function () {
 
 function onloadEvents() {
   $("[notchecked]").each(function () {
-    if ($(this).is(":checked")) {
-      return;
-    }
+    $(this).prev('[dummy-checkbox]').remove();
     $(this).before(
       '<input type="hidden" name="' +
       $(this).attr("name") +
@@ -89,6 +87,14 @@ function onloadEvents() {
       $(this).attr("notchecked") +
       '"  dummy-checkbox="true"/>'
     );
+  });
+
+  $(document).on('change', '[notchecked]', function () {
+    if ($(this).is(":checked")) {
+      return;
+    }
+    $(this).prev('[dummy-checkbox]').remove();
+    $(this).before('<input type="hidden" name="' + $(this).attr("name") + '" value="' + $(this).attr("notchecked") + '"  dummy-checkbox="true"/>');
   });
 
   $(document).on("click", "[data-prevent]", function (e) {
@@ -131,12 +137,6 @@ function onloadEvents() {
 
 jQuery(document).ready(function ($) {
 
-  $.ajaxSetup({
-    headers: {
-      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-    }
-  });
-
   $(document).on("click", ".noty_close", function (e) {
     $(this)
       .parents(".noty_bar:first")
@@ -147,21 +147,6 @@ jQuery(document).ready(function ($) {
     $(this).fadeOut();
   });
 
-  $(document).on("click", "[notchecked]", function () {
-    if ($(this).is(":checked")) {
-      $(this)
-        .prev("[dummy-checkbox]")
-        .remove();
-    } else {
-      $(this).before(
-        '<input type="hidden" name="' +
-        $(this).attr("name") +
-        '" value="' +
-        $(this).attr("notchecked") +
-        '" dummy-checkbox="true"/>'
-      );
-    }
-  });
 
   $(document).on("keyup blur", "[data-slug]", function (e) {
     var target = $(this).data("slug");
@@ -247,7 +232,7 @@ jQuery(document).ready(function ($) {
     t.val($(this).data("task"));
   });
 
-  $(document).on("click", ".ac-dologin, [role=login]", function (e) {
+  $(document).on("click", "[role=login]", function (e) {
     if (is_user_logged_in) {
       return true;
     }
@@ -257,30 +242,10 @@ jQuery(document).ready(function ($) {
     var next = $this.data("next") || 1;
     var url = $this.attr("href") ? $this.attr("href") : "/login";
 
-    $(this).easyTip({
-      content: {
-        text: function (event, api) {
-          if (next) {
-            var prefix = url.indexOf("?") == -1 ? "?" : "&";
-            url += prefix + "next=" + encodeURI(next);
-          }
-          api.set("url", url);
-          return $.fn.easyTip.ajaxContent(event, api);
-        }
-      },
-      position: {
-        viewport: false,
-        at: "center", // Position the tooltip above the link
-        my: "center",
-        target: $(window)
-      },
-      show: {
-        modal: true,
-        ready: true
-      },
-      events: { show: null }
+    $.fn.easyModalShow({
+      url: url,
+      event: 'ready'
     });
-    return false;
   });
 
   if ($.support.pjax) {
@@ -295,36 +260,4 @@ jQuery(document).ready(function ($) {
     });
   }
 });
-
-function drawPreview($this, files) {
-  $this.empty();
-  for (var i = 0; i < files.length; i++) {
-    var file = files[i];
-    if (file.type.match("image/*")) {
-      $this.append(
-        '<li role="tooltip" title="' +
-        file.name +
-        '"> <i class="fa fa-file-image-o"></i></li>'
-      );
-    } else if (file.type.match("audio/*")) {
-      $this.append(
-        '<li role="tooltip" title="' +
-        file.name +
-        '"> <i class="fa fa-file-audio-o"></i></li>'
-      );
-    } else if (file.type.match("video/*")) {
-      $this.append(
-        '<li role="tooltip" title="' +
-        file.name +
-        '"> <i class="fa fa-file-video-o"></i></li>'
-      );
-    } else {
-      $this.append(
-        '<li role="tooltip" title="' +
-        file.name +
-        '"> <i class="fa fa-file-o"></i></li>'
-      );
-    }
-  }
-}
 

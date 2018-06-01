@@ -24,30 +24,47 @@ trait Builder
         return $this->table()->find($id);
     }
 
-    protected function update($id, array $data, $column = 'id')
+    protected function update($id, array $values, $column = 'id')
     {
         return $this->table()
             ->where($column, $id)
-            ->update($data);
+            ->update($values);
     }
 
-    protected function insert(array $data)
+    public function updateOrInsert(array $attributes, array $values = [])
     {
-        return $this->table()->insert($data);
+        return $this->table()->updateOrInsert($attributes, $values);
     }
 
-    protected function insertGetId(array $data, $sequence = null)
+    protected function insert(array $values)
     {
-        return $this->table()->insertGetId($data, $sequence);
+        return $this->table()->insert($values);
     }
 
-    protected function getRows($data = null, $order = ['created_at' => 'desc'])
+    protected function insertGetId(array $values, $sequence = null)
     {
-        $data = $data ?: $this->all();
+        return $this->table()->insertGetId($values, $sequence);
+    }
+
+    protected function getRows($values = null, $order = ['created_at' => 'desc'])
+    {
+        $values = $values ?: $this->all();
 
         return $this->table()
-            ->filter($data)
-            ->ordering($data, $order)
+            ->filter($values)
+            ->ordering($values, $order)
             ->paging();
+    }
+
+    protected function updateWithMessage($id, $values, $name = null)
+    {
+        $result = $this->update($id, $values);
+        return $this->updated($result, $name);
+    }
+
+    protected function insertWithMessage($values, $name = null)
+    {
+        $result = $this->insert($values);
+        return $this->inserted($result, $name);
     }
 }

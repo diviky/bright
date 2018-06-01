@@ -13,11 +13,19 @@ function getForm($this) {
     return form;
 }
 
-function displayNoty(response, callback, $this) {
+function isSuccess(status) {
+    if (status == 'OK' || status == 'success' || status == 200) {
+        return true;
+    }
+
+    return false;
+}
+
+function displayNoty(response, $this) {
     res = parseJSON(response);
 
     if (res.message) {
-        if (res.status == 'OK' || res.status == 'success' || res.status == 200) {
+        if (isSuccess(res.status)) {
             noty({ text: res.message, type: 'success', layout: 'topCenter' });
         } else if (res.status == 'INFO') {
             noty({ text: res.message, type: 'info', layout: 'topCenter' });
@@ -51,6 +59,8 @@ function displayNoty(response, callback, $this) {
         }, 1000);
     }
 
+    var callback = $this.data('callback');
+
     if (typeof callback == 'function') {
         callback(res, $this);
     } else if (typeof window[callback] == 'function') {
@@ -59,8 +69,8 @@ function displayNoty(response, callback, $this) {
 }
 
 
-function displayNoti(xhr, callback, $this) {
-    displayNoty(xhr.responseText, callback, $this)
+function displayNoti(xhr, $this) {
+    displayNoty(xhr.responseText, $this)
 }
 
 
@@ -70,13 +80,12 @@ $(document).ready(function () {
         e.preventDefault();
 
         var $this = $(this);
-        var callback = $this.data('callback');
 
         $.ajax({
             url: $(this).data('href'),
             data: { format: 'json' },
             complete: function (xhr) {
-                displayNoti(xhr, callback, $this);
+                displayNoti(xhr, $this);
             }
         });
     });
@@ -85,14 +94,13 @@ $(document).ready(function () {
         e.preventDefault();
 
         var $this = $(this);
-        var callback = $this.data('callback');
 
         $.ajax({
             url: $(this).data('href'),
             data: $this.data('post-data'),
             method: "POST",
             complete: function (xhr) {
-                displayNoti(xhr, callback, $this);
+                displayNoti(xhr, $this);
             }
         });
     });
@@ -114,12 +122,12 @@ $(document).ready(function () {
             data: { format: 'json' },
             complete: function (xhr) {
                 var res = parseJSON(xhr.responseText);
-                if (res.status == 'OK') {
+                if (isSuccess(res.status)) {
                     parent.remove();
                     $('.ac-ajax-total').html(parseInt($('.ac-ajax-total').text()) - 1);
                 }
 
-                displayNoti(xhr);
+                displayNoti(xhr, $this);
             }
         });
 
@@ -136,7 +144,7 @@ $(document).ready(function () {
             url: link,
             data: { format: 'json' },
             complete: function (xhr) {
-                displayNoti(xhr);
+                displayNoti(xhr, $this);
             }
         });
 
@@ -154,12 +162,12 @@ $(document).ready(function () {
             data: { status: $this.data('status'), format: 'json' },
             complete: function (xhr) {
                 var res = parseJSON(xhr.responseText);
-                if (res.status == 'OK') {
+                if (isSuccess(res.status)) {
                     parent.find('a:hidden').show();
                     $this.hide();
                 }
 
-                displayNoti(xhr);
+                displayNoti(xhr, $this);
             }
         });
 
@@ -176,7 +184,7 @@ $(document).ready(function () {
             url: parent.data('link'),
             data: { status: v, format: 'json' },
             complete: function (xhr) {
-                displayNoti(xhr);
+                displayNoti(xhr, $this);
             }
         });
 
@@ -194,7 +202,7 @@ $(document).ready(function () {
             url: $(this).attr('href'),
             data: { format: 'json' },
             complete: function (xhr) {
-                displayNoti(xhr);
+                displayNoti(xhr, $this);
             }
         });
 
@@ -345,7 +353,7 @@ $(document).ready(function () {
         $('.table_sortable_body').sortable({
             //containment: '.ac-ui-sortable',
             connectWith: ['.table_sortable_body'],
-            handle: '.griddragdrop',
+            handle: '[sortable]',
             opacity: 0.6,
             helper: _gridSortHelper,
             update: _gridSortUpdateHandler
@@ -362,7 +370,7 @@ $(document).ready(function () {
                 delay: 100,
                 source: function (request, response) {
                     $.ajax({
-                        url: _link($this.data('auto')),
+                        url: $this.data('auto'),
                         data: { task: 'auto', q: request.term, format: 'json', options: $this.data('options') },
                         success: function (data) {
                             response(data);
@@ -399,7 +407,7 @@ $(document).ready(function () {
                 delay: 100,
                 source: function (request, response) {
                     $.ajax({
-                        url: _link($this.data('token')),
+                        url: $this.data('token'),
                         data: { task: 'auto', q: request.term, format: 'json', options: $this.data('options') },
                         success: function (data) {
                             response(data);
@@ -430,17 +438,4 @@ $(document).ready(function () {
                 });
         });
     }
-
-    $(document).on('click', '.ac-go-top', function () {
-        $('html, body').animate({ scrollTop: 0 }, 500);
-    });
-
-    $(window).scroll(function () {
-        //show and hide go-to-top buttom
-        if ($(window).scrollTop() <= 250) {
-            $('.ac-go-top').fadeOut(500);
-        } else {
-            $('.ac-go-top').fadeIn(500);
-        }
-    });
 });

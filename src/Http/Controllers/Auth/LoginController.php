@@ -2,7 +2,7 @@
 
 namespace Karla\Http\Controllers\Auth;
 
-use Karla\Http\Controllers\Controller;
+use Karla\Routing\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
