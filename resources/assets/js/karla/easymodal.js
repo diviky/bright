@@ -8,7 +8,7 @@
         },
         event: 'click',
         backdrop: true, //'false|true|static',
-        button: false,
+        close: true,
         keyboard: false,
         id: 'bmodel',
         styles: null,
@@ -91,7 +91,7 @@
         var self = this;
         var settings = self.settings;
         var title = settings.title;
-        
+
         var html = '<div class="modal modal-box ' + settings.styles + '" id="' + settings.id + '">';
         html += '   <div class="modal-dialog animated ' + settings.animation + '">';
         html += '       <div class="modal-content">';
@@ -100,18 +100,20 @@
             title = title(self, el);
         }
 
-        if (settings.button || title) {
-            html += ' <div class="modal-header">';
+        if (settings.close || title) {
 
             if (title) {
+                html += ' <div class="modal-header">';
                 html += ' <h5 class="modal-title">' + title + '</h5>';
             }
 
-            if (settings.button) {
-                html += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>';
+            if (settings.close) {
+                html += '<button type="button" class="close modal-close" data-dismiss="modal"></button>';
             }
 
-            html += '           </div>';
+            if (title) {
+                html += '           </div>';
+            }
         }
         html += '           <div class="modal-body"></div>';
         html += '       </div>';
@@ -140,6 +142,9 @@
 
         onloadEvents();
 
+        $(document).trigger('ajax:loaded');
+        $(document).trigger('ajax:modal:loaded');
+
         return this;
     };
 
@@ -149,8 +154,8 @@
         }
     }
 
-    $.fn.easyModalHide = function() {
-        setTimeout(function() {
+    $.fn.easyModalHide = function () {
+        setTimeout(function () {
             $('.modal').modal('hide');
         }, 1000);
     }

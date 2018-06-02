@@ -9,6 +9,8 @@ trait Events
 {
     protected $event = true;
 
+    protected $lastId;
+
     public function setEvent($event = true)
     {
         $this->setEvent = $event;
@@ -29,6 +31,8 @@ trait Events
         if (!isset($values['id'])) {
             $values['id'] = Str::uuid();
         }
+
+        $this->lastId = $values['id'];
 
         return $values;
     }
@@ -138,4 +142,11 @@ trait Events
 
     }
 
+    /**
+     * Get the value of lastId
+     */
+    public function getLastId()
+    {
+        return $this->lastId;
+    }
 }

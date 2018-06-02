@@ -155,6 +155,9 @@
     };
 
     easyRender.prototype.callback = function (name, res) {
+
+        $(document).trigger('ajax:loaded');
+
         var widget = this;
         var fnc = widget.settings[name];
         if (fnc && 'undefined' !== typeof fnc) {

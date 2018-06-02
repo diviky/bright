@@ -177,16 +177,22 @@ jQuery(document).ready(function ($) {
       .val(1);
   });
 
-  $(document).on("click", ".ac-add", function () {
-    $(".ac-attrs tfoot:first tr")
+  $(document).on("click", "[data-add]", function () {
+
+    var target = $(this).data('add');
+    $(target + " tfoot:first tr")
       .clone()
-      .appendTo(".ac-attrs tbody");
+      .appendTo(target + " tbody");
+
+    e.preventDefault();
   });
 
-  $(document).on("click", ".ac-remove", function () {
+  $(document).on("click", "[data-remove]", function (e) {
     $(this)
       .parents("tr:eq(0)")
       .remove();
+
+    e.preventDefault();
   });
 
   //prevent hash url

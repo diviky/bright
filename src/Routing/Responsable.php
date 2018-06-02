@@ -30,6 +30,11 @@ class Responsable implements BaseResponsable
     {
         $response = $this->getResponse();
         $format = $request->input('format');
+
+        if (!$format && $request->expectsJson()) {
+            return $response;
+        }
+
         $route = $this->getRoute($this->action);
 
         if (!is_array($response) && $response instanceof View) {

@@ -35,7 +35,13 @@ class Builder extends BaseBuilder
     {
         $values = $this->insertEvent($values);
 
-        return parent::insertGetId($values, $sequence);
+        $id = parent::insertGetId($values, $sequence);
+
+        if (empty($id)) {
+            $id = $this->getLastId();
+        }
+
+        return $id;
     }
     /**
      * @{inheritdoc}

@@ -121,7 +121,7 @@ jQuery(document).ready(function ($) {
     });
 
     if ($.fn.chosen) {
-        $('[data-chosen]').chosen();
+        $('[data-chosen]').chosen({width:"auto"});
     }
 
     if ($.fn.tokenfield) {
