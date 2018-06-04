@@ -11,31 +11,6 @@ if (!function_exists('printr')) {
     }
 }
 
-if (!function_exists('ago')) {
-    function ago($time)
-    {
-        if (empty($time)) {
-            return null;
-        }
-
-        return (new Carbon($time))->diffForHumans();
-    }
-}
-
-if (!function_exists('toDate')) {
-    function toDate($time, $format = null)
-    {
-        if (empty($time)) {
-            return null;
-        }
-
-        $format = $format ?: 'M d, Y h:i A';
-        $timestamp = is_numeric($time) ? $time : strtotime($time);
-
-        return date($format, $timestamp);
-    }
-}
-
 if (!function_exists('user')) {
     function user($field = null)
     {
@@ -47,24 +22,40 @@ if (!function_exists('user')) {
     }
 }
 
-if (!function_exists('toTime')) {
-    function toTime($time, $date = false, $format = 'Y-m-d')
+if (!function_exists('carbon')) {
+    function carbon($time = null, $format = null)
     {
+        if (empty($time) && empty($format)) {
+            return new Carbon;
+        }
+
         if (!is_numeric($time)) {
             $parts = explode('/', $time);
 
             if ($parts[0] && strlen($parts[0]) != 4) {
                 $time = str_replace('/', '-', trim($time));
             }
-
-            $time = strtotime($time);
+            $carbon = new Carbon($time);
+        } else {
+            $carbon = Carbon::createFromTimestamp($time);
         }
 
-        if ($date) {
-            return date($format, $time);
+        if ($format) {
+            return $carbon->format($format);
         }
 
-        return $time;
+        return $carbon;
+    }
+}
+
+if (!function_exists('ago')) {
+    function ago($time)
+    {
+        if (empty($time)) {
+            return null;
+        }
+
+        return carbon($time)->diffForHumans();
     }
 }
 

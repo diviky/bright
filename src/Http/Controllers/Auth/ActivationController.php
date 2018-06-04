@@ -59,6 +59,6 @@ class ActivationController extends Controller
 
         return redirect()->back()
             ->with('status', 'success')
-            ->with('message', 'Verification code resent to your registered mobile number!');
+            ->with('message', 'Verification code resent to your registered mobile number.');
     }
 }

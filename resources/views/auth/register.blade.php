@@ -10,7 +10,7 @@
             @csrf
 
             <div class="form-group">
-                <label for="name" class="form-label">{{ __('First and last name') }}</label>
+                <label for="name" class="form-label">{{ __('Your Full Name') }}</label>
 
                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}"
                     required placeholder="Your first and last name" />

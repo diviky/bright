@@ -5,84 +5,45 @@ namespace Karla\Database\Query;
 use Illuminate\Database\Query\Builder as BaseBuilder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Karla\Database\Traits\Events;
+use Karla\Database\Traits\Cachable;
+use Karla\Database\Traits\Eventable;
 
 class Builder extends BaseBuilder
 {
-    use Events;
+    use Cachable;
+    use Eventable;
 
     /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
-    public $timestamps = true;
+    protected $timestamps = true;
 
     /**
      * @{inheritdoc}
      */
-    public function insert(array $values)
+    protected function setTimeStamps(array $values, $force = false)
     {
-        $values = $this->insertEvent($values);
-
-        return parent::insert($values);
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function insertGetId(array $values, $sequence = null)
-    {
-        $values = $this->insertEvent($values);
-
-        $id = parent::insertGetId($values, $sequence);
-
-        if (empty($id)) {
-            $id = $this->getLastId();
+        if ($this->usesTimestamps() || $force) {
+            $time = $this->freshTimestamp();
+            $values['updated_at'] = $time;
+            $values['created_at'] = $time;
         }
 
-        return $id;
-    }
-    /**
-     * @{inheritdoc}
-     */
-    public function delete($id = null)
-    {
-        $this->atomicEvent('delete');
-        return parent::delete($id);
+        return $values;
     }
 
-    /**
-     * @{inheritdoc}
-     */
-    public function exists()
+    protected function setTimeStamp(array $values, $force = false)
     {
-        $this->atomicEvent('select');
-        return parent::exists();
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function find($id, $columns = ['*'])
-    {
-        $this->atomicEvent('select');
-        return parent::find($id, $columns);
-    }
-
-    /**
-     * @{inheritdoc}
-     */
-    public function update(array $values)
-    {
-        if ($this->usesTimestamps()) {
-            $values['updated_at'] = $this->freshTimestamp();
+        if ($this->usesTimestamps() || $force) {
+            $time = $this->freshTimestamp();
+            $values['updated_at'] = $time;
         }
 
-        $values = $this->updateEvent($values);
-
-        return parent::update($values);
+        return $values;
     }
+
     /**
      * @{inheritdoc}
      */
@@ -91,12 +52,6 @@ class Builder extends BaseBuilder
         $this->atomicEvent('select');
 
         return parent::get($columns);
-    }
-
-    public function first($columns = ['*'])
-    {
-        $this->atomicEvent('select');
-        return parent::first($columns);
     }
 
     public function groupByRaw($sql, array $bindings = [])
@@ -176,7 +131,7 @@ class Builder extends BaseBuilder
         $rows = $this->paginate($perPage, $columns, $pageName, $page);
 
         $i = $rows->perPage() * ($rows->currentPage() - 1);
-        $rows->map(function ($row) use (&$i) {
+        $rows->transform(function ($row) use (&$i) {
             $row->serial = ++$i;
 
             if (isset($row->created_at)) {
@@ -186,6 +141,8 @@ class Builder extends BaseBuilder
             if (isset($row->updated_at)) {
                 $row->updated = date('M d, Y h:i A', strtotime($row->updated_at));
             }
+
+            return $row;
         });
 
         return $rows;

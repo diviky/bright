@@ -2,6 +2,8 @@
 
 namespace Karla\Traits;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Short methods to add default conditions to query.
  *
@@ -68,34 +70,34 @@ trait Database
             }
         }
 
-        $date_range = isset($data['date_range']) ? $data['date_range'] : null;
+        $date_range = isset($data['date']) ? $data['date'] : null;
         if (is_array($date_range)) {
-            foreach ($date_range as $field => $date) {
+            foreach ($date_range as $column => $date) {
                 if (!is_array($date)) {
-                    $date = explode('-', $date);
+                    $date = explode(' - ', $date);
                     $date = [
                         'from' => $date[0],
                         'to' => $date[1],
                     ];
                 }
 
-                $from = $this->toTime($date['from']);
-                $to = $this->toTime($date['to']);
-                $field = $alias . $this->cleanField($field);
+                $from = $this->toTime($date['from'], 'Y-m-d');
+                $to = $this->toTime($date['to'], 'Y-m-d');
+                $column = $alias . $this->cleanField($column);
 
                 if ($from && $to) {
-                    $query->whereBetween('DATE(' . $field . ')', [$from, $to]);
+                    $query->whereBetween(DB::raw('DATE(' . $column . ')'), [$from, $to]);
                 }
 
                 if ($from && empty($to)) {
-                    $query->where('DATE(' . $field . ')', $from);
+                    $query->where(DB::raw('DATE(' . $column . ')'), $from);
                 }
             }
         }
 
-        $time_range = isset($data['time_range']) ? $data['time_range'] : null;
+        $time_range = isset($data['time']) ? $data['time'] : null;
         if (is_array($time_range)) {
-            foreach ($time_range as $field => $date) {
+            foreach ($time_range as $column => $date) {
                 if (!is_array($date)) {
                     $date = explode('-', $date);
                     $date = [
@@ -104,23 +106,23 @@ trait Database
                     ];
                 }
 
-                $from = $this->toTime($date['from']);
-                $to = $this->toTimem($date['to']);
-                $field = $alias . $this->cleanField($field);
+                $from = carbon($date['from'], 'Y-m-d');
+                $to = carbon($date['to'], 'Y-m-d');
+                $column = $alias . $this->cleanField($column);
 
                 if ($from && $to) {
-                    $query->whereBetween('DATE(FROM_UNIXTIME(' . $field . '))', [$from, $to]);
+                    $query->whereBetween(DB::raw('DATE(FROM_UNIXTIME(' . $column . '))'), [$from, $to]);
                 }
 
                 if ($from && empty($to)) {
-                    $query->where('DATE(FROM_UNIXTIME(' . $field . '))', $from);
+                    $query->where(DB::raw('DATE(FROM_UNIXTIME(' . $column . '))'), $from);
                 }
             }
         }
 
-        $date_range = isset($data['unix_range']) ? $data['unix_range'] : null;
+        $date_range = isset($data['unix']) ? $data['unix'] : null;
         if (is_array($date_range)) {
-            foreach ($date_range as $field => $date) {
+            foreach ($date_range as $column => $date) {
                 if (!is_array($date)) {
                     $date = explode('-', $date);
                     $date = [
@@ -131,27 +133,27 @@ trait Database
 
                 $from = trim($date['from']);
                 $to = trim($date['to']);
-                $field = $alias . $this->cleanField($field);
+                $column = $alias . $this->cleanField($column);
 
                 if ($from && empty($to)) {
                     $to = $from;
                 }
 
                 if (!is_numeric($from)) {
-                    $from = $this->toTime($from . ' 00:00:00');
+                    $from = $this->toTime($from . ' 00:00:00')->timestamp();
                 }
 
                 if (!is_numeric($to)) {
-                    $to = $this->toTime($to . ' 23:59:59');
+                    $to = $this->toTime($to . ' 23:59:59')->timestamp();
                 }
 
-                $query->whereBetween($field, [$from, $to]);
+                $query->whereBetween($column, [$from, $to]);
             }
         }
 
         $ranges = isset($data['range']) ? $data['range'] : null;
         if (is_array($ranges)) {
-            foreach ($ranges as $field => $date) {
+            foreach ($ranges as $column => $date) {
                 if (!is_array($date)) {
                     $date = explode('-', $date);
                     $date = [
@@ -162,14 +164,14 @@ trait Database
 
                 $from = $this->toTime($date['from']);
                 $to = $this->toTime($date['to']);
-                $field = $alias . $this->cleanField($field);
+                $column = $alias . $this->cleanField($column);
 
                 if ($from && $to) {
-                    $query->whereBetween($field, [$from, $to]);
+                    $query->whereBetween($column, [$from, $to]);
                 }
 
                 if ($from && empty($to)) {
-                    $query->where($field, $from);
+                    $query->where($column, $from);
                 }
             }
         }
@@ -226,7 +228,7 @@ trait Database
             return null;
         }
 
-        return strtotime(trim($time), $format);
+        return carbon(trim($time), $format);
     }
 
     public function database($table, $ordering = [])

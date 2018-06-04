@@ -5,7 +5,7 @@ namespace Karla\Database\Traits;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-trait Events
+trait Eventable
 {
     protected $event = true;
 
@@ -46,27 +46,6 @@ trait Events
         return $values;
     }
 
-    protected function setTimeStamps(array $values, $force = false)
-    {
-        if ($this->usesTimestamps() || $force) {
-            $time = $this->freshTimestamp();
-            $values['updated_at'] = $time;
-            $values['created_at'] = $time;
-        }
-
-        return $values;
-    }
-
-    protected function setTimeStamp(array $values, $force = false)
-    {
-        if ($this->usesTimestamps() || $force) {
-            $time = $this->freshTimestamp();
-            $values['updated_at'] = $time;
-        }
-
-        return $values;
-    }
-
     protected function getEventTables($type)
     {
         $tables = config('karla.tables');
@@ -82,31 +61,41 @@ trait Events
             return $values;
         }
 
+        if (!is_array(reset($values))) {
+            $values = [$values];
+        }
+
         $tables = $this->getEventTables('insert');
         foreach ($tables as $column) {
-            if (isset($values[$column])) {
-                continue;
-            }
+            foreach ($values as $key => $value) {
+                if (isset($value[$column])) {
+                    continue;
+                }
 
-            switch ($column) {
-                case 'id':
-                    $values = $this->setPrimaryKey($values);
-                    break;
-                case 'user_id':
-                    $values = $this->setUserId($values);
-                    break;
-                case 'time':
-                    $values = $this->setTimeStamps($values, true);
-                    break;
-                default:
-                    if (app()->has($column)) {
-                        $values[$column] = app($column);
-                    }
-                    break;
+                switch ($column) {
+                    case 'id':
+                        $value = $this->setPrimaryKey($value);
+                        break;
+                    case 'user_id':
+                        $value = $this->setUserId($value);
+                        break;
+                    case 'time':
+                        $value = $this->setTimeStamps($value, true);
+                        break;
+                    default:
+                        if (app()->has($column)) {
+                            $value[$column] = app($column);
+                        }
+                        break;
+                }
+
+                $values[$key] = $value;
             }
         }
 
-        $values = $this->setTimeStamps($values);
+        foreach ($values as &$value) {
+            $value = $this->setTimeStamps($value);
+        }
 
         return $values;
     }
@@ -139,7 +128,6 @@ trait Events
                     break;
             }
         }
-
     }
 
     /**
@@ -148,5 +136,59 @@ trait Events
     public function getLastId()
     {
         return $this->lastId;
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function insert(array $values)
+    {
+        $values = $this->insertEvent($values);
+
+        return parent::insert($values);
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function insertGetId(array $values, $sequence = null)
+    {
+        $values = $this->insertEvent($values);
+
+        $id = parent::insertGetId($values, $sequence);
+
+        if (empty($id)) {
+            $id = $this->getLastId();
+        }
+
+        return $id;
+    }
+    /**
+     * @{inheritdoc}
+     */
+    public function delete($id = null)
+    {
+        $this->atomicEvent('delete');
+        return parent::delete($id);
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function exists()
+    {
+        $this->atomicEvent('select');
+        return parent::exists();
+    }
+
+    public function update(array $values)
+    {
+        if ($this->usesTimestamps()) {
+            $values['updated_at'] = $this->freshTimestamp();
+        }
+
+        $values = $this->updateEvent($values);
+
+        return parent::update($values);
     }
 }
