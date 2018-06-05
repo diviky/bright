@@ -16,6 +16,7 @@ class Api
     public function handle($request, Closure $next)
     {
         $request->headers->add(['Accept' => 'application/json']);
+        //app('is_api_request', true);
 
         return $next($request);
     }

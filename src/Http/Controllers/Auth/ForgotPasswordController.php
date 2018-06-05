@@ -2,44 +2,49 @@
 
 namespace Karla\Http\Controllers\Auth;
 
-use Karla\Http\Controllers\Auth\Models\Activation;
-use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Routing\Controller;
-use Karla\Notifications\SendActivationToken;
-use Karla\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Karla\Http\Controllers\Auth\Models\Activation;
+use Karla\Http\Controllers\Auth\Traits\Token;
+use Karla\Notifications\SendActivationToken;
+use Karla\Routing\Controller;
+use Karla\User;
 
 class ForgotPasswordController extends Controller
 {
     use Token;
 
+    public function username()
+    {
+        return 'mobile';
+    }
+
     public function reset(Request $request)
     {
-        if ($request->isMethod('get')) {
-            return view('auth.passwords.username');
+        if ($request->isMethod('post')) {
+            $this->validate($request, [
+                $this->username() => 'required|exists:auth_users',
+            ]);
+
+            $user = User::where($this->username(), $request->input($this->username()))->first();
+
+            $token = $this->saveToken($user);
+
+            session(['reset-token' => $this->getTokenId()]);
+
+            $user->notify(new SendActivationToken($token));
+
+            return [
+                'status' => 'success',
+                'message' => __('Verification code sent to your registered :username.', ['username' => $this->username()]),
+                'redirect' => 'password.verify',
+            ];
         }
 
-        $this->validate($request, [
-            'username' => 'required|exists:auth_users',
-        ]);
-
-        $user = User::where('username', $request->input('username'))->first();
-
-        $token = $this->saveToken($user);
-
-        session(['reset-token' => $this->getTokenId()]);
-
-        $user->notify(new SendActivationToken($token));
-
-        return [
-            'status' => 'success',
-            'message' => 'Verification code sent to your registered mobile number!',
-            'redirect' => 'password.verify',
-        ];
+        return view('auth.passwords.token');
     }
 
     public function resend(Request $request)

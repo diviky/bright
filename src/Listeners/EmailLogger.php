@@ -2,7 +2,7 @@
 
 namespace Karla\Listeners;
 
-use Illuminate\Mail\Events\MessageSending;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -13,7 +13,7 @@ class EmailLogger
      *
      * @param MessageSending $event
      */
-    public function handle(MessageSending $event)
+    public function handle(MessageSent $event)
     {
         $message = $event->message;
         DB::table('addon_email_logs')->insert([

@@ -14,17 +14,17 @@ class IsUserActivate
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $guard = null)
     {
-        if ($request->input('_request') == 'iframe') {
-            $request->headers->add(['Accept' => 'application/json']);
+        if (!Auth::guard($guard)->check()) {
+            return $next($request);
         }
 
-        if (Auth::check() && Auth::user()->status == 0) {
+        if (Auth::user()->status == 0) {
             return redirect()->route('user.activate');
         }
 
-        if (Auth::check() && Auth::user()->status != 1) {
+        if (Auth::user()->status != 1) {
             return view('auth.disabled');
         }
 

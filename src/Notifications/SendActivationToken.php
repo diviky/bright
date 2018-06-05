@@ -14,14 +14,17 @@ class SendActivationToken extends Notification
 
     protected $token;
 
+    protected $channels = [];
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($token)
+    public function __construct($token, $channels = [])
     {
         $this->token = $token;
+        $this->channels = $channels;
     }
 
     /**
@@ -32,7 +35,7 @@ class SendActivationToken extends Notification
      */
     public function via($notifiable)
     {
-        return ['database', 'mail', MobtextingChannel::class];
+        return array_merge(['database', 'mail', MobtextingChannel::class], $this->channels);
     }
 
     /**
@@ -44,8 +47,8 @@ class SendActivationToken extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('Your Account OTP is :' . $this->token)
-            ->line('Thank you for using our application!');
+            ->with(['token' => $this->token])
+            ->view('emails.html.activation');
     }
 
     public function toMobtexting($notifiable)

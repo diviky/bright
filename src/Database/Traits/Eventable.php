@@ -11,7 +11,7 @@ trait Eventable
 
     protected $lastId;
 
-    public function setEvent($event = true)
+    public function setEvent($event = false)
     {
         $this->setEvent = $event;
 

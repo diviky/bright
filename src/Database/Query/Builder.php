@@ -131,6 +131,7 @@ class Builder extends BaseBuilder
         $rows = $this->paginate($perPage, $columns, $pageName, $page);
 
         $i = $rows->perPage() * ($rows->currentPage() - 1);
+
         $rows->transform(function ($row) use (&$i) {
             $row->serial = ++$i;
 

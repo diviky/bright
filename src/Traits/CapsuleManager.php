@@ -98,6 +98,15 @@ trait CapsuleManager
         return $this;
     }
 
+    public function take($key, $default = null)
+    {
+        if ($this->has($key)) {
+            return $this->get($key);
+        }
+
+        return $default;
+    }
+
     /**
      * magic method to get property.
      *
