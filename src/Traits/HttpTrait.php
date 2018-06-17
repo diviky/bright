@@ -3,6 +3,7 @@
 namespace Karla\Traits;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -79,7 +80,7 @@ trait HttpTrait
      */
     public function files($key = null, $default = null)
     {
-        return $this->get('request')->files($key, $default, true);
+        return $this->get('request')->file($key, $default);
     }
 
     /**
@@ -198,7 +199,7 @@ trait HttpTrait
      */
     public function setSession($name, $value = null)
     {
-        return $this->get('session')->set($name, $value);
+        return $this->get('session')->put($name, $value);
     }
 
     /**
@@ -263,7 +264,7 @@ trait HttpTrait
      *
      * @return StreamedResponse
      */
-    public function stream($callback = null, $status = 200, array $headers = [])
+    public function stream($callback = null, array $headers = [], $status = 200)
     {
         return new StreamedResponse($callback, $status, $headers);
     }
@@ -292,7 +293,7 @@ trait HttpTrait
      *
      * @return JsonResponse
      */
-    public function toJson($data = [], $status = 200, array $headers = [])
+    public function toJson($data = [], array $headers = [], $status = 200)
     {
         return new JsonResponse($data, $status, $headers);
     }
@@ -307,7 +308,7 @@ trait HttpTrait
      *
      * @return BinaryFileResponse
      */
-    public function sendFile($file, $status = 200, array $headers = [], $disposition = null)
+    public function sendFile($file, array $headers = [], $disposition = null, $status = 200)
     {
         return new BinaryFileResponse($file, $status, $headers, true, $disposition);
     }
@@ -328,4 +329,19 @@ trait HttpTrait
         throw new HttpException($statusCode, $message, null, $headers);
     }
 
+    protected function rules(array $rules = [])
+    {
+        return $this->validate($this->request(), $rules);
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $rules
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $rules)
+    {
+        return Validator::make($this->request(), $rules);
+    }
 }

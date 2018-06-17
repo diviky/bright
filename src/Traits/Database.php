@@ -90,7 +90,7 @@ trait Database
                 }
 
                 if ($from && empty($to)) {
-                    $query->where(DB::raw('DATE(' . $column . ')'), $from);
+                    $query->whereDate($column, '=', $from);
                 }
             }
         }
@@ -115,7 +115,7 @@ trait Database
                 }
 
                 if ($from && empty($to)) {
-                    $query->where(DB::raw('DATE(FROM_UNIXTIME(' . $column . '))'), $from);
+                    $query->whereDate($column, '=', $from);
                 }
             }
         }

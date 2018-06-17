@@ -11,7 +11,7 @@ class Mailable extends BaseMailable
 {
     use Queueable, SerializesModels;
 
-    protected $theme = 'emails';
+    protected $theme;
     protected $prefix = 'emails.';
 
     /**
@@ -43,7 +43,7 @@ class Mailable extends BaseMailable
      */
     public function view($view, array $data = [])
     {
-        $this->view = $this->prefix . 'html.' . $view;
+        $this->view = $this->prefix . $view;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;
@@ -58,7 +58,7 @@ class Mailable extends BaseMailable
      */
     public function text($textView, array $data = [])
     {
-        $this->textView = $this->prefix . 'plain.' . $textView;
+        $this->textView = $this->prefix . $textView;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;
@@ -73,7 +73,7 @@ class Mailable extends BaseMailable
      */
     public function markdown($view, array $data = [])
     {
-        $this->markdown = $this->prefix . 'markdown.' . $view;
+        $this->markdown = $this->prefix . $view;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;
@@ -86,12 +86,14 @@ class Mailable extends BaseMailable
         return $this;
     }
 
-    public function deliver($to = null)
+    public function deliver($to = null, $exception = false)
     {
-        try {
-            Mail::to($to)->send($this);
+        if ($exception) {
+            return Mail::to($to)->send($this);
+        }
 
-            return true;
+        try {
+            return Mail::to($to)->send($this);
         } catch (\Exception $e) {
             return false;
         }

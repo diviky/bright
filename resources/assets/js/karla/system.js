@@ -43,10 +43,39 @@ function displayNoty(response, $this) {
     }
 
     if (res.link) {
-        $.fn.easyModalShow({
+        var opts = {
             url: res.link.url,
-            event: 'ready'
-        });
+            event: 'ready',
+        };
+
+        if (res.link.options) {
+            var opts = $.extend({}, res.link.options, opts);
+        }
+
+        $.fn.easyModalShow(opts);
+
+        return true;
+    }
+
+    if (res.modal) {
+        if (!res.modal.body) {
+            noty({
+                text: 'Invalid response from server. Please try again.',
+                type: 'error'
+            });
+            return true;
+        }
+
+        var opts = {
+            content: res.modal.body,
+            event: 'ready',
+        };
+
+        if (res.modal.options) {
+            var opts = $.extend({}, res.modal.options, opts);
+        }
+
+        $.fn.easyModalShow(opts);
 
         return true;
     }
@@ -65,6 +94,10 @@ function displayNoty(response, $this) {
         callback(res, $this);
     } else if (typeof window[callback] == 'function') {
         window[callback](res, $this);
+    }
+
+    if ($this.data('hide')) {
+        $.fn.easyModalHide();
     }
 }
 
@@ -94,10 +127,13 @@ $(document).ready(function () {
         e.preventDefault();
 
         var $this = $(this);
+        var data = $this.data('post-data');
+        //data = parseJSON(data);
+        //data.format = 'json';
 
         $.ajax({
-            url: $(this).data('href'),
-            data: $this.data('post-data'),
+            url: $(this).data('post'),
+            data: data,
             method: "POST",
             complete: function (xhr) {
                 displayNoti(xhr, $this);
@@ -124,7 +160,7 @@ $(document).ready(function () {
                 var res = parseJSON(xhr.responseText);
                 if (isSuccess(res.status)) {
                     parent.remove();
-                    $('.ac-ajax-total').html(parseInt($('.ac-ajax-total').text()) - 1);
+                    $('[ajax-total]').html(parseInt($('[ajax-total]').text()) - 1);
                 }
 
                 displayNoti(xhr, $this);
@@ -237,7 +273,6 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '[data-task]', function (e) {
-        e.preventDefault();
 
         var $this = $(this);
         var form = getForm($this);
@@ -260,7 +295,11 @@ $(document).ready(function () {
 
         form.find("input[name='page']").val(page);
         $('#page').val(page);
-        form.submit();
+
+        if ($this.attr('type') != "submit") {
+            form.submit();
+            e.preventDefault();
+        }
     });
 
     $(document).on('click', '[data-order]', function (e) {

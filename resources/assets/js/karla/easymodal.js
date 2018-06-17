@@ -4,14 +4,14 @@
 
     var defaults = {
         title: function (api, el) {
-            return el && (el.data('original-title') || el.attr('title'));
+            return el && el.data('title');
         },
         event: 'click',
-        backdrop: true, //'false|true|static',
+        backdrop: 'static', //'false|true|static',
         close: true,
         keyboard: false,
         id: 'bmodel',
-        styles: null,
+        styles: "",
         animation: "bounceInRight",
         content: null,
         url: null,

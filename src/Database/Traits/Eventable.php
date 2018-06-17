@@ -7,13 +7,13 @@ use Illuminate\Support\Str;
 
 trait Eventable
 {
-    protected $event = true;
-
+    protected $eventState = true;
+    protected $eventColumns = [];
     protected $lastId;
 
-    public function setEvent($event = false)
+    public function eventState($event = false)
     {
-        $this->setEvent = $event;
+        $this->eventState = $event;
 
         return $this;
     }
@@ -23,13 +23,24 @@ trait Eventable
      */
     protected function useEvent()
     {
-        return $this->event;
+        return $this->eventState;
     }
 
-    protected function setPrimaryKey(array $values)
+    public function eventColumn($name)
+    {
+        if (is_array($name)) {
+            $this->eventColumns = array_merge($this->eventColumns, $name);
+        } else {
+            $this->eventColumns[] = $name;
+        }
+
+        return $this;
+    }
+
+    protected function setPrimaryKey(array $values, $id = null)
     {
         if (!isset($values['id'])) {
-            $values['id'] = Str::uuid();
+            $values['id'] = (string) $id;
         }
 
         $this->lastId = $values['id'];
@@ -66,7 +77,14 @@ trait Eventable
         }
 
         $tables = $this->getEventTables('insert');
-        foreach ($tables as $column) {
+        foreach ($tables as $columns) {
+            if (!is_array($columns)) {
+                $columns = [$columns => $columns];
+            }
+
+            $column = key($columns);
+            $field = $columns[$column];
+
             foreach ($values as $key => $value) {
                 if (isset($value[$column])) {
                     continue;
@@ -74,7 +92,10 @@ trait Eventable
 
                 switch ($column) {
                     case 'id':
-                        $value = $this->setPrimaryKey($value);
+                        $value = $this->setPrimaryKey($value, Str::uuid());
+                        break;
+                    case 'uid':
+                        $value = $this->setPrimaryKey($value, Str::orderedUuid());
                         break;
                     case 'user_id':
                         $value = $this->setUserId($value);
@@ -83,8 +104,8 @@ trait Eventable
                         $value = $this->setTimeStamps($value, true);
                         break;
                     default:
-                        if (app()->has($column)) {
-                            $value[$column] = app($column);
+                        if (app()->has($field)) {
+                            $value[$column] = app($field);
                         }
                         break;
                 }
@@ -102,10 +123,6 @@ trait Eventable
 
     protected function updateEvent($values)
     {
-        if (!$this->useEvent()) {
-            return $values;
-        }
-
         $this->atomicEvent('update');
         $values = $this->setTimeStamp($values);
 
@@ -114,20 +131,40 @@ trait Eventable
 
     protected function atomicEvent($type = 'update')
     {
-        $tables = $this->getEventTables($type);
+        if (!$this->useEvent()) {
+            return $this;
+        }
 
-        foreach ($tables as $column) {
+        $eventColumns = $this->getEventTables($type);
+        $eventColumns = array_merge($eventColumns, $this->eventColumns);
+
+        foreach ($eventColumns as $columns) {
+
+            if (!is_array($columns)) {
+                $columns = [$columns => $columns];
+            }
+
+            $column = key($columns);
+            $field = $columns[$column];
+
+            $from = last(preg_split('/ as /i', $this->from));
+
             switch ($column) {
                 case 'user_id':
-                    $this->where($this->from . '.' . $column, Auth::user()->id);
+                    $this->where($from . '.' . $column, Auth::user()->id);
+                    break;
+                case 'parent_id':
+                    $this->where($from . '.' . $column, Auth::user()->id);
                     break;
                 default:
-                    if (app()->has($column)) {
-                        $this->where($this->from . '.' . $column, app($column));
+                    if (app()->has($field)) {
+                        $this->where($from . '.' . $column, app($field));
                     }
                     break;
             }
         }
+
+        return $this;
     }
 
     /**
@@ -155,7 +192,7 @@ trait Eventable
     {
         $values = $this->insertEvent($values);
 
-        $id = parent::insertGetId($values, $sequence);
+        $id = parent::insertGetId($values[0], $sequence);
 
         if (empty($id)) {
             $id = $this->getLastId();

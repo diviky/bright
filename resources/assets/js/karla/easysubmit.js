@@ -6,7 +6,7 @@
         reload: false,
         return_url: null,
         validate: true,
-        hide: true,
+        hide: false,
         reset: false,
         clear: false,
         onComplete: function () { },
@@ -60,7 +60,7 @@
                 valid: false
             });
 
-            var msg = widget.form.attr('message') || e('Please correct the highlighted error(s)');
+            var msg = widget.form.attr('message') || 'Please correct the highlighted error(s)';
             noty({
                 text: msg,
                 type: 'error'
@@ -268,14 +268,10 @@
             if (submit == 'parent') {
                 widget.form.closest('form').submit();
             } else if (submit == 'render' || submit == true) {
-                $('[role="render"]').submit();
+                $('[role="easyRender"]').submit();
             } else if (submit) {
                 $(widget.settings.submit).submit();
             }
-        }
-
-        if (!res.preview && !res.link && widget.settings.hide) {
-            $.fn.easyModalHide();
         }
 
         if (res.message) {
@@ -283,6 +279,48 @@
                 text: res.message,
                 type: 'success'
             });
+        }
+
+        if (res.modal) {
+            if (!res.modal.body) {
+                noty({
+                    text: 'Invalid response from server. Please try again.',
+                    type: 'error'
+                });
+                return true;
+            }
+
+            var opts = {
+                content: res.modal.body,
+                event: 'ready',
+            };
+
+            if (res.modal.options) {
+                var opts = $.extend({}, res.modal.options, opts);
+            }
+
+            $.fn.easyModalShow(opts);
+
+            return true;
+        }
+
+        if (res.link) {
+            var opts = {
+                url: res.link.url,
+                event: 'ready',
+            };
+
+            if (res.link.options) {
+                var opts = $.extend({}, res.link.options, opts);
+            }
+
+            $.fn.easyModalShow(opts);
+
+            return true;
+        }
+
+        if (widget.settings.hide) {
+            $.fn.easyModalHide();
         }
 
         if (widget.settings.reset) {
@@ -293,33 +331,7 @@
         }
 
         if (widget.settings.render) {
-            widget.render();
-        }
-
-        if (res.preview) {
-            if (!res.preview.body) {
-                noty({
-                    text: 'Invalid response from server. Please try again.',
-                    type: 'error'
-                });
-                return true;
-            }
-
-            $.fn.easyModalShow({
-                content: res.preview.body,
-                event: 'ready',
-            });
-
-            return true;
-        }
-
-        if (res.link) {
-            $.fn.easyModalShow({
-                url: res.link.url,
-                event: 'ready'
-            });
-
-            return true;
+            widget.render(widget.settings.render);
         }
 
         var delay = (res.message) ? 5000 : 1000;
@@ -345,8 +357,17 @@
         }
     }
 
-    easySubmit.prototype.render = function () {
-        var element = $('[role="easyRender"]');
+    easySubmit.prototype.render = function (value) {
+        var widget = this;
+
+        if (value == 'parent') {
+            var element = widget.form.closest('form');
+        } else if (value == 'render' || value == true) {
+            var element = $('[role="easyRender"]');
+        } else if (value) {
+            var element = $(value);
+        }
+
         element.find('input[name=page]').val(1);
         element.submit();
     }

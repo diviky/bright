@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Karla\Http\Controllers\Auth\Models\Activation;
 use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Notifications\SendActivationToken;
+use Karla\Notifications\ForgetPassword;
 use Karla\Routing\Controller;
 use Karla\User;
 
@@ -35,7 +35,7 @@ class ForgotPasswordController extends Controller
 
             session(['reset-token' => $this->getTokenId()]);
 
-            $user->notify(new SendActivationToken($token));
+            $user->notify(new ForgetPassword($token));
 
             return [
                 'status' => 'success',
@@ -69,11 +69,11 @@ class ForgotPasswordController extends Controller
 
         $user = User::where('id', $activation->user_id)->first();
 
-        $user->notify(new SendActivationToken($activation->token));
+        $user->notify(new ForgetPassword($activation->token));
 
         return [
             'status' => 'success',
-            'message' => 'Verification code resent to your registered mobile number!',
+            'message' => __('Verification code resent to your registered  :username.', ['username' => $this->username()]),
             'next' => [
                 'back' => true,
             ],

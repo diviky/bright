@@ -148,4 +148,17 @@ class Builder extends BaseBuilder
 
         return $rows;
     }
+
+    public function getPdo()
+    {
+        return DB::connection()->getPdo();
+    }
+
+    public function exec($sql)
+    {
+        $prefix = DB::getTablePrefix();
+        $sql = str_replace("#__", $prefix, $sql);
+
+        return $this->getPdo()->exec($sql);
+    }
 }

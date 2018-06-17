@@ -34,7 +34,7 @@ class ActivationController extends Controller
             ->first();
 
         if (empty($activation)) {
-            return redirect()->route('user.verify')
+            return redirect()->route('user.activate')
                 ->with('status', 'error')
                 ->with('message', 'No such token in the database!');
         }

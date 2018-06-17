@@ -3,15 +3,16 @@
 namespace Karla\Helpers;
 
 use Closure;
-use Ddeboer\DataImport\Reader\ArrayReader;
-use Ddeboer\DataImport\Reader\CsvReader;
-use Ddeboer\DataImport\Reader\ExcelReader;
 use EmptyIterator;
 use Karla\Helpers\Iterator\ChunkedIterator;
 use Karla\Helpers\Iterator\MapIterator;
 use LimitIterator;
+use Port\Csv\CsvReader;
+use Port\Excel\ExcelReader;
+use Port\Reader\ArrayReader;
 use SplFileObject;
 use Traversable;
+use wapmorgan\UnifiedArchive\UnifiedArchive;
 
 /**
  * Reader class to get details from iterator.
@@ -22,8 +23,14 @@ class Reader
 {
     public function fetchAll($reader, Closure $callable = null, $options = [])
     {
-        $ext = (!empty($options['ext'])) ? $options['ext'] : strtolower(strrchr($reader, '.'));
-        $ext = strtolower($ext);
+        $reader = $this->unzip($reader, $options);
+
+        if (!is_string($reader)) {
+            $ext = $options['ext'] ?: '.array';
+        } else {
+            $ext = (!empty($options['ext'])) ? $options['ext'] : strtolower(strrchr($reader, '.'));
+            $ext = strtolower($ext);
+        }
 
         if (!in_array($ext, ['.array', '.iterator']) &&
             (!is_file($reader) || !file_exists($reader))) {
@@ -31,7 +38,6 @@ class Reader
         }
 
         $lines = ($ext == '.txt') ? 1 : 5;
-        $duplicates = CsvReader::DUPLICATE_HEADERS_INCREMENT;
         $file = null;
 
         if (!in_array($ext, ['.array', '.iterator'])) {
@@ -45,6 +51,7 @@ class Reader
         switch ($ext) {
             case '.txt':
             case '.csv':
+                $duplicates = CsvReader::DUPLICATE_HEADERS_INCREMENT;
                 if ($options['delimiter']) {
                     $reader = new CsvReader($file, $options['delimiter']);
                 } else {
@@ -223,5 +230,43 @@ class Reader
         fclose($handle);
 
         return $lines;
+    }
+
+    public function unzip($reader, $options = [])
+    {
+        if (!is_string($reader)) {
+            $ext = $options['ext'] ?: '.array';
+        } else {
+            $ext = (!empty($options['ext'])) ? $options['ext'] : strtolower(strrchr($reader, '.'));
+            $ext = strtolower($ext);
+        }
+
+        if (in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
+            $extensions = ['.csv', '.xls', 'xlsx', '.txt'];
+            $extract = '/tmp/';
+
+            try {
+                $archive = UnifiedArchive::open($reader);
+                $files = $archive->getFileNames();
+                $directory = dirname($reader);
+
+                foreach ($files as $file) {
+                    $ext = strtolower(strrchr($file, '.'));
+                    if (in_array($ext, $extensions)) {
+                        $reader = $file;
+                        break;
+                    }
+                }
+
+                $archive->extractFiles($extract);
+                $reader = $directory . '/' . md5(uniqid()) . $ext;
+
+                rename($extract . '/' . $file, $reader);
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+
+        return $reader;
     }
 }

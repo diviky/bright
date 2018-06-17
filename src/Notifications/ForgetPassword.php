@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notification;
 use NotificationChannels\Mobtexting\MobtextingChannel;
 use NotificationChannels\Mobtexting\MobtextingSmsMessage;
 
-class SendActivationToken extends Notification
+class ForgetPassword extends Notification
 {
     use Queueable;
 
@@ -47,8 +47,8 @@ class SendActivationToken extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Welcome to ' . config('app.name'))
-            ->markdown('emails.auth.activation', ['token' => $this->token]);
+            ->subject('Password change request from ' . config('app.name'))
+            ->markdown('emails.auth.password', ['token' => $this->token]);
     }
 
     public function toMobtexting($notifiable)

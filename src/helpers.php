@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('printr')) {
     function printr($data)
@@ -63,5 +64,29 @@ if (!function_exists('ip')) {
     function ip()
     {
         return \request()->ip();
+    }
+}
+
+if (!function_exists('markdown')) {
+    function markdown($text)
+    {
+        $parsedown = new Parsedown;
+
+        return $parsedown->text($text);
+    }
+}
+
+if (!function_exists('disk')) {
+    function disk($path, $disk = null, $time = null)
+    {
+        if (empty($path)) {
+            return null;
+        }
+
+        if ($time) {
+            return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
+
+        }
+        return Storage::disk($disk)->url($path);
     }
 }

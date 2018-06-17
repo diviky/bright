@@ -2,6 +2,8 @@
 
 namespace Karla\Traits;
 
+use Illuminate\Support\Facades\DB;
+
 trait Builder
 {
     protected function table($table = null, $timestamps = true)
@@ -66,5 +68,18 @@ trait Builder
     {
         $result = $this->insert($values);
         return $this->inserted($result, $name);
+    }
+
+    public function getPdo()
+    {
+        return DB::connection()->getPdo();
+    }
+
+    public function queryExec($sql)
+    {
+        $prefix = DB::getTablePrefix();
+        $sql = str_replace("#__", $prefix, $sql);
+
+        return $this->getPdo()->exec($sql);
     }
 }

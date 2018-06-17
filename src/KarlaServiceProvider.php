@@ -37,17 +37,17 @@ class KarlaServiceProvider extends ServiceProvider
             __DIR__ . '/../config/theme.php' => config_path('theme.php'),
             __DIR__ . '/../config/auth.php' => config_path('auth.php'),
             __DIR__ . '/../config/app.php' => config_path('app.php'),
-        ], 'config');
+        ], 'karla-config');
 
         $this->publishes([
             __DIR__ . '/../resources/assets/js' => resource_path('assets/js'),
             __DIR__ . '/../webpack.mix.js' => base_path('webpack.mix.js'),
             __DIR__ . '/../bower.json' => base_path('bower.json'),
-        ], 'assets');
+        ], 'karla-assets');
 
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views'),
-        ], 'views');
+        ], 'karla-views');
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views/', 'karla');
 

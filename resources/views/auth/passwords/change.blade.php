@@ -8,7 +8,7 @@
         <form method="POST" action="{{ route('password.change') }}" role="easySubmit">
             @csrf
             <div class="form-group">
-                <label for="password" class="form-label">{{ __('Password') }}</label>
+                <label for="password" class="form-label">{{ __('New Password') }}</label>
 
                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password"
                     required> @if ($errors->has('password'))

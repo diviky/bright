@@ -11,6 +11,8 @@ class User extends Authenticatable
     use Notifiable;
     use HasRoles;
 
+    public $guard_name = 'web';
+
     protected $table = "auth_users";
 
     /**

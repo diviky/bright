@@ -1,10 +1,10 @@
 <?php
 
-namespace Karla\Middlewares;
+namespace Karla\Http\Middlewares;
 
 use Closure;
 
-class Api
+class Ajax
 {
     /**
      * Handle an incoming request.
@@ -15,8 +15,9 @@ class Api
      */
     public function handle($request, Closure $next)
     {
-        $request->headers->add(['Accept' => 'application/json']);
-        //app('is_api_request', true);
+        if ($request->input('_request') == 'iframe') {
+            $request->headers->add(['Accept' => 'application/json']);
+        }
 
         return $next($request);
     }

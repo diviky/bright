@@ -1,9 +1,12 @@
 # An extension to laravel for quick develpment
 
+Query builder needs to overwrite with karla
 
-## License
+```php
+    \\Database/Connection.php
+    use Karla\Database\Query\Builder as QueryBuilder;
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+```
 
 ```php
     php artisan vendor:publish --provider="Karla\KarlaServiceProvider" --tag="config"
@@ -60,3 +63,7 @@ add in auth.php guards array
         return [];
     }
 ```
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
