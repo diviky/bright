@@ -5,6 +5,7 @@ namespace Karla\Traits;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 trait Provider
 {
@@ -14,12 +15,19 @@ trait Provider
     {
         Blade::directive('form', function ($expression) {
             $expression = substr(substr($expression, 0, -1), 1);
-            return config('vajax.' . $expression);
+            return '<?php echo config("vajax.' . $expression . '"); ?>';
         });
 
         Blade::if('view', function ($expression) {
             $expression = $expression ?: 'ajax';
-            return !config('vajax.' . $expression);
+            return !config("vajax." . $expression);;
+        });
+    }
+
+    public function validates()
+    {
+        Validator::extend('extension', function ($attribute, $value, $parameters) {
+            return in_array($value->getClientOriginalExtension(), $parameters);
         });
     }
 

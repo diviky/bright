@@ -17,7 +17,12 @@ class ForgotPasswordController extends Controller
 {
     use Token;
 
-    public function username()
+    protected function username()
+    {
+        return 'username';
+    }
+
+    protected function address()
     {
         return 'mobile';
     }
@@ -39,7 +44,7 @@ class ForgotPasswordController extends Controller
 
             return [
                 'status' => 'success',
-                'message' => __('Verification code sent to your registered :username.', ['username' => $this->username()]),
+                'message' => __('Verification code sent to your registered :username.', ['username' => $this->address()]),
                 'redirect' => 'password.verify',
             ];
         }
@@ -73,7 +78,7 @@ class ForgotPasswordController extends Controller
 
         return [
             'status' => 'success',
-            'message' => __('Verification code resent to your registered  :username.', ['username' => $this->username()]),
+            'message' => __('Verification code resent to your registered  :username.', ['username' => $this->address()]),
             'next' => [
                 'back' => true,
             ],

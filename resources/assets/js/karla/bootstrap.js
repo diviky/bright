@@ -80,19 +80,10 @@ jQuery(document).ready(function () {
 function onloadEvents() {
   $("[notchecked]").each(function () {
     $(this).prev('[dummy-checkbox]').remove();
-    $(this).before(
-      '<input type="hidden" name="' +
-      $(this).attr("name") +
-      '" value="' +
-      $(this).attr("notchecked") +
-      '"  dummy-checkbox="true"/>'
-    );
+    $(this).before('<input type="hidden" name="' + $(this).attr("name") + '" value="' + $(this).attr("notchecked") + '"  dummy-checkbox="true"/>');
   });
 
   $(document).on('change', '[notchecked]', function () {
-    if ($(this).is(":checked")) {
-      return;
-    }
     $(this).prev('[dummy-checkbox]').remove();
     $(this).before('<input type="hidden" name="' + $(this).attr("name") + '" value="' + $(this).attr("notchecked") + '"  dummy-checkbox="true"/>');
   });
@@ -102,37 +93,11 @@ function onloadEvents() {
     return false;
   });
 
-  jQuery(document).on("click", ".easySubmit :submit, .easySubmit :button",
-    function () {
-      $(this)
-        .parents("form:first")
-        .find("input")
-        .removeClass("clicked");
-      $(this)
-        .parents("form:first")
-        .find("button")
-        .removeClass("clicked");
-      $(this).addClass("clicked");
-    }
-  );
-
-  jQuery('.easyValidate, [role="easyValidate"]').validate();
-  jQuery('.easyValidator, [role="easyValidator"]').validator();
-  jQuery('.easyRender, [role="easyRender"]').easyRender();
-  jQuery('.easySubmit, [role="easySubmit"]').easySubmit();
-  jQuery('[tooltip=modal]').easyModal();
-
-  $("[data-drop]").on("change", "input[type=file]", function (e) {
-    e.preventDefault();
-    var $this = $(this)
-      .parent()
-      .find(".drop-preview");
-    var files = $(this).prop("files");
-    $(this)
-      .parents("form:first")
-      .submit();
-    drawPreview($this, files);
-  });
+  jQuery('[role="easyValidate"]').validate();
+  jQuery('[role="easyValidator"]').validator();
+  jQuery('[role="easyRender"]').easyRender();
+  jQuery('[role="easySubmit"]').easySubmit();
+  jQuery('[tooltip=modal], [role="modal"]').easyModal();
 }
 
 jQuery(document).ready(function ($) {
@@ -147,6 +112,26 @@ jQuery(document).ready(function ($) {
     $(this).fadeOut();
   });
 
+
+  $(document).on('form:reset', function (e) {
+    var form = getForm($(this));
+    form.find("input[name=page]").val(1);
+    $('#page').val(1);
+
+    var total = form.find('[data-total]').data('total');
+
+    if (total == '' || total == undefined) {
+      var total = form.find('input[name=total]').val();
+    }
+
+    form.find("input[name=total]").val(total);
+    form.find('[ajax-total]').html(total);
+
+  });
+
+  $(document).on("click", "[data-filter]", function () {
+    $(document).trigger('form:reset', $(this));
+  });
 
   $(document).on("keyup blur", "[data-slug]", function (e) {
     var target = $(this).data("slug");
@@ -170,12 +155,6 @@ jQuery(document).ready(function ($) {
     $(realTarget).val(value);
   });
 
-  $(document).on("click", "[data-filter]", function () {
-    $(this)
-      .parent("form")
-      .find("input[name=page]")
-      .val(1);
-  });
 
   $(document).on("click", "[data-add]", function () {
 
@@ -198,6 +177,13 @@ jQuery(document).ready(function ($) {
   //prevent hash url
   $(document).on("click", 'a[href="#"]', function (e) {
     e.preventDefault();
+  });
+
+  $("[data-drop]").on("change", "input[type=file]", function (e) {
+    e.preventDefault();
+    var $this = $(this).parent().find(".drop-preview");
+    var files = $(this).prop("files");
+    drawPreview($this, files);
   });
 
   $(document).on("click", "[data-dropzone]", function () {
@@ -228,14 +214,6 @@ jQuery(document).ready(function ($) {
       .parents("form:first")
       .submit();
     drawPreview($this, files);
-  });
-
-  $(document).on("click", "[data-task]", function () {
-    var t = $(this)
-      .parents("form:first")
-      .find("input[name=task]");
-    t.data("task", t.val());
-    t.val($(this).data("task"));
   });
 
   $(document).on("click", "[role=login]", function (e) {

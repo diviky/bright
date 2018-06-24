@@ -148,6 +148,10 @@
             target.html(response);
             var total = widget.form.find('[data-total]').data('total');
 
+            if (total == '' || total == undefined) {
+                var total = widget.form.find('input[name=total]').val();
+            }
+
             widget.form.find("input[name=total]").val(total);
             widget.form.find(widget.settings.total_target).html(total);
         }

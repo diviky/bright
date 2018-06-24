@@ -251,10 +251,6 @@ $(document).ready(function () {
         form[0].reset();
         e.preventDefault();
         form.submit();
-
-        if ($.browser.msie) {
-            init();
-        }
     });
 
     $(document).on('click', "[ajax-export]", function (e) {
@@ -280,7 +276,6 @@ $(document).ready(function () {
         var task = $this.data('task');
         var name = $this.data('task-name') || 'task';
         var input = form.find("input[name='" + name + "']");
-        var page = 1;
 
         if (input.length > 0) {
             var oldtask = input.attr('task', input.val());
@@ -293,8 +288,7 @@ $(document).ready(function () {
             }).appendTo(form);
         }
 
-        form.find("input[name='page']").val(page);
-        $('#page').val(page);
+        $(document).trigger('form:reset', $this);
 
         if ($this.attr('type') != "submit") {
             form.submit();
@@ -353,10 +347,6 @@ $(document).ready(function () {
         form.submit();
     });
 
-    $(document).on('click', '[data-prevent]', function (e) {
-        e.preventDefault();
-    });
-
     // Drag and drop sortable
     if ($.fn.sortable) {
         var _gridSortHelper = function (e, ui) {
@@ -397,44 +387,6 @@ $(document).ready(function () {
             helper: _gridSortHelper,
             update: _gridSortUpdateHandler
         }).disableSelection();
-    }
-
-    if ($.fn.autocomplete) {
-
-        $("[data-auto]").livequery(function () {
-            var $this = $(this);
-
-            var options = {
-                minLength: 2,
-                delay: 100,
-                source: function (request, response) {
-                    $.ajax({
-                        url: $this.data('auto'),
-                        data: { task: 'auto', q: request.term, format: 'json', options: $this.data('options') },
-                        success: function (data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function (event, ui) {
-                    var id = ui.item.id;
-                    $(this).parent().find('[data-auto-value]').val(id);
-                    $(this).next(".ac-auto-value:first").val(id);
-                },
-                change: function (event, ui) {
-                    if (!ui.item) {
-                        $(this).val("");
-                    }
-                }
-            };
-
-            $(this).autocomplete(options).data("ui-autocomplete")._renderItem = function (ul, item) {
-                return $("<li></li>")
-                    .data("item.autocomplete", item)
-                    .append(item.label)
-                    .appendTo(ul);
-            };
-        });
     }
 
     if ($.fn.tokenfield) {

@@ -4,12 +4,15 @@ namespace Karla\Helpers;
 
 use Closure;
 use EmptyIterator;
+use Generator;
 use Karla\Helpers\Iterator\ChunkedIterator;
+use Karla\Helpers\Iterator\MapGeneratorIterator;
 use Karla\Helpers\Iterator\MapIterator;
 use LimitIterator;
 use Port\Csv\CsvReader;
 use Port\Excel\ExcelReader;
 use Port\Reader\ArrayReader;
+use RewindableGenerator;
 use SplFileObject;
 use Traversable;
 use wapmorgan\UnifiedArchive\UnifiedArchive;
@@ -32,15 +35,17 @@ class Reader
             $ext = strtolower($ext);
         }
 
-        if (!in_array($ext, ['.array', '.iterator']) &&
-            (!is_file($reader) || !file_exists($reader))) {
+        $ext = $options['ext'] ?: $ext;
+        $special = in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
+
+        if (!$special && (!is_file($reader) || !file_exists($reader))) {
             return new EmptyIterator();
         }
 
         $lines = ($ext == '.txt') ? 1 : 5;
         $file = null;
 
-        if (!in_array($ext, ['.array', '.iterator'])) {
+        if (!$special) {
             $file = new SplFileObject($reader);
             //Auto detect delimiter
             if (empty($options['delimiter'])) {
@@ -76,12 +81,16 @@ class Reader
                 $reader = new ArrayReader($reader);
                 break;
 
+            case '.generator':
+                $reader = new RewindableGenerator($reader);
+                break;
+
             case '.iterator':
             default:
                 break;
         }
 
-        if (!in_array($ext, ['.array', '.iterator']) && $options['header']) {
+        if (!$special && $options['header']) {
             $reader->setHeaderRowNumber($options['header'] - 1, $duplicates);
         }
 
@@ -133,7 +142,11 @@ class Reader
         }
 
         if (!is_null($callable)) {
-            $reader = new MapIterator($reader, $callable);
+            if ($reader instanceof Generator) {
+                $reader = new MapGeneratorIterator($reader, $callable);
+            } else {
+                $reader = new MapIterator($reader, $callable);
+            }
         }
 
         return $reader;
@@ -151,14 +164,14 @@ class Reader
     {
         $rows = $this->fetchAll($file, $callable, $options);
 
-        return iterator_to_array($rows);
+        return $this->toArray($rows);
     }
 
     public function fetchCount($file, Closure $callable = null, $options = [])
     {
         $rows = $this->fetchAll($file, $callable, $options);
 
-        return iterator_count($rows);
+        return $this->count($rows);
     }
 
     public function count(Traversable $iterator)
@@ -168,10 +181,10 @@ class Reader
 
     public function hasNext(Traversable $iterator)
     {
-        return iterator_count($iterator);
+        return $this->count($iterator);
     }
 
-    public function getChunk(Traversable $iterator, $size = 100)
+    public function chunk(Traversable $iterator, $size = 100)
     {
         return new ChunkedIterator($iterator, $size);
     }

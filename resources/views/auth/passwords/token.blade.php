@@ -13,7 +13,7 @@
         @endif
         <p class="text-muted">Enter your username and your password reset token will be messaged to you.</p>
 
-        <form method="POST" action="{{ route('password/reset') }}" role="easySubmit">
+        <form method="POST" action="{{ route('password.reset') }}" role="easySubmit">
             @csrf
 
             <div class="form-group">

@@ -54,6 +54,7 @@ class KarlaServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         $this->directive();
         $this->macros();
+        $this->validates();
     }
 
     public function register()

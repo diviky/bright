@@ -37,9 +37,15 @@ trait ViewTrait
         return $this;
     }
 
-    public function share($key, $value)
+    public function share($key, $value = null)
     {
-        View::share($key, $value);
+        if (is_array($key)) {
+            foreach ($key as $k => $v) {
+                View::share($k, $v);
+            }
+        } else {
+            View::share($key, $value);
+        }
 
         return $this;
     }

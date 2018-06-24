@@ -3,6 +3,7 @@
 namespace Karla\Helpers;
 
 use Illuminate\Support\Collection;
+use Iterator;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
@@ -65,6 +66,12 @@ class Stream
             $fields = array_keys($fields);
         }
 
+        if ($fields instanceof Iterator) {
+            $fields->rewind();
+            $fields = (array) $fields->current();
+            $fields = array_keys($fields);
+        }
+
         if (is_array($fields)) {
             $out = [];
             foreach ($fields as $field) {
@@ -89,8 +96,16 @@ class Stream
         return $this;
     }
 
-    protected function implode(array $row = [])
+    protected function implode($row = [], $clean = false)
     {
+        if (is_object($row)) {
+            $row = (array) $row;
+        }
+
+        if ($clean) {
+            $row = array_map([$this, 'clean'], $row);
+        }
+
         echo implode($this->separator, $row) . $this->lineEnd;
 
         flush();
@@ -109,6 +124,11 @@ class Stream
     {
         if ($rows instanceof Collection) {
             $rows = $rows->toArray();
+        }
+
+        if ($rows instanceof Iterator) {
+            $rows->rewind();
+            $rows = (array) iterator_to_array($rows);
         }
 
         if (empty($fields)) {
@@ -131,7 +151,7 @@ class Stream
             $out[] = $this->clean($row[$k]);
         }
 
-        $this->implode($out);
+        $this->implode($row);
 
         return $this;
     }
@@ -144,7 +164,7 @@ class Stream
         }
 
         foreach ($rows as $row) {
-            $this->implode($row);
+            $this->implode($row, true);
         }
 
         return $this;
@@ -152,6 +172,7 @@ class Stream
 
     public function clean($string)
     {
+        $string = '"' . str_replace('"', '""', $string) . '"';
         return str_replace(["\n", "\t", "\r"], '', $string);
     }
 

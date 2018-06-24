@@ -19,17 +19,16 @@ trait Database
      *
      * @return array Database conditions
      */
-    public function filter($query, $data = [], $alias = null)
+    public function filter($query, $data = [])
     {
-        if ($alias) {
-            $alias = $alias . '.';
-        }
-
         $filter = isset($data['dfilter']) ? $data['dfilter'] : null;
         if (is_array($filter)) {
-            foreach ($filter as $k => $v) {
-                if ($data[$k] != '') {
-                    $query->where($alias . $this->cleanField($v), 'like', '%' . $data[$k] . '%');
+            foreach ($filter as $value => $column) {
+                $value = $data[$value];
+                if ($value != '') {
+                    $value = '%' . $value . '%';
+
+                    $query = $this->addWhere($query, $column, $value, 'like');
                 }
             }
         }
@@ -38,34 +37,40 @@ trait Database
         if (is_array($filter)) {
             foreach ($filter as $k => $v) {
                 if ($v[0] != '') {
-                    $query->where($alias . $this->cleanField($k), $v);
+                    $query->where($this->cleanField($k), $v);
                 }
             }
         }
 
         $filter = isset($data['lfilter']) ? $data['lfilter'] : null;
         if (is_array($filter)) {
-            foreach ($filter as $k => $v) {
-                if ($v[0] != '') {
-                    $query->where($alias . $this->cleanField($k), 'like', '%' . $v . '%');
+            foreach ($filter as $column => $value) {
+                if ($value != '') {
+                    $value = '%' . $value . '%';
+
+                    $query = $this->addWhere($query, $column, $value, 'like');
                 }
             }
         }
 
         $filter = isset($data['rfilter']) ? $data['rfilter'] : null;
         if (is_array($filter)) {
-            foreach ($filter as $k => $v) {
-                if ($v[0] != '') {
-                    $query->where($alias . $this->cleanField($k), 'like', $v . '%');
+            foreach ($filter as $column => $value) {
+                if ($value != '') {
+                    $value = $value . '%';
+
+                    $query = $this->addWhere($query, $column, $value, 'like');
                 }
             }
         }
 
         $filter = isset($data['efilter']) ? $data['efilter'] : null;
         if (is_array($filter)) {
-            foreach ($filter as $k => $v) {
-                if ($v[0] != '') {
-                    $query->where($alias . $this->cleanField($k), 'like', '%' . $v);
+            foreach ($filter as $column => $value) {
+                if ($value != '') {
+                    $value = '%' . $value;
+
+                    $query = $this->addWhere($query, $column, $value, 'like');
                 }
             }
         }
@@ -83,7 +88,7 @@ trait Database
 
                 $from = $this->toTime($date['from'], 'Y-m-d');
                 $to = $this->toTime($date['to'], 'Y-m-d');
-                $column = $alias . $this->cleanField($column);
+                $column = $this->cleanField($column);
 
                 if ($from && $to) {
                     $query->whereBetween(DB::raw('DATE(' . $column . ')'), [$from, $to]);
@@ -108,7 +113,7 @@ trait Database
 
                 $from = carbon($date['from'], 'Y-m-d');
                 $to = carbon($date['to'], 'Y-m-d');
-                $column = $alias . $this->cleanField($column);
+                $column = $this->cleanField($column);
 
                 if ($from && $to) {
                     $query->whereBetween(DB::raw('DATE(FROM_UNIXTIME(' . $column . '))'), [$from, $to]);
@@ -133,7 +138,7 @@ trait Database
 
                 $from = trim($date['from']);
                 $to = trim($date['to']);
-                $column = $alias . $this->cleanField($column);
+                $column = $this->cleanField($column);
 
                 if ($from && empty($to)) {
                     $to = $from;
@@ -164,7 +169,7 @@ trait Database
 
                 $from = $this->toTime($date['from']);
                 $to = $this->toTime($date['to']);
-                $column = $alias . $this->cleanField($column);
+                $column = $this->cleanField($column);
 
                 if ($from && $to) {
                     $query->whereBetween($column, [$from, $to]);
@@ -179,6 +184,21 @@ trait Database
         return $query;
     }
 
+    protected function addWhere($query, $column, $value, $condition = '=')
+    {
+        if (strpos($column, '|') !== false) {
+            $columns = explode('|', $column);
+            $query->where(function ($query) use ($columns, $value, $condition) {
+                foreach ($columns as $column) {
+                    $query->orWhere($this->cleanField($column), $condition, $value);
+                }
+            });
+        } else {
+            $query->where($this->cleanField($column), $condition, $value);
+        }
+
+        return $query;
+    }
     /**
      * Add Ordering to query.
      *

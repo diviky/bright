@@ -2,14 +2,14 @@
 
 namespace Karla\Helpers\Iterator;
 
-use InvalidArgumentException;
-use IteratorIterator;
+use Generator;
 use Traversable;
+use InvalidArgumentException;
 
 /**
  * Maps values before yielding.
  */
-class MapIterator extends IteratorIterator
+class MapGeneratorIterator extends Generator
 {
     /** @var mixed Callback */
     protected $callback;

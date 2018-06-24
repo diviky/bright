@@ -2,25 +2,28 @@ jQuery.fn.bstooltip = jQuery.fn.tooltip;
 
 function karlaJs() {
 
-    $('[data-toggle="tooltip"]').bstooltip();
-    $('[data-toggle="popover"]').popover();
+    $(document).bstooltip({
+        html: true,
+        selector: '[data-toggle="tooltip"]'
+    });
+
+    $(document).popover({
+        html: true,
+        selector: '[data-toggle="popover"]'
+    });
 
     if ($.fn.lazyload) {
-        $("img[data-original]").livequery(function () {
-            $(this).lazyload({
-                effect: "fadeIn"
-            });
+        $("img[data-original]").lazyload({
+            effect: "fadeIn"
         });
     }
 
     if ($.fn.slimscroll) {
-        $("div[role=scroll]").livequery(function () {
-            $(this).slimscroll({
-                height: 'auto',
-                railVisible: true,
-                size: '5px',
-                wheelStep: 10
-            });
+        $("div[role=scroll]").slimscroll({
+            height: 'auto',
+            railVisible: true,
+            size: '5px',
+            wheelStep: 10
         });
     }
 
@@ -28,15 +31,14 @@ function karlaJs() {
         var clipboard = new ClipboardJS('[data-clipboard]');
         clipboard.on('success', function (e) {
             e.clearSelection();
-            console.info('Action:', e.action);
-            console.info('Text:', e.text);
-            console.info('Trigger:', e.trigger);
-            //showTooltip(e.trigger, 'Copied!');
+            //console.info('Action:', e.action);
+            //console.info('Text:', e.text);
+            //console.info('Trigger:', e.trigger);
+            $('.tooltip-inner').html('Copied!');
+            $(e.trigger).tooltip('update')
         });
         clipboard.on('error', function (e) {
-            console.error('Action:', e.action);
-            console.error('Trigger:', e.trigger);
-            //showTooltip(e.trigger, fallbackMessage(e.action));
+            noty({ text: 'Error!', type: "info" });
         });
     }
 
@@ -243,6 +245,8 @@ jQuery(document).ready(function ($) {
         if (timer) {
             clearTimeout(timer);
         }
+
+        $(document).trigger('form:reset', $(this));
 
         timer = setTimeout(function () {
             return form.submit();

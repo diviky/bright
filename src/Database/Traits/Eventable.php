@@ -18,10 +18,19 @@ trait Eventable
         return $this;
     }
 
+    public function setEvent($event)
+    {
+        if (is_boolen($event)) {
+            return $this->eventState($event);
+        }
+
+        return $this->eventColumn($event);
+    }
+
     /**
      * Get the value of event
      */
-    protected function useEvent()
+    protected function useEvent(): bool
     {
         return $this->eventState;
     }
@@ -139,7 +148,6 @@ trait Eventable
         $eventColumns = array_merge($eventColumns, $this->eventColumns);
 
         foreach ($eventColumns as $columns) {
-
             if (!is_array($columns)) {
                 $columns = [$columns => $columns];
             }

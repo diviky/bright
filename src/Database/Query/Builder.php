@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Karla\Database\Traits\Cachable;
 use Karla\Database\Traits\Eventable;
+use Karla\Helpers\Iterator\SelectIterator;
 
 class Builder extends BaseBuilder
 {
@@ -160,5 +161,37 @@ class Builder extends BaseBuilder
         $sql = str_replace("#__", $prefix, $sql);
 
         return $this->getPdo()->exec($sql);
+    }
+
+    public function flatChunk($count, $callback = null)
+    {
+        $results = $this->forPage($page = 1, $count)->get();
+
+        while (count($results) > 0) {
+            if ($callback) {
+                foreach ($results as $result) {
+                    yield $result = $callback($result);
+                }
+            } else {
+                // Flatten the chunks out
+                foreach ($results as $result) {
+                    yield $result;
+                }
+            }
+
+            $page++;
+
+            $results = $this->forPage($page, $count)->get();
+        }
+    }
+
+    public function iterate($count, $callback = null)
+    {
+        return $this->iterator($count, $callback);
+    }
+
+    public function iterator($count, $callback = null)
+    {
+        return new SelectIterator($this, $count, $callback);
     }
 }
