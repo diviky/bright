@@ -11,12 +11,19 @@ class Options
 
     protected $table = "app_options";
     protected $values = [];
+    protected $updates = [];
+    protected $extra = [];
     protected $where = [];
 
-    public function __construct($table = null)
+    public function __construct($table = null, $group = null)
     {
         if ($table) {
             $this->table = $table;
+        }
+
+        if ($group) {
+            $this->values['option_group'] = $group;
+            $this->where(['option_group' => $group]);
         }
     }
 
@@ -52,12 +59,22 @@ class Options
             return true;
         }
 
+        $type = $this->identifyType($value);
+
+        if ($type == 'json') {
+            $value = json_encode($value);
+        }
+
         $time = new Carbon;
 
         $values = [
             'option_value' => $value,
+            'option_type' => $type,
             'updated_at' => $time,
         ];
+
+        $values = array_merge($values, $this->updates);
+        $values = array_merge($values, $this->extra);
 
         return $this->table()
             ->where('option_name', $key)
@@ -83,6 +100,7 @@ class Options
         ];
 
         $values = array_merge($values, $this->values);
+        $values = array_merge($values, $this->extra);
 
         return $this->table()->insert($values);
     }
@@ -129,7 +147,7 @@ class Options
     protected function formatValue($value, $type = 'string')
     {
         if ($type == 'json') {
-            $value = json_decode($value);
+            $value = json_decode($value, true);
         }
 
         if ($type == 'number') {
@@ -152,7 +170,22 @@ class Options
 
     public function find()
     {
-        return $this->table()->get();
+        $rows = $this->table()->get();
+
+        $rows->transform(function ($row) {
+            $row->value = $this->formatValue($row->option_value, $row->option_type);
+            return $row;
+        });
+
+        return $rows;
+    }
+
+    public function keyBy($name = 'option_name')
+    {
+        $rows = $this->find();
+        $rows = $rows->keyBy($name);
+
+        return $rows;
     }
 
     public function value($key, $default = null)
@@ -180,7 +213,9 @@ class Options
     {
         $name = $name ?: $this->table;
 
-        return $this->db->table($name)->where($this->where);
+        return $this->db
+            ->table($name)
+            ->where($this->where);
     }
 
     /**
@@ -203,6 +238,30 @@ class Options
     public function values($values)
     {
         $this->values = array_merge($this->values, $values);
+
+        return $this;
+    }
+
+    /**
+     * Set the value of values
+     *
+     * @return  self
+     */
+    public function updates($values)
+    {
+        $this->updates = array_merge($this->updates, $values);
+
+        return $this;
+    }
+
+    /**
+     * Set the value of values
+     *
+     * @return  self
+     */
+    public function extra($values)
+    {
+        $this->extra = array_merge($this->extra, $values);
 
         return $this;
     }

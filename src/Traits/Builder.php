@@ -9,6 +9,8 @@ trait Builder
     protected function table($table = null, $timestamps = true)
     {
         $table = $table ?: $this->table;
+        //$prefix = DB::getTablePrefix();
+        //$table = str_replace("#__", $prefix, $table);
 
         $database = $this->db->table($table);
         $database->timestamps($timestamps);
@@ -75,11 +77,11 @@ trait Builder
         return DB::connection()->getPdo();
     }
 
-    public function queryExec($sql)
+    public function statement($sql, array $bindings = [])
     {
         $prefix = DB::getTablePrefix();
         $sql = str_replace("#__", $prefix, $sql);
 
-        return $this->getPdo()->exec($sql);
+        return DB::connection()->statement($sql, $bindings);
     }
 }

@@ -67,6 +67,24 @@ class Builder extends BaseBuilder
         return $this;
     }
 
+    public function where($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        if ($value && is_array($value)) {
+            return parent::whereIn($column, $value, $boolean);
+        }
+
+        return parent::where($column, $operator, $value, $boolean);
+    }
+
+    public function selectRaw($expression, array $bindings = [])
+    {
+        if (is_array($expression)) {
+            $expression = implode(', ', $expression);
+        }
+
+        return parent::selectRaw($expression, $bindings);
+    }
+
     public function softDelete($id = null, $column = 'id', $updated_at = true)
     {
         if ($id) {
@@ -150,17 +168,9 @@ class Builder extends BaseBuilder
         return $rows;
     }
 
-    public function getPdo()
+    public function statement($sql, $bindings = [])
     {
-        return DB::connection()->getPdo();
-    }
-
-    public function exec($sql)
-    {
-        $prefix = DB::getTablePrefix();
-        $sql = str_replace("#__", $prefix, $sql);
-
-        return $this->getPdo()->exec($sql);
+        return $this->connection->statement($sql, $bindings);
     }
 
     public function flatChunk($count, $callback = null)

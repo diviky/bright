@@ -20,7 +20,7 @@ trait Eventable
 
     public function setEvent($event)
     {
-        if (is_boolen($event)) {
+        if (is_bool($event)) {
             return $this->eventState($event);
         }
 

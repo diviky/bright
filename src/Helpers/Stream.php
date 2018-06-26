@@ -80,7 +80,7 @@ class Stream
                     $field = explode(' AS ', $field);
                     $field = trim($field[1]);
                 }
-                $out[] = ucwords(str_replace('_', ' ', $field));
+                $out[] = ucwords($field);
             }
 
             $this->implode($out);
