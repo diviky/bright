@@ -51,7 +51,9 @@ function karlaJs() {
     }
 
     if ($.fn.select2) {
-        $('[data-select]').select2();
+        $('[data-select]').select2({
+            minimumResultsForSearch: 10
+        });
 
         $('[data-select-ajax]').livequery(function () {
             var $this = $(this);

@@ -133,7 +133,7 @@
     easySubmit.prototype.getTarget = function () {
         var element = this.element;
         if (element.is("form")) {
-            var target = (element.find('.clicked').length) ? element.find('.clicked') : element.find('[type=submit]:first');
+            var target = (element.find('.clicked').length) ? element.find('.clicked') : element.find('[type=submit]');
             if ('undefined' !== typeof element.data('submit-target')) {
                 var target = $(element.data('submit-target'));
             }
