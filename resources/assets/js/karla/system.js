@@ -26,11 +26,11 @@ function displayNoty(response, $this) {
 
     if (res.message) {
         if (isSuccess(res.status)) {
-            noty({ text: res.message, type: 'success', layout: 'topCenter' });
+            notify({ text: res.message, type: 'success', layout: 'topCenter' });
         } else if (res.status == 'INFO') {
-            noty({ text: res.message, type: 'info', layout: 'topCenter' });
+            notify({ text: res.message, type: 'info', layout: 'topCenter' });
         } else {
-            noty({ text: res.message, type: 'error', layout: 'topCenter' });
+            notify({ text: res.message, type: 'error', layout: 'topCenter' });
         }
     }
 
@@ -59,7 +59,7 @@ function displayNoty(response, $this) {
 
     if (res.modal) {
         if (!res.modal.body) {
-            noty({
+            notify({
                 text: 'Invalid response from server. Please try again.',
                 type: 'error'
             });

@@ -1,5 +1,5 @@
-;(function($) {
-    $.fn.validate = function(options) {
+; (function ($) {
+    $.fn.validate = function (options) {
         var defaults = {
             message: '<div><em/><div/>',
             grouped: false, // show all error messages at once inside the container
@@ -9,9 +9,9 @@
             formEvent: 'submit' // submit, null
         }
         options = $.extend(defaults, options);
-        return this.each(function() {
+        return this.each(function () {
             var obj = $(this);
-            var opt = $.metadata ? $.extend({}, options, obj.metadata({type:'html5'})) : options; // metadata plugin support (applied on link element)
+            var opt = $.metadata ? $.extend({}, options, obj.metadata({ type: 'html5' })) : options; // metadata plugin support (applied on link element)
             if (obj.is("form")) {
                 var form = this;
             } else {
@@ -20,8 +20,8 @@
             return $.fn.validate.isValid(form, opt);
         });
     };
-    $.fn.validate.isValid = function(form, options) {
-        $(form).validator(options).submit(function(e) {
+    $.fn.validate.isValid = function (form, options) {
+        $(form).validator(options).submit(function (e) {
             if (!e.isDefaultPrevented()) {
                 $(form).attr({
                     valid: true
@@ -37,23 +37,36 @@
     };
 })(jQuery);
 
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
     // adds an effect called "image" to the validator
-    $.tools.validator.addEffect("image", function(errors, event) {
-        $.each(errors, function(index, error) {
-            error.input.next('.ac-input-msg').remove();
-            error.input.after('<span class="ui-input-err ac-input-msg" title="' + error.messages[0] + '">&nbsp;</span>');
+    $.tools.validator.addEffect("feedback", function (errors, event) {
+        $.each(errors, function (index, error) {
+            $(this).addClass('is-invalid');
+            error.input.next('.invalid-feedback').remove();
+            error.input.after('<div class="invalid-feedback show">' + error.messages[0] + '</div>');
         });
-    }, function(inputs) {
+    }, function (inputs) {
         var conf = this.getConf();
-        inputs.removeClass(conf.errorClass).each(function() {
-            $(this).next('.ac-input-msg').remove();
-            $(this).after('<span class="ui-input-ok ac-input-msg">&nbsp;</span>');
+        inputs.removeClass(conf.errorClass).each(function () {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
         });
     });
-    $.tools.validator.addEffect("noty", function(errors, event) {
-        $.each(errors, function(index, error) {
-            noty({
+
+    $.tools.validator.addEffect("state", function (errors, event) {
+        $.each(errors, function (index, error) {
+            error.input.removeClass('state-valid').addClass('state-invalid');
+        });
+    }, function (inputs) {
+        var conf = this.getConf();
+        inputs.removeClass(conf.errorClass).each(function () {
+            $(this).removeClass('state-invalid').addClass('state-valid');
+        });
+    });
+
+    $.tools.validator.addEffect("noty", function (errors, event) {
+        $.each(errors, function (index, error) {
+            notify({
                 type: 'error',
                 text: error.messages[0]
             });

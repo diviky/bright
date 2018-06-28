@@ -4,8 +4,8 @@
     var defaults = {
         response_target: '[ajax-content]',
         total_target: '[ajax-total]',
-        loadmore: '.ac-load-more',
-        overlayclass: 'render-overlay',
+        loadmore: '[ajax-more]',
+        backdrop: 'backdrop',
         append: false,
         data: {}
     };
@@ -37,55 +37,56 @@
 
     easyRender.prototype.init = function () {
         var widget = this;
+        var form = widget.form;
         var ps_loaded = false
             , oldtop = 0;
 
-        $(widget.form).on('click', ".ac-ajax-pagination li", function (e) {
+        $(form).on('click', ".ac-ajax-pagination li", function (e) {
             e.preventDefault();
             var page = $(this).data('page');
 
             if (!page) {
                 return false;
             }
-            widget.form.find('input[name=page]').val(page);
+            form.find('input[name=page]').val(page);
             widget.settings.append = false;
             widget.formSubmit();
             return false;
         });
 
-        $(widget.form).on('click', widget.settings.loadmore, function (e) {
+        $(form).on('click', widget.settings.loadmore, function (e) {
             e.preventDefault();
             var page = $(this).data('page');
-            widget.form.find('input[name=page]').val(page);
+            form.find('input[name=page]').val(page);
             widget.settings.append = true;
             widget.formSubmit();
             return false;
         });
 
-        $(widget.form).on('click', "[type=submit]", function (e) {
+        $(form).on('click', "[type=submit]", function (e) {
             e.preventDefault();
-            widget.form.find('input[name=page]').val(1);
+            form.find('input[name=page]').val(1);
             widget.settings.append = false;
             widget.formSubmit();
             return false;
         });
 
         $(window).scroll(function () {
-            var offset = widget.form.find(widget.settings.loadmore).offset();
+            var offset = form.find(widget.settings.loadmore).offset();
             var tops = (offset) ? offset.top : 0;
             if (isNaN(tops) || tops == 0) {
                 return false;
             }
             if (oldtop != tops) {
                 oldtop = tops;
-                var p = widget.form.find('input[name=page]').val();
+                var p = form.find('input[name=page]').val();
                 if (p < 3) {
                     ps_loaded = false;
                 }
             }
             if (!ps_loaded && $(window).scrollTop() + $(window).height() > tops) {
                 ps_loaded = true;
-                widget.form.find(widget.settings.loadmore).click();
+                form.find(widget.settings.loadmore).click();
             }
         });
     };
@@ -124,7 +125,7 @@
 
         var target = widget.form.find(widget.settings.response_target);
 
-        target.addClass(widget.settings.overlayclass);
+        target.addClass(widget.settings.backdrop);
         widget.form.find(widget.settings.loadmore).next('.ac-load-more-loading').show();
         widget.form.find(widget.settings.loadmore).remove();
         return true;
@@ -155,7 +156,7 @@
             widget.form.find("input[name=total]").val(total);
             widget.form.find(widget.settings.total_target).html(total);
         }
-        target.removeClass(widget.settings.overlayclass);
+        target.removeClass(widget.settings.backdrop);
     };
 
     easyRender.prototype.callback = function (name, res) {

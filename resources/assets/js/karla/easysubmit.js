@@ -61,7 +61,7 @@
             });
 
             var msg = widget.form.attr('message') || 'Please correct the highlighted error(s)';
-            noty({
+            notify({
                 text: msg,
                 type: 'error'
             });
@@ -195,7 +195,7 @@
         var res = widget.parse(response);
 
         if (res === false || res === null) {
-            noty({
+            notify({
                 text: 'Ooops.., We are unable to serve your request. Please try again.',
                 type: 'error'
             });
@@ -208,7 +208,7 @@
             widget.onSuccess(res, xhr)
         } else if (res.status == 'INFO') {
             if (res.message) {
-                noty({
+                notify({
                     text: res.message,
                     type: 'information'
                 });
@@ -233,7 +233,7 @@
         }
 
         if (res.message) {
-            noty({
+            notify({
                 text: res.message,
                 type: 'error'
             });
@@ -244,7 +244,7 @@
         }
 
         if (res.error) {
-            noty({
+            notify({
                 text: res.error.message,
                 type: 'error'
             });
@@ -275,7 +275,7 @@
         }
 
         if (res.message) {
-            noty({
+            notify({
                 text: res.message,
                 type: 'success'
             });
@@ -283,7 +283,7 @@
 
         if (res.modal) {
             if (!res.modal.body) {
-                noty({
+                notify({
                     text: 'Invalid response from server. Please try again.',
                     type: 'error'
                 });

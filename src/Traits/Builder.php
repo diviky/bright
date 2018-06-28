@@ -72,7 +72,7 @@ trait Builder
         return $this->inserted($result, $name);
     }
 
-    public function getPdo()
+    public function pdo()
     {
         return DB::connection()->getPdo();
     }
@@ -80,8 +80,8 @@ trait Builder
     public function statement($sql, array $bindings = [])
     {
         $prefix = DB::getTablePrefix();
-        $sql = str_replace("#__", $prefix, $sql);
+        $sql    = str_replace("#__", $prefix, $sql);
 
-        return DB::connection()->statement($sql, $bindings);
+        return $this->pdo()->exec($sql);
     }
 }

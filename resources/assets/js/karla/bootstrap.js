@@ -57,6 +57,16 @@ function parseJSON(response) {
   return res;
 }
 
+function notify(message) {
+  new Noty({
+    text: message.text,
+    type: message.type || 'error',
+    layout: 'topRight',
+    theme: 'nest',
+    timeout: (5 * 60 * 1000)
+  }).show();
+}
+
 function trace(text) {
   if (window["console"] !== undefined) {
     console.log(text);

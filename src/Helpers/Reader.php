@@ -35,7 +35,7 @@ class Reader
             $ext = strtolower($ext);
         }
 
-        $ext = $options['ext'] ?: $ext;
+        $ext     = $options['ext'] ?: $ext;
         $special = in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
 
         if (!$special && (!is_file($reader) || !file_exists($reader))) {
@@ -43,7 +43,7 @@ class Reader
         }
 
         $lines = ($ext == '.txt') ? 1 : 5;
-        $file = null;
+        $file  = null;
 
         if (!$special) {
             $file = new SplFileObject($reader);
@@ -68,7 +68,7 @@ class Reader
                 if ($options['delimiter'] === "\t" && $ext == '.xls') {
                     $reader = new CsvReader($file, $options['delimiter']);
                 } else {
-                    $reader = new ExcelReader($file, null, 0);
+                    $reader     = new ExcelReader($file, null, 0);
                     $duplicates = null;
                 }
 
@@ -132,7 +132,7 @@ class Reader
             }
 
             $options['offset'] = $offset;
-            $count = $options['total'];
+            $count             = $options['total'];
 
             if ($count !== null && $offset >= $count) {
                 $reader = new EmptyIterator();
@@ -155,7 +155,7 @@ class Reader
     public function fetchHeader($file, Closure $callable = null, $options = [])
     {
         $options['limit'] = 1;
-        $columns = $this->fetchArray($file, $callable, $options);
+        $columns          = $this->fetchArray($file, $callable, $options);
 
         return $columns[0];
     }
@@ -197,18 +197,18 @@ class Reader
     public function detectDelimiter($file, $sample = 5)
     {
         $delimsRegex = "|,;:\t"; // whichever is first in the list will be the default
-        $delims = str_split($delimsRegex);
-        $delimCount = $delimiters = [];
+        $delims      = str_split($delimsRegex);
+        $delimCount  = $delimiters  = [];
         foreach ($delims as $delim) {
             $delimCount[$delim] = 0;
-            $delimiters[] = $delim;
+            $delimiters[]       = $delim;
         }
 
         $lines = $this->getLines($file, $sample);
 
         foreach ($lines as $row) {
-            $row = preg_replace('/\r\n/', '', trim($row)); // clean up .. strip new line and line return chars
-            $row = preg_replace("/[^$delimsRegex]/", '', $row); // clean up .. strip evthg which is not a dilim'r
+            $row      = preg_replace('/\r\n/', '', trim($row)); // clean up .. strip new line and line return chars
+            $row      = preg_replace("/[^$delimsRegex]/", '', $row); // clean up .. strip evthg which is not a dilim'r
             $rowChars = str_split($row); // break it apart char by char
 
             foreach ($rowChars as $char) {
@@ -230,7 +230,7 @@ class Reader
     {
         $handle = fopen($file, 'r');
 
-        $line = 0;
+        $line  = 0;
         $lines = [];
         while (!feof($handle)) {
             $lines[] = fgets($handle, 1024);
@@ -256,11 +256,11 @@ class Reader
 
         if (in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
             $extensions = ['.csv', '.xls', 'xlsx', '.txt'];
-            $extract = '/tmp/';
+            $extract    = '/tmp/';
 
             try {
-                $archive = UnifiedArchive::open($reader);
-                $files = $archive->getFileNames();
+                $archive   = UnifiedArchive::open($reader);
+                $files     = $archive->getFileNames();
                 $directory = dirname($reader);
 
                 foreach ($files as $file) {
