@@ -1,44 +1,3 @@
-; (function (jQuery, window, undefined) {
-
-  jQuery.uaMatch = function (ua) {
-    ua = ua.toLowerCase();
-
-    var match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
-      /(webkit)[ \/]([\w.]+)/.exec(ua) ||
-      /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
-      /(msie) ([\w.]+)/.exec(ua) ||
-      ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua) ||
-      [];
-
-    return {
-      browser: match[1] || "",
-      version: match[2] || "0"
-    };
-  };
-
-  matched = jQuery.uaMatch(navigator.userAgent);
-  browser = {};
-
-  if (matched.browser) {
-    browser[matched.browser] = true;
-    browser.version = matched.version;
-  }
-
-  // Chrome is Webkit, but Webkit is also Safari.
-  if (browser.chrome) {
-    browser.webkit = true;
-  } else if (browser.webkit) {
-    browser.safari = true;
-  }
-
-  jQuery.browser = browser;
-
-  jQuery.fn.live = function (types, data, fn) {
-    jQuery(document).on(types, this.selector, data, fn);
-    return this;
-  };
-
-})(jQuery, window);
 
 function parseJSON(response) {
   if ('object' === typeof response) {
@@ -103,10 +62,10 @@ function onloadEvents() {
     return false;
   });
 
-  jQuery('[role="easyValidate"]').validate();
-  jQuery('[role="easyValidator"]').validator();
-  jQuery('[role="easyRender"]').easyRender();
-  jQuery('[role="easySubmit"]').easySubmit();
+  jQuery('[role="validate"]').validate();
+  jQuery('[role="validator"]').validator();
+  jQuery('[role="krender"]').easyRender();
+  jQuery('[role="ksubmit"]').easySubmit();
   jQuery('[tooltip=modal], [role="modal"]').easyModal();
 }
 

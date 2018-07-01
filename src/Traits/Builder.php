@@ -2,6 +2,7 @@
 
 namespace Karla\Traits;
 
+use Karla\Database\Karla;
 use Illuminate\Support\Facades\DB;
 
 trait Builder
@@ -83,5 +84,10 @@ trait Builder
         $sql    = str_replace("#__", $prefix, $sql);
 
         return $this->pdo()->exec($sql);
+    }
+
+    public function karla()
+    {
+        return new Karla();
     }
 }

@@ -5,6 +5,7 @@ namespace Karla\Database\Query;
 use Illuminate\Database\Query\Builder as BaseBuilder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Karla\Database\Karla;
 use Karla\Database\Traits\Cachable;
 use Karla\Database\Traits\Eventable;
 use Karla\Helpers\Iterator\SelectIterator;
@@ -27,7 +28,7 @@ class Builder extends BaseBuilder
     protected function setTimeStamps(array $values, $force = false)
     {
         if ($this->usesTimestamps() || $force) {
-            $time = $this->freshTimestamp();
+            $time                 = $this->freshTimestamp();
             $values['updated_at'] = $time;
             $values['created_at'] = $time;
         }
@@ -38,7 +39,7 @@ class Builder extends BaseBuilder
     protected function setTimeStamp(array $values, $force = false)
     {
         if ($this->usesTimestamps() || $force) {
-            $time = $this->freshTimestamp();
+            $time                 = $this->freshTimestamp();
             $values['updated_at'] = $time;
         }
 
@@ -203,5 +204,11 @@ class Builder extends BaseBuilder
     public function iterator($count, $callback = null)
     {
         return new SelectIterator($this, $count, $callback);
+    }
+
+    public function whereWith($where = [], $bindings = [])
+    {
+        $sql = (new Karla())->conditions($where);
+        return $this->whereRaw($sql, $bindings);
     }
 }

@@ -184,6 +184,21 @@ class Reader
         return $this->count($iterator);
     }
 
+    public function first(Traversable $iterator)
+    {
+        $fields = [];
+        foreach ($iterator as $row) {
+            $fields = $row;
+            break;
+        }
+
+        //$iterator->rewind();
+        //$fields = (array) $iterator->current();
+        //$fields = array_keys($fields);
+
+        return $fields;
+    }
+
     public function chunk(Traversable $iterator, $size = 100)
     {
         return new ChunkedIterator($iterator, $size);
