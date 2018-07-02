@@ -20,7 +20,7 @@ class Builder extends BaseBuilder
      *
      * @var bool
      */
-    protected $timestamps = true;
+    protected $timestamps = false;
 
     /**
      * @{inheritdoc}

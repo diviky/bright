@@ -2,8 +2,8 @@
 
 namespace Karla\Http\Controllers\Auth;
 
-use Karla\Routing\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Karla\Routing\Controller;
 
 class LoginController extends Controller
 {
@@ -16,7 +16,7 @@ class LoginController extends Controller
     | redirecting them to your home screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
     |
-    */
+     */
 
     use AuthenticatesUsers;
 

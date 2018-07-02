@@ -31,11 +31,10 @@ class Reader
         if (!is_string($reader)) {
             $ext = $options['ext'] ?: '.array';
         } else {
-            $ext = (!empty($options['ext'])) ? $options['ext'] : strtolower(strrchr($reader, '.'));
+            $ext = $options['ext'] ?: strrchr($reader, '.');
             $ext = '.' == $ext ? '.xls' : $ext;
         }
 
-        $ext     = $options['ext'] ?: $ext;
         $ext     = strtolower($ext);
         $special = in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
 

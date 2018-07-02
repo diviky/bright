@@ -91,12 +91,6 @@ jQuery(document).ready(function ($) {
         form.submit();
     });
 
-    $.ajaxSetup({
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-        }
-    });
-
     $(document).on('click', '[data-toggle="tabs"] a', function (e) {
         e.preventDefault();
         $(this).tab('show');

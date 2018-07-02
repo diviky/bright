@@ -9,7 +9,7 @@ trait ViewTrait
 {
     public function ajax($url = null, $params = [], $method = 'post')
     {
-        $form = [];
+        $form         = [];
         $form['pjax'] = $this->get('request')->pjax();
         $form['ajax'] = $form['pjax'] ? false : $this->get('request')->ajax();
 
@@ -19,16 +19,16 @@ trait ViewTrait
                 $inputs .= '<input type="hidden" name="' . $k . '" value="' . $v . '" />';
             }
 
-            $class = 'render-' . Str::slug($url);
+            $class           = 'render-' . Str::slug($url);
             $params['class'] = '.' . $class;
 
             $action = substr($url, 0, 1) !== '/' ? $this->route($url) : url($url);
 
-            $start = '<form role="easyRender" class="' . $class . '" method="' . $method . '" action="' . $action . '">';
-            $form['start'] = $start . $inputs;
+            $start          = '<form role="krender" class="' . $class . '" method="' . $method . '" action="' . $action . '">';
+            $form['start']  = $start . $inputs . csrf_field();
             $form['inputs'] = $inputs;
-            $form['end'] = '</form>';
-            $form['class'] = $params['class'];
+            $form['end']    = '</form>';
+            $form['class']  = $params['class'];
             $form['params'] = $params;
         }
 

@@ -71,6 +71,13 @@ function onloadEvents() {
 
 jQuery(document).ready(function ($) {
 
+  $.ajaxSetup({
+    headers: {
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+    }
+  });
+
+
   $(document).on("click", ".noty_close", function (e) {
     $(this)
       .parents(".noty_bar:first")

@@ -2,12 +2,12 @@
 
 namespace Karla\Traits;
 
-use Karla\Database\Karla;
 use Illuminate\Support\Facades\DB;
+use Karla\Database\Karla;
 
 trait Builder
 {
-    protected function table($table = null, $timestamps = true)
+    protected function table($table = null, $timestamps = false)
     {
         $table = $table ?: $this->table;
         //$prefix = DB::getTablePrefix();

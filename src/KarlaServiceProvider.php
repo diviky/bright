@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Karla\Extensions\TokenUserProvider;
 use Karla\Listeners\EmailLogger;
+use Karla\Listeners\SuccessLogin;
 use Karla\Routing\Redirector;
 use Karla\Routing\Resolver;
 use Karla\Services\Auth\AccessTokenGuard;
@@ -25,6 +26,9 @@ class KarlaServiceProvider extends ServiceProvider
         'Illuminate\Mail\Events\MessageSent' => [
             EmailLogger::class,
         ],
+        'Illuminate\Auth\Events\Login'       => [
+            SuccessLogin::class,
+        ],
     ];
 
     public function boot()
@@ -33,16 +37,16 @@ class KarlaServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../config/permission.php' => config_path('permission.php'),
-            __DIR__ . '/../config/karla.php' => config_path('karla.php'),
-            __DIR__ . '/../config/theme.php' => config_path('theme.php'),
-            __DIR__ . '/../config/auth.php' => config_path('auth.php'),
-            __DIR__ . '/../config/app.php' => config_path('app.php'),
+            __DIR__ . '/../config/karla.php'      => config_path('karla.php'),
+            __DIR__ . '/../config/theme.php'      => config_path('theme.php'),
+            __DIR__ . '/../config/auth.php'       => config_path('auth.php'),
+            __DIR__ . '/../config/app.php'        => config_path('app.php'),
         ], 'karla-config');
 
         $this->publishes([
             __DIR__ . '/../resources/assets/js' => resource_path('assets/js'),
-            __DIR__ . '/../webpack.mix.js' => base_path('webpack.mix.js'),
-            __DIR__ . '/../bower.json' => base_path('bower.json'),
+            __DIR__ . '/../webpack.mix.js'      => base_path('webpack.mix.js'),
+            __DIR__ . '/../bower.json'          => base_path('bower.json'),
         ], 'karla-assets');
 
         $this->publishes([
@@ -91,7 +95,7 @@ class KarlaServiceProvider extends ServiceProvider
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
             $userProvider = app(TokenUserProvider::class);
-            $request = app('request');
+            $request      = app('request');
             return new AccessTokenGuard($userProvider, $request, $config);
         });
     }
