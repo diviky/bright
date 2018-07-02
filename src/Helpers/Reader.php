@@ -32,17 +32,18 @@ class Reader
             $ext = $options['ext'] ?: '.array';
         } else {
             $ext = (!empty($options['ext'])) ? $options['ext'] : strtolower(strrchr($reader, '.'));
-            $ext = strtolower($ext);
+            $ext = '.' == $ext ? '.xls' : $ext;
         }
 
         $ext     = $options['ext'] ?: $ext;
+        $ext     = strtolower($ext);
         $special = in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
 
         if (!$special && (!is_file($reader) || !file_exists($reader))) {
             return new EmptyIterator();
         }
 
-        $lines = ($ext == '.txt') ? 1 : 5;
+        $lines = ('.txt' == $ext) ? 1 : 5;
         $file  = null;
 
         if (!$special) {
@@ -65,7 +66,7 @@ class Reader
                 break;
             case '.xls':
             case '.xlsx':
-                if ($options['delimiter'] === "\t" && $ext == '.xls') {
+                if ("\t" === $options['delimiter'] && '.xls' == $ext) {
                     $reader = new CsvReader($file, $options['delimiter']);
                 } else {
                     $reader     = new ExcelReader($file, null, 0);
@@ -134,7 +135,7 @@ class Reader
             $options['offset'] = $offset;
             $count             = $options['total'];
 
-            if ($count !== null && $offset >= $count) {
+            if (null !== $count && $offset >= $count) {
                 $reader = new EmptyIterator();
             } else {
                 $reader = new LimitIterator($reader, $options['offset'], $options['limit']);
@@ -228,7 +229,7 @@ class Reader
 
             foreach ($rowChars as $char) {
                 foreach ($delimiters as $delim) {
-                    if (strpos($char, $delim) !== false) {
+                    if (false !== strpos($char, $delim)) {
                         // if the char is the delim ...
                         ++$delimCount[$delim]; // ... increment
                     }
@@ -260,41 +261,49 @@ class Reader
         return $lines;
     }
 
-    public function unzip($reader, $options = [])
+    public function unzip($zip, $options = [])
     {
-        if (!is_string($reader)) {
-            $ext = $options['ext'] ?: '.array';
-        } else {
-            $ext = (!empty($options['ext'])) ? $options['ext'] : strtolower(strrchr($reader, '.'));
+        if (is_string($zip)) {
+            $ext = $options['ext'] ?: strrchr($zip, '.');
             $ext = strtolower($ext);
         }
 
-        if (in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
-            $extensions = ['.csv', '.xls', 'xlsx', '.txt'];
-            $extract    = '/tmp/';
+        if ($ext && in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
+            $extensions = ['.csv', '.xls', '.xlsx', '.txt'];
+            $directory  = dirname($zip);
+            $extract    = '/tmp/' . uniqid() . '/';
 
             try {
-                $archive   = UnifiedArchive::open($reader);
+                $archive   = UnifiedArchive::open($zip);
                 $files     = $archive->getFileNames();
-                $directory = dirname($reader);
+                $tmpfile   = null;
+                $extension = null;
 
                 foreach ($files as $file) {
-                    $ext = strtolower(strrchr($file, '.'));
-                    if (in_array($ext, $extensions)) {
-                        $reader = $file;
+                    $extension = strtolower(strrchr($file, '.'));
+                    if (in_array($extension, $extensions)) {
+                        $tmpfile = $file;
                         break;
                     }
                 }
 
-                $archive->extractFiles($extract);
-                $reader = $directory . '/' . md5(uniqid()) . $ext;
+                if ($extension && $tmpfile) {
+                    $archive->extractFiles($extract);
+                    $reader = $directory . '/' . md5(uniqid()) . $extension;
 
-                rename($extract . '/' . $file, $reader);
+                    rename($extract . '/' . $tmpfile, $reader);
+                    chmod($reader, 0777);
+                    unlink($zip);
+
+                    return $reader;
+                }
+
+                return null;
             } catch (\Exception $e) {
                 return null;
             }
         }
 
-        return $reader;
+        return $zip;
     }
 }

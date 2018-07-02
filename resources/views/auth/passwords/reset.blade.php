@@ -5,7 +5,7 @@
     <div class="card-body">
         <div class="card-title">{{ __('Reset Password') }}</div>
 
-        <form method="POST" action="{{ route('password.request') }}" role="easySubmit">
+        <form method="POST" action="{{ route('password.request') }}" role="ksubmit">
             @csrf
 
             <input type="hidden" name="token" value="{{ $token }}">

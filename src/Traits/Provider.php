@@ -28,6 +28,10 @@ trait Provider
     {
         Validator::extend('extension', function ($attribute, $value, $parameters) {
             return in_array($value->getClientOriginalExtension(), $parameters);
+        }, 'The :attribute must be a file of type: :values.');
+
+        Validator::replacer('extension', function ($message, $attribute, $rule, $parameters) {
+            return str_replace([':attribute', ':values'], [$attribute, implode(',', $parameters)], $message);
         });
     }
 
@@ -39,7 +43,7 @@ trait Provider
             $sql = $this->toSql();
             foreach ($this->getBindings() as $binding) {
                 $value = is_numeric($binding) ? $binding : "'$binding'";
-                $sql = preg_replace('/\?/', $value, $sql, 1);
+                $sql   = preg_replace('/\?/', $value, $sql, 1);
             }
             return $sql;
         });

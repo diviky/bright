@@ -6,7 +6,7 @@
     <div class="card-body p-6">
         <div class="card-title">{{ __('Create new account') }}</div>
 
-        <form method="POST" action="{{ route('register') }}" role="easySubmit">
+        <form method="POST" action="{{ route('register') }}" role="ksubmit">
             @csrf
 
             <div class="form-group">

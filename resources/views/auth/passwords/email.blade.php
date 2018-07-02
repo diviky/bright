@@ -13,7 +13,7 @@
         @endif
         <p class="text-muted">Enter your email address and your password reset link will be emailed to you.</p>
 
-        <form method="POST" action="{{ route('password.email') }}" role="easySubmit">
+        <form method="POST" action="{{ route('password.email') }}" role="ksubmit">
             @csrf
 
             <div class="form-group">

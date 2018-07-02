@@ -13,7 +13,7 @@
         @endif
         <p class="text-muted">Enter the code sent to your mobile number.</p>
 
-        <form method="POST" action="{{ route('password.verify') }}" role="easySubmit">
+        <form method="POST" action="{{ route('password.verify') }}" role="ksubmit">
             @csrf
 
             <div class="form-group">

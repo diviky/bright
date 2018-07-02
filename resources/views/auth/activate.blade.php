@@ -13,7 +13,7 @@
         @endif
         <p class="text-muted">Enter the code sent to your mobile number.</p>
 
-        <form method="POST" action="{{ route('user.activate') }}" role="easySubmit">
+        <form method="POST" action="{{ route('user.activate') }}" role="ksubmit">
             @csrf
 
             <div class="form-group">

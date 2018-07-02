@@ -6,7 +6,7 @@
     <div class="card-body p-6">
         <div class="card-title">Login to your account</div>
 
-        <form method="POST" action="{{ route('login') }}" role="easySubmit">
+        <form method="POST" action="{{ route('login') }}" role="ksubmit">
             @csrf
 
             <div class="form-group">

@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 if (!function_exists('printr')) {
     function printr($data)
@@ -15,6 +16,10 @@ if (!function_exists('printr')) {
 if (!function_exists('user')) {
     function user($field = null)
     {
+        if ('id' == $field && app()->has('user_id')) {
+            return app()->get('user_id');
+        }
+
         if ($field) {
             return Auth::user()->$field;
         }
@@ -27,13 +32,13 @@ if (!function_exists('carbon')) {
     function carbon($time = null, $format = null)
     {
         if (empty($time) && empty($format)) {
-            return new Carbon;
+            return new Carbon();
         }
 
         if (!is_numeric($time)) {
             $parts = explode('/', $time);
 
-            if ($parts[0] && strlen($parts[0]) != 4) {
+            if ($parts[0] && 4 != strlen($parts[0])) {
                 $time = str_replace('/', '-', trim($time));
             }
             $carbon = new Carbon($time);
@@ -70,7 +75,7 @@ if (!function_exists('ip')) {
 if (!function_exists('markdown')) {
     function markdown($text)
     {
-        $parsedown = new Parsedown;
+        $parsedown = new Parsedown();
 
         return $parsedown->text($text);
     }
@@ -85,8 +90,20 @@ if (!function_exists('disk')) {
 
         if ($time) {
             return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
-
         }
+
         return Storage::disk($disk)->url($path);
     }
+}
+
+if (!function_exists('user_id')) {
+    function user_id($column = 'id')
+    {
+        return user($column);
+    }
+}
+
+function uuid()
+{
+    return Str::uuid();
 }

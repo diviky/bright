@@ -2,12 +2,11 @@
 
 namespace Karla\Database\Traits;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 trait Eventable
 {
-    protected $eventState = true;
+    protected $eventState   = true;
     protected $eventColumns = [];
     protected $lastId;
 
@@ -60,7 +59,7 @@ trait Eventable
     protected function setUserId(array $values)
     {
         if (!isset($values['user_id'])) {
-            $values['user_id'] = Auth::user()->id;
+            $values['user_id'] = user('id');
         }
 
         return $values;
@@ -92,7 +91,7 @@ trait Eventable
             }
 
             $column = key($columns);
-            $field = $columns[$column];
+            $field  = $columns[$column];
 
             foreach ($values as $key => $value) {
                 if (isset($value[$column])) {
@@ -153,20 +152,20 @@ trait Eventable
             }
 
             $column = key($columns);
-            $field = $columns[$column];
+            $field  = $columns[$column];
 
             $from = last(preg_split('/ as /i', $this->from));
 
             switch ($column) {
                 case 'user_id':
-                    $this->where($from . '.' . $column, Auth::user()->id);
+                    $this->where($from . '.' . $column, user('id'));
                     break;
                 case 'parent_id':
-                    $this->where($from . '.' . $column, Auth::user()->id);
+                    $this->where($from . '.' . $column, user('id'));
                     break;
                 default:
                     if (app()->has($field)) {
-                        $this->where($from . '.' . $column, app($field));
+                        $this->where($from . '.' . $column, app()->get($field));
                     }
                     break;
             }

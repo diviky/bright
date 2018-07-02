@@ -45,7 +45,6 @@
         this.form.validator(widget.settings).submit(function (e) {
             // client-side validation OK.
             if (!e.isDefaultPrevented()) {
-
                 widget.event('onValidationSuccess', {});
 
                 widget.form.attr({
@@ -225,11 +224,35 @@
 
     easySubmit.prototype.onError = function (res, xhr) {
         var widget = this;
+
+        if (res === false || res === null) {
+            notify({
+                text: 'Ooops.., We are unable to serve your request. Please try again.',
+                type: 'error'
+            });
+            return true;
+        }
+
         widget.event('onError', res, xhr);
 
         if ('undefined' === typeof res.status && res.redirect) {
             widget.redirect(res.redirect, 1000);
             return true;
+        }
+
+        if (res.errors) {
+            widget.form.data("validator").invalidate(res.errors);
+            notify({
+                text: res.errors[Object.keys(res.errors)[0]][0],
+                type: 'error'
+            });
+        }
+
+        if (res.error) {
+            notify({
+                text: res.error.message,
+                type: 'error'
+            });
         }
 
         if (res.message) {
@@ -239,16 +262,6 @@
             });
         }
 
-        if (res.errors) {
-            widget.form.data("validator").invalidate(res.errors);
-        }
-
-        if (res.error) {
-            notify({
-                text: res.error.message,
-                type: 'error'
-            });
-        }
     }
 
     easySubmit.prototype.onSuccess = function (res, xhr) {
