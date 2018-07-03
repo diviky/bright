@@ -9,6 +9,7 @@
         hide: false,
         reset: false,
         clear: false,
+        render: true,
         onComplete: function () { },
         onFailed: function () { },
         inputEvent: 'blur' // change, blur
@@ -281,7 +282,7 @@
             if (submit == 'parent') {
                 widget.form.closest('form').submit();
             } else if (submit == 'render' || submit == true) {
-                $('[role="easyRender"]').submit();
+                $('[role="krender"]').submit();
             } else if (submit) {
                 $(widget.settings.submit).submit();
             }
@@ -376,8 +377,8 @@
         if (value == 'parent') {
             var element = widget.form.closest('form');
         } else if (value == 'render' || value == true) {
-            var element = $('[role="easyRender"]');
-        } else if (value) {
+            var element = $('[role="krender"]');
+        } else if (value && value != false) {
             var element = $(value);
         }
 
