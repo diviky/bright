@@ -200,6 +200,7 @@ jQuery(document).ready(function ($) {
         var val = parseInt($this.data('interval'));
 
         if (val > 0) {
+            val = val * 1000;
             setInterval(function () {
                 var form = getForm($this);
                 form.submit();
