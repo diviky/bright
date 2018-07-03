@@ -68,8 +68,8 @@ trait Cachable
         // for this database connection and query statement, including the bindings
         // that are used on this query, providing great convenience when caching.
         list($key, $minutes) = $this->getCacheInfo();
-        $cache = $this->getCache();
-        $callback = $this->getCacheCallback($columns);
+        $cache               = $this->getCache();
+        $callback            = $this->getCacheCallback($columns);
         // If we've been given a DateTime instance or a "minutes" value that is
         // greater than zero then we'll pass it on to the remember method.
         // Otherwise we'll cache it indefinitely.

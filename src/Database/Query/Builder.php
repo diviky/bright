@@ -23,7 +23,7 @@ class Builder extends BaseBuilder
     protected $timestamps = false;
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     protected function setTimeStamps(array $values, $force = false)
     {
@@ -47,7 +47,17 @@ class Builder extends BaseBuilder
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
+     */
+    public function pluck($column, $key = null)
+    {
+        $this->atomicEvent('select');
+
+        return parent::pluck($column, $key);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function get($columns = ['*'])
     {
@@ -126,7 +136,7 @@ class Builder extends BaseBuilder
      */
     public function freshTimestamp()
     {
-        return new Carbon;
+        return new Carbon();
     }
 
     public function timestamps($allow = true)
@@ -194,7 +204,7 @@ class Builder extends BaseBuilder
                 }
             }
 
-            $page++;
+            ++$page;
 
             $results = $this->forPage($page, $count)->get();
         }
@@ -213,6 +223,7 @@ class Builder extends BaseBuilder
     public function whereWith($where = [], $bindings = [])
     {
         $sql = (new Karla())->conditions($where);
+
         return $this->whereRaw($sql, $bindings);
     }
 }

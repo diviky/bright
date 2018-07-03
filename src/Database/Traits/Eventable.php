@@ -27,7 +27,7 @@ trait Eventable
     }
 
     /**
-     * Get the value of event
+     * Get the value of event.
      */
     protected function useEvent(): bool
     {
@@ -73,6 +73,7 @@ trait Eventable
         } else {
             $tables = $tables[$type];
         }
+
         $tables = isset($tables[$this->from]) ? $tables[$this->from] : [];
 
         return $tables;
@@ -149,6 +150,7 @@ trait Eventable
 
         $eventColumns = $this->getEventTables($type);
         $eventColumns = array_merge($eventColumns, $this->eventColumns);
+        $from         = last(preg_split('/ as /i', $this->from));
 
         foreach ($eventColumns as $columns) {
             if (!is_array($columns)) {
@@ -157,8 +159,6 @@ trait Eventable
 
             $column = key($columns);
             $field  = $columns[$column];
-
-            $from = last(preg_split('/ as /i', $this->from));
 
             switch ($column) {
                 case 'user_id':
@@ -179,7 +179,7 @@ trait Eventable
     }
 
     /**
-     * Get the value of lastId
+     * Get the value of lastId.
      */
     public function getLastId()
     {
@@ -187,7 +187,7 @@ trait Eventable
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function insert(array $values)
     {
@@ -197,7 +197,7 @@ trait Eventable
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function insertGetId(array $values, $sequence = null)
     {
@@ -211,21 +211,24 @@ trait Eventable
 
         return $id;
     }
+
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function delete($id = null)
     {
         $this->atomicEvent('delete');
+
         return parent::delete($id);
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function exists()
     {
         $this->atomicEvent('select');
+
         return parent::exists();
     }
 
