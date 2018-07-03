@@ -1,6 +1,7 @@
 <?php
 namespace Karla\Database;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 class Karla
@@ -93,7 +94,6 @@ class Karla
         return $this->conditions($conditions);
     }
 
-
     /**
      * Builds and generates a JOIN statement from an array.  Handles final clean-up before conversion.
      *
@@ -173,7 +173,7 @@ class Karla
      *
      * @return string SQL fragment
      */
-    public function conditions($conditions, $quoteValues = true, $where = true, $model = null)
+    public function conditions($conditions, $quoteValues = true, $where = false)
     {
         $clause = $out = '';
 
@@ -271,11 +271,8 @@ class Karla
                     $keys = array_keys($value);
                     if (array_keys($value) === array_values(array_keys($value))) {
                         $count = count($value);
-                        //if ($count === 1) {
-                        //   $data = $this->quoteFields($key).' = (';
-                        //} else {
+
                         $data = $this->quoteFields($key) . ' IN (';
-                        //}
                         if ($quoteValues || strpos($value[0], '-!') !== 0) {
                             if (is_object($model)) {
                                 $columnType = $model->getColumnType($key);
@@ -596,6 +593,10 @@ class Karla
         }
 
         if (is_string($data)) {
+            return "'" . $data . "'";
+        }
+
+        if ($data instanceof Carbon) {
             return "'" . $data . "'";
         }
 

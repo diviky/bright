@@ -57,7 +57,7 @@ class Resolver
      */
     protected function getNameSpace($option, $type = 'controllers')
     {
-        $path = $this->getPath($option, $type);
+        $path      = $this->getPath($option, $type);
         $namespace = (is_array($path)) ? $path['namespace'] : $path;
 
         return rtrim($namespace, '\\') . '\\';
@@ -74,12 +74,12 @@ class Resolver
      */
     public function getModel($option)
     {
-        $option = $this->sanitize($option);
+        $option    = $this->sanitize($option);
         $signature = 'model.' . $option;
 
         if (!$this->has($signature)) {
             $namespace = $this->getNameSpace($option);
-            $class = $namespace . 'Model';
+            $class     = $namespace . 'Model';
 
             if (!class_exists($class)) {
                 throw new Exception('Model ' . $class . ' not found', 500);
@@ -111,11 +111,9 @@ class Resolver
      *
      * @return object
      */
-    public function getHelper($name, $singletone = true)
+    public function getHelper($name, $namespace = null, $singletone = true)
     {
-        if (!is_string($name)
-            && $name instanceof Closure
-        ) {
+        if (!is_string($name) && $name instanceof Closure) {
             return $name($this->getContainer());
         }
 
@@ -126,35 +124,41 @@ class Resolver
         }
 
         $helper = $name;
-        $group = null;
+        $group  = null;
         $option = null;
 
-        if (strpos($name, ':') !== false) {
+        if (false !== strpos($name, ':')) {
             list($name, $group) = explode(':', $name);
         }
 
-        if (strpos($name, '.') !== false) {
+        if (false !== strpos($name, '.')) {
             list($helper, $option) = explode('.', $name);
         }
 
-        $paths = [];
+        $paths       = [];
         $helperClass = 'Helpers\\' . (($group) ? $group . '\\' : '') . ucfirst($helper);
 
-        if ($option) {
-            $option = $this->sanitize($option);
-            $namespace = $this->getNameSpace($option);
-
+        if ($namespace) {
             $paths[] = [
-                'class' => $namespace . $helperClass,
+                'class' => str_replace('/', '\\', $namespace) . '\\' . $helperClass,
             ];
         } else {
-            $paths[] = [
-                'class' => $this->app->getNamespace() . $helperClass,
-            ];
+            if ($option) {
+                $option    = $this->sanitize($option);
+                $namespace = $this->getNameSpace($option);
 
-            $paths[] = [
-                'class' => 'Karla\\' . $helperClass,
-            ];
+                $paths[] = [
+                    'class' => $namespace . $helperClass,
+                ];
+            } else {
+                $paths[] = [
+                    'class' => $this->app->getNamespace() . $helperClass,
+                ];
+
+                $paths[] = [
+                    'class' => 'Karla\\' . $helperClass,
+                ];
+            }
         }
 
         foreach ($paths as $path) {
@@ -165,7 +169,7 @@ class Resolver
 
             if ($exists) {
                 $helperClass = $path['class'];
-                $instance = $this->app->make($helperClass);
+                $instance    = $this->app->make($helperClass);
 
                 if (method_exists($instance, 'setContainer')) {
                     $instance->setContainer($this->getContainer());

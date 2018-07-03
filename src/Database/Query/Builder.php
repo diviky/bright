@@ -156,11 +156,15 @@ class Builder extends BaseBuilder
             $row->serial = ++$i;
 
             if (isset($row->created_at)) {
-                $row->created = date('M d, Y h:i A', strtotime($row->created_at));
+                $row->created = carbon($row->created_at)->format('M d, Y h:i A');
             }
 
             if (isset($row->updated_at)) {
-                $row->updated = date('M d, Y h:i A', strtotime($row->updated_at));
+                $row->updated = carbon($row->updated_at)->format('M d, Y h:i A');
+            }
+
+            if (isset($row->deleted_at)) {
+                $row->deleted = carbon($row->deleted_at)->format('M d, Y h:i A');
             }
 
             return $row;
@@ -201,7 +205,7 @@ class Builder extends BaseBuilder
         return $this->iterator($count, $callback);
     }
 
-    public function iterator($count, $callback = null)
+    public function iterator($count = 10000, $callback = null)
     {
         return new SelectIterator($this, $count, $callback);
     }

@@ -68,7 +68,11 @@ trait Eventable
     protected function getEventTables($type)
     {
         $tables = config('karla.tables');
-        $tables = array_merge($tables['default'], $tables[$type]);
+        if (is_array($tables['default'])) {
+            $tables = array_merge($tables['default'], $tables[$type]);
+        } else {
+            $tables = $tables[$type];
+        }
         $tables = isset($tables[$this->from]) ? $tables[$this->from] : [];
 
         return $tables;
