@@ -16,12 +16,9 @@ class Mailable extends BaseMailable
 
     /**
      * Create a new message instance.
-     *
-     * @return void
      */
     public function __construct()
     {
-        //
     }
 
     /**
@@ -37,13 +34,14 @@ class Mailable extends BaseMailable
     /**
      * Set the view and view data for the message.
      *
-     * @param  string  $view
-     * @param  array  $data
+     * @param string $view
+     * @param array  $data
+     *
      * @return $this
      */
     public function view($view, array $data = [])
     {
-        $this->view = $this->prefix . $view;
+        $this->view = $this->prefix.$view;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;
@@ -52,13 +50,14 @@ class Mailable extends BaseMailable
     /**
      * Set the plain text view for the message.
      *
-     * @param  string  $textView
-     * @param  array  $data
+     * @param string $textView
+     * @param array  $data
+     *
      * @return $this
      */
     public function text($textView, array $data = [])
     {
-        $this->textView = $this->prefix . $textView;
+        $this->textView = $this->prefix.$textView;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;
@@ -67,13 +66,14 @@ class Mailable extends BaseMailable
     /**
      * Set the Markdown template for the message.
      *
-     * @param  string  $view
-     * @param  array  $data
+     * @param string $view
+     * @param array  $data
+     *
      * @return $this
      */
     public function markdown($view, array $data = [])
     {
-        $this->markdown = $this->prefix . $view;
+        $this->markdown = $this->prefix.$view;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;
@@ -89,20 +89,24 @@ class Mailable extends BaseMailable
     public function deliver($to = null, $exception = false)
     {
         if ($exception) {
-            return Mail::to($to)->send($this);
+            Mail::to($to)->send($this);
+
+            return true;
         }
 
         try {
-            return Mail::to($to)->send($this);
+            Mail::to($to)->send($this);
+
+            return true;
         } catch (\Exception $e) {
             return false;
         }
     }
 
     /**
-     * Set the value of prefix
+     * Set the value of prefix.
      *
-     * @return  self
+     * @return self
      */
     public function prefix($prefix)
     {
