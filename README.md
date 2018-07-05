@@ -6,6 +6,8 @@ Query builder needs to overwrite with karla
     \\Database/Connection.php
     use Karla\Database\Query\Builder as QueryBuilder;
 
+sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Connection.php
+
 ```
 
 ```php

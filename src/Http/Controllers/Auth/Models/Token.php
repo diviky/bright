@@ -13,8 +13,7 @@ class Token extends Model
         'access_token',
         'user_id',
         'refresh_token',
-        'whitelist_ips',
-        'blocklist_ips',
+        'allowed_ip',
         'expires_in',
     ];
 

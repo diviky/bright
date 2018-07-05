@@ -23,10 +23,10 @@ class KarlaServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Illuminate\Mail\Events\MessageSent' => [
+        'Illuminate\Mail\Events\MessageSending' => [
             EmailLogger::class,
         ],
-        'Illuminate\Auth\Events\Login'       => [
+        'Illuminate\Auth\Events\Login'          => [
             SuccessLogin::class,
         ],
     ];

@@ -134,8 +134,6 @@
     easyRender.prototype.onSuccess = function (response) {
         var widget = this;
 
-        this.callback('onComplete', response);
-
         //check the page number
         var page = widget.form.find('input[name=page]').val();
         var append = (page == 1) ? false : widget.settings.append;
@@ -157,6 +155,8 @@
             widget.form.find(widget.settings.total_target).html(total);
         }
         target.removeClass(widget.settings.backdrop);
+
+        this.callback('onComplete', response);
     };
 
     easyRender.prototype.callback = function (name, res) {

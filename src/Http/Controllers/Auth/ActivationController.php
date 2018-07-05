@@ -24,9 +24,11 @@ class ActivationController extends Controller
         $token = $request->input('token');
 
         if (auth()->user()->status == 1) {
-            return redirect()->route('home')
-                ->with('status', 'success')
-                ->with('message', 'Your account is already activated.');
+            return [
+                'status'   => 'OK',
+                'message'  => 'Your account is already activated',
+                'redirect' => 'home',
+            ];
         }
 
         $activation = Activation::where('token', $token)
@@ -34,9 +36,10 @@ class ActivationController extends Controller
             ->first();
 
         if (empty($activation)) {
-            return redirect()->route('user.activate')
-                ->with('status', 'error')
-                ->with('message', 'No such token in the database!');
+            return [
+                'status'  => 'ERROR',
+                'message' => 'Invalid activation key.',
+            ];
         }
 
         Auth::user()->status = 1;
@@ -44,9 +47,11 @@ class ActivationController extends Controller
 
         $activation->delete();
 
-        return redirect()->route('home')
-            ->with('status', 'success')
-            ->with('message', 'You successfully activated your account!');
+        return [
+            'status'   => 'OK',
+            'message'  => 'Your account activated successfully.',
+            'redirect' => 'home',
+        ];
     }
 
     public function resend()
@@ -57,8 +62,9 @@ class ActivationController extends Controller
 
         $user->notify(new SendActivationToken($token));
 
-        return redirect()->back()
-            ->with('status', 'success')
-            ->with('message', 'Verification code resent to your registered mobile number.');
+        return [
+            'status'  => 'OK',
+            'message' => 'Verification code resent to your registered mobile number.',
+        ];
     }
 }

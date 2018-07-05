@@ -61,12 +61,6 @@ function onloadEvents() {
     e.preventDefault();
     return false;
   });
-
-  jQuery('[role="validate"]').validate();
-  jQuery('[role="validator"]').validator();
-  jQuery('[role="krender"]').easyRender();
-  jQuery('[role="ksubmit"]').easySubmit();
-  jQuery('[tooltip=modal], [role="modal"]').easyModal();
 }
 
 jQuery(document).ready(function ($) {

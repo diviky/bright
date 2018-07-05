@@ -6,19 +6,20 @@ use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 class AccessTokenGuard implements Guard
 {
     use GuardHelpers;
 
-    protected $inputKey = '';
+    protected $inputKey   = '';
     protected $storageKey = '';
     protected $request;
 
     public function __construct(UserProvider $provider, Request $request)
     {
         $this->provider = $provider;
-        $this->request = $request;
+        $this->request  = $request;
         // key to check in request
         $this->inputKey = 'token';
         // key to check in database
@@ -41,11 +42,37 @@ class AccessTokenGuard implements Guard
             $user = $this->provider->retrieveByToken($this->storageKey, $token);
         }
 
-        return $this->user = $user;
+        if (is_null($user)) {
+            return null;
+        }
+
+        $allowed_ips = $user->allowed_ip;
+
+        if (!empty($allowed_ips)) {
+            $ips         = $this->request->ips();
+            $allowed_ips = explode(',', $allowed_ips);
+            $allowed     = false;
+
+            foreach ($ips as $ip) {
+                foreach ($allowed_ips as $address) {
+                    if (IpUtils::checkIp($ip, $address)) {
+                        $allowed = true;
+                        break 2;
+                    }
+                }
+            }
+
+            if (!$allowed) {
+                return null;
+            }
+        }
+
+        return $this->user = $user->user;
     }
 
     /**
      * Get the token for the current request.
+     *
      * @return string
      */
     public function getTokenForRequest()
@@ -66,7 +93,7 @@ class AccessTokenGuard implements Guard
     /**
      * Validate a user's credentials.
      *
-     * @param  array $credentials
+     * @param array $credentials
      *
      * @return bool
      */

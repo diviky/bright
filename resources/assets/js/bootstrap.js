@@ -2,6 +2,12 @@ jQuery.fn.bstooltip = jQuery.fn.tooltip;
 
 function karlaJs() {
 
+    jQuery('[role="validate"]').validate();
+    jQuery('[role="validator"]').validator();
+    jQuery('[role="krender"]').easyRender();
+    jQuery('[role="ksubmit"]').easySubmit();
+    jQuery('[tooltip=modal], [role="modal"]').easyModal();
+
     $(document).bstooltip({
         html: true,
         selector: '[data-toggle="tooltip"]'
@@ -91,6 +97,51 @@ jQuery(document).ready(function ($) {
         form.submit();
     });
 
+    $(document).on('click', '[data-poload]', function (e) {
+        var $this = $(this);
+        //$this.off('hover');
+        $.get($this.data('poload'), { format: 'html' }, function (d) {
+            $this.popover({
+                content: d,
+                html: true,
+                placement: 'bottom'
+            }).popover('show');
+        });
+
+        $this.on("show.bs.popover", function (e) {
+            $("[data-poload]").not(e.target).popover("dispose");
+        });
+
+        e.preventDefault();
+    });
+
+
+    $('body').on('click', function (e) {
+        $('[data-original-title]').each(function () {
+            // hide any open popovers when the anywhere else in the body is clicked
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+    });
+
+    $(document).on('click', '[data-popover]', function (e) {
+        var $this = $(this);
+        var d = $($this.data('popover')).html();
+
+        $this.popover({
+            content: d,
+            html: true,
+            placement: 'bottom'
+        }).popover('show');
+
+        $this.on("show.bs.popover", function (e) {
+            $("[data-popover]").not(e.target).popover("dispose");
+        });
+
+        e.preventDefault();
+    });
+
     $(document).on('click', '[data-toggle="tabs"] a', function (e) {
         e.preventDefault();
         $(this).tab('show');
@@ -102,11 +153,15 @@ jQuery(document).ready(function ($) {
     var hash = window.location.hash;
     if (hash) {
         $('[data-toggle="tabs"] a[href="' + hash + '"]').tab('show');
+        $('[data-toggle="tab"][href="' + hash + '"]').tab('show');
     }
 
     $(window).on('hashchange', function () {
         var hash = window.location.hash;
-        hash && $('[data-toggle="tabs"], a[href="' + hash + '"]').tab('show');
+        if (hash) {
+            $('[data-toggle="tabs"], a[href="' + hash + '"]').tab('show');
+            $('[data-toggle="tab"][href="' + hash + '"]').tab('show');
+        }
     });
 
     $(document).on('click', '[data-toggle="sidebar"]', function () {

@@ -7,7 +7,7 @@ use Karla\Database\Karla;
 
 trait Builder
 {
-    protected function table($table = null, $timestamps = false)
+    protected function table($table = null, $timestamps = true)
     {
         $table = $table ?: $this->table;
         //$prefix = DB::getTablePrefix();
@@ -64,12 +64,14 @@ trait Builder
     protected function updateWithMessage($id, $values, $name = null)
     {
         $result = $this->update($id, $values);
+
         return $this->updated($result, $name);
     }
 
     protected function insertWithMessage($values, $name = null)
     {
         $result = $this->insert($values);
+
         return $this->inserted($result, $name);
     }
 
@@ -81,7 +83,7 @@ trait Builder
     public function statement($sql, array $bindings = [])
     {
         $prefix = DB::getTablePrefix();
-        $sql    = str_replace("#__", $prefix, $sql);
+        $sql    = str_replace('#__', $prefix, $sql);
 
         return $this->pdo()->exec($sql);
     }

@@ -2,6 +2,7 @@
 
 namespace Karla\Http\Controllers\Auth;
 
+use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +12,6 @@ use Illuminate\Support\Str;
 use Karla\Http\Controllers\Auth\Traits\Token;
 use Karla\Notifications\SendActivationToken;
 use Karla\Routing\Controller;
-use Karla\User;
 
 class RegisterController extends Controller
 {

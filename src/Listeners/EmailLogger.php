@@ -2,7 +2,7 @@
 
 namespace Karla\Listeners;
 
-use Illuminate\Mail\Events\MessageSent;
+use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -13,21 +13,21 @@ class EmailLogger
      *
      * @param MessageSending $event
      */
-    public function handle(MessageSent $event)
+    public function handle(MessageSending $event)
     {
         $message = $event->message;
         DB::table('addon_email_logs')->insert([
-            'id' => Str::uuid(),
-            'from' => $this->formatAddressField($message, 'From'),
-            'to' => $this->formatAddressField($message, 'To'),
-            'cc' => $this->formatAddressField($message, 'Cc'),
-            'bcc' => $this->formatAddressField($message, 'Bcc'),
-            'subject' => $message->getSubject(),
-            'body' => $message->getBody(),
-            'headers' => (string) $message->getHeaders(),
+            'id'          => Str::uuid(),
+            'from'        => $this->formatAddressField($message, 'From'),
+            'to'          => $this->formatAddressField($message, 'To'),
+            'cc'          => $this->formatAddressField($message, 'Cc'),
+            'bcc'         => $this->formatAddressField($message, 'Bcc'),
+            'subject'     => $message->getSubject(),
+            'body'        => $message->getBody(),
+            'headers'     => (string) $message->getHeaders(),
             'attachments' => $message->getChildren() ? implode("\n\n", $message->getChildren()) : null,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
+            'created_at'  => date('Y-m-d H:i:s'),
+            'updated_at'  => date('Y-m-d H:i:s'),
         ]);
     }
     /**
@@ -44,7 +44,7 @@ class EmailLogger
             return null;
         }
         $mailboxes = $headers->get($field)->getFieldBodyModel();
-        $strings = [];
+        $strings   = [];
         foreach ($mailboxes as $email => $name) {
             $mailboxStr = $email;
             if (null !== $name) {

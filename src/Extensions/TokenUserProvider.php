@@ -2,11 +2,11 @@
 
 namespace Karla\Extensions;
 
+use App\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
 use Karla\Http\Controllers\Auth\Models\Token;
-use Karla\User;
 
 class TokenUserProvider implements UserProvider
 {
@@ -15,7 +15,7 @@ class TokenUserProvider implements UserProvider
 
     public function __construct(User $user, Token $token)
     {
-        $this->user = $user;
+        $this->user  = $user;
         $this->token = $token;
     }
 
@@ -28,7 +28,7 @@ class TokenUserProvider implements UserProvider
     {
         $token = $this->token->with('user')->where($identifier, $token)->first();
 
-        return $token && $token->user ? $token->user : null;
+        return $token && $token->user ? $token : null;
     }
 
     public function updateRememberToken(Authenticatable $user, $token)
