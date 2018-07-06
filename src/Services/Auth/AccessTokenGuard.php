@@ -63,6 +63,7 @@ class AccessTokenGuard implements Guard
             }
 
             if (!$allowed) {
+                abort(403, 'Ip Not allowed');
                 return null;
             }
         }
