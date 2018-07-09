@@ -401,7 +401,7 @@ class Karla
         if (strpos($str, '?') !== false && is_numeric(key($value))) {
             $offset = 0;
             while (($pos = strpos($str, '?', $offset)) !== false) {
-                $val    = array_shift($data);
+                $val    = array_shift($value);
                 $offset = $pos + strlen($val);
                 $str    = substr_replace($str, $val, $pos, 1);
             }
