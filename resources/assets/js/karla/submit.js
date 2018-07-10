@@ -348,7 +348,7 @@
             widget.render(widget.settings.render);
         }
 
-        var delay = (res.message) ? 5000 : 1000;
+        var delay = (res.message) ? 2000 : 1000;
         var redirect = widget.form.find('#return_url').val();
         if (widget.settings.return_url) {
             widget.redirect(return_url, delay);

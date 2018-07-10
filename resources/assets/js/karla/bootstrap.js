@@ -22,7 +22,7 @@ function notify(message) {
     type: message.type || 'error',
     layout: 'topRight',
     theme: 'nest',
-    timeout: (5 * 60 * 1000)
+    timeout: (2 * 60 * 1000)
   }).show();
 }
 
@@ -208,11 +208,9 @@ jQuery(document).ready(function ($) {
   if ($.support.pjax) {
     $(document).on("click", "[data-pjax] a, a[data-pjax]", function (event) {
       var container = $(this).data("pjax-container") || "[data-pjax-container]";
-      $(this)
-        .parents("[data-pjax]")
-        .find("a")
-        .removeClass("active");
+      $(this).parents("[data-pjax]").find("a").removeClass("active");
       $(this).addClass("active");
+
       $.pjax.click(event, { container: container });
     });
 

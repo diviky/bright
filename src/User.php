@@ -12,8 +12,8 @@ class User extends Authenticatable
     use HasRoles;
 
     public $guard_name = 'web';
-
-    protected $table = "auth_users";
+    protected $admin   = 'super-admin';
+    protected $table   = "auth_users";
 
     /**
      * The attributes that are mass assignable.
