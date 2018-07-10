@@ -65,12 +65,15 @@ function onloadEvents() {
 
 jQuery(document).ready(function ($) {
 
+  $(document).on('ajax:loaded', function (e, $this) {
+    onloadEvents();
+  });
+
   $.ajaxSetup({
     headers: {
       "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
     }
   });
-
 
   $(document).on("click", ".noty_close", function (e) {
     $(this)
@@ -212,6 +215,10 @@ jQuery(document).ready(function ($) {
       $(this).addClass("active");
       $.pjax.click(event, { container: container });
     });
+
+    $(document).on('pjax:end', function () {
+      $(document).trigger('ajax:loaded');
+    })
   }
 });
 

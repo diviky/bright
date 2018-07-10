@@ -18,7 +18,7 @@ class Responsable implements BaseResponsable
     public function __construct($response, $action)
     {
         $this->response = $response;
-        $this->action = $action;
+        $this->action   = $action;
     }
     /**
      * Create an HTTP response that represents the object.
@@ -29,7 +29,7 @@ class Responsable implements BaseResponsable
     public function toResponse($request)
     {
         $response = $this->getResponse();
-        $format = $request->input('format');
+        $format   = $request->input('format');
 
         if (!$format && $request->expectsJson()) {
             return $response;
@@ -61,7 +61,7 @@ class Responsable implements BaseResponsable
             return $this->getNextRedirect($response, 'next');
         } elseif ($ajax && isset($response['redirect'])) {
             if (substr($response['redirect'], 0, 1) !== '/') {
-                $redirect = $this->getNextRedirect($response, 'redirect');
+                $redirect             = $this->getNextRedirect($response, 'redirect');
                 $response['redirect'] = $redirect->getTargetUrl();
             }
         }
@@ -70,9 +70,14 @@ class Responsable implements BaseResponsable
             return $response;
         }
 
+        if ($request->pjax()) {
+            $format = 'html';
+        }
+
         list($component, $view) = explode('.', $route);
-        $path = $this->getViewPath($this->action);
-        $theme = $this->setUpTheme($route, $component, $path);
+
+        $path   = $this->getViewPath($this->action);
+        $theme  = $this->setUpTheme($route, $component, $path);
         $layout = $format == 'html' ? 'html' : $theme['layout'];
 
         return $this->getView($view, $response, $layout);

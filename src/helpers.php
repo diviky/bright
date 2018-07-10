@@ -88,6 +88,9 @@ if (!function_exists('disk')) {
             return null;
         }
 
+        $disk = $disk ?: config('filesystems.default');
+        $disk = ('local' == $disk) ? 'public' : $disk;
+
         if ($time) {
             return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
         }

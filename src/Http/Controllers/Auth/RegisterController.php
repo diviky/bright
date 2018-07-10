@@ -15,6 +15,8 @@ use Karla\Routing\Controller;
 
 class RegisterController extends Controller
 {
+    protected $role = 'customer';
+
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -40,7 +42,8 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -50,7 +53,7 @@ class RegisterController extends Controller
             //'username' => 'required|string|regex:([0-9A-Za-z]+)|max:50|unique:auth_users',
             'mobile'   => [
                 'required',
-                'regex:/([6789][0-9]{9})/',
+                'number',
                 'unique:auth_users,username',
             ],
             'password' => 'required|string|min:6',
@@ -65,7 +68,8 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
+     *
      * @return \App\User
      */
     protected function create(array $data)
@@ -83,18 +87,23 @@ class RegisterController extends Controller
     /**
      * The user has been registered.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
+     * @param \Illuminate\Http\Request $request
+     * @param mixed                    $user
+     *
      * @return mixed
      */
     protected function registered(Request $request, $user)
     {
         //Assign a role to user
-        $user->assignRole('customer');
+        $user->assignRole($this->role);
 
-        $token = $this->saveToken($user);
+        if (0 == $user->status) {
+            $token = $this->saveToken($user);
+            $user->notify(new SendActivationToken($token));
+        }
 
-        $user->notify(new SendActivationToken($token));
+        $user->assignOwnRole($this->role);
+        $user->assignParent();
 
         return [
             'next' => $this->redirectPath(),

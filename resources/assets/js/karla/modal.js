@@ -140,8 +140,6 @@
             $('.modal-backdrop').remove();
         });
 
-        onloadEvents();
-
         $(document).trigger('ajax:loaded');
         $(document).trigger('ajax:modal:loaded');
 
