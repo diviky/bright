@@ -51,7 +51,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof Exception) {
-            $view = 'errors.'.$exception->getStatusCode();
+            $view = 'errors.' . $exception->getCode();
             if (view()->exists($view)) {
                 return response()->view($view, ['e' => $exception], 500);
             }
@@ -65,7 +65,7 @@ class Handler extends ExceptionHandler
         $response = parent::convertExceptionToArray($e);
 
         if ($e instanceof Exception) {
-            $response['status'] = $e->getStatusCode();
+            $response['status'] = $e->getCode();
         }
 
         return $response;
