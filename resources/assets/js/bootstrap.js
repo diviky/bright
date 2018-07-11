@@ -52,10 +52,6 @@ function karlaJs() {
         $('[data-chosen]').chosen({ width: "auto" });
     }
 
-    if ($.fn.tokenfield) {
-        $('[data-tokenfield]').tokenfield();
-    }
-
     if ($.fn.select2) {
         $('[data-select]').select2({
             minimumResultsForSearch: 10

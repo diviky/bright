@@ -13,7 +13,7 @@ class Permission extends BasePermission
     /**
      * Find a permission by its name (and optionally guardName).
      *
-     * @param string $name
+     * @param string      $name
      * @param string|null $guardName
      *
      * @throws \Spatie\Permission\Exceptions\PermissionDoesNotExist

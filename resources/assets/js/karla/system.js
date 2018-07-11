@@ -388,45 +388,4 @@ $(document).ready(function () {
             update: _gridSortUpdateHandler
         }).disableSelection();
     }
-
-    if ($.fn.tokenfield) {
-        $("[data-token]").livequery(function () {
-            var $this = $(this);
-
-            var autocomplete = {
-                minLength: 2,
-                delay: 100,
-                source: function (request, response) {
-                    $.ajax({
-                        url: $this.data('token'),
-                        data: { task: 'auto', q: request.term, format: 'json', options: $this.data('options') },
-                        success: function (data) {
-                            response(data);
-                        }
-                    });
-                }
-            };
-            var tokens = [];
-            if ($this.attr('tokens')) {
-                try {
-                    tokens = $.parseJSON($this.attr('tokens'));
-                } catch (err) {
-                    console.log(err);
-                }
-            }
-
-            $this.tokenfield({
-                tokens: tokens,
-                autocomplete: autocomplete
-            })
-                .on('tokenfield:createtoken', function (event) {
-                    var existingTokens = $(this).tokenfield('getTokens');
-                    $.each(existingTokens, function (index, token) {
-                        if (token.value === event.attrs.value) {
-                            event.preventDefault();
-                        }
-                    });
-                });
-        });
-    }
 });

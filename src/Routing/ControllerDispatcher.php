@@ -2,9 +2,9 @@
 
 namespace Karla\Routing;
 
-use Karla\Traits\Authorize;
 use Illuminate\Routing\ControllerDispatcher as BaseControllerDispatcher;
 use Illuminate\Routing\Route;
+use Karla\Traits\Authorize;
 
 class ControllerDispatcher extends BaseControllerDispatcher
 {
@@ -22,9 +22,9 @@ class ControllerDispatcher extends BaseControllerDispatcher
     {
         $action = $route->getActionName();
 
-        // if (!$this->isAuthorized($action)) {
-        //     abort(401, 'Access denied');
-        // }
+        if (!$this->isAuthorized($action)) {
+            abort(401, 'Access denied');
+        }
 
         $parameters = $this->resolveClassMethodDependencies(
             $route->parametersWithoutNulls(),

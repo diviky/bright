@@ -21,7 +21,7 @@ class AccessTokenGuard implements Guard
         $this->provider = $provider;
         $this->request  = $request;
         // key to check in request
-        $this->inputKey = 'token';
+        $this->inputKey = ['access_token', 'token'];
         // key to check in database
         $this->storageKey = 'access_token';
     }
@@ -43,7 +43,7 @@ class AccessTokenGuard implements Guard
         }
 
         if (is_null($user)) {
-            return null;
+            return;
         }
 
         $allowed_ips = $user->allowed_ip;
@@ -64,7 +64,8 @@ class AccessTokenGuard implements Guard
 
             if (!$allowed) {
                 abort(403, 'Ip Not allowed');
-                return null;
+
+                return;
             }
         }
 
@@ -78,10 +79,15 @@ class AccessTokenGuard implements Guard
      */
     public function getTokenForRequest()
     {
-        $token = $this->request->query($this->inputKey);
+        foreach ($this->inputKey as $key) {
+            $token = $this->request->query($key);
+            if (empty($token)) {
+                $token = $this->request->input($key);
+            }
 
-        if (empty($token)) {
-            $token = $this->request->input($this->inputKey);
+            if ($token) {
+                return $token;
+            }
         }
 
         if (empty($token)) {
