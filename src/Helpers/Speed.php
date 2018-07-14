@@ -145,13 +145,13 @@ class Speed extends Capsule
             }
         }
 
-        return true;
+        return $this;
     }
 
     public function sorting($table, $values = [], $field = 'id')
     {
         if (empty($values)) {
-            return true;
+            return $this;
         }
 
         $i = 0;
@@ -169,6 +169,6 @@ class Speed extends Capsule
             }
         }
 
-        return true;
+        return $this;
     }
 }

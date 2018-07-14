@@ -68,6 +68,10 @@ class Builder extends BaseBuilder
 
     public function groupByRaw($sql, array $bindings = [])
     {
+        if (is_array($sql)) {
+            $sql = implode(',', $sql);
+        }
+
         $this->groupBy(DB::raw($sql));
 
         if ($bindings) {
@@ -158,7 +162,8 @@ class Builder extends BaseBuilder
 
     public function paging($perPage = 25, $columns = ['*'], $pageName = 'page', $page = null)
     {
-        $rows = $this->paginate($perPage, $columns, $pageName, $page);
+        $perPage = is_null($perPage) ? 25 : $perPage;
+        $rows    = $this->paginate($perPage, $columns, $pageName, $page);
 
         $i = $rows->perPage() * ($rows->currentPage() - 1);
 

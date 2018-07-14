@@ -82,12 +82,12 @@ trait Database
                     $date = explode(' - ', $date);
                     $date = [
                         'from' => $date[0],
-                        'to' => $date[1],
+                        'to'   => $date[1],
                     ];
                 }
 
-                $from = $this->toTime($date['from'], 'Y-m-d');
-                $to = $this->toTime($date['to'], 'Y-m-d');
+                $from   = $this->toTime($date['from'], 'Y-m-d');
+                $to     = $this->toTime($date['to'], 'Y-m-d');
                 $column = $this->cleanField($column);
 
                 if ($from && $to) {
@@ -104,15 +104,15 @@ trait Database
         if (is_array($time_range)) {
             foreach ($time_range as $column => $date) {
                 if (!is_array($date)) {
-                    $date = explode('-', $date);
+                    $date = explode(' - ', $date);
                     $date = [
                         'from' => $date[0],
-                        'to' => $date[1],
+                        'to'   => $date[1],
                     ];
                 }
 
-                $from = carbon($date['from'], 'Y-m-d');
-                $to = carbon($date['to'], 'Y-m-d');
+                $from   = carbon($date['from'], 'Y-m-d');
+                $to     = carbon($date['to'], 'Y-m-d');
                 $column = $this->cleanField($column);
 
                 if ($from && $to) {
@@ -129,15 +129,15 @@ trait Database
         if (is_array($date_range)) {
             foreach ($date_range as $column => $date) {
                 if (!is_array($date)) {
-                    $date = explode('-', $date);
+                    $date = explode(' - ', $date);
                     $date = [
                         'from' => $date[0],
-                        'to' => $date[1],
+                        'to'   => $date[1],
                     ];
                 }
 
-                $from = trim($date['from']);
-                $to = trim($date['to']);
+                $from   = trim($date['from']);
+                $to     = trim($date['to']);
                 $column = $this->cleanField($column);
 
                 if ($from && empty($to)) {
@@ -160,15 +160,15 @@ trait Database
         if (is_array($ranges)) {
             foreach ($ranges as $column => $date) {
                 if (!is_array($date)) {
-                    $date = explode('-', $date);
+                    $date = explode(' - ', $date);
                     $date = [
-                        'from' => $date[0],
-                        'to' => $date[1],
+                        'from' => trim($date[0]),
+                        'to'   => trim($date[1]),
                     ];
                 }
 
-                $from = $this->toTime($date['from']);
-                $to = $this->toTime($date['to']);
+                $from   = $this->toTime($date['from']);
+                $to     = $this->toTime($date['to']);
                 $column = $this->cleanField($column);
 
                 if ($from && $to) {
