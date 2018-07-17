@@ -1,9 +1,8 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Middlewares;
+namespace Karla\Http\Controllers\Auth\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class PermissionMiddleware

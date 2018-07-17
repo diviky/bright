@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Middlewares;
+namespace Karla\Http\Controllers\Auth\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
@@ -10,8 +10,9 @@ class IsUserActivate
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null)
@@ -20,11 +21,11 @@ class IsUserActivate
             return $next($request);
         }
 
-        if (Auth::user()->status == 0) {
+        if (0 == Auth::user()->status) {
             return redirect()->route('user.activate');
         }
 
-        if (Auth::user()->status != 1) {
+        if (1 != Auth::user()->status) {
             return view('auth.disabled');
         }
 

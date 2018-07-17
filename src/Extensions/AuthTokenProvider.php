@@ -6,17 +6,14 @@ use App\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
-use Karla\Http\Controllers\Auth\Models\Token;
 
-class TokenUserProvider implements UserProvider
+class AuthTokenProvider implements UserProvider
 {
-    protected $token;
     protected $user;
 
-    public function __construct(User $user, Token $token)
+    public function __construct(User $user)
     {
-        $this->user  = $user;
-        $this->token = $token;
+        $this->user = $user;
     }
 
     public function retrieveById($identifier)
@@ -24,18 +21,11 @@ class TokenUserProvider implements UserProvider
         return $this->user->find($identifier);
     }
 
-    public function retrieveByAcess($identifier, $token)
+    public function retrieveByToken($identifier, $token)
     {
         $user = $this->user->where($identifier, $token)->first();
 
         return $user ? $user : null;
-    }
-
-    public function retrieveByToken($identifier, $token)
-    {
-        $token = $this->token->with('user')->where($identifier, $token)->first();
-
-        return $token && $token->user ? $token : null;
     }
 
     public function updateRememberToken(Authenticatable $user, $token)

@@ -2,16 +2,18 @@
 
 namespace Karla;
 
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
-use Karla\Extensions\TokenUserProvider;
+use Karla\Traits\Provider;
+use Karla\Routing\Resolver;
+use Karla\Routing\Redirector;
 use Karla\Listeners\EmailLogger;
 use Karla\Listeners\SuccessLogin;
-use Karla\Routing\Redirector;
-use Karla\Routing\Resolver;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
+use Karla\Extensions\AuthTokenProvider;
+use Karla\Extensions\TokenUserProvider;
+use Karla\Services\Auth\AuthTokenGuard;
 use Karla\Services\Auth\AccessTokenGuard;
-use Karla\Traits\Provider;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class KarlaServiceProvider extends ServiceProvider
 {
@@ -26,7 +28,7 @@ class KarlaServiceProvider extends ServiceProvider
         'Illuminate\Mail\Events\MessageSending' => [
             EmailLogger::class,
         ],
-        'Illuminate\Auth\Events\Login'          => [
+        'Illuminate\Auth\Events\Login' => [
             SuccessLogin::class,
         ],
     ];
@@ -36,24 +38,24 @@ class KarlaServiceProvider extends ServiceProvider
         parent::boot();
 
         $this->publishes([
-            __DIR__ . '/../config/permission.php' => config_path('permission.php'),
-            __DIR__ . '/../config/karla.php'      => config_path('karla.php'),
-            __DIR__ . '/../config/theme.php'      => config_path('theme.php'),
-            __DIR__ . '/../config/auth.php'       => config_path('auth.php'),
-            __DIR__ . '/../config/app.php'        => config_path('app.php'),
+            __DIR__.'/../config/permission.php' => config_path('permission.php'),
+            __DIR__.'/../config/karla.php' => config_path('karla.php'),
+            __DIR__.'/../config/theme.php' => config_path('theme.php'),
+            __DIR__.'/../config/auth.php' => config_path('auth.php'),
+            __DIR__.'/../config/app.php' => config_path('app.php'),
         ], 'karla-config');
 
         $this->publishes([
-            __DIR__ . '/../resources/assets/js' => resource_path('assets/js'),
-            __DIR__ . '/../webpack.mix.js'      => base_path('webpack.mix.js'),
-            __DIR__ . '/../bower.json'          => base_path('bower.json'),
+            __DIR__.'/../resources/assets/js' => resource_path('assets/js'),
+            __DIR__.'/../webpack.mix.js' => base_path('webpack.mix.js'),
+            __DIR__.'/../bower.json' => base_path('bower.json'),
         ], 'karla-assets');
 
         $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views'),
+            __DIR__.'/../resources/views' => resource_path('views'),
         ], 'karla-views');
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views/', 'karla');
+        $this->loadViewsFrom(__DIR__.'/../resources/views/', 'karla');
 
         Schema::defaultStringLength(191);
         $this->directive();
@@ -63,9 +65,9 @@ class KarlaServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/permission.php', 'permission');
-        $this->mergeConfigFrom(__DIR__ . '/../config/karla.php', 'karla');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/');
+        $this->mergeConfigFrom(__DIR__.'/../config/permission.php', 'permission');
+        $this->mergeConfigFrom(__DIR__.'/../config/karla.php', 'karla');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations/');
 
         $this->redirect();
         $this->auth();
@@ -86,6 +88,7 @@ class KarlaServiceProvider extends ServiceProvider
             if (isset($app['session.store'])) {
                 $redirector->setSession($app['session.store']);
             }
+
             return $redirector;
         });
     }
@@ -95,8 +98,17 @@ class KarlaServiceProvider extends ServiceProvider
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
             $userProvider = app(TokenUserProvider::class);
-            $request      = app('request');
+            $request = app('request');
+
             return new AccessTokenGuard($userProvider, $request, $config);
+        });
+
+        Auth::extend('auth_token', function ($app, $name, array $config) {
+            // automatically build the DI, put it as reference
+            $userProvider = app(AuthTokenProvider::class);
+            $request = app('request');
+
+            return new AuthTokenGuard($userProvider, $request, $config);
         });
     }
 }

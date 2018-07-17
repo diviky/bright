@@ -21,7 +21,7 @@ class AccessTokenGuard implements Guard
         $this->provider = $provider;
         $this->request  = $request;
         // key to check in request
-        $this->inputKey = ['access_token', 'token'];
+        $this->inputKey = ['access_token', 'access_key', 'token'];
         // key to check in database
         $this->storageKey = 'access_token';
     }
@@ -47,29 +47,37 @@ class AccessTokenGuard implements Guard
         }
 
         $allowed_ips = $user->allowed_ip;
+        $this->validateIp($allowed_ips);
 
-        if (!empty($allowed_ips)) {
-            $ips         = $this->request->ips();
-            $allowed_ips = explode(',', $allowed_ips);
-            $allowed     = false;
+        return $this->user = $user->user;
+    }
 
-            foreach ($ips as $ip) {
-                foreach ($allowed_ips as $address) {
-                    if (IpUtils::checkIp($ip, $address)) {
-                        $allowed = true;
-                        break 2;
-                    }
+    protected function validateIp($allowed_ips = null)
+    {
+        if (empty($allowed_ips)) {
+            return true;
+        }
+
+        $ips         = $this->request->ips();
+        $allowed_ips = explode(',', $allowed_ips);
+        $allowed     = false;
+
+        foreach ($ips as $ip) {
+            foreach ($allowed_ips as $address) {
+                if (IpUtils::checkIp($ip, $address)) {
+                    $allowed = true;
+                    break 2;
                 }
-            }
-
-            if (!$allowed) {
-                abort(403, 'Ip Not allowed');
-
-                return;
             }
         }
 
-        return $this->user = $user->user;
+        if (!$allowed) {
+            abort(403, 'Ip Not allowed');
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -92,6 +100,10 @@ class AccessTokenGuard implements Guard
 
         if (empty($token)) {
             $token = $this->request->bearerToken();
+        }
+
+        if (empty($token)) {
+            $token = $this->request->header('Authorization');
         }
 
         return $token;
