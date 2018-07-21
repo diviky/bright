@@ -8,43 +8,16 @@ use Illuminate\Support\Facades\DB;
 use Karla\Database\Karla;
 use Karla\Database\Traits\Cachable;
 use Karla\Database\Traits\Eventable;
+use Karla\Database\Traits\Outfile;
+use Karla\Database\Traits\Timestamps;
 use Karla\Helpers\Iterator\SelectIterator;
 
 class Builder extends BaseBuilder
 {
     use Cachable;
     use Eventable;
-
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    protected $timestamps = true;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setTimeStamps(array $values, $force = false)
-    {
-        if ($this->usesTimestamps() || $force) {
-            $time                 = $this->freshTimestamp();
-            $values['updated_at'] = $time;
-            $values['created_at'] = $time;
-        }
-
-        return $values;
-    }
-
-    protected function setTimeStamp(array $values, $force = false)
-    {
-        if ($this->usesTimestamps() || $force) {
-            $time                 = $this->freshTimestamp();
-            $values['updated_at'] = $time;
-        }
-
-        return $values;
-    }
+    use Outfile;
+    use Timestamps;
 
     /**
      * {@inheritdoc}
@@ -133,33 +106,6 @@ class Builder extends BaseBuilder
         return $this;
     }
 
-    /**
-     * Get a fresh timestamp for the model.
-     *
-     * @return \Illuminate\Support\Carbon
-     */
-    public function freshTimestamp()
-    {
-        return new Carbon();
-    }
-
-    public function timestamps($allow = true)
-    {
-        $this->timestamps = $allow;
-
-        return $this;
-    }
-
-    /**
-     * Determine if the builder uses timestamps.
-     *
-     * @return bool
-     */
-    protected function usesTimestamps()
-    {
-        return $this->timestamps;
-    }
-
     public function paging($perPage = 25, $columns = ['*'], $pageName = 'page', $page = null)
     {
         $perPage = is_null($perPage) ? 25 : $perPage;
@@ -193,7 +139,7 @@ class Builder extends BaseBuilder
         return $this->connection->statement($sql, $bindings);
     }
 
-    public function flatChunk($count, $callback = null)
+    public function flatChunk($count = 1000, $callback = null)
     {
         $results = $this->forPage($page = 1, $count)->get();
 
@@ -230,5 +176,16 @@ class Builder extends BaseBuilder
         $sql = (new Karla())->conditions($where);
 
         return $this->whereRaw($sql, $bindings);
+    }
+
+    public function toQuery()
+    {
+        $sql = $this->toSql();
+        foreach ($this->getBindings() as $binding) {
+            $value = is_numeric($binding) ? $binding : "'" . $binding . "'";
+            $sql   = preg_replace('/\?/', $value, $sql, 1);
+        }
+
+        return $sql;
     }
 }

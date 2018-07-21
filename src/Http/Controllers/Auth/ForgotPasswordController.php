@@ -43,8 +43,8 @@ class ForgotPasswordController extends Controller
             $user->notify(new ForgetPassword($token));
 
             return [
-                'status' => 'success',
-                'message' => __('Verification code sent to your registered :username.', ['username' => $this->address()]),
+                'status'   => 'success',
+                'message'  => __('Verification code sent to your registered :username.', ['username' => $this->address()]),
                 'redirect' => 'password.verify',
             ];
         }
@@ -58,7 +58,7 @@ class ForgotPasswordController extends Controller
 
         if (is_null($id)) {
             return [
-                'message' => 'Invalid request',
+                'message'  => 'Invalid request',
                 'redirect' => 'password.reset',
             ];
         }
@@ -67,7 +67,7 @@ class ForgotPasswordController extends Controller
 
         if (is_null($activation)) {
             return [
-                'message' => 'Invalid request',
+                'message'  => 'Invalid request',
                 'redirect' => 'password.reset',
             ];
         }
@@ -77,9 +77,9 @@ class ForgotPasswordController extends Controller
         $user->notify(new ForgetPassword($activation->token));
 
         return [
-            'status' => 'success',
+            'status'  => 'success',
             'message' => __('Verification code resent to your registered  :username.', ['username' => $this->address()]),
-            'next' => [
+            'next'    => [
                 'back' => true,
             ],
         ];
@@ -91,7 +91,7 @@ class ForgotPasswordController extends Controller
 
         if (is_null($id)) {
             return [
-                'message' => 'Invalid request',
+                'message'  => 'Invalid request',
                 'redirect' => 'password.reset',
             ];
         }
@@ -112,9 +112,9 @@ class ForgotPasswordController extends Controller
 
         if (empty($activation)) {
             return [
-                'status' => 'error',
+                'status'  => 'ERROR',
                 'message' => 'Invalid verification code.',
-                'next' => 'password.verify',
+                'next'    => 'password.verify',
             ];
         }
 
@@ -123,7 +123,11 @@ class ForgotPasswordController extends Controller
         $activation->delete();
         session()->forget('reset-token');
 
-        return redirect()->route('password.change');
+        return [
+            'status'  => 'OK',
+            'message' => 'Account verified successfully.',
+            'next'    => 'password.change',
+        ];
     }
 
     public function change(Request $request)
@@ -147,6 +151,7 @@ class ForgotPasswordController extends Controller
 
         if ($this->resetPassword($user, $request->input('password'))) {
             session()->forget('forget-userid');
+
             return redirect()->route('home');
         } else {
             return redirect()->back()
@@ -158,9 +163,8 @@ class ForgotPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
-     * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
-     * @param  string  $password
-     * @return void
+     * @param \Illuminate\Contracts\Auth\CanResetPassword $user
+     * @param string                                      $password
      */
     protected function resetPassword($user, $password)
     {

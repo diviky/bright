@@ -88,6 +88,10 @@ if (!function_exists('disk')) {
             return null;
         }
 
+        if ('data:' == substr($path, 0, 5)) {
+            return $path;
+        }
+
         $disk = $disk ?: config('filesystems.default');
         $disk = ('local' == $disk) ? 'public' : $disk;
 

@@ -75,12 +75,12 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'name'      => $data['name'],
-            'username'  => $data['mobile'],
-            'mobile'    => $data['mobile'],
-            'password'  => Hash::make($data['password']),
-            'status'    => 0,
-            'api_token' => Str::random(32),
+            'name'         => $data['name'],
+            'username'     => $data['mobile'],
+            'mobile'       => $data['mobile'],
+            'password'     => Hash::make($data['password']),
+            'status'       => 0,
+            'access_token' => Str::random(32),
         ]);
     }
 
@@ -96,17 +96,20 @@ class RegisterController extends Controller
     {
         //Assign a role to user
         $user->assignRole($this->role);
+        $user->assignOwnRole($this->role);
+        $user->assignParent();
 
         if (0 == $user->status) {
             $token = $this->saveToken($user);
             $user->notify(new SendActivationToken($token));
         }
 
-        $user->assignOwnRole($this->role);
-        $user->assignParent();
+        $next = (0 == $user->status) ? 'user.activate' : $this->redirectPath();
 
         return [
-            'next' => $this->redirectPath(),
+            'redirect' => $next,
+            'status'   => 'OK',
+            'message'  => _('Registration success. Redirecting..'),
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace Karla\Helpers;
 
 use Closure;
 use EmptyIterator;
+use finfo;
 use Generator;
 use Karla\Helpers\Iterator\ChunkedIterator;
 use Karla\Helpers\Iterator\MapGeneratorIterator;
@@ -65,7 +66,10 @@ class Reader
                 break;
             case '.xls':
             case '.xlsx':
-                if ("\t" === $options['delimiter'] && '.xls' == $ext) {
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                $mime  = $finfo->file($file->getRealPath());
+
+                if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
                     $reader = new CsvReader($file, $options['delimiter']);
                 } else {
                     $reader     = new ExcelReader($file, null, 0);
@@ -155,7 +159,8 @@ class Reader
     public function fetchHeader($file, Closure $callable = null, $options = [])
     {
         $options['limit'] = 1;
-        $columns          = $this->fetchArray($file, $callable, $options);
+
+        $columns = $this->fetchArray($file, $callable, $options);
 
         return $columns[0];
     }
