@@ -2,12 +2,10 @@
 
 namespace Karla\Console;
 
-use Karla\Traits\Builder;
-use Karla\Traits\CapsuleManager;
 use Illuminate\Console\Command as BaseCommand;
+use Karla\Traits\CapsuleManager;
 
 class Command extends BaseCommand
 {
     use CapsuleManager;
-    use Builder;
 }
