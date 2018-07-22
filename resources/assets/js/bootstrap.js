@@ -97,6 +97,7 @@ jQuery(document).ready(function ($) {
         var $this = $(this);
         //$this.off('hover');
         $.get($this.data('poload'), { format: 'html' }, function (d) {
+            $this.popover("dispose")
             $this.popover({
                 content: d,
                 html: true,
