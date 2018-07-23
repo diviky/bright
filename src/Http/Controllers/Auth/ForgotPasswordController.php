@@ -112,9 +112,9 @@ class ForgotPasswordController extends Controller
 
         if (empty($activation)) {
             return [
-                'status'  => 'ERROR',
-                'message' => 'Invalid verification code.',
-                'next'    => 'password.verify',
+                'status'   => 'ERROR',
+                'message'  => 'Invalid verification code.',
+                'redirect' => 'password.verify',
             ];
         }
 
@@ -124,9 +124,9 @@ class ForgotPasswordController extends Controller
         session()->forget('reset-token');
 
         return [
-            'status'  => 'OK',
-            'message' => 'Account verified successfully.',
-            'next'    => 'password.change',
+            'status'   => 'OK',
+            'message'  => 'Account verified successfully.',
+            'redirect' => 'password.change',
         ];
     }
 
