@@ -2,31 +2,31 @@
 
 namespace Karla\Traits;
 
-use Karla\Util\Device;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Karla\Util\Device;
 
 trait Themable
 {
     protected function setUpTheme($route, $component = null, $paths = [])
     {
-        $template = $this->identify($route);
+        $template             = $this->identify($route);
         list($theme, $layout) = explode('.', $template . '.');
 
         $themePath = resource_path('themes/' . $theme);
-        $location = public_path($theme);
+        $location  = public_path($theme);
 
         $theme = [
-            'name' => $theme,
-            'layout' => $layout,
-            'path' => $themePath,
+            'name'     => $theme,
+            'layout'   => $layout,
+            'path'     => $themePath,
             'location' => $location,
         ];
 
         View::share('theme', $theme);
 
         View::prependLocation($themePath);
-        View::prependLocation($themePath . '/' . $component);
+        View::prependLocation($themePath . '/views/' . $component);
 
         if (!empty($paths)) {
             $paths = !is_array($paths) ? [$paths] : $paths;
