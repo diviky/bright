@@ -24,7 +24,7 @@ trait Outfile
         $rows = $this->flatChunk($count);
 
         foreach ($rows as $row) {
-            fwrite($fp, implode('","', (array) $row) . "\n");
+            fwrite($fp, '"' . implode('","', (array) $row) . '"' . "\r\n");
         }
 
         fclose($fp);
