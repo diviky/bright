@@ -2,15 +2,16 @@
 
 namespace Karla\Database\Query;
 
-use Illuminate\Database\Query\Builder as BaseBuilder;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Karla\Database\Karla;
+use Illuminate\Support\Carbon;
+use Karla\Database\Traits\Raw;
+use Illuminate\Support\Facades\DB;
+use Karla\Database\Traits\Outfile;
 use Karla\Database\Traits\Cachable;
 use Karla\Database\Traits\Eventable;
-use Karla\Database\Traits\Outfile;
 use Karla\Database\Traits\Timestamps;
 use Karla\Helpers\Iterator\SelectIterator;
+use Illuminate\Database\Query\Builder as BaseBuilder;
 
 class Builder extends BaseBuilder
 {
@@ -18,6 +19,7 @@ class Builder extends BaseBuilder
     use Eventable;
     use Outfile;
     use Timestamps;
+    use Raw;
 
     /**
      * {@inheritdoc}
@@ -39,22 +41,6 @@ class Builder extends BaseBuilder
         return parent::get($columns);
     }
 
-    public function groupByRaw($sql, array $bindings = [])
-    {
-        if (is_array($sql)) {
-            $sql = implode(',', $sql);
-        }
-
-        $this->groupBy(DB::raw($sql));
-
-        if ($bindings) {
-            $this->setBindings($bindings, 'group');
-            $this->addBinding($bindings, 'group');
-        }
-
-        return $this;
-    }
-
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
         if ($value && is_array($value)) {
@@ -62,15 +48,6 @@ class Builder extends BaseBuilder
         }
 
         return parent::where($column, $operator, $value, $boolean);
-    }
-
-    public function selectRaw($expression, array $bindings = [])
-    {
-        if (is_array($expression)) {
-            $expression = implode(', ', $expression);
-        }
-
-        return parent::selectRaw($expression, $bindings);
     }
 
     public function softDelete($id = null, $column = 'id', $updated_at = true)
