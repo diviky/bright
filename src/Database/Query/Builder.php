@@ -2,16 +2,15 @@
 
 namespace Karla\Database\Query;
 
-use Karla\Database\Karla;
+use Illuminate\Database\Query\Builder as BaseBuilder;
 use Illuminate\Support\Carbon;
-use Karla\Database\Traits\Raw;
-use Illuminate\Support\Facades\DB;
-use Karla\Database\Traits\Outfile;
+use Karla\Database\Karla;
 use Karla\Database\Traits\Cachable;
 use Karla\Database\Traits\Eventable;
+use Karla\Database\Traits\Outfile;
+use Karla\Database\Traits\Raw;
 use Karla\Database\Traits\Timestamps;
 use Karla\Helpers\Iterator\SelectIterator;
-use Illuminate\Database\Query\Builder as BaseBuilder;
 
 class Builder extends BaseBuilder
 {
@@ -138,7 +137,7 @@ class Builder extends BaseBuilder
         }
     }
 
-    public function iterate($count, $callback = null)
+    public function iterate($count = 10000, $callback = null)
     {
         return $this->iterator($count, $callback);
     }

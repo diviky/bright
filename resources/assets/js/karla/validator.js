@@ -22,7 +22,7 @@
 
         // http://net.tutsplus.com/tutorials/other/8-regular-expressions-you-should-know/
         emailRe = /^([a-z0-9_\.\-\+]+)@([\da-z\.\-]+)\.([a-z\.]{2,6})$/i,
-        urlRe = /^(https?:\/\/)?[\da-z\.\-]+\.[a-z\.]{2,6}[#&+_\?\/\w \.\-=]*$/i,
+        urlRe = /^(https?:\/\/)?[\da-z\.\-]+\.[a-z\.]{2,6}[#&+_\?\/\w \W\^\(\)\.\-=]*$/i,
         v;
 
     v = $.tools.validator = {
