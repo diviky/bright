@@ -164,14 +164,14 @@ trait Eventable
 
             switch ($column) {
                 case 'user_id':
-                    $this->where($alias . '.' . $column, user('id'));
+                    $this->where($alias . $column, user('id'));
                     break;
                 case 'parent_id':
-                    $this->where($alias . '.' . $column, user('id'));
+                    $this->where($alias . $column, user('id'));
                     break;
                 default:
                     if (app()->has($field)) {
-                        $this->where($alias . '.' . $column, app()->get($field));
+                        $this->where($alias . $column, app()->get($field));
                     }
                     break;
             }
