@@ -74,7 +74,8 @@ trait Eventable
             $tables = $tables[$type];
         }
 
-        $tables = isset($tables[$this->from]) ? $tables[$this->from] : [];
+        $from   = preg_split('/ as /i', $this->from)[0];
+        $tables = isset($tables[$from]) ? $tables[$from] : [];
 
         return $tables;
     }
@@ -150,7 +151,8 @@ trait Eventable
 
         $eventColumns = $this->getEventTables($type);
         $eventColumns = array_merge($eventColumns, $this->eventColumns);
-        $from         = last(preg_split('/ as /i', $this->from));
+        $from         = preg_split('/ as /i', $this->from);
+        $alias        = (count($from) > 1) ? last($from) . '.' : '';
 
         foreach ($eventColumns as $columns) {
             if (!is_array($columns)) {
@@ -162,14 +164,14 @@ trait Eventable
 
             switch ($column) {
                 case 'user_id':
-                    $this->where($from . '.' . $column, user('id'));
+                    $this->where($alias . '.' . $column, user('id'));
                     break;
                 case 'parent_id':
-                    $this->where($from . '.' . $column, user('id'));
+                    $this->where($alias . '.' . $column, user('id'));
                     break;
                 default:
                     if (app()->has($field)) {
-                        $this->where($from . '.' . $column, app()->get($field));
+                        $this->where($alias . '.' . $column, app()->get($field));
                     }
                     break;
             }
