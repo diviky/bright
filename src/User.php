@@ -4,12 +4,14 @@ namespace Karla;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Karla\Http\Controllers\Auth\Traits\Authorizable;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
+    use Authorizable;
 
     public $guard_name = 'web';
     protected $admin   = 'super-admin';
@@ -32,4 +34,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function hasPermissionTo($permission, $guardName = null): bool
+    {
+        $granted = $this->isMatched($permission);
+
+        return ($granted) ? true : false;
+    }
+
 }

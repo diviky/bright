@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Traits;
+namespace Mobtexting\Common\Traits;
 
 trait UserTrait
 {
@@ -38,17 +38,17 @@ trait UserTrait
 
         $roles = [
             'customer' => 'customers',
-            'client' => 'customers',
-            'partner' => 'resellers',
+            'client'   => 'customers',
+            'partner'  => 'resellers',
             'reseller' => 'resellers',
         ];
 
-        $results = [];
-        $results['users'][$parent_id] = $parent_id;
+        $results                                  = [];
+        $results['users'][$parent_id]             = $parent_id;
         $results['customers'][$parent_id]['user'] = $this->getUserById($parent_id);
 
         foreach ($rows as $row) {
-            $id = $row->id;
+            $id   = $row->id;
             $role = $row->role;
 
             if ('agent' == $role) {
@@ -59,16 +59,18 @@ trait UserTrait
 
             $results['users'][$id] = $id;
 
-            $users = [];
-            $users[$id] = $id;
+            $users      = [];
+            $users[$id] = $row;
 
             $results[$role][$id]['user'] = $this->getUserById($id);
 
             if ('resellers' == $role) {
                 $users = $this->getChildUsers($id, $users);
+
+                $results[$role][$id]['customers'] = $users;
             }
 
-            $results['users'] = array_merge($results['users'], $users);
+            $results['users'] = array_merge($results['users'], array_keys($users));
         }
 
         return $results;

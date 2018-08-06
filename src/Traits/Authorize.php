@@ -18,7 +18,6 @@ trait Authorize
 
     protected function isAuthorized($action)
     {
-        return true;
         $routeName = $this->getRoute($action);
 
         // Check user has permission
