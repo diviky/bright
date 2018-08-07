@@ -129,12 +129,10 @@ jQuery(document).ready(function ($) {
   });
 
 
-  $(document).on("click", "[data-add]", function () {
-
-    var target = $(this).data('add');
-    $(target + " tfoot:first tr")
-      .clone()
-      .appendTo(target + " tbody");
+  $(document).on("click", "[data-add]", function (e) {
+    var target = $(this).parents('table:first');
+    var clone = target.find("tfoot:first tr").clone();
+    target.find('tbody:first').append(clone);
 
     e.preventDefault();
   });

@@ -22,7 +22,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
     {
         $action = $route->getActionName();
 
-        if (!$this->isAuthorized($action)) {
+        if (!app()->has('is_api_request') && !$this->isAuthorized($action)) {
             abort(401, 'Access denied');
         }
 
