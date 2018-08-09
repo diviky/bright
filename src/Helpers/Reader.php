@@ -29,6 +29,8 @@ class Reader
     {
         $reader = $this->unzip($reader, $options);
 
+        set_time_limit(0);
+
         if (!is_string($reader)) {
             $ext = $options['ext'] ?: '.array';
         } else {
