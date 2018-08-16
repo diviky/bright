@@ -2,8 +2,6 @@
 
 namespace Karla\Database\Traits;
 
-use Illuminate\Support\Facades\DB;
-
 trait Raw
 {
     public function groupByRaw($sql, array $bindings = [])
@@ -12,7 +10,7 @@ trait Raw
             $sql = implode(', ', $sql);
         }
 
-        $this->groupBy(DB::raw($sql));
+        $this->groupBy($this->raw($sql));
 
         if ($bindings) {
             $this->setBindings($bindings, 'group');
@@ -25,15 +23,44 @@ trait Raw
     public function selectRaw($expression, array $bindings = [])
     {
         if (is_array($expression)) {
+
+            foreach ($expression as &$exp) {
+                if (is_string($exp)) {
+                    if (false !== strpos($exp, '(')) {
+                        $exp = $this->wrapColumn($exp);
+                    } else {
+                        $exp = $this->grammar->wrap(trim($exp));
+                    }
+                }
+            }
+
             $expression = implode(', ', $expression);
         }
 
         return parent::selectRaw($expression, $bindings);
     }
 
+    protected function wrapColumn($value)
+    {
+        if (preg_match('/\(([^\)]+)\)/', $value, $matches)) {
+            if ($matches[1]) {
+                $columns = explode(',', $matches[1]);
+                foreach ($columns as &$column) {
+                    if (is_string($column)) {
+                        $column = $this->grammar->wrap(trim($column));
+                    }
+                }
+                $columns = implode(', ', $columns);
+                $value   = str_replace($matches[0], '(' . $columns . ')', $value);
+            }
+        }
+
+        return $value;
+    }
+
     public function whereBetweenRaw($column, array $values, $boolean = 'and', $not = false)
     {
-        $column = DB::raw($column);
+        $column = $this->raw($column);
 
         return parent::whereBetween($column, $values, $boolean, $not);
     }
@@ -42,7 +69,7 @@ trait Raw
     {
         foreach ($values as $key => $value) {
             if (':' == substr($value, 0, 1)) {
-                $values[$key] = DB::raw(substr($value, 1));
+                $values[$key] = $this->raw(substr($value, 1));
             }
         }
 
