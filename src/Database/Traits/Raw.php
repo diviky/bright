@@ -23,11 +23,10 @@ trait Raw
     public function selectRaw($expression, array $bindings = [])
     {
         if (is_array($expression)) {
-
             foreach ($expression as &$exp) {
                 if (is_string($exp)) {
                     if (false !== strpos($exp, '(')) {
-                        $exp = $this->wrapColumn($exp);
+                        $exp = $this->wrapColumn(trim($exp));
                     } else {
                         $exp = $this->grammar->wrap(trim($exp));
                     }
@@ -42,12 +41,18 @@ trait Raw
 
     protected function wrapColumn($value)
     {
-        if (preg_match('/\(([^\)]+)\)/', $value, $matches)) {
+        if (preg_match('/\((.+)\)/', $value, $matches)) {
             if ($matches[1]) {
                 $columns = explode(',', $matches[1]);
                 foreach ($columns as &$column) {
                     if (is_string($column)) {
-                        $column = $this->grammar->wrap(trim($column));
+                        if (false !== strpos($column, '(')) {
+                            if (false !== strpos($column, '.')) {
+                                $column = $this->wrapColumn($column);
+                            }
+                        } else {
+                            $column = $this->grammar->wrap(trim($column));
+                        }
                     }
                 }
                 $columns = implode(', ', $columns);

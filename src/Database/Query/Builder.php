@@ -2,15 +2,16 @@
 
 namespace Karla\Database\Query;
 
-use Illuminate\Database\Query\Builder as BaseBuilder;
-use Illuminate\Support\Carbon;
 use Karla\Database\Karla;
+use Illuminate\Support\Carbon;
+use Karla\Database\Traits\Raw;
+use Karla\Database\Traits\Build;
+use Karla\Database\Traits\Outfile;
 use Karla\Database\Traits\Cachable;
 use Karla\Database\Traits\Eventable;
-use Karla\Database\Traits\Outfile;
-use Karla\Database\Traits\Raw;
 use Karla\Database\Traits\Timestamps;
 use Karla\Helpers\Iterator\SelectIterator;
+use Illuminate\Database\Query\Builder as BaseBuilder;
 
 class Builder extends BaseBuilder
 {
@@ -19,6 +20,7 @@ class Builder extends BaseBuilder
     use Outfile;
     use Timestamps;
     use Raw;
+    use Build;
 
     /**
      * {@inheritdoc}

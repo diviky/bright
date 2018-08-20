@@ -76,6 +76,7 @@ trait Cachable
         if ($minutes instanceof DateTime || $minutes > 0) {
             return $cache->remember($key, $minutes, $callback);
         }
+
         return $cache->rememberForever($key, $callback);
     }
 
