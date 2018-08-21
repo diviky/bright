@@ -91,7 +91,7 @@ trait Database
                 $column = $this->cleanField($column);
 
                 if ($from && $to) {
-                    $query->whereBetween(DB::raw('DATE(' . $column . ')'), [$from, $to]);
+                    $query->whereDateBetween($column, [$from, $to]);
                 }
 
                 if ($from && empty($to)) {
