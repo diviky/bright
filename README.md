@@ -19,8 +19,10 @@ sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query
 add in kernal.php route middleware
 ```php
 
-'auth.verified' => \Karla\Http\Controllers\Auth\Middlewares\IsUserActivate::class,
+'auth.verified' => \Karla\Http\Controllers\Auth\Middleware\IsUserActivate::class,
 ```
+
+## Config changes
 
 add in auth.php guards array
 ```php
@@ -30,6 +32,7 @@ add in auth.php guards array
     ],
 ```
 
+Replace passwords array with below
 ```php
     'passwords' => [
         'users' => [
@@ -40,6 +43,7 @@ add in auth.php guards array
     ],
 ```
 
+Add in providers array in app.php
 ```php
     //app.php
     

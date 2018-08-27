@@ -36,24 +36,29 @@ return [
      */
 
     'guards'    => [
-        'web'        => [
+        'web'         => [
             'driver'   => 'session',
             'provider' => 'users',
         ],
 
-        'api'        => [
+        'api'         => [
             'driver'   => 'token',
             'provider' => 'users',
         ],
 
-        'token'      => [
+        'token'       => [
             'driver'   => 'access_token',
             'provider' => 'token',
         ],
 
-        'auth_token' => [
+        'auth_token'  => [
             'driver'   => 'auth_token',
             'provider' => 'token',
+        ],
+
+        'credentials' => [
+            'driver'   => 'credentials',
+            'provider' => 'credentials',
         ],
     ],
 
