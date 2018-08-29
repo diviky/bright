@@ -8,6 +8,8 @@ Query builder needs to overwrite with karla
 
 sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Connection.php
 
+sed -i -e 's/use Illuminate\\Database\\Grammar/use Karla\\Database\\Grammar/g' vendor/laravel/framework/src/Illuminate/Database/Query/Grammars/Grammar.php
+
 ```
 
 ```php
