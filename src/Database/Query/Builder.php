@@ -42,15 +42,6 @@ class Builder extends BaseBuilder
         return parent::get($columns);
     }
 
-    public function where($column, $operator = null, $value = null, $boolean = 'and')
-    {
-        if ($value && is_array($value)) {
-            return parent::whereIn($column, $value, $boolean);
-        }
-
-        return parent::where($column, $operator, $value, $boolean);
-    }
-
     public function softDelete($id = null, $column = 'id', $updated_at = true)
     {
         if ($id) {

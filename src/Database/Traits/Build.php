@@ -14,4 +14,14 @@ trait Build
 
         return parent::whereBetween($column, $values, $boolean, $not);
     }
+
+    public function where($column, $operator = null, $value = null, $boolean = 'and')
+    {
+        $val = func_num_args() === 2 ? $operator : $value;
+        if (is_array($val)) {
+            return parent::whereIn($column, $val);
+        }
+
+        return parent::where($column, $operator, $value, $boolean);
+    }
 }
