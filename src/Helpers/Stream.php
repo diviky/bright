@@ -11,40 +11,40 @@ use Iterator;
 class Stream
 {
     protected $mime_types = [
-        '.txt' => 'text/plain',
+        '.txt'  => 'text/plain',
         '.json' => 'application/json',
-        '.xml' => 'application/xml',
-        '.doc' => 'application/msword',
-        '.rtf' => 'application/rtf',
-        '.xls' => 'application/vnd.ms-excel',
+        '.xml'  => 'application/xml',
+        '.doc'  => 'application/msword',
+        '.rtf'  => 'application/rtf',
+        '.xls'  => 'application/vnd.ms-excel',
         '.xlsx' => 'application/vnd.ms-excel',
-        '.csv' => 'application/vnd.ms-excel',
-        '.ppt' => 'application/vnd.ms-powerpoint',
-        '.pdf' => 'application/pdf',
+        '.csv'  => 'application/vnd.ms-excel',
+        '.ppt'  => 'application/vnd.ms-powerpoint',
+        '.pdf'  => 'application/pdf',
     ];
 
-    protected $separator = ",";
+    protected $separator = ',';
 
     protected $lineEnd = "\r\n";
 
     public function start($filename)
     {
-        $ext = strtolower(strrchr($filename, '.'));
+        $ext  = strtolower(strrchr($filename, '.'));
         $type = $this->mime_types[$ext];
 
-        if ($ext == '.csv') {
+        if ('.csv' == $ext) {
             $this->separator = ',';
         }
 
         set_time_limit(0);
         header('Content-Type: application/octet-stream');
         header('Content-Description: File Transfer');
-        header('Content-Type: ' . $type);
-        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Content-Type: '.$type);
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
 
         $seconds = 30;
-        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $seconds) . ' GMT');
-        header('Cache-Control: max-age=' . $seconds . ', s-maxage=' . $seconds . ', must-revalidate, proxy-revalidate');
+        header('Expires: '.gmdate('D, d M Y H:i:s', time() + $seconds).' GMT');
+        header('Cache-Control: max-age='.$seconds.', s-maxage='.$seconds.', must-revalidate, proxy-revalidate');
 
         session_cache_limiter(false); // Disable session_start() caching headers
         if (session_id()) {
@@ -76,7 +76,7 @@ class Stream
             $out = [];
             foreach ($fields as $field) {
                 $field = strtoupper($field);
-                if (strpos($field, ' AS ') !== false) {
+                if (false !== strpos($field, ' AS ')) {
                     $field = explode(' AS ', $field);
                     $field = trim($field[1]);
                 }
@@ -106,7 +106,7 @@ class Stream
             $row = array_map([$this, 'clean'], $row);
         }
 
-        echo implode($this->separator, $row) . $this->lineEnd;
+        echo implode($this->separator, $row).$this->lineEnd;
 
         flush();
         ob_flush();
@@ -172,7 +172,8 @@ class Stream
 
     public function clean($string)
     {
-        $string = '"' . str_replace('"', '""', $string) . '"';
+        $string = '"'.str_replace('"', '""', $string).'"';
+
         return str_replace(["\n", "\t", "\r"], '', $string);
     }
 
@@ -186,11 +187,11 @@ class Stream
     public function readFile($filename)
     {
         $chunksize = 2 * (1024 * 1024); // how many bytes per chunk
-        $buffer = '';
+        $buffer    = '';
 
         $handle = fopen($filename, 'rb');
 
-        if ($handle === false) {
+        if (false === $handle) {
             return false;
         }
 

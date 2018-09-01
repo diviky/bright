@@ -2,8 +2,8 @@
 
 namespace Karla\Http\Controllers\Auth;
 
-use Karla\Routing\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Karla\Routing\Controller;
 
 class ResetPasswordController extends Controller
 {

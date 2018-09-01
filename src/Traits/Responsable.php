@@ -12,7 +12,7 @@ trait Responsable
         $layout            = $layout ?: 'index';
         $data['component'] = $route;
 
-        return view('layouts.' . $layout, $data);
+        return view('layouts.'.$layout, $data);
     }
 
     protected function getRoute($action): string
@@ -20,7 +20,7 @@ trait Responsable
         $method    = $this->getMethod($action);
         $component = $this->getNamespace($action);
 
-        return strtolower($component . '.' . $method);
+        return strtolower($component.'.'.$method);
     }
 
     /**
@@ -49,7 +49,7 @@ trait Responsable
         array_pop($action);
         $path = implode(DIRECTORY_SEPARATOR, array_slice($action, 1));
 
-        return app_path($path . '/views');
+        return app_path($path.'/views');
     }
 
     protected function getNextRedirect($response = [], $keyword = 'next')
@@ -62,9 +62,9 @@ trait Responsable
         unset($response[$keyword]);
 
         if (is_string($next)) {
-            if (substr($next, 0, 1) == '/') {
+            if ('/' == substr($next, 0, 1)) {
                 $redirect = redirect($next);
-            } elseif ($next == 'back') {
+            } elseif ('back' == $next) {
                 $redirect = redirect()->back();
             } else {
                 $redirect = redirect()->route($next);

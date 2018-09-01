@@ -13,7 +13,7 @@ trait Authorize
         $controller = explode('\\', $action[0]);
         $component  = strtolower($controller[count($controller) - 2]);
 
-        return strtolower($component . '.' . $method);
+        return strtolower($component.'.'.$method);
     }
 
     protected function isAuthorized($action)

@@ -277,7 +277,7 @@ class Reader
         if ($ext && in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
             $extensions = ['.csv', '.xls', '.xlsx', '.txt'];
             $directory  = dirname($zip);
-            $extract    = '/tmp/' . uniqid() . '/';
+            $extract    = '/tmp/'.uniqid().'/';
 
             try {
                 $archive   = UnifiedArchive::open($zip);
@@ -295,18 +295,18 @@ class Reader
 
                 if ($extension && $tmpfile) {
                     $archive->extractFiles($extract);
-                    $reader = $directory . '/' . md5(uniqid()) . $extension;
+                    $reader = $directory.'/'.md5(uniqid()).$extension;
 
-                    rename($extract . '/' . $tmpfile, $reader);
+                    rename($extract.'/'.$tmpfile, $reader);
                     chmod($reader, 0777);
                     unlink($zip);
 
                     return $reader;
                 }
 
-                return null;
+                return;
             } catch (\Exception $e) {
-                return null;
+                return;
             }
         }
 

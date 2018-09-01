@@ -1,8 +1,8 @@
 <?php
+
 namespace Karla\Database;
 
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 class Karla
 {
@@ -61,7 +61,7 @@ class Karla
             'fields'     => (count($query['fields']) > 0) ? @implode(', ', $query['fields']) : ' * ',
             'values'     => (count($query['values']) > 0) ? @implode(', ', $query['values']) : '',
             'table'      => $table,
-            'alias'      => ($query['alias']) ? $this->alias . $this->name($query['alias']) : '',
+            'alias'      => ($query['alias']) ? $this->alias.$this->name($query['alias']) : '',
             'order'      => $this->order($query['order']),
             'limit'      => $this->limit($query['limit'], $query['offset'], $query['page']),
             'joins'      => @implode(' ', $query['joins']),
@@ -111,7 +111,7 @@ class Karla
         ], $join);
 
         if (!empty($data['alias'])) {
-            $data['alias'] = $this->alias . $this->name($data['alias']);
+            $data['alias'] = $this->alias.$this->name($data['alias']);
         }
         if (!empty($data['conditions'])) {
             $data['conditions'] = trim($this->conditions($data['conditions'], true, false));
@@ -185,30 +185,30 @@ class Karla
             $out = $this->conditionKeysToString($conditions, $quoteValues);
 
             if (empty($out)) {
-                return $clause . ' 1 = 1';
+                return $clause.' 1 = 1';
             }
 
-            return $clause . implode(' AND ', $out);
+            return $clause.implode(' AND ', $out);
         }
-        if ($conditions === false || $conditions === true) {
-            return $clause . (int) $conditions . ' = 1';
+        if (false === $conditions || true === $conditions) {
+            return $clause.(int) $conditions.' = 1';
         }
 
-        if (empty($conditions) || trim($conditions) == '') {
-            return $clause . '1 = 1';
+        if (empty($conditions) || '' == trim($conditions)) {
+            return $clause.'1 = 1';
         }
         $clauses = '/^WHERE\\x20|^GROUP\\x20BY\\x20|^HAVING\\x20|^ORDER\\x20BY\\x20/i';
 
         if (preg_match($clauses, $conditions, $match)) {
             $clause = '';
         }
-        if (trim($conditions) == '') {
+        if ('' == trim($conditions)) {
             $conditions = ' 1 = 1';
         } else {
             $conditions = $this->quoteFields($conditions);
         }
 
-        return $clause . $conditions;
+        return $clause.$conditions;
     }
 
     /**
@@ -241,30 +241,30 @@ class Karla
             if (is_numeric($key) && empty($value)) {
                 continue;
             } elseif (is_numeric($key) && is_string($value)) {
-                $out[] = $not . $this->quoteFields($value);
+                $out[] = $not.$this->quoteFields($value);
             } elseif ((is_numeric($key) && is_array($value)) || in_array(strtolower(trim($key)), $bool)) {
                 if (in_array(strtolower(trim($key)), $bool)) {
-                    $join = ' ' . strtoupper($key) . ' ';
+                    $join = ' '.strtoupper($key).' ';
                 } else {
                     $key = $join;
                 }
                 $value = $this->conditionKeysToString($value, $quoteValues);
 
-                if (strpos($join, 'NOT') !== false) {
-                    if (strtoupper(trim($key)) == 'NOT') {
-                        $key = 'AND ' . trim($key);
+                if (false !== strpos($join, 'NOT')) {
+                    if ('NOT' == strtoupper(trim($key))) {
+                        $key = 'AND '.trim($key);
                     }
                     $not = 'NOT ';
                 }
 
                 if (empty($value[1])) {
                     if ($not) {
-                        $out[] = $not . '(' . $value[0] . ')';
+                        $out[] = $not.'('.$value[0].')';
                     } else {
                         $out[] = $value[0];
                     }
                 } else {
-                    $out[] = '(' . $not . '(' . implode(') ' . strtoupper($key) . ' (', $value) . '))';
+                    $out[] = '('.$not.'('.implode(') '.strtoupper($key).' (', $value).'))';
                 }
             } else {
                 if (is_array($value) && !empty($value) && !$valueInsert) {
@@ -272,8 +272,8 @@ class Karla
                     if (array_keys($value) === array_values(array_keys($value))) {
                         $count = count($value);
 
-                        $data = $this->quoteFields($key) . ' IN (';
-                        if ($quoteValues || strpos($value[0], '-!') !== 0) {
+                        $data = $this->quoteFields($key).' IN (';
+                        if ($quoteValues || 0 !== strpos($value[0], '-!')) {
                             if (is_object($model)) {
                                 $columnType = $model->getColumnType($key);
                             }
@@ -283,7 +283,7 @@ class Karla
                     } else {
                         $ret = $this->conditionKeysToString($value, $quoteValues);
                         if (count($ret) > 1) {
-                            $data = '(' . implode(') AND (', $ret) . ')';
+                            $data = '('.implode(') AND (', $ret).')';
                         } elseif (isset($ret[0])) {
                             $data = $ret[0];
                         }
@@ -294,7 +294,7 @@ class Karla
                     $data = $this->parseKey(trim($key), $value);
                 }
 
-                if ($data != null) {
+                if (null != $data) {
                     if (preg_match('/^\(\(\((.+)\)\)\)$/', $data)) {
                         $data = substr($data, 1, strlen($data) - 2);
                     }
@@ -320,17 +320,17 @@ class Karla
      */
     protected function parseKey($key, $value)
     {
-        $operatorMatch = '/^((' . implode(')|(', $this->sqlOps);
+        $operatorMatch = '/^(('.implode(')|(', $this->sqlOps);
         $operatorMatch .= '\\x20)|<[>=]?(?![^>]+>)\\x20?|[>=!]{1,3}(?!<)\\x20?)/is';
-        $bound = (strpos($key, '?') !== false || (is_array($value) && strpos($key, ':') !== false));
+        $bound = (false !== strpos($key, '?') || (is_array($value) && false !== strpos($key, ':')));
 
         if (!strpos($key, ' ')) {
             $operator = '=';
         } else {
             list($key, $operator) = explode(' ', trim($key), 2);
 
-            if (!preg_match($operatorMatch, trim($operator)) && strpos($operator, ' ') !== false) {
-                $key      = $key . ' ' . $operator;
+            if (!preg_match($operatorMatch, trim($operator)) && false !== strpos($operator, ' ')) {
+                $key      = $key.' '.$operator;
                 $split    = strrpos($key, ' ');
                 $operator = substr($key, $split);
                 $key      = substr($key, 0, $split);
@@ -339,9 +339,9 @@ class Karla
 
         $type = null;
 
-        $null = ($value === null || (is_array($value) && empty($value)));
+        $null = (null === $value || (is_array($value) && empty($value)));
 
-        if (strtolower($operator) === 'not') {
+        if ('not' === strtolower($operator)) {
             $data = $this->conditionKeysToString([$operator => [$key => $value]], true);
 
             return $data[0];
@@ -349,13 +349,13 @@ class Karla
 
         $value = $this->value($value, $type);
 
-        if ($key !== '?') {
-            $isKey = (strpos($key, '(') !== false || strpos($key, ')') !== false);
+        if ('?' !== $key) {
+            $isKey = (false !== strpos($key, '(') || false !== strpos($key, ')'));
             $key   = $isKey ? $this->quoteFields($key) : $this->name($key);
         }
 
         if ($bound) {
-            return $this->replace($key . ' ' . trim($operator), $value);
+            return $this->replace($key.' '.trim($operator), $value);
         }
 
         if (!preg_match($operatorMatch, trim($operator))) {
@@ -376,7 +376,7 @@ class Karla
                     break;
             }
             $value = "({$value})";
-        } elseif ($null || $value === 'NULL') {
+        } elseif ($null || 'NULL' === $value) {
             switch ($operator) {
                 case '=':
                     $operator = 'IS';
@@ -398,9 +398,9 @@ class Karla
             $value = [$value];
         }
 
-        if (strpos($str, '?') !== false && is_numeric(key($value))) {
+        if (false !== strpos($str, '?') && is_numeric(key($value))) {
             $offset = 0;
-            while (($pos = strpos($str, '?', $offset)) !== false) {
+            while (false !== ($pos = strpos($str, '?', $offset))) {
                 $val    = array_shift($value);
                 $offset = $pos + strlen($val);
                 $str    = substr_replace($str, $val, $pos, 1);
@@ -410,7 +410,7 @@ class Karla
         }
 
         foreach ($value as $key => $val) {
-            $str = str_replace(':' . $key, $val, $str);
+            $str = str_replace(':'.$key, $val, $str);
         }
 
         return $str;
@@ -435,14 +435,14 @@ class Karla
             $end = preg_quote($this->endQuote);
         }
         $conditions = str_replace([$start, $end], '', $conditions);
-        preg_match_all('/(?:[\'\"][^\'\"\\\]*(?:\\\.[^\'\"\\\]*)*[\'\"])|([a-z0-9_' . $start . $end . ']*\\.[a-z0-9_' . $start . $end . ']*)/i', $conditions, $replace, PREG_PATTERN_ORDER);
+        preg_match_all('/(?:[\'\"][^\'\"\\\]*(?:\\\.[^\'\"\\\]*)*[\'\"])|([a-z0-9_'.$start.$end.']*\\.[a-z0-9_'.$start.$end.']*)/i', $conditions, $replace, PREG_PATTERN_ORDER);
 
         if (isset($replace['1']['0'])) {
             $pregCount = count($replace['1']);
 
             for ($i = 0; $i < $pregCount; ++$i) {
                 if (!empty($replace['1'][$i]) && !is_numeric($replace['1'][$i])) {
-                    $conditions = preg_replace('/\b' . preg_quote($replace['1'][$i]) . '\b/', $this->name($replace['1'][$i]), $conditions);
+                    $conditions = preg_replace('/\b'.preg_quote($replace['1'][$i]).'\b/', $this->name($replace['1'][$i]), $conditions);
                 }
             }
 
@@ -464,19 +464,19 @@ class Karla
     {
         if ($limit) {
             $rt = '';
-            if (!stripos($limit, 'limit') || strpos(strtolower($limit), 'limit') === 0) {
+            if (!stripos($limit, 'limit') || 0 === strpos(strtolower($limit), 'limit')) {
                 $rt = ' LIMIT';
             }
 
-            if (intval($offset)) {
-                $rt .= ' ' . $offset . ',';
+            if ((int) $offset) {
+                $rt .= ' '.$offset.',';
             }
 
-            if (intval($page) && !$offset) {
-                $rt .= ' ' . $limit * ($page - 1) . ',';
+            if ((int) $page && !$offset) {
+                $rt .= ' '.$limit * ($page - 1).',';
             }
 
-            $rt .= ' ' . $limit;
+            $rt .= ' '.$limit;
 
             return $rt;
         }
@@ -505,14 +505,14 @@ class Karla
         }
 
         if (is_array($keys)) {
-            $keys = ($this->countDim($keys) > 1) ? array_map([ & $this, 'order'], $keys) : $keys;
+            $keys = ($this->countDim($keys) > 1) ? array_map([&$this, 'order'], $keys) : $keys;
 
             foreach ($keys as $key => $value) {
                 if (is_numeric($key)) {
                     $key   = $value   = ltrim(str_replace('ORDER BY ', '', $this->order($value)));
-                    $value = (!preg_match('/\\x20ASC|\\x20DESC/i', $key) ? ' ' . $direction : '');
+                    $value = (!preg_match('/\\x20ASC|\\x20DESC/i', $key) ? ' '.$direction : '');
                 } else {
-                    $value = ' ' . $value;
+                    $value = ' '.$value;
                 }
 
                 if (!preg_match('/^.+\\(.*\\)/', $key) && !strpos($key, ',')) {
@@ -526,12 +526,12 @@ class Karla
                     if (!preg_match('/\s/', $key)) {
                         $key = $this->name($key);
                     }
-                    $key .= ' ' . trim($dir);
+                    $key .= ' '.trim($dir);
                 }
-                $order[] = $this->order($key . $value);
+                $order[] = $this->order($key.$value);
             }
 
-            return ' ORDER BY ' . trim(str_replace('ORDER BY', '', implode(',', $order)));
+            return ' ORDER BY '.trim(str_replace('ORDER BY', '', implode(',', $order)));
         }
         $keys = preg_replace('/ORDER\\x20BY/i', '', $keys);
 
@@ -541,19 +541,19 @@ class Karla
 
             for ($i = 0; $i < $pregCount; ++$i) {
                 if (!is_numeric($result[0][$i])) {
-                    $keys = preg_replace('/' . $result[0][$i] . '/', $this->name($result[0][$i]), $keys);
+                    $keys = preg_replace('/'.$result[0][$i].'/', $this->name($result[0][$i]), $keys);
                 }
             }
-            $result = ' ORDER BY ' . $keys;
+            $result = ' ORDER BY '.$keys;
 
-            return $result . (!preg_match('/\\x20ASC|\\x20DESC/i', $keys) ? ' ' . $direction : '');
+            return $result.(!preg_match('/\\x20ASC|\\x20DESC/i', $keys) ? ' '.$direction : '');
         } elseif (preg_match('/(\\x20ASC|\\x20DESC)/i', $keys, $match)) {
             $direction = $match[1];
 
-            return ' ORDER BY ' . preg_replace('/' . $match[1] . '/', '', $keys) . $direction;
+            return ' ORDER BY '.preg_replace('/'.$match[1].'/', '', $keys).$direction;
         }
 
-        return ' ORDER BY ' . $keys . ' ' . $direction;
+        return ' ORDER BY '.$keys.' '.$direction;
     }
 
     /**
@@ -570,7 +570,7 @@ class Karla
                 $group = implode(', ', $group);
             }
 
-            return ' GROUP BY ' . $this->quoteFields($group);
+            return ' GROUP BY '.$this->quoteFields($group);
         }
     }
 
@@ -587,17 +587,17 @@ class Karla
     {
         if (is_array($data) && !empty($data)) {
             return array_map(
-                [ & $this, 'value'],
+                [&$this, 'value'],
                 $data, array_fill(0, count($data), $column), array_fill(0, count($data), $read)
             );
         }
 
         if (is_string($data)) {
-            return "'" . $data . "'";
+            return "'".$data."'";
         }
 
         if ($data instanceof Carbon) {
-            return "'" . $data . "'";
+            return "'".$data."'";
         }
 
         if (is_null($data)) {
@@ -617,7 +617,7 @@ class Karla
      */
     public function name($data)
     {
-        if ($data == '*') {
+        if ('*' == $data) {
             return '*';
         }
         if (is_object($data) && isset($data->type)) {
@@ -628,10 +628,10 @@ class Karla
         $count = count($data);
 
         for ($i = 0; $i < $count; ++$i) {
-            if ($data[$i] == '*') {
+            if ('*' == $data[$i]) {
                 continue;
             }
-            if (strpos($data[$i], '(') !== false && preg_match_all('/([^(]*)\((.*)\)(.*)/', $data[$i], $fields)) {
+            if (false !== strpos($data[$i], '(') && preg_match_all('/([^(]*)\((.*)\)(.*)/', $data[$i], $fields)) {
                 $fe = [];
                 foreach ($fields as $field) {
                     $fe[] = $field[0];
@@ -641,32 +641,32 @@ class Karla
 
                 if (!empty($fields[1])) {
                     if (!empty($fields[2])) {
-                        $data[$i] = $fields[1] . '(' . $this->name($fields[2]) . ')' . $fields[3];
+                        $data[$i] = $fields[1].'('.$this->name($fields[2]).')'.$fields[3];
                     } else {
-                        $data[$i] = $fields[1] . '()' . $fields[3];
+                        $data[$i] = $fields[1].'()'.$fields[3];
                     }
                 }
             }
-            $data[$i] = str_replace('.', $this->endQuote . '.' . $this->startQuote, $data[$i]);
-            $data[$i] = $this->startQuote . $data[$i] . $this->endQuote;
-            $data[$i] = str_replace($this->startQuote . $this->startQuote, $this->startQuote, $data[$i]);
-            $data[$i] = str_replace($this->startQuote . '(', '(', $data[$i]);
-            $data[$i] = str_replace(')' . $this->startQuote, ')', $data[$i]);
+            $data[$i] = str_replace('.', $this->endQuote.'.'.$this->startQuote, $data[$i]);
+            $data[$i] = $this->startQuote.$data[$i].$this->endQuote;
+            $data[$i] = str_replace($this->startQuote.$this->startQuote, $this->startQuote, $data[$i]);
+            $data[$i] = str_replace($this->startQuote.'(', '(', $data[$i]);
+            $data[$i] = str_replace(')'.$this->startQuote, ')', $data[$i]);
             $alias    = !empty($this->alias) ? $this->alias : 'AS ';
 
-            if (preg_match('/\s+' . $alias . '\s*/', $data[$i])) {
-                if (preg_match('/\w+\s+' . $alias . '\s*/', $data[$i])) {
-                    $quoted   = $this->endQuote . ' ' . $alias . $this->startQuote;
-                    $data[$i] = str_replace(' ' . $alias, $quoted, $data[$i]);
+            if (preg_match('/\s+'.$alias.'\s*/', $data[$i])) {
+                if (preg_match('/\w+\s+'.$alias.'\s*/', $data[$i])) {
+                    $quoted   = $this->endQuote.' '.$alias.$this->startQuote;
+                    $data[$i] = str_replace(' '.$alias, $quoted, $data[$i]);
                 } else {
-                    $quoted   = $alias . $this->startQuote;
-                    $data[$i] = str_replace($alias, $quoted, $data[$i]) . $this->endQuote;
+                    $quoted   = $alias.$this->startQuote;
+                    $data[$i] = str_replace($alias, $quoted, $data[$i]).$this->endQuote;
                 }
             }
 
             if (!empty($this->endQuote) && $this->endQuote == $this->startQuote) {
-                if (substr_count($data[$i], $this->endQuote) % 2 == 1) {
-                    if (substr($data[$i], -2) == $this->endQuote . $this->endQuote) {
+                if (1 == substr_count($data[$i], $this->endQuote) % 2) {
+                    if (substr($data[$i], -2) == $this->endQuote.$this->endQuote) {
                         $data[$i] = substr($data[$i], 0, -1);
                     } else {
                         $data[$i] = trim($data[$i], $this->endQuote);
@@ -674,9 +674,9 @@ class Karla
                 }
             }
             if (strpos($data[$i], '*')) {
-                $data[$i] = str_replace($this->endQuote . '*' . $this->endQuote, '*', $data[$i]);
+                $data[$i] = str_replace($this->endQuote.'*'.$this->endQuote, '*', $data[$i]);
             }
-            $data[$i] = str_replace($this->endQuote . $this->endQuote, $this->endQuote, $data[$i]);
+            $data[$i] = str_replace($this->endQuote.$this->endQuote, $this->endQuote, $data[$i]);
         }
 
         return (!$array) ? $data[0] : $data;
@@ -697,7 +697,7 @@ class Karla
     {
         if ($all) {
             $depth = [$count];
-            if (is_array($array) && reset($array) !== false) {
+            if (is_array($array) && false !== reset($array)) {
                 foreach ($array as $value) {
                     $depth[] = $this->countDim($value, true, $count + 1);
                 }
@@ -713,5 +713,4 @@ class Karla
 
         return $return;
     }
-
 }

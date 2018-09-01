@@ -15,7 +15,7 @@ class User extends Authenticatable
 
     public $guard_name = 'web';
     protected $admin   = 'super-admin';
-    protected $table   = "auth_users";
+    protected $table   = 'auth_users';
 
     /**
      * The attributes that are mass assignable.
@@ -41,5 +41,4 @@ class User extends Authenticatable
 
         return ($granted) ? true : false;
     }
-
 }

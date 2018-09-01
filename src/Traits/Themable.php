@@ -11,9 +11,9 @@ trait Themable
     protected function setUpTheme($route, $component = null, $paths = [])
     {
         $template             = $this->identify($route);
-        list($theme, $layout) = explode('.', $template . '.');
+        list($theme, $layout) = explode('.', $template.'.');
 
-        $themePath = resource_path('themes/' . $theme);
+        $themePath = resource_path('themes/'.$theme);
         $location  = public_path($theme);
 
         $theme = [
@@ -26,7 +26,7 @@ trait Themable
         View::share('theme', $theme);
 
         View::prependLocation($themePath);
-        View::prependLocation($themePath . '/views/' . $component);
+        View::prependLocation($themePath.'/views/'.$component);
 
         if (!empty($paths)) {
             $paths = !is_array($paths) ? [$paths] : $paths;
@@ -63,8 +63,8 @@ trait Themable
         list($option, $view) = explode('.', $route);
 
         $matches = [
-            $option . '.' . $view,
-            $option . '.*',
+            $option.'.'.$view,
+            $option.'.*',
             'default',
         ];
 

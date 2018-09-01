@@ -30,28 +30,31 @@ class EmailLogger
             'updated_at'  => date('Y-m-d H:i:s'),
         ]);
     }
+
     /**
      * Format address strings for sender, to, cc, bcc.
      *
      * @param $message
      * @param $field
+     *
      * @return null|string
      */
     public function formatAddressField($message, $field)
     {
         $headers = $message->getHeaders();
         if (!$headers->has($field)) {
-            return null;
+            return;
         }
         $mailboxes = $headers->get($field)->getFieldBodyModel();
         $strings   = [];
         foreach ($mailboxes as $email => $name) {
             $mailboxStr = $email;
             if (null !== $name) {
-                $mailboxStr = $name . ' <' . $mailboxStr . '>';
+                $mailboxStr = $name.' <'.$mailboxStr.'>';
             }
             $strings[] = $mailboxStr;
         }
+
         return implode(', ', $strings);
     }
 }

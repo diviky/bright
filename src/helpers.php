@@ -58,7 +58,7 @@ if (!function_exists('ago')) {
     function ago($time)
     {
         if (empty($time)) {
-            return null;
+            return;
         }
 
         return carbon($time)->diffForHumans();
@@ -85,7 +85,7 @@ if (!function_exists('disk')) {
     function disk($path, $disk = null, $time = null)
     {
         if (empty($path)) {
-            return null;
+            return;
         }
 
         if ('data:' == substr($path, 0, 5)) {

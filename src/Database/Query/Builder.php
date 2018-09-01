@@ -16,11 +16,11 @@ use Karla\Helpers\Iterator\SelectIterator;
 class Builder extends BaseBuilder
 {
     use Cachable;
-    use Eventable;
     use Outfile;
     use Timestamps;
     use Raw;
     use Build;
+    use Eventable;
 
     /**
      * {@inheritdoc}
@@ -151,7 +151,7 @@ class Builder extends BaseBuilder
     {
         $sql = $this->toSql();
         foreach ($this->getBindings() as $binding) {
-            $value = is_numeric($binding) ? $binding : "'" . $binding . "'";
+            $value = is_numeric($binding) ? $binding : "'".$binding."'";
             $sql   = preg_replace('/\?/', $value, $sql, 1);
         }
 

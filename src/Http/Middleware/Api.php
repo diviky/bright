@@ -31,7 +31,7 @@ class Api
     protected function respond($response)
     {
         $original = $response->getOriginalContent();
-        $code = $original['code'];
+        $code     = $original['code'];
         if ($code) {
             $response->setStatusCode($code, $original['message']);
         }

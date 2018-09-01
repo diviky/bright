@@ -2,10 +2,10 @@
 
 namespace Karla\Listeners;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Karla\Traits\CapsuleManager;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Karla\Traits\CapsuleManager;
 
 class SuccessLogin
 {

@@ -92,4 +92,9 @@ trait Builder
     {
         return new Karla();
     }
+
+    protected function raw($column)
+    {
+        return DB::raw($column);
+    }
 }

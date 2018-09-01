@@ -9,7 +9,6 @@ use Illuminate\Container\Container;
  */
 trait CapsuleManager
 {
-
     /**
      * The container instance.
      *
@@ -124,8 +123,9 @@ trait CapsuleManager
      *
      * If an array is passed as the key, we will assume you want to set an array of values.
      *
-     * @param  array|string  $key
-     * @param  mixed  $default
+     * @param array|string $key
+     * @param mixed        $default
+     *
      * @return mixed|\Illuminate\Config\Repository
      */
     public function config($key = null, $default = null)

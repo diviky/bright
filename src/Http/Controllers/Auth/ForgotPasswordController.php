@@ -153,11 +153,11 @@ class ForgotPasswordController extends Controller
             session()->forget('forget-userid');
 
             return redirect()->route('home');
-        } else {
-            return redirect()->back()
+        }
+
+        return redirect()->back()
                 ->with('status', 'error')
                 ->with('message', 'Unable to reset password');
-        }
     }
 
     /**

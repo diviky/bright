@@ -2,8 +2,6 @@
 
 namespace Karla\Mail;
 
-use Karla\Mail\Mailable;
-
 trait Notifyable
 {
     public function sendAnEmail($data = [], $user_id = null)
@@ -37,7 +35,7 @@ trait Notifyable
     protected function getMailTo($user_id = null)
     {
         if (empty($user_id)) {
-            return null;
+            return;
         }
 
         return $this->table('auth_users')
@@ -48,7 +46,7 @@ trait Notifyable
     protected function getBranding($user_id = null)
     {
         if (empty($user_id)) {
-            return null;
+            return;
         }
 
         $parent_id = $this->table('auth_users')
@@ -60,14 +58,12 @@ trait Notifyable
                 ->where('user_id', $parent_id)
                 ->first();
         }
-
-        return null;
     }
 
     protected function getMailFrom($user_id = null)
     {
         if (empty($user_id)) {
-            return null;
+            return;
         }
 
         $parent_id = $this->table('auth_users')
@@ -79,7 +75,5 @@ trait Notifyable
                 ->where('user_id', $parent_id)
                 ->value('name');
         }
-
-        return null;
     }
 }

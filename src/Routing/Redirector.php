@@ -1,7 +1,7 @@
 <?php
+
 namespace Karla\Routing;
 
-use Karla\Routing\RedirectResponse;
 use Illuminate\Routing\Redirector as BaseRedirector;
 
 class Redirector extends BaseRedirector
@@ -10,8 +10,8 @@ class Redirector extends BaseRedirector
      * Create a new redirect response.
      *
      * @param string $path
-     * @param int $status
-     * @param array $headers
+     * @param int    $status
+     * @param array  $headers
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -23,7 +23,7 @@ class Redirector extends BaseRedirector
                 if (isset($this->session)) {
                     $redirect->setSession($this->session);
                 }
-    
+
                 $redirect->setRequest($this->generator->getRequest());
             });
         } else {

@@ -20,10 +20,12 @@ class Responsable implements BaseResponsable
         $this->response = $response;
         $this->action   = $action;
     }
+
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function toResponse($request)
@@ -39,6 +41,7 @@ class Responsable implements BaseResponsable
 
         if (!is_array($response) && $response instanceof View) {
             $this->setUpTheme($route);
+
             return $response;
         }
 
@@ -47,7 +50,7 @@ class Responsable implements BaseResponsable
         }
 
         $requestType = $request->input('_request');
-        if ($requestType == 'iframe') {
+        if ('iframe' == $requestType) {
             $html = '<textarea>';
             $html .= json_encode($response);
             $html .= '</textarea>';
@@ -60,13 +63,13 @@ class Responsable implements BaseResponsable
         if (!$ajax && isset($response['next'])) {
             return $this->getNextRedirect($response, 'next');
         } elseif ($ajax && isset($response['redirect'])) {
-            if (substr($response['redirect'], 0, 1) !== '/') {
+            if ('/' !== substr($response['redirect'], 0, 1)) {
                 $redirect             = $this->getNextRedirect($response, 'redirect');
                 $response['redirect'] = $redirect->getTargetUrl();
             }
         }
 
-        if ($format == 'json') {
+        if ('json' == $format) {
             return $response;
         }
 
@@ -78,12 +81,13 @@ class Responsable implements BaseResponsable
 
         $path   = $this->getViewPath($this->action);
         $theme  = $this->setUpTheme($route, $component, $path);
-        $layout = $format == 'html' ? 'html' : $theme['layout'];
+        $layout = 'html' == $format ? 'html' : $theme['layout'];
 
         return $this->getView($view, $response, $layout);
     }
+
     /**
-     * Get the value of data
+     * Get the value of data.
      */
     public function getResponse()
     {

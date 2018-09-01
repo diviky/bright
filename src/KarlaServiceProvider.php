@@ -40,24 +40,24 @@ class KarlaServiceProvider extends ServiceProvider
         parent::boot();
 
         $this->publishes([
-            __DIR__ . '/../config/permission.php' => config_path('permission.php'),
-            __DIR__ . '/../config/karla.php'      => config_path('karla.php'),
-            __DIR__ . '/../config/theme.php'      => config_path('theme.php'),
-            __DIR__ . '/../config/auth.php'       => config_path('auth.php'),
-            __DIR__ . '/../config/app.php'        => config_path('app.php'),
+            __DIR__.'/../config/permission.php' => config_path('permission.php'),
+            __DIR__.'/../config/karla.php'      => config_path('karla.php'),
+            __DIR__.'/../config/theme.php'      => config_path('theme.php'),
+            __DIR__.'/../config/auth.php'       => config_path('auth.php'),
+            __DIR__.'/../config/app.php'        => config_path('app.php'),
         ], 'config');
 
         $this->publishes([
-            __DIR__ . '/../resources/assets/js' => resource_path('assets/js'),
-            __DIR__ . '/../webpack.mix.js'      => base_path('webpack.mix.js'),
-            __DIR__ . '/../bower.json'          => base_path('bower.json'),
+            __DIR__.'/../resources/assets/js' => resource_path('assets/js'),
+            __DIR__.'/../webpack.mix.js'      => base_path('webpack.mix.js'),
+            __DIR__.'/../bower.json'          => base_path('bower.json'),
         ], 'assets');
 
         $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views'),
+            __DIR__.'/../resources/views' => resource_path('views'),
         ], 'views');
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views/', 'karla');
+        $this->loadViewsFrom(__DIR__.'/../resources/views/', 'karla');
 
         Schema::defaultStringLength(191);
         $this->directive();
@@ -67,9 +67,9 @@ class KarlaServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/permission.php', 'permission');
-        $this->mergeConfigFrom(__DIR__ . '/../config/karla.php', 'karla');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/');
+        $this->mergeConfigFrom(__DIR__.'/../config/permission.php', 'permission');
+        $this->mergeConfigFrom(__DIR__.'/../config/karla.php', 'karla');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations/');
 
         $this->redirect();
         $this->auth();

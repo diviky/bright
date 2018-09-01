@@ -16,16 +16,16 @@ trait ViewTrait
         if (!$form['ajax']) {
             $inputs = '';
             foreach ($params as $k => $v) {
-                $inputs .= '<input type="hidden" name="' . $k . '" value="' . $v . '" />';
+                $inputs .= '<input type="hidden" name="'.$k.'" value="'.$v.'" />';
             }
 
-            $class           = 'render-' . Str::slug($url);
-            $params['class'] = '.' . $class;
+            $class           = 'render-'.Str::slug($url);
+            $params['class'] = '.'.$class;
 
-            $action = substr($url, 0, 1) !== '/' ? $this->route($url) : url($url);
+            $action = '/' !== substr($url, 0, 1) ? $this->route($url) : url($url);
 
-            $start          = '<form role="krender" class="' . $class . '" method="' . $method . '" action="' . $action . '">';
-            $form['start']  = $start . $inputs . csrf_field();
+            $start          = '<form role="krender" class="'.$class.'" method="'.$method.'" action="'.$action.'">';
+            $form['start']  = $start.$inputs.csrf_field();
             $form['inputs'] = $inputs;
             $form['end']    = '</form>';
             $form['class']  = $params['class'];

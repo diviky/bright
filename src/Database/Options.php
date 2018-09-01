@@ -9,11 +9,11 @@ class Options
 {
     use CapsuleManager;
 
-    protected $table = "app_options";
-    protected $values = [];
+    protected $table   = 'app_options';
+    protected $values  = [];
     protected $updates = [];
-    protected $extra = [];
-    protected $where = [];
+    protected $extra   = [];
+    protected $where   = [];
 
     public function __construct($table = null, $group = null)
     {
@@ -61,16 +61,16 @@ class Options
 
         $type = $this->identifyType($value);
 
-        if ($type == 'json') {
+        if ('json' == $type) {
             $value = json_encode($value);
         }
 
-        $time = new Carbon;
+        $time = new Carbon();
 
         $values = [
             'option_value' => $value,
-            'option_type' => $type,
-            'updated_at' => $time,
+            'option_type'  => $type,
+            'updated_at'   => $time,
         ];
 
         $values = array_merge($values, $this->updates);
@@ -83,20 +83,20 @@ class Options
 
     public function insert($key, $value, $type = null)
     {
-        $time = new Carbon;
+        $time = new Carbon();
 
         $type = $this->identifyType($value, $type);
 
-        if ($type == 'json') {
+        if ('json' == $type) {
             $value = json_encode($value);
         }
 
         $values = [
-            'option_name' => $key,
+            'option_name'  => $key,
             'option_value' => $value,
-            'option_type' => $type,
-            'created_at' => $time,
-            'updated_at' => $time,
+            'option_type'  => $type,
+            'created_at'   => $time,
+            'updated_at'   => $time,
         ];
 
         $values = array_merge($values, $this->values);
@@ -146,12 +146,12 @@ class Options
 
     protected function formatValue($value, $type = 'string')
     {
-        if ($type == 'json') {
+        if ('json' == $type) {
             $value = json_decode($value, true);
         }
 
-        if ($type == 'number') {
-            $value = intval($value);
+        if ('number' == $type) {
+            $value = (int) $value;
         }
 
         return $value;
@@ -174,6 +174,7 @@ class Options
 
         $rows->transform(function ($row) {
             $row->value = $this->formatValue($row->option_value, $row->option_type);
+
             return $row;
         });
 
@@ -219,9 +220,9 @@ class Options
     }
 
     /**
-     * Set the value of table
+     * Set the value of table.
      *
-     * @return  self
+     * @return self
      */
     public function setTable($table)
     {
@@ -231,9 +232,9 @@ class Options
     }
 
     /**
-     * Set the value of values
+     * Set the value of values.
      *
-     * @return  self
+     * @return self
      */
     public function values($values)
     {
@@ -243,9 +244,9 @@ class Options
     }
 
     /**
-     * Set the value of values
+     * Set the value of values.
      *
-     * @return  self
+     * @return self
      */
     public function updates($values)
     {
@@ -255,9 +256,9 @@ class Options
     }
 
     /**
-     * Set the value of values
+     * Set the value of values.
      *
-     * @return  self
+     * @return self
      */
     public function extra($values)
     {

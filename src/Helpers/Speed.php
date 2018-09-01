@@ -12,7 +12,7 @@ class Speed extends Capsule
     public function formatToSave($save, $required = null)
     {
         $required = ($required) ? explode(',', $required) : null;
-        $fields = array_keys($save);
+        $fields   = array_keys($save);
 
         $pass = true;
         // check all required keys exits in fields
@@ -25,12 +25,12 @@ class Speed extends Capsule
             }
         }
 
-        if ($pass !== true) {
+        if (true !== $pass) {
             return [];
         }
 
         $total = count($save[$fields[0]]);
-        $data = [];
+        $data  = [];
 
         for ($i = 0; $i < $total; ++$i) {
             $row = [];
@@ -60,7 +60,7 @@ class Speed extends Capsule
 
     public function formatFiles($files = [])
     {
-        $data = [];
+        $data  = [];
         $names = array_keys($files);
 
         foreach ($names as $name) {
@@ -72,11 +72,11 @@ class Speed extends Capsule
                 foreach ($file['name'] as $key => $value) {
                     if (is_array($value)) {
                         foreach ($value as $k => $v) {
-                            $add = true;
+                            $add    = true;
                             $values = [];
                             foreach ($fields as $field) {
                                 $val = $file[$field][$key][$k];
-                                if ($field == 'name' && empty($val)) {
+                                if ('name' == $field && empty($val)) {
                                     $add = false;
                                     continue;
                                 }
@@ -91,11 +91,11 @@ class Speed extends Capsule
                             }
                         }
                     } else {
-                        $add = true;
+                        $add    = true;
                         $values = [];
                         foreach ($fields as $field) {
                             $val = $file[$field][$key];
-                            if ($field == 'name' && empty($val)) {
+                            if ('name' == $field && empty($val)) {
                                 $add = false;
                                 continue;
                             }

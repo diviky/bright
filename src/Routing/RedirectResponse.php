@@ -1,4 +1,5 @@
 <?php
+
 namespace Karla\Routing;
 
 use Illuminate\Http\RedirectResponse as BaseRedirectResponse;
@@ -10,8 +11,9 @@ class RedirectResponse extends BaseRedirectResponse
     /**
      * Flash a piece of data to the session.
      *
-     * @param  string|array  $key
-     * @param  mixed  $value
+     * @param string|array $key
+     * @param mixed        $value
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function with($key, $value = null)
@@ -32,24 +34,25 @@ class RedirectResponse extends BaseRedirectResponse
      *
      * @throws \InvalidArgumentException
      *
-     * @return RedirectResponse The current response.
+     * @return RedirectResponse the current response
      */
     public function setTargetUrl($url)
     {
         if (empty($url)) {
             throw new \InvalidArgumentException('Cannot redirect to an empty URL.');
         }
-        
+
         $this->headers->set('Content-Type', 'application/json');
 
-        $this->targetUrl = $url;
-        $data = $this->with;
+        $this->targetUrl  = $url;
+        $data             = $this->with;
         $data['redirect'] = $url;
-      
+
         $this->setContent(json_encode($data));
 
         return $this;
     }
+
     /**
      * Is the response a redirect of some form?
      *

@@ -25,8 +25,8 @@ trait Database
         if (is_array($filter)) {
             foreach ($filter as $value => $column) {
                 $value = $data[$value];
-                if ($value != '') {
-                    $value = '%' . $value . '%';
+                if ('' != $value) {
+                    $value = '%'.$value.'%';
 
                     $query = $this->addWhere($query, $column, $value, 'like');
                 }
@@ -36,7 +36,7 @@ trait Database
         $filter = isset($data['filter']) ? $data['filter'] : null;
         if (is_array($filter)) {
             foreach ($filter as $k => $v) {
-                if ($v[0] != '') {
+                if ('' != $v[0]) {
                     $query->where($this->cleanField($k), $v);
                 }
             }
@@ -45,8 +45,8 @@ trait Database
         $filter = isset($data['lfilter']) ? $data['lfilter'] : null;
         if (is_array($filter)) {
             foreach ($filter as $column => $value) {
-                if ($value != '') {
-                    $value = '%' . $value . '%';
+                if ('' != $value) {
+                    $value = '%'.$value.'%';
 
                     $query = $this->addWhere($query, $column, $value, 'like');
                 }
@@ -56,8 +56,8 @@ trait Database
         $filter = isset($data['rfilter']) ? $data['rfilter'] : null;
         if (is_array($filter)) {
             foreach ($filter as $column => $value) {
-                if ($value != '') {
-                    $value = $value . '%';
+                if ('' != $value) {
+                    $value = $value.'%';
 
                     $query = $this->addWhere($query, $column, $value, 'like');
                 }
@@ -67,8 +67,8 @@ trait Database
         $filter = isset($data['efilter']) ? $data['efilter'] : null;
         if (is_array($filter)) {
             foreach ($filter as $column => $value) {
-                if ($value != '') {
-                    $value = '%' . $value;
+                if ('' != $value) {
+                    $value = '%'.$value;
 
                     $query = $this->addWhere($query, $column, $value, 'like');
                 }
@@ -116,7 +116,7 @@ trait Database
                 $column = $this->cleanField($column);
 
                 if ($from && $to) {
-                    $query->whereBetween(DB::raw('DATE(FROM_UNIXTIME(' . $column . '))'), [$from, $to]);
+                    $query->whereBetween(DB::raw('DATE(FROM_UNIXTIME('.$column.'))'), [$from, $to]);
                 }
 
                 if ($from && empty($to)) {
@@ -145,11 +145,11 @@ trait Database
                 }
 
                 if (!is_numeric($from)) {
-                    $from = $this->toTime($from . ' 00:00:00')->timestamp();
+                    $from = $this->toTime($from.' 00:00:00')->timestamp();
                 }
 
                 if (!is_numeric($to)) {
-                    $to = $this->toTime($to . ' 23:59:59')->timestamp();
+                    $to = $this->toTime($to.' 23:59:59')->timestamp();
                 }
 
                 $query->whereBetween($column, [$from, $to]);
@@ -186,7 +186,7 @@ trait Database
 
     protected function addWhere($query, $column, $value, $condition = '=')
     {
-        if (strpos($column, '|') !== false) {
+        if (false !== strpos($column, '|')) {
             $columns = explode('|', $column);
             $query->where(function ($query) use ($columns, $value, $condition) {
                 foreach ($columns as $column) {
@@ -199,6 +199,7 @@ trait Database
 
         return $query;
     }
+
     /**
      * Add Ordering to query.
      *
@@ -210,10 +211,15 @@ trait Database
     {
         if (isset($data['sort'])) {
             if (empty($data['order'])) {
-                $data['sort'] = implode(' ', explode('|', $data['sort'], 2));
+                $sort = explode('|', $data['sort'], 2);
+
+                $data['sort']  = $sort[0];
+                $data['order'] = $sort[1];
             }
+
             return $query->orderBy($data['sort'], strtolower($data['order']));
-        } else {
+        }
+        if (is_array($ordering)) {
             foreach ($ordering as $column => $type) {
                 $query->orderBy($column, $type);
             }
@@ -245,19 +251,9 @@ trait Database
     public function toTime($time, $format = 'Y-m-d')
     {
         if (empty($time)) {
-            return null;
+            return;
         }
 
         return carbon(trim($time), $format);
-    }
-
-    public function database($table, $ordering = [])
-    {
-        $data = $this->all();
-
-        $query = $this->db->table($table);
-        $query = $this->conditions($query, $data);
-
-        return $this->ordering($query, $data, $ordering);
     }
 }

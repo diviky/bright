@@ -9,9 +9,9 @@ class Meta
 {
     use CapsuleManager;
 
-    protected $fields = [];
-    protected $table = "desk_meta";
-    protected $relation = "desk_meta_values";
+    protected $fields   = [];
+    protected $table    = 'desk_meta';
+    protected $relation = 'desk_meta_values';
 
     public function updateOrInsert($key, $value = null)
     {
@@ -32,7 +32,7 @@ class Meta
 
     public static function instance()
     {
-        return new self;
+        return new self();
     }
 
     public function update($key, $value = null)
@@ -46,13 +46,13 @@ class Meta
         }
 
         $field = $this->getField($key);
-        $id = $field['id'];
+        $id    = $field['id'];
 
         if (empty($id)) {
             return false;
         }
 
-        $time = new Carbon;
+        $time = new Carbon();
 
         $values = [
             'meta_value' => $value,
@@ -74,10 +74,10 @@ class Meta
             return false;
         }
 
-        $time = new Carbon;
+        $time = new Carbon();
 
         $values = [
-            'option_id' => $id,
+            'option_id'  => $id,
             'meta_value' => $value,
             'created_at' => $time,
             'updated_at' => $time,
@@ -161,9 +161,9 @@ class Meta
     }
 
     /**
-     * Set the value of table
+     * Set the value of table.
      *
-     * @return  self
+     * @return self
      */
     public function setTable($table)
     {
@@ -173,9 +173,9 @@ class Meta
     }
 
     /**
-     * Set the value of relation
+     * Set the value of relation.
      *
-     * @return  self
+     * @return self
      */
     public function setRelation($relation)
     {

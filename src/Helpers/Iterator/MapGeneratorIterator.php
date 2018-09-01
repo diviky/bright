@@ -3,8 +3,8 @@
 namespace Karla\Helpers\Iterator;
 
 use Generator;
-use Traversable;
 use InvalidArgumentException;
+use Traversable;
 
 /**
  * Maps values before yielding.
@@ -32,6 +32,7 @@ class MapGeneratorIterator extends Generator
     public function current()
     {
         $callback = $this->callback;
+
         return $callback(parent::current());
     }
 }

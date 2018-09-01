@@ -41,7 +41,7 @@ class Mailable extends BaseMailable
      */
     public function view($view, array $data = [])
     {
-        $this->view = $this->prefix.$view;
+        $this->view     = $this->prefix.$view;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;

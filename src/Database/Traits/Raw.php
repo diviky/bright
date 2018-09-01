@@ -24,7 +24,7 @@ trait Raw
     {
         if (is_array($expression)) {
             foreach ($expression as &$exp) {
-                if (is_string($exp) && strpos($exp, '.') !== false) {
+                if (is_string($exp) && false !== strpos($exp, '.')) {
                     if (false !== strpos($exp, '(')) {
                         $exp = $this->wrapColumn(trim($exp));
                     } else {
@@ -56,7 +56,7 @@ trait Raw
                     }
                 }
                 $columns = implode(', ', $columns);
-                $value   = str_replace($matches[0], '(' . $columns . ')', $value);
+                $value   = str_replace($matches[0], '('.$columns.')', $value);
             }
         }
 

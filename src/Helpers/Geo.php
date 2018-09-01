@@ -2,12 +2,12 @@
 
 namespace Karla\Helpers;
 
-use Geocoder\ProviderAggregator;
 use Geocoder\Provider\Chain\Chain;
 use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
 use Geocoder\Provider\GeoIP2\GeoIP2;
 use Geocoder\Provider\GeoIP2\GeoIP2Adapter;
 use Geocoder\Provider\HostIp\HostIp;
+use Geocoder\ProviderAggregator;
 use GeoIp2\Database\Reader;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
@@ -18,7 +18,7 @@ class Geo
 {
     public function geocode($address = null, $db = 'GeoLite2-City.mmdb')
     {
-        if ($address === null) {
+        if (null === $address) {
             $address = ip();
         }
 
@@ -27,9 +27,9 @@ class Geo
         //http://ipinfo.io/119.63.142.37/json
 
         $geocoder = new ProviderAggregator();
-        $adapter = new GuzzleAdapter();
+        $adapter  = new GuzzleAdapter();
 
-        $reader = new Reader(storage_path() . '/' . $db);
+        $reader        = new Reader(storage_path().'/'.$db);
         $geoIP2Adapter = new GeoIP2Adapter($reader);
 
         $chain = new Chain([
@@ -49,7 +49,7 @@ class Geo
         }
 
         $result = [];
-        if ($results !== false) {
+        if (false !== $results) {
             foreach ($results as $value) {
                 try {
                     $region = $value->getAdminLevels()->get(1);
@@ -59,17 +59,17 @@ class Geo
 
                 $data = $value->toArray();
 
-                $result['provider'] = $data['providedBy'];
-                $result['latitude'] = $data['latitude'];
-                $result['longitude'] = $data['longitude'];
-                $result['country'] = $data['country'];
+                $result['provider']     = $data['providedBy'];
+                $result['latitude']     = $data['latitude'];
+                $result['longitude']    = $data['longitude'];
+                $result['country']      = $data['country'];
                 $result['country_code'] = $data['countryCode'];
-                $result['city'] = $data['locality'];
-                $result['region'] = ($region) ? $region->getName() : '';
-                $result['region_code'] = ($region) ? $region->getCode() : '';
-                $result['zipcode'] = $data['postalCode'];
-                $result['locality'] = $data['locality'];
-                $result['timezone'] = $data['timezone'];
+                $result['city']         = $data['locality'];
+                $result['region']       = ($region) ? $region->getName() : '';
+                $result['region_code']  = ($region) ? $region->getCode() : '';
+                $result['zipcode']      = $data['postalCode'];
+                $result['locality']     = $data['locality'];
+                $result['timezone']     = $data['timezone'];
             }
         }
 

@@ -15,9 +15,10 @@ class ControllerDispatcher extends BaseControllerDispatcher
     /**
      * Dispatch a request to a given controller and method.
      *
-     * @param  \Illuminate\Routing\Route  $route
-     * @param  mixed  $controller
-     * @param  string  $method
+     * @param \Illuminate\Routing\Route $route
+     * @param mixed                     $controller
+     * @param string                    $method
+     *
      * @return mixed
      */
     public function dispatch(Route $route, $controller, $method)

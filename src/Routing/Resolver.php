@@ -41,7 +41,7 @@ class Resolver
         $option = $this->sanitize($option);
 
         $default = [
-            'namespace' => $this->app->getNameSpace() . 'Http\\' . $folder . '\\' . $option . '\\',
+            'namespace' => $this->app->getNameSpace().'Http\\'.$folder.'\\'.$option.'\\',
         ];
 
         return $default;
@@ -60,7 +60,7 @@ class Resolver
         $path      = $this->getPath($option, $type);
         $namespace = (is_array($path)) ? $path['namespace'] : $path;
 
-        return rtrim($namespace, '\\') . '\\';
+        return rtrim($namespace, '\\').'\\';
     }
 
     /**
@@ -75,14 +75,14 @@ class Resolver
     public function getModel($option)
     {
         $option    = $this->sanitize($option);
-        $signature = 'model.' . $option;
+        $signature = 'model.'.$option;
 
         if (!$this->has($signature)) {
             $namespace = $this->getNameSpace($option);
-            $class     = $namespace . 'Model';
+            $class     = $namespace.'Model';
 
             if (!class_exists($class)) {
-                throw new Exception('Model ' . $class . ' not found', 500);
+                throw new Exception('Model '.$class.' not found', 500);
             }
 
             $model = new $class();
@@ -117,7 +117,7 @@ class Resolver
             return $name($this->getContainer());
         }
 
-        $signature = 'helper.' . strtolower($name);
+        $signature = 'helper.'.strtolower($name);
 
         if ($singletone && $this->has($signature)) {
             return $this->get($signature);
@@ -136,11 +136,11 @@ class Resolver
         }
 
         $paths       = [];
-        $helperClass = 'Helpers\\' . (($group) ? $group . '\\' : '') . ucfirst($helper);
+        $helperClass = 'Helpers\\'.(($group) ? $group.'\\' : '').ucfirst($helper);
 
         if ($namespace) {
             $paths[] = [
-                'class' => str_replace('/', '\\', $namespace) . '\\' . $helperClass,
+                'class' => str_replace('/', '\\', $namespace).'\\'.$helperClass,
             ];
         } else {
             if ($option) {
@@ -148,15 +148,15 @@ class Resolver
                 $namespace = $this->getNameSpace($option);
 
                 $paths[] = [
-                    'class' => $namespace . $helperClass,
+                    'class' => $namespace.$helperClass,
                 ];
             } else {
                 $paths[] = [
-                    'class' => $this->app->getNamespace() . $helperClass,
+                    'class' => $this->app->getNamespace().$helperClass,
                 ];
 
                 $paths[] = [
-                    'class' => 'Karla\\' . $helperClass,
+                    'class' => 'Karla\\'.$helperClass,
                 ];
             }
         }
@@ -186,6 +186,6 @@ class Resolver
             }
         }
 
-        throw new Exception($helper . ' helper not found');
+        throw new Exception($helper.' helper not found');
     }
 }

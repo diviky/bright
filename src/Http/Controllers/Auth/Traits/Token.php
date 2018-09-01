@@ -10,16 +10,16 @@ trait Token
 
     public function generateToken()
     {
-        return sprintf("%06d", mt_rand(1, 999999));
+        return sprintf('%06d', mt_rand(1, 999999));
     }
 
     public function saveToken($user)
     {
         $token = $this->generateToken();
 
-        $activation = new Activation;
+        $activation          = new Activation();
         $activation->user_id = $user->id;
-        $activation->token = $token;
+        $activation->token   = $token;
         $activation->save();
 
         $this->tokenId = $activation->id;
@@ -28,7 +28,7 @@ trait Token
     }
 
     /**
-     * Get the value of tokenId
+     * Get the value of tokenId.
      */
     public function getTokenId()
     {

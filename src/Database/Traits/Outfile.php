@@ -24,7 +24,7 @@ trait Outfile
         $rows = $this->flatChunk($count);
 
         foreach ($rows as $row) {
-            fwrite($fp, '"' . implode('","', (array) $row) . '"' . "\r\n");
+            fwrite($fp, '"'.implode('","', (array) $row).'"'."\r\n");
         }
 
         fclose($fp);
@@ -36,8 +36,8 @@ trait Outfile
     {
         $sql = $this->toQuery();
 
-        $out = 'SELECT * FROM(' . $sql . ') AS export';
-        $out .= 'INTO OUTFILE ' . $this->getOutPath();
+        $out = 'SELECT * FROM('.$sql.') AS export';
+        $out .= 'INTO OUTFILE '.$this->getOutPath();
         $out .= "FIELDS TERMINATED BY ',' ";
         $out .= "OPTIONALLY ENCLOSED BY '\"' ";
         $out .= "LINES TERMINATED BY '\n'";

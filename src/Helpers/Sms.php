@@ -36,7 +36,7 @@ class Sms extends Capsule
         }
 
         $data['message'] = $this->replace($tags, $data['message']);
-        $data['to'] = $this->formatMobileNumber($data['to']);
+        $data['to']      = $this->formatMobileNumber($data['to']);
 
         //if disable
         if (!$config['enable']) {
@@ -62,18 +62,18 @@ class Sms extends Capsule
             return true;
         }
 
-        $provider = $config['provider'];
+        $provider  = $config['provider'];
         $providers = $config['providers'];
-        $config = $providers[$provider];
-        $config = array_merge(['from' => $data['from']], $config);
-        $driver = $config['driver'];
+        $config    = $providers[$provider];
+        $config    = array_merge(['from' => $data['from']], $config);
+        $driver    = $config['driver'];
 
         try {
-            $sms = $this->get('resolver')->getHelper($driver);
+            $sms  = $this->get('resolver')->getHelper($driver);
             $sent = $sms->send($data, $config);
         } catch (Exception $e) {
-            $sent = [];
-            $sent['status'] = 'FAILED';
+            $sent            = [];
+            $sent['status']  = 'FAILED';
             $sent['message'] = $e->getMessage();
         }
 
@@ -128,9 +128,9 @@ class Sms extends Capsule
     public function getContent($filename)
     {
         $message = null;
-        $path = resource_path('email') . '/en/';
+        $path    = resource_path('email').'/en/';
 
-        $filename = $path . $filename;
+        $filename = $path.$filename;
 
         if (file_exists($filename)) {
             $message = file_get_contents($filename);
@@ -163,17 +163,17 @@ class Sms extends Capsule
     public function logSms($data = [], $status = true)
     {
         //log enable
-        if (!$this->config('sms.log') || $data['log'] === false) {
+        if (!$this->config('sms.log') || false === $data['log']) {
             return true;
         }
 
-        $values = [];
-        $values['sender'] = $data['from'];
-        $values['mobile'] = implode(', ', $data['to']);
-        $values['message'] = $data['message'];
-        $values['created_at'] = new Carbon;
-        $values['reason'] = $data['reason'];
-        $values['status'] = ($status) ? 1 : 0;
+        $values               = [];
+        $values['sender']     = $data['from'];
+        $values['mobile']     = implode(', ', $data['to']);
+        $values['message']    = $data['message'];
+        $values['created_at'] = new Carbon();
+        $values['reason']     = $data['reason'];
+        $values['status']     = ($status) ? 1 : 0;
 
         $this->get('db')->table('addon_sms_logs')->insert($values);
     }

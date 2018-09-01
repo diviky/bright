@@ -175,15 +175,16 @@ trait HttpTrait
     /**
      * Create a new cookie instance.
      *
-     * @param  string  $name
-     * @param  string  $value
-     * @param  int  $minutes
-     * @param  string  $path
-     * @param  string  $domain
-     * @param  bool  $secure
-     * @param  bool  $httpOnly
-     * @param  bool  $raw
-     * @param  string|null  $sameSite
+     * @param string      $name
+     * @param string      $value
+     * @param int         $minutes
+     * @param string      $path
+     * @param string      $domain
+     * @param bool        $secure
+     * @param bool        $httpOnly
+     * @param bool        $raw
+     * @param string|null $sameSite
+     *
      * @return \Illuminate\Cookie\CookieJar|\Symfony\Component\HttpFoundation\Cookie
      */
     public function setCookie($name = null, $value = null, $minutes = 0, $path = null, $domain = null, $secure = false, $httpOnly = true, $raw = false, $sameSite = null)
@@ -226,12 +227,12 @@ trait HttpTrait
     /**
      * Generate the URL to a named route.
      *
-     * @param  array|string  $name
-     * @param  array  $parameters
-     * @param  bool  $absolute
+     * @param array|string $name
+     * @param array        $parameters
+     * @param bool         $absolute
+     *
      * @return string
      */
-
     public function route($name, $parameters = [], $absolute = true)
     {
         return $this->get('url')->route($name, $parameters, $absolute);
@@ -240,10 +241,11 @@ trait HttpTrait
     /**
      * Get an instance of the redirector.
      *
-     * @param  string|null  $to
-     * @param  int     $status
-     * @param  array   $headers
-     * @param  bool    $secure
+     * @param string|null $to
+     * @param int         $status
+     * @param array       $headers
+     * @param bool        $secure
+     *
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
      */
     public function redirect($to = null, $status = 302, $headers = [], $secure = null)
@@ -322,7 +324,7 @@ trait HttpTrait
      */
     public function abort($statusCode, $message = '', array $headers = [])
     {
-        if ($statusCode == 404) {
+        if (404 == $statusCode) {
             throw new NotFoundHttpException($message);
         }
 
@@ -337,7 +339,8 @@ trait HttpTrait
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $rules
+     * @param array $rules
+     *
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $rules)

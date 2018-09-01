@@ -9,10 +9,10 @@ use Iterator;
  */
 class SelectIterator implements Iterator
 {
-    protected $position = 0;
+    protected $position      = 0;
     protected $totalPosition = 0;
-    protected $next = null;
-    protected $results = null;
+    protected $next          = null;
+    protected $results       = null;
     protected $builder;
     protected $page = 1;
     protected $callback;
@@ -30,16 +30,16 @@ class SelectIterator implements Iterator
             throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; $chunkSize given");
         }
         $this->chunkSize = $chunkSize;
-        $this->builder = $builder;
-        $this->callback = $callback;
+        $this->builder   = $builder;
+        $this->callback  = $callback;
     }
 
     protected function reset()
     {
-        $this->position = 0;
+        $this->position      = 0;
         $this->totalPosition = 0;
-        $this->next = null;
-        $this->page = 1;
+        $this->next          = null;
+        $this->page          = 1;
     }
 
     protected function query()
@@ -56,9 +56,9 @@ class SelectIterator implements Iterator
             $rows->transform($this->callback);
         }
 
-        $this->page += 1;
+        ++$this->page;
         $this->position = 0;
-        $this->results = $rows->toArray();
+        $this->results  = $rows->toArray();
 
         unset($rows);
     }
@@ -81,8 +81,8 @@ class SelectIterator implements Iterator
 
     public function next()
     {
-        $this->position++;
-        $this->totalPosition++;
+        ++$this->position;
+        ++$this->totalPosition;
 
         if (!isset($this->results[$this->position]) && $this->next) {
             $this->query();

@@ -23,7 +23,7 @@ class ActivationController extends Controller
 
         $token = $request->input('token');
 
-        if (auth()->user()->status == 1) {
+        if (1 == auth()->user()->status) {
             return [
                 'status'   => 'OK',
                 'message'  => 'Your account is already activated',

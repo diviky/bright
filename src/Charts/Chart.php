@@ -8,8 +8,6 @@ class Chart extends BaseChart
 {
     /**
      * Initializes the chart.
-     *
-     * @return void
      */
     public function __construct()
     {

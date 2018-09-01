@@ -40,7 +40,7 @@ class CredentialsGuard implements Guard
 
     public function getCredentials()
     {
-        $credentials = ["username", "password"];
+        $credentials = ['username', 'password'];
         $return      = [];
         foreach ($credentials as $key) {
             $token = $this->request->query($key);

@@ -12,8 +12,8 @@ trait Authorizable
 
         $matches = [
             '*',
-            $option . '.*',
-            $option . '.' . $view,
+            $option.'.*',
+            $option.'.'.$view,
             $ability,
         ];
 

@@ -8,13 +8,13 @@ trait Message
     {
         if ($result) {
             return [
-                'status' => 200,
-                'message' => __(':Name :action successfully', ['name' => $name, 'action' => $action . 'd']),
+                'status'  => 200,
+                'message' => __(':Name :action successfully', ['name' => $name, 'action' => $action.'d']),
             ];
         }
 
         return [
-            'status' => 'ERROR',
+            'status'  => 'ERROR',
             'message' => __('Unable to :action :name. Please try again.', ['name' => $name, 'action' => $action]),
         ];
     }
