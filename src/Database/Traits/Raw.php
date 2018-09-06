@@ -91,7 +91,7 @@ trait Raw
 
     public function whereBetweenRaw($column, array $values, $boolean = 'and', $not = false)
     {
-        $column = $this->raw($column);
+        $column = $this->raw($this->wrap($column));
 
         return parent::whereBetween($column, $values, $boolean, $not);
     }
