@@ -112,5 +112,5 @@ if (!function_exists('user_id')) {
 
 function uuid()
 {
-    return Str::uuid();
+    return (string) Str::uuid();
 }

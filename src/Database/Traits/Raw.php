@@ -20,13 +20,34 @@ trait Raw
         return $this;
     }
 
+    public function whereRaw($column, $binds = [], $boolean = 'and')
+    {
+        if (false !== strpos($column, '(')) {
+            $column = $this->wrap(trim($column));
+        }
+
+        return parent::whereRaw($column, $binds, $boolean);
+    }
+
+    protected function wrap($value)
+    {
+        if (preg_match_all('/([^\W]+)\.([^\W]+)?/', $value, $matches)) {
+            foreach ($matches[0] as $match) {
+                $exp   = $this->grammar->wrap(trim($match));
+                $value = str_replace($match, $exp, $value);
+            }
+        }
+
+        return $value;
+    }
+
     public function selectRaw($expression, array $bindings = [])
     {
         if (is_array($expression)) {
             foreach ($expression as &$exp) {
                 if (is_string($exp) && false !== strpos($exp, '.')) {
                     if (false !== strpos($exp, '(')) {
-                        $exp = $this->wrapColumn(trim($exp));
+                        $exp = $this->wrap(trim($exp));
                     } else {
                         $exp = $this->grammar->wrap(trim($exp));
                     }
@@ -43,20 +64,25 @@ trait Raw
     {
         if (preg_match('/\((.+)\)/', $value, $matches)) {
             if ($matches[1]) {
-                $columns = explode(',', $matches[1]);
-                foreach ($columns as &$column) {
-                    if (is_string($column)) {
-                        if (false !== strpos($column, '(')) {
-                            if (false !== strpos($column, '.')) {
-                                $column = $this->wrapColumn($column);
+                $column = $matches[1];
+                if (is_string($column)) {
+                    if (false !== strpos($column, '(')) {
+                        $column = $this->wrapColumn($column);
+                    } else {
+                        $exps = explode(', ', $column);
+                        foreach ($exps as &$exp) {
+                            if ("'" != substr($exp, 0, 1)) {
+                                $exp = $this->grammar->wrap(trim($exp));
+                            } else {
+                                $exp = str_replace('`', '', $exp);
                             }
-                        } else {
-                            $column = $this->grammar->wrap(trim($column));
                         }
+
+                        $column = implode(', ', $exps);
                     }
+
+                    $value = str_replace($matches[0], '(' . $column . ')', $value);
                 }
-                $columns = implode(', ', $columns);
-                $value   = str_replace($matches[0], '('.$columns.')', $value);
             }
         }
 
