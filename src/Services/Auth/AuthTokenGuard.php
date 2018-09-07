@@ -23,6 +23,10 @@ class AuthTokenGuard extends AccessTokenGuard
             return;
         }
 
+        if ($user->status != 1) {
+            return;
+        }
+
         return $this->user = $user;
     }
 }

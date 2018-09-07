@@ -49,6 +49,10 @@ class AccessTokenGuard implements Guard
         $allowed_ips = $user->allowed_ip;
         $this->validateIp($allowed_ips);
 
+        if ($user->user->status != 1) {
+            return;
+        }
+
         return $this->user = $user->user;
     }
 
