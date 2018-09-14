@@ -49,6 +49,7 @@ class Reader
         $file  = null;
 
         if (!$special) {
+            ini_set('auto_detect_line_endings', true);
             $file = new SplFileObject($reader);
             //Auto detect delimiter
             if (empty($options['delimiter'])) {
@@ -218,7 +219,7 @@ class Reader
 
     public function detectDelimiter($file, $sample = 5)
     {
-        $delimsRegex = "|,;:\t"; // whichever is first in the list will be the default
+        $delimsRegex = ",|;:\t"; // whichever is first in the list will be the default
         $delims      = str_split($delimsRegex);
         $delimCount  = $delimiters  = [];
         foreach ($delims as $delim) {
@@ -243,7 +244,13 @@ class Reader
             }
         }
 
-        $detected = array_keys($delimCount, max($delimCount));
+        $max = max($delimCount);
+
+        if ($max <= 0) {
+            return null;
+        }
+
+        $detected = array_keys($delimCount, $max);
 
         return $detected[0];
     }
@@ -277,7 +284,7 @@ class Reader
         if ($ext && in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
             $extensions = ['.csv', '.xls', '.xlsx', '.txt'];
             $directory  = dirname($zip);
-            $extract    = '/tmp/'.uniqid().'/';
+            $extract    = '/tmp/' . uniqid() . '/';
 
             try {
                 $archive   = UnifiedArchive::open($zip);
@@ -295,9 +302,9 @@ class Reader
 
                 if ($extension && $tmpfile) {
                     $archive->extractFiles($extract);
-                    $reader = $directory.'/'.md5(uniqid()).$extension;
+                    $reader = $directory . '/' . md5(uniqid()) . $extension;
 
-                    rename($extract.'/'.$tmpfile, $reader);
+                    rename($extract . '/' . $tmpfile, $reader);
                     chmod($reader, 0777);
                     unlink($zip);
 
