@@ -26,7 +26,7 @@ class IsUserActivate
         }
 
         if (1 != Auth::user()->status) {
-            return view('auth.disabled');
+            return abort(401, 'Account Suspended');
         }
 
         return $next($request);
