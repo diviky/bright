@@ -64,45 +64,6 @@ class Resolver
     }
 
     /**
-     * Load the model class for given component.
-     *
-     * @param string $option Component name
-     *
-     * @throws Exception
-     *
-     * @return object
-     */
-    public function getModel($option)
-    {
-        $option    = $this->sanitize($option);
-        $signature = 'model.'.$option;
-
-        if (!$this->has($signature)) {
-            $namespace = $this->getNameSpace($option);
-            $class     = $namespace.'Model';
-
-            if (!class_exists($class)) {
-                throw new Exception('Model '.$class.' not found', 500);
-            }
-
-            $model = new $class();
-            $model->setContainer($this->getContainer());
-
-            $this->set($signature, $model);
-        } else {
-            $model = $this->get($signature);
-        }
-
-        $beforeRender = 'beforeRender';
-
-        if (method_exists($model, 'beforeRender')) {
-            $model->$beforeRender();
-        }
-
-        return $model;
-    }
-
-    /**
      * Load helper class.
      *
      * @param string $name Helper name

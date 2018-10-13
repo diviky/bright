@@ -96,7 +96,11 @@ if (!function_exists('disk')) {
         $disk = ('local' == $disk) ? 'public' : $disk;
 
         if ($time) {
-            return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
+            try {
+                return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
+            } catch (\Exception $e) {
+
+            }
         }
 
         return Storage::disk($disk)->url($path);
@@ -110,7 +114,16 @@ if (!function_exists('user_id')) {
     }
 }
 
-function uuid()
-{
-    return (string) Str::uuid();
+if (!function_exists('uuid')) {
+    function uuid()
+    {
+        return (string) Str::uuid();
+    }
+}
+
+if (!function_exists('storage_public')) {
+    function storage_public()
+    {
+        return storage_path('app/public/' . $path);
+    }
 }

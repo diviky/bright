@@ -47,14 +47,14 @@ class SendActivationToken extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage())
-            ->subject('Welcome to '.config('app.name'))
+            ->subject('Welcome to ' . config('app.name'))
             ->markdown('emails.auth.activation', ['token' => $this->token]);
     }
 
     public function toMobtexting($notifiable)
     {
         return (new MobtextingSmsMessage())
-            ->text('Your Account OTP is '.$this->token);
+            ->text($this->token . ' OTP for activating or login into account');
     }
 
     /**
