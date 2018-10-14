@@ -13,10 +13,15 @@ return [
         'default' => [
             'smart_links' => ['user_id'],
         ],
-        'select' => [],
-        'insert' => [],
-        'delete' => [],
-        'update' => [],
+        'select'  => [],
+        'insert'  => [],
+        'delete'  => [],
+        'update'  => [],
+        'ignore'  => [
+            'migrations',
+            'jobs',
+            'failed_jobs',
+        ],
     ],
 
 ];

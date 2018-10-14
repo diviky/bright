@@ -15,7 +15,7 @@ use Karla\Routing\Controller;
 
 class RegisterController extends Controller
 {
-    protected $role = 'customer';
+    protected $role = 'default';
 
     /*
     |--------------------------------------------------------------------------

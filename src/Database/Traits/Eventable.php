@@ -67,14 +67,19 @@ trait Eventable
 
     protected function getEventTables($type)
     {
-        $tables = config('karla.tables');
-        if (is_array($tables['default'])) {
-            $tables = array_merge($tables['default'], $tables[$type]);
-        } else {
-            $tables = $tables[$type];
+        $karla = config('karla.tables');
+        $from  = preg_split('/ as /i', $this->from)[0];
+
+        if ($karla['ignore'] && isset($karla['ignore'][$from])) {
+            return [];
         }
 
-        $from   = preg_split('/ as /i', $this->from)[0];
+        if (is_array($karla['default'])) {
+            $tables = array_merge($karla['default'], $karla[$type]);
+        } else {
+            $tables = $karla[$type];
+        }
+
         $tables = isset($tables[$from]) ? $tables[$from] : [];
 
         return $tables;
@@ -152,7 +157,7 @@ trait Eventable
         $eventColumns = $this->getEventTables($type);
         $eventColumns = array_merge($eventColumns, $this->eventColumns);
         $from         = preg_split('/ as /i', $this->from);
-        $alias        = (count($from) > 1) ? last($from).'.' : '';
+        $alias        = (count($from) > 1) ? last($from) . '.' : '';
 
         foreach ($eventColumns as $columns) {
             if (!is_array($columns)) {
@@ -164,14 +169,14 @@ trait Eventable
 
             switch ($column) {
                 case 'user_id':
-                    $this->where($alias.$column, user('id'));
+                    $this->where($alias . $column, user('id'));
                     break;
                 case 'parent_id':
-                    $this->where($alias.$column, user('id'));
+                    $this->where($alias . $column, user('id'));
                     break;
                 default:
                     if (app()->has($field)) {
-                        $this->where($alias.$column, app()->get($field));
+                        $this->where($alias . $column, app()->get($field));
                     }
                     break;
             }
@@ -236,10 +241,6 @@ trait Eventable
 
     public function update(array $values)
     {
-        if ($this->usesTimestamps()) {
-            $values['updated_at'] = $this->freshTimestamp();
-        }
-
         $values = $this->updateEvent($values);
 
         return parent::update($values);
