@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 
 trait Eventable
 {
-    protected $eventState   = true;
+    protected $eventState = true;
     protected $eventColumns = [];
     protected $lastId;
 
@@ -58,7 +58,7 @@ trait Eventable
 
     protected function setUserId(array $values)
     {
-        if (!isset($values['user_id'])) {
+        if (!isset($values['user_id']) && user('id')) {
             $values['user_id'] = user('id');
         }
 
@@ -68,7 +68,7 @@ trait Eventable
     protected function getEventTables($type)
     {
         $karla = config('karla.tables');
-        $from  = preg_split('/ as /i', $this->from)[0];
+        $from = preg_split('/ as /i', $this->from)[0];
 
         if ($karla['ignore'] && isset($karla['ignore'][$from])) {
             return [];
@@ -102,7 +102,7 @@ trait Eventable
             }
 
             $column = key($columns);
-            $field  = $columns[$column];
+            $field = $columns[$column];
 
             foreach ($values as $key => $value) {
                 if (isset($value[$column])) {
@@ -156,8 +156,8 @@ trait Eventable
 
         $eventColumns = $this->getEventTables($type);
         $eventColumns = array_merge($eventColumns, $this->eventColumns);
-        $from         = preg_split('/ as /i', $this->from);
-        $alias        = (count($from) > 1) ? last($from) . '.' : '';
+        $from = preg_split('/ as /i', $this->from);
+        $alias = (count($from) > 1) ? last($from).'.' : '';
 
         foreach ($eventColumns as $columns) {
             if (!is_array($columns)) {
@@ -165,18 +165,18 @@ trait Eventable
             }
 
             $column = key($columns);
-            $field  = $columns[$column];
+            $field = $columns[$column];
 
             switch ($column) {
                 case 'user_id':
-                    $this->where($alias . $column, user('id'));
+                    $this->where($alias.$column, user('id'));
                     break;
                 case 'parent_id':
-                    $this->where($alias . $column, user('id'));
+                    $this->where($alias.$column, user('id'));
                     break;
                 default:
                     if (app()->has($field)) {
-                        $this->where($alias . $column, app()->get($field));
+                        $this->where($alias.$column, app()->get($field));
                     }
                     break;
             }

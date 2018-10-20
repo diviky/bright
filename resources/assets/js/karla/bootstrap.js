@@ -194,7 +194,6 @@ jQuery(document).ready(function ($) {
 
     e.preventDefault();
     var $this = $(this);
-    var next = $this.data("next") || 1;
     var url = $this.attr("href") ? $this.attr("href") : "/login";
 
     $.fn.easyModalShow({
@@ -204,17 +203,21 @@ jQuery(document).ready(function ($) {
   });
 
   if ($.support.pjax) {
-    $(document).on("click", "[data-pjax] a, a[data-pjax]", function (event) {
+    $(document).on("click", "[data-pjax] a, a[data-pjax]", function (e) {
+      if ($(this).data('nojax')) {
+        return true;
+      }
+
       var container = $(this).data("pjax-container") || "[data-pjax-container]";
       $(this).parents("[data-pjax]").find("a").removeClass("active");
       $(this).addClass("active");
 
-      $.pjax.click(event, { container: container });
+      $.pjax.click(e, { container: container });
     });
 
     $(document).on('pjax:end', function () {
       $(document).trigger('ajax:loaded');
-    })
+    });
   }
 });
 

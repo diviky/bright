@@ -33,10 +33,10 @@ mix.scripts(
     node + "jquery/dist/jquery.min.js",
     node + "popper.js/dist/umd/popper.min.js",
     node + "bootstrap/dist/js/bootstrap.min.js",
+    bower + "jquery.livequery/dist/jquery.livequery.min.js",
     bower + "nprogress/nprogress.js",
     bower + "jquery-pjax/jquery.pjax.js",
     //bower + "waypoints/lib/jquery.waypoints.min.js",
-    bower + "df-visible/jquery.visible.min.js",
     node+ 'clipboard/dist/clipboard.min.js',
   ],
   public + "js/static.js"
