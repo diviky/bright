@@ -8,14 +8,12 @@ class CreateTokensTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
         Schema::create('auth_tokens', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('access_token', 100)->nullable();
             $table->string('refresh_token', 100)->nullable();
             $table->text('whitelist_ips')->nullable();
@@ -32,8 +30,6 @@ class CreateTokensTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

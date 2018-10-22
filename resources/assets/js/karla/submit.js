@@ -382,7 +382,7 @@
             var element = $(value);
         }
 
-        element.find('input[name=page]').val(1);
+        //element.find('input[name=page]').val(1);
         element.submit();
     }
 

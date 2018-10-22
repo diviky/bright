@@ -12,7 +12,7 @@ class CreateDocleAuthLoginHistoryTable extends Migration
     {
         Schema::create('auth_login_history', function (Blueprint $table) {
             $table->string('id', 36)->primary();
-            $table->integer('user_id')->unsigned()->index('user_id');
+            $table->unsignedBigInteger('user_id')->index('user_id');
             $table->string('ip', 20)->nullable();
             $table->text('ips')->nullable();
             $table->string('host', 128)->nullable();

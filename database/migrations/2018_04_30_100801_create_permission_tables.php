@@ -18,6 +18,7 @@ class CreatePermissionTables extends Migration
         Schema::create($tableNames['permissions'], function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('display_name')->nullable();
             $table->string('guard_name');
             $table->timestamps();
         });
@@ -33,6 +34,7 @@ class CreatePermissionTables extends Migration
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames) {
             $table->unsignedInteger('permission_id');
             $table->morphs('model');
+            $table->tinyInteger('is_exclude')->default(0);
 
             $table->foreign('permission_id')
                 ->references('id')

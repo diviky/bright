@@ -8,14 +8,12 @@ class CreateAuthActivationsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
         Schema::create('auth_activations', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('token', 100)->nullable();
             $table->timestamps();
 
@@ -28,8 +26,6 @@ class CreateAuthActivationsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

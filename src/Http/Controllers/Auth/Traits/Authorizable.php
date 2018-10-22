@@ -12,10 +12,33 @@ trait Authorizable
 
         $matches = [
             '*',
-            $option . '.*',
-            $option . '.' . $view,
+            $option.'.*',
+            $option.'.'.$view,
             $ability,
         ];
+
+        $permissions = $this->getDirectPermissions();
+
+        $granted = null;
+        $revoke = false;
+        foreach ($permissions as $permission) {
+            foreach ($matches as $match) {
+                if (Str::is($permission->name, $match)) {
+                    $pivot = $permission->pivot;
+                    if ($pivot->is_exclude) {
+                        $revoke = true;
+                        break 2;
+                    }
+
+                    $granted = $permission;
+                    break 2;
+                }
+            }
+        }
+
+        if ($revoke || $granted) {
+            return $granted;
+        }
 
         $permissions = $this->getAllPermissions();
 

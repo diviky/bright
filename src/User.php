@@ -2,11 +2,10 @@
 
 namespace Karla;
 
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasPermissions;
-use Karla\Http\Controllers\Auth\Traits\Authorizable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Karla\Http\Controllers\Auth\Traits\Authorizable;
+use Karla\Http\Controllers\Auth\Traits\HasRoles;
 
 class User extends Authenticatable
 {
