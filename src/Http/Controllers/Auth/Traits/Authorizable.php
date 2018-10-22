@@ -12,20 +12,20 @@ trait Authorizable
 
         $matches = [
             '*',
-            $option.'.*',
-            $option.'.'.$view,
+            $option . '.*',
+            $option . '.' . $view,
             $ability,
         ];
 
         $permissions = $this->getDirectPermissions();
 
         $granted = null;
-        $revoke = false;
+        $revoke  = false;
         foreach ($permissions as $permission) {
             foreach ($matches as $match) {
                 if (Str::is($permission->name, $match)) {
                     $pivot = $permission->pivot;
-                    if ($pivot->is_exclude) {
+                    if ($pivot && $pivot->is_exclude) {
                         $revoke = true;
                         break 2;
                     }
