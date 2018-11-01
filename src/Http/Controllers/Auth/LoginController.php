@@ -7,6 +7,8 @@ use Karla\Routing\Controller;
 
 class LoginController extends Controller
 {
+    protected $maxAttempts  = 5;
+    protected $decayMinutes = 10;
     /*
     |--------------------------------------------------------------------------
     | Login Controller

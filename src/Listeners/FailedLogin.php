@@ -2,12 +2,12 @@
 
 namespace Karla\Listeners;
 
-use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Failed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Karla\Traits\CapsuleManager;
 
-class SuccessLogin
+class FailedLogin
 {
     use CapsuleManager;
 
@@ -24,24 +24,22 @@ class SuccessLogin
     /**
      * Handle the event.
      *
-     * @param Login $event
+     * @param Failed $event
      */
-    public function handle(Login $event)
+    public function handle(Failed $event)
     {
-        $user                = $event->user;
-        $user->last_login_at = date('Y-m-d H:i:s');
-        $user->last_login_ip = $this->request->ip();
-        $user->save();
+        $user = $event->user;
 
         $this->db->table('auth_login_history')->insert([
             'id'         => Str::uuid(),
-            'user_id'    => $user->id,
+            'user_id'    => is_null($user) ? null : $user->id,
             'ip'         => $this->request->ip(),
             'ips'        => implode(',', $this->request->getClientIps()),
             'host'       => $this->request->getHost(),
             'user_agent' => $this->request->userAgent(),
             'created_at' => carbon(),
-            'status'     => 1,
+            'meta'       => json_encode($event->credentials),
+            'status'     => 2,
         ]);
     }
 }

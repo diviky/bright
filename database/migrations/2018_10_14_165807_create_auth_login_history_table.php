@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateDocleAuthLoginHistoryTable extends Migration
+class CreateAuthLoginHistoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateDocleAuthLoginHistoryTable extends Migration
     {
         Schema::create('auth_login_history', function (Blueprint $table) {
             $table->string('id', 36)->primary();
-            $table->unsignedBigInteger('user_id')->index('user_id');
+            $table->unsignedBigInteger('user_id')->index('user_id')->nullable();
             $table->string('ip', 20)->nullable();
             $table->text('ips')->nullable();
             $table->string('host', 128)->nullable();
