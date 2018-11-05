@@ -145,46 +145,18 @@ jQuery(document).ready(function ($) {
     e.preventDefault();
   });
 
+  $(document).on('change', ".custom-file-input", function () {
+    var files = $(this).prop("files");
+
+    if (files.length > 0) {
+      var name = files[0]['name'];
+      $(this).parent().find('.custom-file-label').html(name);
+    }
+  });
+
   //prevent hash url
   $(document).on("click", 'a[href="#"]', function (e) {
     e.preventDefault();
-  });
-
-  $("[data-drop]").on("change", "input[type=file]", function (e) {
-    e.preventDefault();
-    var $this = $(this).parent().find(".drop-preview");
-    var files = $(this).prop("files");
-    drawPreview($this, files);
-  });
-
-  $(document).on("click", "[data-dropzone]", function () {
-    $(this)
-      .next("input[type=file]")
-      .click();
-  });
-
-  $(document).on("dragover", "[data-drop]", function (e) {
-    $(this)
-      .find("[data-dropzone]")
-      .addClass("drag-hover");
-    e.preventDefault();
-  });
-
-  $(document).on("dragleave", "[data-drop]", function (e) {
-    $(this)
-      .find("[data-dropzone]")
-      .removeClass("drag-hover");
-    e.preventDefault();
-  });
-
-  $(document).on("drop", "[data-drop]", function (e) {
-    e.preventDefault();
-    var $this = $(this).find(".drop-preview");
-    var files = e.originalEvent.dataTransfer.files;
-    $(this)
-      .parents("form:first")
-      .submit();
-    drawPreview($this, files);
   });
 
   $(document).on("click", "[role=login]", function (e) {

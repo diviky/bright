@@ -15,7 +15,9 @@ use Karla\Helpers\Iterator\SelectIterator;
 
 class Builder extends BaseBuilder
 {
-    use Cachable;
+    use Cachable {
+        Cachable::get as cacheGet;
+    }
     use Outfile;
     use Timestamps;
     use Raw;
@@ -39,7 +41,7 @@ class Builder extends BaseBuilder
     {
         $this->atomicEvent('select');
 
-        return parent::get($columns);
+        return $this->cacheGet($columns);
     }
 
     public function softDelete($id = null, $column = 'id', $updated_at = true)
@@ -151,7 +153,7 @@ class Builder extends BaseBuilder
     {
         $sql = $this->toSql();
         foreach ($this->getBindings() as $binding) {
-            $value = is_numeric($binding) ? $binding : "'".$binding."'";
+            $value = is_numeric($binding) ? $binding : "'" . $binding . "'";
             $sql   = preg_replace('/\?/', $value, $sql, 1);
         }
 

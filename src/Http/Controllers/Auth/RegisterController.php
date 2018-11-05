@@ -56,7 +56,7 @@ class RegisterController extends Controller
                 'number',
                 'unique:auth_users,username',
             ],
-            'password' => 'required|string|min:6',
+            'password' => 'required|case_diff|numbers|letters|min:6|max:20',
         ]);
     }
 
