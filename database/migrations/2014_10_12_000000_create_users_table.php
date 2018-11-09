@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('access_token', 60)->nullable()->unique();
             $table->string('avatar')->nullable();
             $table->text('options')->nullable();
+            $table->timestamp('last_password_at')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->string('last_login_ip', 100)->nullable();
 

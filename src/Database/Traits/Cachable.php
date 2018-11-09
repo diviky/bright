@@ -47,7 +47,7 @@ trait Cachable
      * @return array|static[]
      */
     public function get($columns = ['*'])
-    {
+    {        
         if (!is_null($this->cacheMinutes) && $this->cacheEnabled()) {
             return $this->getCached($columns);
         }
@@ -269,6 +269,6 @@ trait Cachable
 
     protected function cacheEnabled()
     {
-        return true;
+        return $this->connection->getConfig('cache');
     }
 }
