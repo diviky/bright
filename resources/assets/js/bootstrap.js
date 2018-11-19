@@ -37,19 +37,12 @@ function karlaJs() {
         var clipboard = new ClipboardJS('[data-clipboard]');
         clipboard.on('success', function (e) {
             e.clearSelection();
-            //console.info('Action:', e.action);
-            //console.info('Text:', e.text);
-            //console.info('Trigger:', e.trigger);
             $('.tooltip-inner').html('Copied!');
             $(e.trigger).tooltip('update')
         });
         clipboard.on('error', function (e) {
             noty({ text: 'Error!', type: "info" });
         });
-    }
-
-    if ($.fn.chosen) {
-        $('[data-chosen]').chosen({ width: "auto" });
     }
 
     if ($.fn.select2) {

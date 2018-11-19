@@ -3,7 +3,8 @@
 
 <p>But don’t worry! You can use the following token to reset your password:</p>
 
-<strong>{{ $token }}</strong>
+<strong>Username: {{ $notifiable->username }}</strong>
+<strong>Token: {{ $token }}</strong>
 
 <p>If you don’t use this token within 3 hours, it will expire.</p>
 

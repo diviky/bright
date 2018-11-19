@@ -128,8 +128,6 @@ $(document).ready(function () {
 
         var $this = $(this);
         var data = $this.data('post-data');
-        //data = parseJSON(data);
-        //data.format = 'json';
 
         $.ajax({
             url: $(this).data('post'),
@@ -143,7 +141,6 @@ $(document).ready(function () {
 
     //common delete script
     $(document).on('click', '[data-delete], [data-action="delete"]', function (e) {
-
         if (!confirm('Are you sure want to delete?')) {
             return false;
         }

@@ -47,14 +47,17 @@ class ForgetPassword extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage())
-            ->subject('Password change request from '.config('app.name'))
-            ->markdown('emails.auth.password', ['token' => $this->token]);
+            ->subject('Password change request from ' . config('app.name'))
+            ->markdown('emails.auth.password', [
+                'token'      => $this->token,
+                'notifiable' => $notifiable,
+            ]);
     }
 
     public function toMobtexting($notifiable)
     {
         return (new MobtextingSmsMessage())
-            ->text('Your Account OTP is '.$this->token);
+            ->text('Your Account OTP is ' . $this->token);
     }
 
     /**

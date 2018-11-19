@@ -70,9 +70,9 @@
 
     easySubmit.prototype.formSubmit = function () {
         var widget = this;
-        var beforeSubmit = this.settings.beforeSubmit || this.beforeSubmit;
-        var success = this.settings.success || this.success;
-        var progress = this.settings.onProgress || this.progress;
+        var beforeSubmit = widget.settings.beforeSubmit || widget.beforeSubmit;
+        var success = widget.settings.success || widget.success;
+        var progress = widget.settings.onProgress || widget.progress;
 
         var fromOptions = {
             beforeSubmit: function () {
@@ -81,7 +81,7 @@
             success: function (response, code, xhr) {
                 widget.success(response, code, xhr)
             },
-            uploadProgress: function (event, position, total, percentComplete) {
+            uploadProgress: function (e, position, total, percentComplete) {
                 widget.progress(percentComplete, total, position);
             },
             complete: function (xhr) {

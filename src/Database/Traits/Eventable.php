@@ -114,6 +114,7 @@ trait Eventable
                         $value = $this->setPrimaryKey($value, Str::uuid());
                         break;
                     case 'uid':
+                    case 'uuid':
                         $value = $this->setPrimaryKey($value, Str::orderedUuid());
                         break;
                     case 'user_id':
