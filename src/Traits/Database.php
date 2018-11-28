@@ -26,7 +26,7 @@ trait Database
             foreach ($filter as $value => $column) {
                 $value = $data[$value];
                 if ('' != $value) {
-                    $value = '%'.$value.'%';
+                    $value = '%' . $value . '%';
 
                     $query = $this->addWhere($query, $column, $value, 'like');
                 }
@@ -46,7 +46,7 @@ trait Database
         if (is_array($filter)) {
             foreach ($filter as $column => $value) {
                 if ('' != $value) {
-                    $value = '%'.$value.'%';
+                    $value = '%' . $value . '%';
 
                     $query = $this->addWhere($query, $column, $value, 'like');
                 }
@@ -57,7 +57,7 @@ trait Database
         if (is_array($filter)) {
             foreach ($filter as $column => $value) {
                 if ('' != $value) {
-                    $value = $value.'%';
+                    $value = $value . '%';
 
                     $query = $this->addWhere($query, $column, $value, 'like');
                 }
@@ -68,7 +68,7 @@ trait Database
         if (is_array($filter)) {
             foreach ($filter as $column => $value) {
                 if ('' != $value) {
-                    $value = '%'.$value;
+                    $value = '%' . $value;
 
                     $query = $this->addWhere($query, $column, $value, 'like');
                 }
@@ -100,6 +100,34 @@ trait Database
             }
         }
 
+        $datetime = isset($data['datetime']) ? $data['datetime'] : null;
+        if (is_array($datetime)) {
+            foreach ($datetime as $column => $date) {
+                if (!is_array($date)) {
+                    $date = explode(' - ', $date);
+                    $date = [
+                        'from' => $date[0],
+                        'to'   => $date[1],
+                    ];
+                }
+
+                $from   = trim($date['from']);
+                $to     = trim($date['to']);
+                $column = $this->cleanField($column);
+
+                if ($from && empty($to)) {
+                    $to = $from;
+                }
+
+                $from = $this->toTime($from, 'Y-m-d') . ' 00:00:00';
+                $to   = $this->toTime($to, 'Y-m-d') . ' 23:59:59';
+
+                if ($from && $to) {
+                    $query->whereBetween($column, [$from, $to]);
+                }
+            }
+        }
+
         $time_range = isset($data['time']) ? $data['time'] : null;
         if (is_array($time_range)) {
             foreach ($time_range as $column => $date) {
@@ -116,7 +144,7 @@ trait Database
                 $column = $this->cleanField($column);
 
                 if ($from && $to) {
-                    $query->whereBetween(DB::raw('DATE(FROM_UNIXTIME('.$column.'))'), [$from, $to]);
+                    $query->whereBetween(DB::raw('DATE(FROM_UNIXTIME(' . $column . '))'), [$from, $to]);
                 }
 
                 if ($from && empty($to)) {
@@ -145,11 +173,11 @@ trait Database
                 }
 
                 if (!is_numeric($from)) {
-                    $from = $this->toTime($from.' 00:00:00')->timestamp();
+                    $from = $this->toTime($from . ' 00:00:00')->timestamp();
                 }
 
                 if (!is_numeric($to)) {
-                    $to = $this->toTime($to.' 23:59:59')->timestamp();
+                    $to = $this->toTime($to . ' 23:59:59')->timestamp();
                 }
 
                 $query->whereBetween($column, [$from, $to]);

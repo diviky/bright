@@ -1,0 +1,22 @@
+<?php
+
+namespace Karla\Charts;
+
+use ConsoleTVs\Charts\Classes\Chartjs\Dataset as BaseDataset;
+
+class Dataset extends BaseDataset
+{
+    /**
+     * Initializes the chart.
+     */
+    public function __construct(string $name, string $type, array $values)
+    {
+        parent::__construct($name, $type, $values);
+
+        $this->options([
+            'color' => config(config('charts.default.color')),
+        ]);
+
+        $this->backgroundColor(config('charts.default.colors'));
+    }
+}

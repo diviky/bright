@@ -8,22 +8,22 @@ trait Analytics
     {
         switch ($time) {
             case 'weekly':
-                $group  = ['YEAR('.$column.')', 'WEEKOFYEAR('.$column.')'];
+                $group  = ['YEAR(' . $column . ')', 'WEEKOFYEAR(' . $column . ')'];
                 $format = 'dS M';
 
                 break;
             case 'monthly':
-                $group  = ['EXTRACT(YEAR_MONTH FROM '.$column.')'];
+                $group  = ['EXTRACT(YEAR_MONTH FROM ' . $column . ')'];
                 $format = 'M Y';
 
                 break;
             case 'hourly':
-                $group  = ['DATE_FORMAT('.$column.', \'%h:%p \')'];
+                $group  = ['DATE_FORMAT(' . $column . ', \'%h:%p \')'];
                 $format = 'h A';
 
                 break;
             case 'daily':
-                $group  = ['DATE('.$column.')'];
+                $group  = ['DATE(' . $column . ')'];
                 $format = 'dS M';
                 break;
             default:
@@ -42,7 +42,7 @@ trait Analytics
                     return $this->getFormats($column, 'hourly');
                 }
 
-                if ($diff <= 7) {
+                if ($diff <= 13) {
                     return $this->getFormats($column, 'daily');
                 }
 
