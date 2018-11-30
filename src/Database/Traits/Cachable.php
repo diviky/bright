@@ -47,7 +47,7 @@ trait Cachable
      * @return array|static[]
      */
     public function get($columns = ['*'])
-    {        
+    {
         if (!is_null($this->cacheMinutes) && $this->cacheEnabled()) {
             return $this->getCached($columns);
         }
@@ -214,8 +214,9 @@ trait Cachable
     public function generateCacheKey()
     {
         $name = $this->connection->getName();
+        $key  = $name . $this->toSql() . serialize($this->getBindings());
 
-        return hash('sha256', $name . $this->toSql() . serialize($this->getBindings()));
+        return hash('sha256', $key);
     }
 
     /**
@@ -231,6 +232,7 @@ trait Cachable
         if (!method_exists($cache, 'tags')) {
             return false;
         }
+
         $cacheTags = $cacheTags ?: $this->cacheTags;
         $cache->tags($cacheTags)->flush();
 
