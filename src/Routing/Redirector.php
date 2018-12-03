@@ -18,7 +18,7 @@ class Redirector extends BaseRedirector
     protected function createRedirect($path, $status, $headers)
     {
         $request = $this->generator->getRequest();
-        if ($request->ajax()) {
+        if ($request->ajax() && !$request->pjax()) {
             return tap(new RedirectResponse($path, 200, $headers), function ($redirect) {
                 if (isset($this->session)) {
                     $redirect->setSession($this->session);

@@ -8,8 +8,8 @@ trait Message
     {
         if ($result) {
             return [
-                'status'  => 200,
-                'message' => __(':Name :action successfully', ['name' => $name, 'action' => $action.'d']),
+                'status'  => 'OK',
+                'message' => __(':Name :action successfully', ['name' => $name, 'action' => $action . 'd']),
             ];
         }
 

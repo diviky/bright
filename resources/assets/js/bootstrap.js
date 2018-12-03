@@ -25,7 +25,7 @@ function karlaJs() {
     }
 
     if ($.fn.slimscroll) {
-        $("div[role=scroll]").slimscroll({
+        $("[role=scroll]").slimscroll({
             height: 'auto',
             railVisible: true,
             size: '5px',

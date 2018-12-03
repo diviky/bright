@@ -28,7 +28,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
         if (!app()->has('is_api_request') && !$this->isAuthorized($action)) {
             $route = $this->getRoute($action);
             $this->setUpTheme($route);
-            abort(401, 'Access denied');
+            abort(403, 'Access denied');
         }
 
         $parameters = $this->resolveClassMethodDependencies(
