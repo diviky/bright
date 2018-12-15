@@ -170,10 +170,16 @@ trait Eventable
 
             switch ($column) {
                 case 'user_id':
-                    $this->where($alias.$column, user('id'));
+                    $user_id = user('id');
+                    if ($user_id) {
+                        $this->where($alias.$column, user('id'));
+                    }
                     break;
                 case 'parent_id':
-                    $this->where($alias.$column, user('id'));
+                    $parent_id = user('id');
+                    if ($parent_id) {
+                        $this->where($alias.$column, user('id'));
+                    }
                     break;
                 default:
                     if (app()->has($field)) {
