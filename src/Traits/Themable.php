@@ -4,16 +4,19 @@ namespace Karla\Traits;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Karla\Traits\Responsable;
 use Karla\Util\Device;
 
 trait Themable
 {
+    use Responsable;
+
     protected function setUpTheme($route, $component = null, $paths = [])
     {
         $template             = $this->identify($route);
-        list($theme, $layout) = explode('.', $template.'.');
+        list($theme, $layout) = explode('.', $template . '.');
 
-        $themePath = resource_path('themes/'.$theme);
+        $themePath = resource_path('themes/' . $theme);
         $location  = public_path($theme);
 
         $theme = [
@@ -26,7 +29,7 @@ trait Themable
         View::share('theme', $theme);
 
         View::prependLocation($themePath);
-        View::prependLocation($themePath.'/views/'.$component);
+        View::prependLocation($themePath . '/views/' . $component);
 
         if (!empty($paths)) {
             $paths = !is_array($paths) ? [$paths] : $paths;
@@ -51,7 +54,7 @@ trait Themable
         $deviceType = !is_array($device) ? $device : $device['type'];
 
         $user = Auth::user();
-        if ($user) {
+        if ($user && $user->options) {
             $themes = $this->userLevelTheme($user, $themes);
         }
 
@@ -63,8 +66,8 @@ trait Themable
         list($option, $view) = explode('.', $route);
 
         $matches = [
-            $option.'.'.$view,
-            $option.'.*',
+            $option . '.' . $view,
+            $option . '.*',
             'default',
         ];
 
@@ -96,7 +99,7 @@ trait Themable
     protected function userLevelTheme($user, $themes = [])
     {
         // User level theme support
-        $meta = $user->options;
+        $meta = !in_array($user->options) ? json_decode($user->options) : $user->options;
 
         if ($meta && !is_array($meta)) {
             $meta = json_decode($meta, true);
@@ -106,5 +109,12 @@ trait Themable
         }
 
         return $themes;
+    }
+
+    public function setUpThemeFromAction($action)
+    {
+        $route = $this->getRoute($action);
+
+        return $this->setUpTheme($route);
     }
 }

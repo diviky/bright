@@ -4,13 +4,11 @@ namespace Karla\Routing;
 
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
 use Illuminate\Contracts\View\View;
-use Karla\Traits\Responsable as ResponsableTrait;
 use Karla\Traits\Themable;
 
 class Responsable implements BaseResponsable
 {
     use Themable;
-    use ResponsableTrait;
 
     protected $response;
     protected $action;

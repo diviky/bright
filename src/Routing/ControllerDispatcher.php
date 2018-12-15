@@ -26,8 +26,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
         $action = $route->getActionName();
 
         if (!app()->has('is_api_request') && !$this->isAuthorized($action)) {
-            $route = $this->getRoute($action);
-            $this->setUpTheme($route);
+            $this->setUpThemeFromAction($action);
             abort(403, 'Access denied');
         }
 

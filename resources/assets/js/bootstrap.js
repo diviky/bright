@@ -50,6 +50,11 @@ function karlaJs() {
             minimumResultsForSearch: 10
         });
 
+        $("[tokenizer]").select2({
+            tags: true,
+            tokenSeparators: [',', ' ']
+        });
+
         $('[data-select-ajax]').livequery(function () {
             var $this = $(this);
             var url = $this.data('select-ajax');
