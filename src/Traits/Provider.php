@@ -29,7 +29,8 @@ trait Provider
     public function validates()
     {
         Validator::extend('extension', function ($attribute, $value, $parameters) {
-            return in_array($value->getClientOriginalExtension(), $parameters);
+            $ext = $value->getClientOriginalExtension();
+            return in_array(strtolower($ext), $parameters);
         }, 'The :attribute must be a file of type: :values.');
 
         Validator::replacer('extension', function ($message, $attribute, $rule, $parameters) {

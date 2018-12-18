@@ -12,6 +12,7 @@ use Karla\Http\Controllers\Auth\Traits\Token;
 use Karla\Notifications\ForgetPassword;
 use Karla\Routing\Controller;
 use Karla\User;
+use NotificationChannels\Mobtexting\MobtextingChannel;
 
 class ForgotPasswordController extends Controller
 {
@@ -40,7 +41,7 @@ class ForgotPasswordController extends Controller
 
             session(['reset-token' => $this->getTokenId()]);
 
-            $user->notify(new ForgetPassword($token));
+            $user->notify(new ForgetPassword($token, $this->notificationVia()));
 
             return [
                 'status'   => 'success',
@@ -74,7 +75,7 @@ class ForgotPasswordController extends Controller
 
         $user = User::where('id', $activation->user_id)->first();
 
-        $user->notify(new ForgetPassword($activation->token));
+        $user->notify(new ForgetPassword($activation->token, $this->notificationVia()));
 
         return [
             'status'  => 'success',
@@ -156,8 +157,8 @@ class ForgotPasswordController extends Controller
         }
 
         return redirect()->back()
-                ->with('status', 'error')
-                ->with('message', 'Unable to reset password');
+            ->with('status', 'error')
+            ->with('message', 'Unable to reset password');
     }
 
     /**
@@ -181,5 +182,10 @@ class ForgotPasswordController extends Controller
         Auth::guard()->login($user);
 
         return true;
+    }
+
+    protected function notificationVia($channels = [])
+    {
+        return array_merge(['mail', MobtextingChannel::class], $channels);
     }
 }
