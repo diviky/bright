@@ -4,20 +4,8 @@ namespace Karla\Database;
 
 use Illuminate\Database\DatabaseManager as LaravelDatabaseManager;
 
-class DatabaseManager extends LaravelDatabaseManager
+class DatabaseConnectionManager extends LaravelDatabaseManager
 {
-    public function table($name)
-    {
-        $config      = $this->app['config']['karla'];
-        $connections = $config['connections'];
-
-        if (is_array($connections) && $connections[$name]) {
-            return $this->connection($connections[$name])->table($name);
-        }
-
-        return $this->connection()->table($name);
-    }
-
     /**
      * Get the configuration for a connection.
      *

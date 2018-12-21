@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Tables configuration
@@ -9,9 +8,9 @@ return [
     |
     | Use this configuration to add user_id to below tables in query process
      */
-    'tables' => [
+    'tables'      => [
         'default' => [
-            'smart_links' => ['user_id'],
+            'table' => ['user_id'],
         ],
         'select'  => [],
         'insert'  => [],
@@ -23,5 +22,12 @@ return [
             'failed_jobs',
         ],
     ],
+    // append database based on table name
+    'databases'   => [
+        //'table' => 'database',
+    ],
 
+    'connections' => [
+        //'table' => 'connection',
+    ],
 ];
