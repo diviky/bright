@@ -2,7 +2,7 @@
 
 namespace Karla\Database\Query;
 
-use Illuminate\Database\Query\Builder as BaseBuilder;
+use Illuminate\Database\Query\Builder as LaravelBuilder;
 use Illuminate\Support\Carbon;
 use Karla\Database\Karla;
 use Karla\Database\Traits\Build;
@@ -13,7 +13,7 @@ use Karla\Database\Traits\Raw;
 use Karla\Database\Traits\Timestamps;
 use Karla\Helpers\Iterator\SelectIterator;
 
-class Builder extends BaseBuilder
+class Builder extends LaravelBuilder
 {
     use Cachable {
         Cachable::get as cacheGet;

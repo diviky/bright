@@ -1,10 +1,8 @@
 <?php
 
-namespace Karla\Database;
+namespace Karla\Database\Query\Grammars;
 
-use Illuminate\Database\Grammar as BaseGrammar;
-
-class Grammar extends BaseGrammar
+trait WrapTrait
 {
     /**
      * Wrap a table in keyword identifiers.
@@ -13,7 +11,7 @@ class Grammar extends BaseGrammar
      *
      * @return string
      */
-    public function wrapTable($table)
+    public function wrapTables($table)
     {
         if (!$this->isExpression($table)) {
             if (false !== strpos($table, '.')) {

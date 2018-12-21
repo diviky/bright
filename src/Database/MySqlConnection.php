@@ -2,24 +2,26 @@
 
 namespace Karla\Database;
 
+use Closure;
 use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 use Illuminate\Database\QueryException;
-use Karla\Database\Grammar;
 use Karla\Database\Query\Builder as QueryBuilder;
+use Karla\Database\Query\Grammars\MySqlGrammar;
 
 class MySqlConnection extends LaravelMySqlConnection
 {
     /**
-     * Number of attempts to retry
+     * Number of attempts to retry.
      */
     const ATTEMPTS_COUNT = 3;
 
     /**
      * Run a SQL statement.
      *
-     * @param  string    $query
-     * @param  array     $bindings
-     * @param  \Closure  $callback
+     * @param string   $query
+     * @param array    $bindings
+     * @param \Closure $callback
+     *
      * @return mixed
      *
      * @throws \Illuminate\Database\QueryException
@@ -28,7 +30,7 @@ class MySqlConnection extends LaravelMySqlConnection
     {
         $attempts_count = self::ATTEMPTS_COUNT;
 
-        for ($attempt = 1; $attempt <= $attempts_count; $attempt++) {
+        for ($attempt = 1; $attempt <= $attempts_count; ++$attempt) {
             try {
                 return parent::runQueryCallback($query, $bindings, $callback);
             } catch (QueryException $e) {
@@ -62,6 +64,6 @@ class MySqlConnection extends LaravelMySqlConnection
      */
     protected function getDefaultQueryGrammar()
     {
-        return new Grammar;
+        return $this->withTablePrefix(new MySqlGrammar());
     }
 }
