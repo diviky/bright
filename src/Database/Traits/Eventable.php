@@ -68,6 +68,7 @@ trait Eventable
     protected function getEventTables($type)
     {
         $karla = $this->connection->getConfig('karla');
+        $karla = $karla['tables'];
 
         $from = preg_split('/ as /i', $this->from)[0];
 

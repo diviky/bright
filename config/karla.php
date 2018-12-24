@@ -30,4 +30,8 @@ return [
     'connections' => [
         //'table' => 'connection',
     ],
+
+    'notifications' => [
+        'mail',
+    ],
 ];
