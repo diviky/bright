@@ -99,7 +99,7 @@ trait Themable
     protected function userLevelTheme($user, $themes = [])
     {
         // User level theme support
-        $meta = !in_array($user->options) ? json_decode($user->options) : $user->options;
+        $meta = $user->options;
 
         if ($meta && !is_array($meta)) {
             $meta = json_decode($meta, true);
