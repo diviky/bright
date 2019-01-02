@@ -10,8 +10,8 @@ class Meta
     use CapsuleManager;
 
     protected $fields   = [];
-    protected $table    = 'desk_meta';
-    protected $relation = 'desk_meta_values';
+    protected $table    = 'meta';
+    protected $relation = 'meta_values';
 
     public function updateOrInsert($key, $value = null)
     {

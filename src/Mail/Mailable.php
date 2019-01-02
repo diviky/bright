@@ -3,23 +3,17 @@
 namespace Karla\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable as BaseMailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class Mailable extends BaseMailable
+class Mailable extends BaseMailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     protected $theme;
     protected $prefix = 'emails.';
-
-    /**
-     * Create a new message instance.
-     */
-    public function __construct()
-    {
-    }
 
     /**
      * Build the message.
@@ -41,7 +35,7 @@ class Mailable extends BaseMailable
      */
     public function view($view, array $data = [])
     {
-        $this->view     = $this->prefix.$view;
+        $this->view     = $this->prefix . $view;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;
@@ -57,7 +51,7 @@ class Mailable extends BaseMailable
      */
     public function text($textView, array $data = [])
     {
-        $this->textView = $this->prefix.$textView;
+        $this->textView = $this->prefix . $textView;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;
@@ -73,7 +67,7 @@ class Mailable extends BaseMailable
      */
     public function markdown($view, array $data = [])
     {
-        $this->markdown = $this->prefix.$view;
+        $this->markdown = $this->prefix . $view;
         $this->viewData = array_merge($this->viewData, $data);
 
         return $this;

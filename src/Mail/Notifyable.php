@@ -25,6 +25,14 @@ trait Notifyable
             ->with($data['with'])
             ->markdown($data['template']);
 
+        if ($data['cc']) {
+            $mail->cc($data['cc']);
+        }
+
+        if ($data['bcc']) {
+            $mail->bcc($data['bcc']);
+        }
+
         if ($from) {
             $mail->from(config('mail.from.address'), $from);
         }

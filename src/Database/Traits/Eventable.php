@@ -174,13 +174,13 @@ trait Eventable
                 case 'user_id':
                     $user_id = user('id');
                     if ($user_id) {
-                        $this->where($alias . $column, user('id'));
+                        $this->where($alias . $column, $user_id);
                     }
                     break;
                 case 'parent_id':
                     $parent_id = user('id');
                     if ($parent_id) {
-                        $this->where($alias . $column, user('id'));
+                        $this->where($alias . $column, $parent_id);
                     }
                     break;
                 default:

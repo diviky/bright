@@ -8,6 +8,8 @@ use Karla\Database\Karla;
 use Karla\Database\Traits\Build;
 use Karla\Database\Traits\Cachable;
 use Karla\Database\Traits\Eventable;
+use Karla\Database\Traits\Filter;
+use Karla\Database\Traits\Ordering;
 use Karla\Database\Traits\Outfile;
 use Karla\Database\Traits\Raw;
 use Karla\Database\Traits\Timestamps;
@@ -23,6 +25,8 @@ class Builder extends LaravelBuilder
     use Raw;
     use Build;
     use Eventable;
+    use Ordering;
+    use Filter;
 
     /**
      * {@inheritdoc}
@@ -151,7 +155,10 @@ class Builder extends LaravelBuilder
 
     public function toQuery()
     {
+        $this->atomicEvent('select');
+
         $sql = $this->toSql();
+
         foreach ($this->getBindings() as $binding) {
             $value = is_numeric($binding) ? $binding : "'" . $binding . "'";
             $sql   = preg_replace('/\?/', $value, $sql, 1);

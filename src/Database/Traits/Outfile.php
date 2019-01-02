@@ -8,7 +8,7 @@ trait Outfile
 
     public function out($path = null, $local = true, $count = 10000)
     {
-        $path          = $path ?: '/tmp/' . uniqid() . '.csv';
+        $path          = $path ?: sys_get_temp_dir() . '/' . uniqid() . '.csv';
         $this->outpath = $path;
 
         if ($local) {
@@ -20,7 +20,7 @@ trait Outfile
 
     protected function outLoop($file = null, $count = 10000)
     {
-        $file          = $file ?: '/tmp/' . uniqid() . '.csv';
+        $file          = $file ?: sys_get_temp_dir() . '/' . uniqid() . '.csv';
         $this->outpath = $file;
 
         $fp = fopen($file, 'w+');
@@ -38,7 +38,7 @@ trait Outfile
 
     protected function outFile($file = null)
     {
-        $file          = $file ?: '/tmp/' . uniqid() . '.csv';
+        $file          = $file ?: sys_get_temp_dir() . '/' . uniqid() . '.csv';
         $this->outpath = $file;
 
         $sql = $this->toQuery();

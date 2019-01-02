@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 trait Provider
 {
-    use Database;
-
     public function directive()
     {
         Blade::directive('form', function ($expression) {
@@ -47,18 +45,6 @@ trait Provider
                 $message = func_get_arg(0);
             }
             Log::debug((empty($message) ? '' : $message . ': ') . $this->toQuery());
-
-            return $this;
-        });
-
-        Builder::macro('ordering', function ($data, $default = []) use ($parent) {
-            $parent->ordering($this, $data, $default);
-
-            return $this;
-        });
-
-        Builder::macro('filter', function ($data, $alias = null) use ($parent) {
-            $parent->filter($this, $data, $alias);
 
             return $this;
         });

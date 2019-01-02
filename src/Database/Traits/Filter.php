@@ -1,15 +1,8 @@
 <?php
 
-namespace Karla\Traits;
+namespace Karla\Database\Traits;
 
-use Illuminate\Support\Facades\DB;
-
-/**
- * Short methods to add default conditions to query.
- *
- * @author Sankar <sankar.suda@gmail.com>
- */
-trait Database
+trait Filter
 {
     /**
      * Add Filters to database query builder.
@@ -19,7 +12,7 @@ trait Database
      *
      * @return array Database conditions
      */
-    public function filter($query, $data = [])
+    public function filter($data = [])
     {
         $filter = isset($data['dfilter']) ? $data['dfilter'] : null;
         if (is_array($filter)) {
@@ -28,7 +21,7 @@ trait Database
                 if ('' != $value) {
                     $value = '%' . $value . '%';
 
-                    $query = $this->addWhere($query, $column, $value, 'like');
+                    $this->addWhere($column, $value, 'like');
                 }
             }
         }
@@ -37,7 +30,7 @@ trait Database
         if (is_array($filter)) {
             foreach ($filter as $k => $v) {
                 if ('' != $v[0]) {
-                    $query->where($this->cleanField($k), $v);
+                    $this->where($this->cleanField($k), $v);
                 }
             }
         }
@@ -48,7 +41,7 @@ trait Database
                 if ('' != $value) {
                     $value = '%' . $value . '%';
 
-                    $query = $this->addWhere($query, $column, $value, 'like');
+                    $this->addWhere($column, $value, 'like');
                 }
             }
         }
@@ -59,7 +52,7 @@ trait Database
                 if ('' != $value) {
                     $value = $value . '%';
 
-                    $query = $this->addWhere($query, $column, $value, 'like');
+                    $this->addWhere($column, $value, 'like');
                 }
             }
         }
@@ -70,7 +63,7 @@ trait Database
                 if ('' != $value) {
                     $value = '%' . $value;
 
-                    $query = $this->addWhere($query, $column, $value, 'like');
+                    $this->addWhere($column, $value, 'like');
                 }
             }
         }
@@ -91,11 +84,11 @@ trait Database
                 $column = $this->cleanField($column);
 
                 if ($from && $to) {
-                    $query->whereDateBetween($column, [$from, $to]);
+                    $this->whereDateBetween($column, [$from, $to]);
                 }
 
                 if ($from && empty($to)) {
-                    $query->whereDate($column, '=', $from);
+                    $this->whereDate($column, '=', $from);
                 }
             }
         }
@@ -123,7 +116,7 @@ trait Database
                 $to   = $this->toTime($to, 'Y-m-d') . ' 23:59:59';
 
                 if ($from && $to) {
-                    $query->whereBetween($column, [$from, $to]);
+                    $this->whereBetween($column, [$from, $to]);
                 }
             }
         }
@@ -144,11 +137,11 @@ trait Database
                 $column = $this->cleanField($column);
 
                 if ($from && $to) {
-                    $query->whereBetween(DB::raw('DATE(FROM_UNIXTIME(' . $column . '))'), [$from, $to]);
+                    $this->whereBetween(DB::raw('DATE(FROM_UNIXTIME(' . $column . '))'), [$from, $to]);
                 }
 
                 if ($from && empty($to)) {
-                    $query->whereDate($column, '=', $from);
+                    $this->whereDate($column, '=', $from);
                 }
             }
         }
@@ -180,7 +173,7 @@ trait Database
                     $to = $this->toTime($to . ' 23:59:59')->timestamp();
                 }
 
-                $query->whereBetween($column, [$from, $to]);
+                $this->whereBetween($column, [$from, $to]);
             }
         }
 
@@ -200,60 +193,32 @@ trait Database
                 $column = $this->cleanField($column);
 
                 if ($from && $to) {
-                    $query->whereBetween($column, [$from, $to]);
+                    $this->whereBetween($column, [$from, $to]);
                 }
 
                 if ($from && empty($to)) {
-                    $query->where($column, $from);
+                    $this->where($column, $from);
                 }
             }
         }
 
-        return $query;
+        return $this;
     }
 
-    protected function addWhere($query, $column, $value, $condition = '=')
+    protected function addWhere($column, $value, $condition = '=')
     {
         if (false !== strpos($column, '|')) {
             $columns = explode('|', $column);
-            $query->where(function ($query) use ($columns, $value, $condition) {
+            $this->where(function ($query) use ($columns, $value, $condition) {
                 foreach ($columns as $column) {
                     $query->orWhere($this->cleanField($column), $condition, $value);
                 }
             });
         } else {
-            $query->where($this->cleanField($column), $condition, $value);
+            $this->where($this->cleanField($column), $condition, $value);
         }
 
-        return $query;
-    }
-
-    /**
-     * Add Ordering to query.
-     *
-     * @param array &$data
-     *
-     * @return array
-     */
-    public function ordering($query, $data = [], $ordering = [])
-    {
-        if (isset($data['sort'])) {
-            if (empty($data['order'])) {
-                $sort = explode('|', $data['sort'], 2);
-
-                $data['sort']  = $sort[0];
-                $data['order'] = $sort[1];
-            }
-
-            return $query->orderBy($data['sort'], strtolower($data['order']));
-        }
-        if (is_array($ordering)) {
-            foreach ($ordering as $column => $type) {
-                $query->orderBy($column, $type);
-            }
-        }
-
-        return $query;
+        return $this;
     }
 
     /**
@@ -276,7 +241,7 @@ trait Database
      *
      * @return int|string
      */
-    public function toTime($time, $format = 'Y-m-d')
+    protected function toTime($time, $format = 'Y-m-d')
     {
         if (empty($time)) {
             return;
