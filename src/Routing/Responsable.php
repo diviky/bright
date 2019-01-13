@@ -12,11 +12,13 @@ class Responsable implements BaseResponsable
 
     protected $response;
     protected $action;
+    protected $controller;
 
-    public function __construct($response, $action)
+    public function __construct($response, $action, $controller)
     {
-        $this->response = $response;
-        $this->action   = $action;
+        $this->response   = $response;
+        $this->action     = $action;
+        $this->controller = $controller;
     }
 
     /**
@@ -62,7 +64,8 @@ class Responsable implements BaseResponsable
             return $this->getNextRedirect($response, 'next');
         } elseif ($ajax && isset($response['redirect'])) {
             if ('/' !== substr($response['redirect'], 0, 1)) {
-                $redirect             = $this->getNextRedirect($response, 'redirect');
+                $redirect = $this->getNextRedirect($response, 'redirect');
+
                 $response['redirect'] = $redirect->getTargetUrl();
             }
         }
@@ -77,7 +80,7 @@ class Responsable implements BaseResponsable
 
         list($component, $view) = explode('.', $route);
 
-        $path   = $this->getViewPath($this->action);
+        $path   = $this->getViewsFrom($this->controller, $this->action);
         $theme  = $this->setUpTheme($route, $component, $path);
         $layout = 'html' == $format ? 'html' : $theme['layout'];
 

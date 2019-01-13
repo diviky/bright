@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Karla\View\View;
 
 if (!function_exists('printr')) {
     function printr($data)
@@ -126,4 +127,11 @@ if (!function_exists('storage_public')) {
     {
         return storage_path('app/public/' . $path);
     }
+}
+
+function kview($controller, $view, $data = [], $mergeData = [])
+{
+    $factory = app(View::class);
+
+    return $factory->make($controller, $view, $data, $mergeData);
 }

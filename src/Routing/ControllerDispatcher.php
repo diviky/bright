@@ -30,18 +30,8 @@ class ControllerDispatcher extends BaseControllerDispatcher
             abort(403, 'Access denied');
         }
 
-        $parameters = $this->resolveClassMethodDependencies(
-            $route->parametersWithoutNulls(),
-            $controller,
-            $method
-        );
+        $response = parent::dispatch($route, $controller, $method);
 
-        if (method_exists($controller, 'callAction')) {
-            $response = $controller->callAction($method, $parameters);
-        } else {
-            $response = $controller->{$method}(...array_values($parameters));
-        }
-
-        return new Responsable($response, $action);
+        return new Responsable($response, $action, $controller);
     }
 }

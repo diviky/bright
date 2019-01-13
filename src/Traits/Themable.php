@@ -17,6 +17,7 @@ trait Themable
         list($theme, $layout) = explode('.', $template . '.');
 
         $themePath = resource_path('themes/' . $theme);
+        $views     = resource_path('views');
         $location  = public_path($theme);
 
         $theme = [
@@ -28,15 +29,16 @@ trait Themable
 
         View::share('theme', $theme);
 
-        View::prependLocation($themePath);
-        View::prependLocation($themePath . '/views/' . $component);
-
         if (!empty($paths)) {
             $paths = !is_array($paths) ? [$paths] : $paths;
             foreach ($paths as $path) {
                 View::prependLocation($path);
             }
         }
+
+        View::prependLocation($views.'/'.$component);
+        View::prependLocation($themePath);
+        View::prependLocation($themePath . '/views/' . $component);
 
         return $theme;
     }
