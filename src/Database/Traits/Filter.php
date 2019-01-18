@@ -230,7 +230,7 @@ trait Filter
      */
     protected function cleanField($string)
     {
-        return preg_replace("/[^\w\.\s]/", '', $string);
+        return $string;
     }
 
     /**
