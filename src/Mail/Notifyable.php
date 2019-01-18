@@ -37,7 +37,7 @@ trait Notifyable
             $mail->from(config('mail.from.address'), $from);
         }
 
-        return $mail->deliver($to, true);
+        return $mail->deliver(trim($to), true);
     }
 
     protected function getMailTo($user_id = null)
