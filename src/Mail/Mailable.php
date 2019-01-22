@@ -16,6 +16,13 @@ class Mailable extends BaseMailable implements ShouldQueue
     protected $prefix = 'emails.';
 
     /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 5;
+
+    /**
      * Build the message.
      *
      * @return $this

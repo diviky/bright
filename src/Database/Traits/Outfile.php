@@ -6,19 +6,25 @@ trait Outfile
 {
     protected $outpath;
 
-    public function out($path = null, $local = true, $count = 10000)
+    public function out($path = null, $local = true, $count = 10000, $options = [])
     {
         $path          = $path ?: sys_get_temp_dir() . '/' . uniqid() . '.csv';
         $this->outpath = $path;
 
+        $options = array_merge([
+            'separated' => ',',
+            'enclosed'  => '"',
+            'ends'      => '\n',
+        ], $options);
+
         if ($local) {
-            return $this->outFile($path);
+            return $this->outFile($path, $options);
         }
 
-        return $this->outLoop($path, $count);
+        return $this->outLoop($path, $count, $options);
     }
 
-    protected function outLoop($file = null, $count = 10000)
+    protected function outLoop($file = null, $count = 10000, $options = [])
     {
         $file          = $file ?: sys_get_temp_dir() . '/' . uniqid() . '.csv';
         $this->outpath = $file;
@@ -28,7 +34,7 @@ trait Outfile
         $rows = $this->flatChunk($count);
 
         foreach ($rows as $row) {
-            fwrite($fp, '"' . implode('","', (array) $row) . '"' . "\r\n");
+            fwrite($fp, '"' . implode('","', (array) $row) . '"' . "\n");
         }
 
         fclose($fp);
@@ -36,7 +42,7 @@ trait Outfile
         return $file;
     }
 
-    protected function outFile($file = null)
+    protected function outFile($file = null, $options = [])
     {
         $file          = $file ?: sys_get_temp_dir() . '/' . uniqid() . '.csv';
         $this->outpath = $file;
@@ -63,7 +69,7 @@ trait Outfile
     {
         $table = $this->grammar->wrapTable($table);
         if ($file) {
-            $path = $this->outFile();
+            $path = $this->outFile($path);
 
             $sql = "LOAD DATA LOCAL INFILE '" . $path . "'";
             $sql .= ' IGNORE INTO TABLE ' . $table;
@@ -74,6 +80,6 @@ trait Outfile
             $sql = 'INSERT INTO ' . $table . ' ' . $this->toQuery();
         }
 
-        return $this->statement($out);
+        return $this->statement($sql);
     }
 }
