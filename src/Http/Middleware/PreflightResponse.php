@@ -28,7 +28,7 @@ class PreflightResponse
     public function addCorsHeaders($response)
     {
         $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
-        $response->headers->set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Origin, Cache-Control, Pragma, Authorization, Accept, Accept-Encoding');
+        $response->headers->set('Access-Control-Allow-Headers', '*');
         $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('Access-Control-Allow-Credentials', 'true');
 

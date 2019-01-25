@@ -68,7 +68,7 @@ class AccessTokenGuard implements Guard
 
         foreach ($ips as $ip) {
             foreach ($allowed_ips as $address) {
-                if (IpUtils::checkIp($ip, $address)) {
+                if (IpUtils::checkIp($ip, trim($address))) {
                     $allowed = true;
                     break 2;
                 }
