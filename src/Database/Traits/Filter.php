@@ -85,9 +85,7 @@ trait Filter
 
                 if ($from && $to) {
                     $this->whereDateBetween($column, [$from, $to]);
-                }
-
-                if ($from) {
+                } else if ($from) {
                     $this->whereDate($column, '=', $from);
                 }
             }
@@ -166,9 +164,7 @@ trait Filter
 
                 if ($from && $to) {
                     $this->whereBetween($column, [$from, $to]);
-                }
-
-                if ($from) {
+                } else if ($from) {
                     $this->where($column, $from);
                 }
             }
@@ -191,9 +187,7 @@ trait Filter
 
                 if ($from && $to) {
                     $this->whereBetween($column, [$from, $to]);
-                }
-
-                if ($from) {
+                } else if ($from) {
                     $this->where($column, $from);
                 }
             }
