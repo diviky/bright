@@ -106,7 +106,7 @@ trait HttpTrait
      */
     public function header($key = null, $default = null)
     {
-        return $this->get('request')->headers($key, $default);
+        return $this->get('request')->header($key, $default);
     }
 
     /**
