@@ -89,6 +89,8 @@ class Mailable extends BaseMailable implements ShouldQueue
 
     public function deliver($to = null, $exception = false)
     {
+        //$to = $this->format($to);
+
         if ($exception) {
             Mail::to($to)->send($this);
 
@@ -114,5 +116,81 @@ class Mailable extends BaseMailable implements ShouldQueue
         $this->prefix = $prefix;
 
         return $this;
+    }
+
+    /**
+     * Set the recipients of the message.
+     *
+     * All recipients are stored internally as [['name' => ?, 'address' => ?]]
+     *
+     * @param  object|array|string  $address
+     * @param  string|null  $name
+     * @param  string  $property
+     * @return $this
+     */
+    protected function setAddress($address, $name = null, $property = 'to')
+    {
+        $addresses = $this->format($address, $name);
+
+        foreach ($addresses as $address) {
+            foreach ($this->addressesToArray($address, $name) as $recipient) {
+                $recipient = $this->normalizeRecipient($recipient);
+
+                $this->{$property}[] = [
+                    'name'    => $recipient->name ?? null,
+                    'address' => $recipient->email,
+                ];
+            }
+        }
+
+        return $this;
+    }
+
+    protected function format($address, $from = null)
+    {
+        if (empty($address)) {
+            return [];
+        }
+
+        $addresses = [];
+        if (is_array($address)) {
+            foreach ($address as $value) {
+                if (isset($value['email'])) {
+                    $addresses[] = $value;
+                } else {
+                    $addresses[] = ['email' => trim($value), 'name' => $from];
+                }
+            }
+        } elseif (preg_match('/>[^\S]*;/', $address)) {
+            $address = explode(';', $address);
+            foreach ($address as $v) {
+                $v     = explode('<', $v);
+                $email = ($v[1]) ? rtrim(trim($v[1]), '>') : $v[0];
+                $name  = ($v[1]) ? $v[0] : $from;
+
+                $addresses[] = ['email' => trim($email), 'name' => trim($name)];
+            }
+        } elseif (strstr($address, '|')) {
+            $delim   = (strstr($address, ',')) ? ',' : ';';
+            $address = explode('|', $address);
+            foreach ($address as $v) {
+                $v     = explode($delim, $v);
+                $email = ($v[1]) ? $v[1] : $v[0];
+                $name  = ($v[1]) ? $v[0] : $from;
+
+                $addresses[] = ['email' => trim($email), 'name' => trim($name)];
+            }
+        } else {
+            $address = preg_split("/[,|\n]/", $address);
+            foreach ($address as $v) {
+                $v     = explode(';', $v);
+                $email = ($v[1]) ? $v[1] : $v[0];
+                $name  = ($v[1]) ? $v[0] : $from;
+
+                $addresses[] = ['email' => trim($email), 'name' => trim($name)];
+            }
+        }
+
+        return $addresses;
     }
 }
