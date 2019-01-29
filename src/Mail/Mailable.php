@@ -166,6 +166,10 @@ class Mailable extends BaseMailable implements ShouldQueue
             return array_map('trim', $address);
         }
 
+        if (!is_string($address)) {
+            return $address;
+        }
+
         $addresses = [];
         if (preg_match('/>[^\S]*;/', $address)) {
             $address = explode(';', $address);
