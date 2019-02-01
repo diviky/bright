@@ -11,7 +11,7 @@ class Permission extends BasePermission
     /**
      * Get the current cached permissions.
      */
-    protected static function getPermissions($params = null): Collection
+    protected static function getPermissions(array $params = []): Collection
     {
         return app(PermissionRegistrar::class)->getPermissions($params);
     }
