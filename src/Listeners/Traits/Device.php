@@ -2,14 +2,14 @@
 
 namespace Karla\Listeners\Traits;
 
-use Karla\Helpers\Device;
+use Karla\Helpers\Device as BaseDevice;
 use Karla\Helpers\Geo;
 
 trait Device
 {
     protected function getDeviceDetails($ip, $userAgent): array
     {
-        $device  = new Device();
+        $device  = new BaseDevice();
         $details = (array) $device->detect($userAgent, true);
 
         $geoHelper = new Geo();
