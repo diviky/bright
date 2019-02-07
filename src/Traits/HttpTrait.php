@@ -331,8 +331,12 @@ trait HttpTrait
         throw new HttpException($statusCode, $message, null, $headers);
     }
 
-    protected function rules(array $rules = [])
+    protected function rules(array $rules = [], $data = null)
     {
+        if (is_array($data)) {
+            return Validator::make($data, $rules);
+        }
+        
         return $this->validate($this->request(), $rules);
     }
 

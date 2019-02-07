@@ -29,16 +29,14 @@ trait Themable
 
         View::share('theme', $theme);
 
-        if (!empty($paths)) {
-            $paths = !is_array($paths) ? [$paths] : $paths;
-            foreach ($paths as $path) {
-                View::prependLocation($path);
-            }
-        }
+        $paths   = !is_array($paths) ? [$paths] : $paths;
+        $paths[] = $views . '/' . $component;
+        $paths[] = $themePath;
+        $paths[] = $themePath . '/views/' . $component;
 
-        View::prependLocation($views.'/'.$component);
-        View::prependLocation($themePath);
-        View::prependLocation($themePath . '/views/' . $component);
+        foreach ($paths as $path) {
+            View::prependLocation($path);
+        }
 
         return $theme;
     }

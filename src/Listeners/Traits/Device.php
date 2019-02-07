@@ -1,0 +1,31 @@
+<?php
+
+namespace Karla\Listeners\Traits;
+
+use Karla\Helpers\Device;
+use Karla\Helpers\Geo;
+
+trait Device
+{
+    protected function getDeviceDetails($ip, $userAgent): array
+    {
+        $device  = new Device();
+        $details = (array) $device->detect($userAgent, true);
+
+        $geoHelper = new Geo();
+        $geo       = (array) $geoHelper->geocode($ip);
+
+        $values = [
+            'country'      => $geo['country'],
+            'country_code' => $geo['country_code'],
+            'region'       => $geo['region'],
+            'city'         => $geo['city'],
+            'os'           => $details['os'],
+            'browser'      => $details['browser'],
+            'device'       => $details['device'],
+            'brand'        => $details['brand'],
+        ];
+
+        return $values;
+    }
+}

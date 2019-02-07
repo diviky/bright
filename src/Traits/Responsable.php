@@ -46,6 +46,7 @@ trait Responsable
     {
         $action = explode('@', $action);
         $action = explode('\\', $action[0]);
+        $action = array_filter($action);
         array_pop($action);
         $path = implode(DIRECTORY_SEPARATOR, array_slice($action, 1));
 

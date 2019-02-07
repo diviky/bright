@@ -11,7 +11,9 @@ trait Authorize
         $action     = explode('@', $action);
         $method     = end($action);
         $controller = explode('\\', $action[0]);
-        $component  = strtolower($controller[count($controller) - 2]);
+        //echo $controller = array_filter($controller);
+
+        $component = strtolower($controller[count($controller) - 2]);
 
         return strtolower($component . '.' . $method);
     }

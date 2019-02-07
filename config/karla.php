@@ -8,7 +8,7 @@ return [
     |
     | Use this configuration to add user_id to below tables in query process
      */
-    'tables'      => [
+    'tables'        => [
         'default' => [
             'table' => ['user_id'],
         ],
@@ -23,15 +23,27 @@ return [
         ],
     ],
     // append database based on table name
-    'databases'   => [
+    'databases'     => [
         //'table' => 'database',
     ],
 
-    'connections' => [
+    'connections'   => [
         //'table' => 'connection',
     ],
 
     'notifications' => [
         'mail',
+    ],
+
+    'events'        => [
+        'Illuminate\Mail\Events\MessageSending' => [
+            Karla\Listeners\EmailLogger::class,
+        ],
+        'Illuminate\Auth\Events\Login'          => [
+            Karla\Listeners\SuccessLogin::class,
+        ],
+        'Illuminate\Auth\Events\Failed'         => [
+            Karla\Listeners\FailedLogin::class,
+        ],
     ],
 ];

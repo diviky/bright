@@ -2,78 +2,52 @@
 
 namespace Karla;
 
-use Karla\Traits\Provider;
-use Karla\Routing\Resolver;
-use Karla\Routing\Redirector;
-use Karla\Listeners\EmailLogger;
-use Karla\Listeners\FailedLogin;
-use Karla\Listeners\SuccessLogin;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\ServiceProvider;
 use Karla\Extensions\AuthTokenProvider;
-use Karla\Extensions\TokenUserProvider;
-use Karla\Services\Auth\AuthTokenGuard;
 use Karla\Extensions\CredentialsProvider;
+use Karla\Extensions\TokenUserProvider;
+use Karla\Routing\Redirector;
+use Karla\Routing\Resolver;
 use Karla\Services\Auth\AccessTokenGuard;
+use Karla\Services\Auth\AuthTokenGuard;
 use Karla\Services\Auth\CredentialsGuard;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Karla\Traits\Provider;
 
 class KarlaServiceProvider extends ServiceProvider
 {
     use Provider;
 
-    /**
-     * The event listener mappings for the application.
-     *
-     * @var array
-     */
-    protected $listen = [
-        'Illuminate\Mail\Events\MessageSending' => [
-            EmailLogger::class,
-        ],
-        'Illuminate\Auth\Events\Login'          => [
-            SuccessLogin::class,
-        ],
-        'Illuminate\Auth\Events\Failed'         => [
-            FailedLogin::class,
-        ],
-    ];
+    protected function path()
+    {
+        return __DIR__ . '/..';
+    }
 
     public function boot()
     {
-        parent::boot();
-
-        $this->publishes([
-            __DIR__ . '/../config/permission.php' => config_path('permission.php'),
-            __DIR__ . '/../config/karla.php'      => config_path('karla.php'),
-            __DIR__ . '/../config/theme.php'      => config_path('theme.php'),
-            __DIR__ . '/../config/auth.php'       => config_path('auth.php'),
-            __DIR__ . '/../config/app.php'        => config_path('app.php'),
-        ], 'config');
-
-        $this->publishes([
-            __DIR__ . '/../resources/assets/js' => resource_path('assets/js'),
-            __DIR__ . '/../webpack.mix.js'      => base_path('webpack.mix.js'),
-            __DIR__ . '/../bower.json'          => base_path('bower.json'),
-        ], 'assets');
-
-        $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views'),
-        ], 'views');
-
-        $this->loadViewsFrom(__DIR__ . '/../resources/views/', 'karla');
-
-        Schema::defaultStringLength(191);
         $this->directive();
         $this->macros();
         $this->validates();
+
+        $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
+        $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
+        $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
+
+        $this->loadMigrationsFrom($this->path() . '/database/migrations/');
+        $this->loadViewsFrom($this->path() . '/resources/views/', 'karla');
+
+        $this->registerEvents();
+
+        if ($this->app->runningInConsole()) {
+            $this->console();
+        }
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/permission.php', 'permission');
-        $this->mergeConfigFrom(__DIR__ . '/../config/karla.php', 'karla');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations/');
+        Schema::defaultStringLength(191);
 
         $this->redirect();
         $this->auth();
@@ -82,6 +56,27 @@ class KarlaServiceProvider extends ServiceProvider
         $this->app->singleton('resolver', function ($app) {
             return new Resolver($app);
         });
+    }
+
+    protected function console()
+    {
+        $this->publishes([
+            $this->path() . '/config/permission.php' => config_path('permission.php'),
+            $this->path() . '/config/karla.php'      => config_path('karla.php'),
+            $this->path() . '/config/theme.php'      => config_path('theme.php'),
+            $this->path() . '/config/auth.php'       => config_path('auth.php'),
+            $this->path() . '/config/app.php'        => config_path('app.php'),
+        ], 'config');
+
+        $this->publishes([
+            $this->path() . '/resources/assets/js' => resource_path('assets/js'),
+            $this->path() . '/webpack.mix.js'      => base_path('webpack.mix.js'),
+            $this->path() . '/bower.json'          => base_path('bower.json'),
+        ], 'assets');
+
+        $this->publishes([
+            $this->path() . '/resources/views' => resource_path('views'),
+        ], 'views');
     }
 
     public function redirect()
@@ -123,5 +118,23 @@ class KarlaServiceProvider extends ServiceProvider
 
             return new CredentialsGuard($userProvider, $request, $config);
         });
+    }
+
+    /**
+     * Register the Authentication Log's events.
+     *
+     * @return void
+     */
+    protected function registerEvents()
+    {
+        $events = $this->app['config']->get('karla.events');
+
+        if (is_array($events)) {
+            foreach ($events as $event => $listeners) {
+                foreach ($listeners as $listener) {
+                    Event::listen($event, $listener);
+                }
+            }
+        }
     }
 }

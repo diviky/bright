@@ -58,7 +58,10 @@ class SendActivationToken extends Notification
     {
         return (new MailMessage())
             ->subject('Welcome to ' . config('app.name'))
-            ->markdown('emails.auth.activation', ['token' => $this->token]);
+            ->markdown('emails.auth.activation', [
+                'token'      => $this->token,
+                'notifiable' => $notifiable,
+            ]);
     }
 
     public function toMobtexting($notifiable)

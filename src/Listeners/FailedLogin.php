@@ -5,11 +5,13 @@ namespace Karla\Listeners;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Karla\Listeners\Traits\Device;
 use Karla\Traits\CapsuleManager;
 
 class FailedLogin
 {
     use CapsuleManager;
+    use Device;
 
     /**
      * Create the event listener.
@@ -30,16 +32,24 @@ class FailedLogin
     {
         $user = $event->user;
 
-        $this->db->table('auth_login_history')->insert([
+        $ip         = $this->request->ip();
+        $user_agent = $this->request->userAgent();
+
+        $values = [
             'id'         => Str::uuid(),
             'user_id'    => is_null($user) ? null : $user->id,
-            'ip'         => $this->request->ip(),
+            'ip'         => $ip,
             'ips'        => implode(',', $this->request->getClientIps()),
             'host'       => $this->request->getHost(),
-            'user_agent' => $this->request->userAgent(),
+            'user_agent' => $user_agent,
             'created_at' => carbon(),
             'meta'       => json_encode($event->credentials),
             'status'     => 2,
-        ]);
+        ];
+
+        $values = array_merge($values, $this->getDeviceDetails($ip, $user_agent));
+
+        $this->db->table('auth_login_history')->insert($values);
     }
+
 }
