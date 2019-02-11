@@ -247,12 +247,16 @@
                 text: res.errors[Object.keys(res.errors)[0]][0],
                 type: 'error'
             });
-        } else if (res.error) {
+        }
+
+        if (res.error) {
             notify({
                 text: res.error.message,
                 type: 'error'
             });
-        } else if (res.message) {
+        }
+
+        if (res.message) {
             notify({
                 text: res.message,
                 type: 'error'
