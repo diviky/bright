@@ -23,7 +23,7 @@ class ActivationController extends Controller
 
         $token = $request->input('token');
 
-        if (1 == auth()->user()->status) {
+        if (user('status')) {
             return [
                 'status'   => 'OK',
                 'message'  => 'Your account is already activated',
@@ -32,13 +32,13 @@ class ActivationController extends Controller
         }
 
         $activation = Activation::where('token', $token)
-            ->where('user_id', auth()->user()->id)
+            ->where('user_id', user('id'))
             ->first();
 
         if (empty($activation)) {
             return [
                 'status'  => 'ERROR',
-                'message' => 'Invalid activation key.',
+                'message' => 'Invalid activation code.',
             ];
         }
 
