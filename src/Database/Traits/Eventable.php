@@ -168,7 +168,13 @@ trait Eventable
             }
 
             $column = key($columns);
-            $field  = $columns[$column];
+            if (strpos($column, '.') !== false) {
+                list($alias, $column) = explode('.', $column);
+
+                $alias = $alias . '.';
+            }
+
+            $field = $columns[$column];
 
             switch ($column) {
                 case 'user_id':
