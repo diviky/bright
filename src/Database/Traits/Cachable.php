@@ -94,6 +94,10 @@ trait Cachable
      */
     public function remember($minutes = 0, $key = null)
     {
+        if (is_null($minutes)) {
+            $minutes = 10;
+        }
+
         list($this->cacheMinutes, $this->cacheKey) = [$minutes, $key];
 
         return $this;

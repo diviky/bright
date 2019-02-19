@@ -21,7 +21,9 @@ class TokenUserProvider implements UserProvider
 
     public function retrieveById($identifier)
     {
-        return $this->user->find($identifier);
+        return $this->user
+            ->remeber(null, 'uid:' . $identifier)
+            ->find($identifier);
     }
 
     public function retrieveByAcess($identifier, $token)
@@ -33,7 +35,10 @@ class TokenUserProvider implements UserProvider
 
     public function retrieveByToken($identifier, $token)
     {
-        $token = $this->token->with('user')->where($identifier, $token)->first();
+        $token = $this->token->with('user')
+            ->remember(null, 'token:', $token)
+            ->where($identifier, $token)
+            ->first();
 
         return $token && $token->user ? $token : null;
     }

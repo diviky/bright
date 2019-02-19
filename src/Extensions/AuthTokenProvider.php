@@ -18,12 +18,16 @@ class AuthTokenProvider implements UserProvider
 
     public function retrieveById($identifier)
     {
-        return $this->user->find($identifier);
+        return $this->user
+            ->remeber(null, 'uid:' . $identifier)
+            ->find($identifier);
     }
 
     public function retrieveByToken($identifier, $token)
     {
-        $user = $this->user->where($identifier, $token)->first();
+        $user = $this->user->where($identifier, $token)
+            ->remember(null, 'access_token:' . $token)
+            ->first();
 
         return $user ? $user : null;
     }

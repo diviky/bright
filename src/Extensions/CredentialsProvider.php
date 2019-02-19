@@ -18,7 +18,9 @@ class CredentialsProvider implements UserProvider
 
     public function retrieveById($identifier)
     {
-        return $this->user->find($identifier);
+        return $this->user
+            ->remeber(null, 'uid:' . $identifier)
+            ->find($identifier);
     }
 
     public function retrieveByToken($identifier, $token)
