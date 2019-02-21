@@ -334,7 +334,7 @@ trait HttpTrait
     protected function rules(array $rules = [], $data = null)
     {
         if (is_array($data)) {
-            return Validator::make($data, $rules);
+            return Validator::make($data, $rules)->validate();
         }
         
         return $this->validate($this->request(), $rules);
