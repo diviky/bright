@@ -36,7 +36,7 @@ class TokenUserProvider implements UserProvider
     public function retrieveByToken($identifier, $token)
     {
         $token = $this->token->with('user')
-            ->remember(null, 'token:', $token)
+            ->remember(null, 'token:' . $token)
             ->where($identifier, $token)
             ->first();
 
