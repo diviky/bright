@@ -14,8 +14,15 @@ trait Authorize
         //echo $controller = array_filter($controller);
 
         $component = strtolower($controller[count($controller) - 2]);
+        $method    = strtolower($method);
 
-        return strtolower($component . '.' . $method);
+        $mappings = config('permission.grouping');
+
+        if ($mappings && isset($mappings[$component])) {
+            return $mappings[$component];
+        }
+
+        return $component . '.' . $method;
     }
 
     protected function isAuthorized($action)

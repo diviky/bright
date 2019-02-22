@@ -2,7 +2,7 @@
 
 return [
 
-    'models' => [
+    'models'                          => [
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -24,11 +24,11 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        'role' => Karla\Http\Controllers\Auth\Models\Role::class,
+        'role'       => Karla\Http\Controllers\Auth\Models\Role::class,
 
     ],
 
-    'table_names' => [
+    'table_names'                     => [
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -36,7 +36,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'roles' => 'auth_roles',
+        'roles'                 => 'auth_roles',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -44,7 +44,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'permissions' => 'auth_permissions',
+        'permissions'           => 'auth_permissions',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -60,7 +60,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_roles' => 'auth_user_roles',
+        'model_has_roles'       => 'auth_user_roles',
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -68,7 +68,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'role_has_permissions' => 'auth_role_permissions',
+        'role_has_permissions'  => 'auth_role_permissions',
     ],
 
     /*
@@ -76,7 +76,7 @@ return [
      * role is updated. Then the cache will be flushed immediately.
      */
 
-    'cache_expiration_time' => 60 * 1,
+    'cache_expiration_time'           => 60 * 1,
 
     /*
      * When set to true, the required permission/role names are added to the exception
@@ -85,4 +85,6 @@ return [
      */
 
     'display_permission_in_exception' => false,
+
+    'grouping'                        => [],
 ];
