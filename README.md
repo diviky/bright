@@ -2,10 +2,12 @@
 
 Query builder needs to overwrite with karla
 
-```php
-sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Connection.php
+Illuminate/Database/Eloquent/Builder.php
 
-sed -i -e 's/use Illuminate\\Database\\Grammar/use Karla\\Database\\Grammar/g' vendor/laravel/framework/src/Illuminate/Database/Query/Grammars/Grammar.php
+```php
+sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Bulider.php
+
+sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
 
 ```
 

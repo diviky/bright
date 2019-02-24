@@ -11,7 +11,7 @@ class DatabaseManager extends LaravelDatabaseManager
         $config      = $this->app['config']['karla'];
         $connections = $config['connections'];
 
-        if (is_array($connections) && $connections[$name]) {
+        if (is_array($connections) && isset($connections[$name])) {
             return $this->connection($connections[$name])->table($name);
         }
 

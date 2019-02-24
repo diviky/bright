@@ -34,7 +34,7 @@ class MySqlConnection extends LaravelMySqlConnection
             try {
                 return parent::runQueryCallback($query, $bindings, $callback);
             } catch (QueryException $e) {
-                if ($attempt > $attempts_count) {
+                if ($attempt >= $attempts_count) {
                     throw $e;
                 }
 
