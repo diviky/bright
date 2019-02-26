@@ -65,10 +65,10 @@ trait Outfile
         return $this->outpath;
     }
 
-    public function into($table, $file = true, $path = null)
+    public function into($table, $path = null)
     {
         $table = $this->grammar->wrapTable($table);
-        if ($file) {
+        if ($path) {
             $path = $this->outFile($path);
 
             $sql = "LOAD DATA LOCAL INFILE '" . $path . "'";

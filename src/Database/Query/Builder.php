@@ -111,6 +111,26 @@ class Builder extends LaravelBuilder
 
     public function statement($sql, $bindings = [])
     {
+        $type = trim(strtolower(explode(' ', $sql)[0]));
+
+        switch ($type) {
+            case 'delete':
+                return $this->connection->delete($sql, $bindings);
+                break;
+            case 'update':
+                return $this->connection->update($sql, $bindings);
+                break;
+            case 'insert':
+                return $this->connection->insert($sql, $bindings);
+                break;
+            case 'select':
+                return $this->connection->select($sql, $bindings);
+                break;
+            case 'load':
+                return $this->connection->affectingStatement($sql, $bindings);
+                break;
+        }
+
         return $this->connection->statement($sql, $bindings);
     }
 
