@@ -71,7 +71,11 @@
     }
 
     easyModal.prototype.ajaxContent = function (self, el) {
-        var target = self.settings.url || el.attr('href');
+        var target = self.settings.url || el && el.attr('href');
+
+        if (target == '' || target == undefined) {
+            return false;
+        }
 
         //add loading
         $.ajax({

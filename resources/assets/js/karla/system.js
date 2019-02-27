@@ -42,7 +42,7 @@ function displayNoty(response, $this) {
         res.link.url = link;
     }
 
-    if (res.link) {
+    if (res.link && res.link.url) {
         var opts = {
             url: res.link.url,
             event: 'ready',

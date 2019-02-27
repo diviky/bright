@@ -314,7 +314,7 @@
             return true;
         }
 
-        if (res.link) {
+        if (res.link && res.link.url) {
             var opts = {
                 url: res.link.url,
                 event: 'ready',
