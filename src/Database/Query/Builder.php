@@ -2,19 +2,20 @@
 
 namespace Karla\Database\Query;
 
-use Karla\Database\Karla;
+use Illuminate\Database\Query\Builder as LaravelBuilder;
 use Illuminate\Support\Carbon;
-use Karla\Database\Traits\Raw;
+use Karla\Database\Karla;
 use Karla\Database\Traits\Build;
-use Karla\Database\Traits\Filter;
-use Karla\Database\Traits\Remove;
-use Karla\Database\Traits\Outfile;
 use Karla\Database\Traits\Cachable;
-use Karla\Database\Traits\Ordering;
 use Karla\Database\Traits\Eventable;
+use Karla\Database\Traits\Filter;
+use Karla\Database\Traits\Ordering;
+use Karla\Database\Traits\Outfile;
+use Karla\Database\Traits\Raw;
+use Karla\Database\Traits\Remove;
+use Karla\Database\Traits\Tables;
 use Karla\Database\Traits\Timestamps;
 use Karla\Helpers\Iterator\SelectIterator;
-use Illuminate\Database\Query\Builder as LaravelBuilder;
 
 class Builder extends LaravelBuilder
 {
@@ -29,6 +30,7 @@ class Builder extends LaravelBuilder
     use Ordering;
     use Filter;
     use Remove;
+    use Tables;
 
     /**
      * {@inheritdoc}
@@ -86,7 +88,12 @@ class Builder extends LaravelBuilder
     public function paging($perPage = 25, $columns = ['*'], $pageName = 'page', $page = null)
     {
         $perPage = is_null($perPage) ? 25 : $perPage;
-        $rows    = $this->paginate($perPage, $columns, $pageName, $page);
+
+        if (count($this->tables) > 0) {
+            $rows = $this->paginateComplex($perPage, $columns, $pageName, $page);
+        } else {
+            $rows = $this->paginate($perPage, $columns, $pageName, $page);
+        }
 
         $i = $rows->perPage() * ($rows->currentPage() - 1);
 
