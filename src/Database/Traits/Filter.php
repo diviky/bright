@@ -96,6 +96,9 @@ trait Filter
 
         if (is_array($datetime)) {
             foreach ($datetime as $column => $date) {
+                if (empty($date)) {
+                    continue;
+                }
                 if (!is_array($date)) {
                     $date = explode(' - ', $date);
                     $date = [
@@ -122,6 +125,10 @@ trait Filter
 
         if (is_array($unixtime)) {
             foreach ($unixtime as $column => $date) {
+                if (empty($date)) {
+                    continue;
+                }
+
                 if (!is_array($date)) {
                     $date = explode(' - ', $date);
                     $date = [

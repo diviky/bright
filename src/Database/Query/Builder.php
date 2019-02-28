@@ -2,18 +2,19 @@
 
 namespace Karla\Database\Query;
 
-use Illuminate\Database\Query\Builder as LaravelBuilder;
-use Illuminate\Support\Carbon;
 use Karla\Database\Karla;
-use Karla\Database\Traits\Build;
-use Karla\Database\Traits\Cachable;
-use Karla\Database\Traits\Eventable;
-use Karla\Database\Traits\Filter;
-use Karla\Database\Traits\Ordering;
-use Karla\Database\Traits\Outfile;
+use Illuminate\Support\Carbon;
 use Karla\Database\Traits\Raw;
+use Karla\Database\Traits\Build;
+use Karla\Database\Traits\Filter;
+use Karla\Database\Traits\Remove;
+use Karla\Database\Traits\Outfile;
+use Karla\Database\Traits\Cachable;
+use Karla\Database\Traits\Ordering;
+use Karla\Database\Traits\Eventable;
 use Karla\Database\Traits\Timestamps;
 use Karla\Helpers\Iterator\SelectIterator;
+use Illuminate\Database\Query\Builder as LaravelBuilder;
 
 class Builder extends LaravelBuilder
 {
@@ -27,6 +28,7 @@ class Builder extends LaravelBuilder
     use Eventable;
     use Ordering;
     use Filter;
+    use Remove;
 
     /**
      * {@inheritdoc}

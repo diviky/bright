@@ -52,6 +52,8 @@ trait Cachable
             return $this->getCached($columns);
         }
 
+        $this->removeWheres();
+
         return parent::get($columns);
     }
 

@@ -7,10 +7,16 @@ trait Message
     public function message($result = true, $action = 'save', $name = 'row')
     {
         if ($result) {
-            return [
+            $response = [
                 'status'  => 'OK',
                 'message' => __(':Name :action successfully', ['name' => $name, 'action' => $action . 'd']),
             ];
+
+            if (!is_bool($result)) {
+                $response['id'] = $result;
+            }
+
+            return $response;
         }
 
         return [
