@@ -15,6 +15,7 @@
         animation: "bounceInRight",
         content: null,
         url: null,
+        data: {},
         container: 'body'
     };
 
@@ -77,12 +78,13 @@
             return false;
         }
 
+        var data = self.settings.data || {};
+        data = Object.assign({ format: 'html' }, data);
+
         //add loading
         $.ajax({
             url: target,
-            data: {
-                format: 'html'
-            },
+            data: data,
             cache: false
         }).then(function (html) {
             self.content(html);
@@ -159,7 +161,8 @@
     $.fn.easyModalHide = function () {
         setTimeout(function () {
             $('.modal').modal('hide');
-        }, 1000);
+            $('.modal-backdrop').remove();
+        }, 500);
     }
 
     $.fn.easyModal = function (options) {

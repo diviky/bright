@@ -49,7 +49,7 @@ trait Outfile
 
         $sql = $this->toQuery();
 
-        $out = 'SELECT * FROM(' . $sql . ') AS export';
+        $out = 'SELECT * FROM (' . $sql . ') AS export';
         $out .= " INTO OUTFILE '" . $file . "'";
         $out .= " FIELDS TERMINATED BY ','";
         $out .= " OPTIONALLY ENCLOSED BY '\"'";
