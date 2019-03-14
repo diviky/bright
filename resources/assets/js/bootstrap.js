@@ -55,7 +55,7 @@ function karlaJs() {
             tokenSeparators: [',', ' ']
         });
 
-        $('[data-select-ajax]').livequery(function () {
+        $('[data-select-ajax]').each(function () {
             var $this = $(this);
             var url = $this.data('select-ajax');
 
