@@ -39,6 +39,8 @@ class CredentialsGuard implements Guard
             return;
         }
 
+        $this->user->auth_token = $user->access_token;
+
         return $this->user = $user;
     }
 

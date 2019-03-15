@@ -53,7 +53,11 @@ class AccessTokenGuard implements Guard
             return;
         }
 
-        return $this->user = $user->user;
+        $this->user = $user->user;
+
+        $this->user->auth_token = $user->access_token;
+
+        return $this->user;
     }
 
     protected function validateIp($allowed_ips = null)
