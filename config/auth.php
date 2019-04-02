@@ -13,7 +13,7 @@ return [
     |
      */
 
-    'defaults'  => [
+    'defaults'     => [
         'guard'     => 'web',
         'passwords' => 'users',
     ],
@@ -35,7 +35,7 @@ return [
     |
      */
 
-    'guards'    => [
+    'guards'       => [
         'web'         => [
             'driver'   => 'session',
             'provider' => 'users',
@@ -79,7 +79,7 @@ return [
     |
      */
 
-    'providers' => [
+    'providers'    => [
         'users' => [
             'driver' => 'eloquent',
             'model'  => App\User::class,
@@ -106,7 +106,7 @@ return [
     |
      */
 
-    'passwords' => [
+    'passwords'    => [
         'users' => [
             'provider' => 'users',
             'table'    => 'auth_password_resets',
@@ -114,4 +114,16 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Throttle Key
+    |--------------------------------------------------------------------------
+    |
+    | You may choose to block ip address from failed attempts
+    | of a combination of IP and Username
+    |
+    | Supported: "ip", "username|ip"
+    |
+     */
+    'throttle_key' => 'ip',
 ];
