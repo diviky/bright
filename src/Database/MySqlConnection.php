@@ -69,4 +69,33 @@ class MySqlConnection extends LaravelMySqlConnection
 
         return $this->withTablePrefix($grammar);
     }
+
+    /**
+     * Execute an SQL statement and return the boolean result.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return bool
+     */
+    public function statement($query, $bindings = [], $useReadPdo = false)
+    {
+        return $this->run($query, $bindings, function ($query, $bindings) use ($useReadPdo) {
+            if ($this->pretending()) {
+                return true;
+            }
+
+            if ($useReadPdo) {
+                $statement = $this->getPdo()->prepare($query);
+            } else {
+                $statement = $this->getPdoForSelect($useReadPdo)->prepare($query);
+            }
+
+            $this->bindValues($statement, $this->prepareBindings($bindings));
+
+            $this->recordsHaveBeenModified();
+
+            return $statement->execute();
+        });
+    }
+
 }

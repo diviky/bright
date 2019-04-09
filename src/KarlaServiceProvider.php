@@ -77,6 +77,10 @@ class KarlaServiceProvider extends ServiceProvider
         $this->publishes([
             $this->path() . '/resources/views' => resource_path('views'),
         ], 'views');
+
+        $this->commands([
+            GeoipUpdate::class,
+        ]);
     }
 
     public function redirect()

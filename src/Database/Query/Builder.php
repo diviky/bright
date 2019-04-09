@@ -118,9 +118,13 @@ class Builder extends LaravelBuilder
         return $rows;
     }
 
-    public function statement($sql, $bindings = [])
+    public function statement($sql, $bindings = [], $useReadPdo = false)
     {
         $type = trim(strtolower(explode(' ', $sql)[0]));
+
+        if ($useReadPdo) {
+            return $this->connection->statement($sql, $bindings, $useReadPdo);
+        }
 
         switch ($type) {
             case 'delete':
@@ -133,14 +137,18 @@ class Builder extends LaravelBuilder
                 return $this->connection->insert($sql, $bindings);
                 break;
             case 'select':
-                return $this->connection->select($sql, $bindings);
+                if (preg_match('/outfile\s/i', $sql)) {
+                    return $this->connection->statement($sql, $bindings, true);
+                } else {
+                    return $this->connection->select($sql, $bindings);
+                }
                 break;
             case 'load':
                 return $this->connection->affectingStatement($sql, $bindings);
                 break;
         }
 
-        return $this->connection->statement($sql, $bindings);
+        return $this->connection->statement($sql, $bindings, $useReadPdo);
     }
 
     public function flatChunk($count = 1000, $callback = null)
