@@ -2,19 +2,20 @@
 
 namespace Karla;
 
+use Karla\Traits\Provider;
+use Karla\Routing\Resolver;
+use Karla\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Karla\Console\Commands\GeoipUpdate;
 use Karla\Extensions\AuthTokenProvider;
-use Karla\Extensions\CredentialsProvider;
 use Karla\Extensions\TokenUserProvider;
-use Karla\Routing\Redirector;
-use Karla\Routing\Resolver;
-use Karla\Services\Auth\AccessTokenGuard;
 use Karla\Services\Auth\AuthTokenGuard;
+use Karla\Extensions\CredentialsProvider;
+use Karla\Services\Auth\AccessTokenGuard;
 use Karla\Services\Auth\CredentialsGuard;
-use Karla\Traits\Provider;
 
 class KarlaServiceProvider extends ServiceProvider
 {
