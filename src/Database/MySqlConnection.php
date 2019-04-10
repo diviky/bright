@@ -85,9 +85,9 @@ class MySqlConnection extends LaravelMySqlConnection
             }
 
             if ($useReadPdo) {
-                $statement = $this->getPdo()->prepare($query);
-            } else {
                 $statement = $this->getPdoForSelect($useReadPdo)->prepare($query);
+            } else {
+                $statement = $this->getPdo()->prepare($query);
             }
 
             $this->bindValues($statement, $this->prepareBindings($bindings));
