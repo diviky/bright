@@ -42,6 +42,23 @@ trait Authorizable
 
         $permissions = $this->getAllPermissions();
 
+        $revoke = false;
+        foreach ($permissions as $permission) {
+            foreach ($matches as $match) {
+                if (Str::is($permission->name, $match)) {
+                    $pivot = $permission->pivot;
+                    if ($pivot && $pivot->is_exclude) {
+                        $revoke = true;
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        if ($revoke) {
+            return $granted;
+        }
+
         $granted = null;
         foreach ($permissions as $permission) {
             foreach ($matches as $match) {

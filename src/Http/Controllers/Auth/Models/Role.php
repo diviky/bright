@@ -24,6 +24,7 @@ class Role extends BaseRole
             config('permission.table_names.role_has_permissions'),
             'role_id',
             'permission_id'
-        )->where('guard_name', '=', $this->attributes['guard_name']);
+        )->where('guard_name', '=', $this->attributes['guard_name'])
+            ->withPivot('is_exclude');
     }
 }
