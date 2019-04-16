@@ -65,7 +65,8 @@
         "laravel": {
             "providers": [
                 "Karla\\KarlaServiceProvider",
-                "Karla\\Providers\\DatabaseServiceProvider"
+                "Karla\\Providers\\DatabaseServiceProvider",
+                "Karla\\Providers\\ServiceProvider"
             ]
         }
     }

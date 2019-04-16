@@ -85,6 +85,6 @@ return [
      */
 
     'display_permission_in_exception' => false,
-
     'grouping'                        => [],
+    'guard_name'                      => null,
 ];
