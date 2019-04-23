@@ -12,20 +12,20 @@ class CreateAuthLoginHistoryTable extends Migration
     {
         Schema::create('auth_login_history', function (Blueprint $table) {
             $table->string('id', 36)->primary();
-            $table->bigInteger('user_id')->unsigned()->index('user_id');
+            $table->bigInteger('user_id')->unsigned()->nullable()->index('user_id');
             $table->string('ip', 20)->nullable()->index('ip');
             $table->text('ips', 65535)->nullable();
             $table->string('host', 128)->nullable();
-            $table->string('user_agent', 191)->nullable();
-            $table->text('meta', 65535)->nullable();
-            $table->string('os', 70);
-            $table->string('brand', 50);
-            $table->string('device', 50);
-            $table->string('browser', 60);
-            $table->string('country_code', 50);
-            $table->string('country', 100);
-            $table->string('region', 100);
-            $table->string('city', 100);
+            $table->string('user_agent')->nullable();
+            $table->text('meta', 16777215)->nullable();
+            $table->string('os', 50)->nullable();
+            $table->string('brand', 100)->nullable();
+            $table->string('device', 50)->nullable();
+            $table->string('browser', 50)->nullable();
+            $table->string('country_code', 10)->nullable();
+            $table->string('country', 100)->nullable();
+            $table->string('region', 100)->nullable();
+            $table->string('city', 100)->nullable();
             $table->timestamps();
             $table->boolean('status');
         });

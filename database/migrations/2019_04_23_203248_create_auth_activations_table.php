@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class CreateAuthActivationsTable extends Migration
 {
@@ -13,14 +12,9 @@ class CreateAuthActivationsTable extends Migration
     {
         Schema::create('auth_activations', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedBigInteger('user_id');
+            $table->integer('user_id')->unsigned()->index('auth_activations_user_id_foreign');
             $table->string('token', 100)->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('auth_users')
-                ->onDelete('cascade');
         });
     }
 
@@ -29,6 +23,6 @@ class CreateAuthActivationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('auth_activations');
+        Schema::drop('auth_activations');
     }
 }

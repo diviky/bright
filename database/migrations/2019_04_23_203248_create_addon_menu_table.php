@@ -2,14 +2,11 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
-class CreateMenuTypesTable extends Migration
+class CreateAddonMenuTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -18,16 +15,15 @@ class CreateMenuTypesTable extends Migration
             $table->string('name', 50);
             $table->string('title', 50);
             $table->timestamps();
+            $table->boolean('status')->default(1)->index('addon_menu_status_index');
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('addon_menu');
+        Schema::drop('addon_menu');
     }
 }
