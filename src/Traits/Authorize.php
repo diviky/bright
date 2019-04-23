@@ -18,16 +18,14 @@ trait Authorize
 
         $mappings = config('permission.grouping');
 
-        if ($mappings && is_array($mappings[$namespace])) {
+        if ($mappings && is_array($mappings[$namespace]) && isset($mappings[$namespace][$component])) {
             $mapping = $mappings[$namespace][$component];
 
             return is_array($mapping) ? $mapping[0] : $mapping;
         }
 
-        if ($mappings && isset($mappings[$component])) {
-            $mapping = $mappings[$namespace];
-
-            return is_array($mapping) ? $mapping[0] : $mapping;
+        if ($mappings && isset($mappings[$component]) && !is_array($mappings[$component])) {
+            return $mappings[$component];
         }
 
         return $component . '.' . $method;
