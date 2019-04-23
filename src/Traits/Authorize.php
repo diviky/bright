@@ -11,12 +11,16 @@ trait Authorize
         $action     = explode('@', $action);
         $method     = end($action);
         $controller = explode('\\', $action[0]);
-        //echo $controller = array_filter($controller);
 
         $component = strtolower($controller[count($controller) - 2]);
         $method    = strtolower($method);
+        $namespace = strtolower($controller[count($controller) - 5]);
 
         $mappings = config('permission.grouping');
+
+        if ($mappings && is_array($mappings[$namespace])) {
+            return $mappings[$namespace][$component];
+        }
 
         if ($mappings && isset($mappings[$component])) {
             return $mappings[$component];
