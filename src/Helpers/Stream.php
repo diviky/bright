@@ -56,6 +56,8 @@ class Stream
             }
         }
 
+        echo "\xEF\xBB\xBF";
+        
         return $this;
     }
 

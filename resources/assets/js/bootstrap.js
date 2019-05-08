@@ -105,6 +105,7 @@ jQuery(document).ready(function ($) {
 
         $this.on("show.bs.popover", function (e) {
             $("[data-poload]").not(e.target).popover("dispose");
+            $(document).trigger('ajax:loaded');
         });
 
         e.preventDefault();
