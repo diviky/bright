@@ -238,13 +238,12 @@
     });
 
     v.fn(":number,[data-type=number]", "Please enter a numeric value.", function (el, v) {
-        return numRe.test(v);
+        return !v || numRe.test(v);
     });
 
     v.fn("[data-type='mobile'], [type=mobile]", "Please enter a valid 10 digits mobile number.", function (el, v) {
         return !v || mobRe.test(v);
     });
-
 
     v.fn("[max]", e("Please enter a value no larger than $1"), function (el, v) {
         // skip empty values and dateinputs
@@ -262,33 +261,38 @@
         return parseFloat(v) >= parseFloat(min) ? true : [min];
     });
 
-    v.fn("[minlength]", e("Please provide at least $1 character(s)"), function (input, value) {
-        var min = input.attr("minlength");
-        return value.length >= min ? true : [min];
+    v.fn("[length]", e("Please provide $1 character(s)"), function (el, v) {
+        var min = el.attr("length");
+        return !v || (v.length >= min ? true : [min]);
     });
 
-    v.fn("[maxlength]", e("Maximum $1 character allowed"), function (input, value) {
-        var max = input.attr("maxlength");
-        return value.length <= max ? true : [max];
+    v.fn("[minlength]", e("Please provide at least $1 character(s)"), function (el, v) {
+        var min = el.attr("minlength");
+        return !v || (v.length >= min ? true : [min]);
     });
 
+    v.fn("[maxlength]", e("Maximum $1 character allowed"), function (el, v) {
+        var max = el.attr("maxlength");
+        return !v || (v.length <= max ? true : [max]);
+    });
 
-    v.fn("[minwords]", e("Please provide at least $1 word(s)"), function (input, value) {
-        var min = input.attr("minwords");
-        var wordcount = value.split(/\b[\s,\.-:;]*/).length;
+    v.fn("[minwords]", e("Please provide at least $1 word(s)"), function (el, v) {
+        if (v === '') { return true; }
+        var min = el.attr("minwords");
+        var wordcount = v.split(/\b[\s,\.-:;]*/).length;
 
         return wordcount >= min ? true : [min];
     });
 
-    v.fn("[maxwords]", e("Maximum $1 word(s) allowed"), function (input, value) {
-        var max = input.attr("maxwords");
-        var wordcount = value.split(/\b[\s,\.-:;]*/).length;
+    v.fn("[maxwords]", e("Maximum $1 word(s) allowed"), function (el, v) {
+        if (v === '') { return true; }
+        var max = el.attr("maxwords");
+        var wordcount = v.split(/\b[\s,\.-:;]*/).length;
 
         return wordcount <= max ? true : [max];
     });
 
     v.fn("[required]", "Please complete this mandatory field.", function (el, v) {
-
         v = $.trim(v);
         if (el.attr('placeholder') != '' && el.attr('placeholder') != undefined) {
             if (el.attr('placeholder') == v) {
@@ -312,9 +316,7 @@
     });
 
     v.fn("[pattern]", function (el, v) {
-        if (v === '') {
-            return true;
-        }
+        if (v === '') { return true; }
 
         var regex = el.attr("pattern");
         if (!regex) {
@@ -343,31 +345,39 @@
     });
 
     // Regular Expression to test whether the value is valid
-    v.fn("[type=time]", "Please supply a valid time", function (input, value) {
-        return /^\d\d:\d\d$/.test(value);
+    v.fn("[type=time]", "Please supply a valid time", function (el, v) {
+        return !v || /^\d\d:\d\d$/.test(v);
     });
 
-    v.fn("[data-equals]", e("Value not equal with the $1 field"), function (input) {
-        var name = input.attr("data-equals"),
+    v.fn("[data-equals]", e("Value not equal with the $1 field"), function (el, v) {
+        if (v === '') { return true; }
+        var name = el.attr("data-equals"),
             field = this.getInputs().filter("[name=" + name + "]");
-        return input.val() == field.val() ? true : [name];
+        return el.val() == field.val() ? true : [name];
     });
 
+    v.fn("[data-notequals]", e("Value should not be equal to the $1 field"), function (el, v) {
+        if (v === '') { return true; }
+        var name = el.attr("data-notequals"),
+            field = this.getInputs().filter("[name=" + name + "]");
+        return el.val() != field.val() ? true : [name];
+    });
 
-    v.fn("[data-type=file],[type=file]", function (input) {
-        var ext = input.val().split('.').pop().toLowerCase();
+    v.fn("[data-type=file],[type=file]", function (el, v) {
+        if (v === '') { return true; }
+        var ext = el.val().split('.').pop().toLowerCase();
 
-        var allowed = input.data('accept');
+        var allowed = el.data('accept');
         if (!allowed || allowed == undefined) return true;
         var allow = allowed.split(',');
         if ($.inArray(ext, allow) == -1) {
             return e("Please enter valid extensions $1", allowed);
         }
-        var allowed_size = input.data('allowed-size');
+        var allowed_size = el.data('allowed-size');
         if (!allowed_size || allowed_size == undefined || allowed_size == 0) {
             return true;
         }
-        var fileInput = input[0];
+        var fileInput = el[0];
         var size = parseInt(fileInput.files[0].fileSize);
 
         if (size > allowed_size) {
@@ -378,19 +388,19 @@
     });
 
 
-    v.fn("[data-type=group]", function (input, v) {
-        if (input.is(':checkbox')) {
-            var name = input.attr("name"),
+    v.fn("[data-type=group]", function (el, v) {
+        if (el.is(':checkbox')) {
+            var name = el.attr("name"),
                 field = this.getInputs().filter("[name=" + name + "]:checked");
         } else {
-            var field = input.val();
+            var field = el.val();
         }
 
         if (!field) return true;
 
-        var len1 = input.attr('data-length');
-        var max = input.attr('data-max');
-        var min = input.attr('data-min');
+        var len1 = el.attr('data-length');
+        var max = el.attr('data-max');
+        var min = el.attr('data-min');
 
         if (len1) {
             if (field.length != parseInt(len1))
@@ -585,7 +595,6 @@
                             // execute a validator function
                             var returnValue = fn[1].call(self, el, el.val());
 
-
                             // validation failed. multiple substitutions can be returned with an array
                             if (returnValue !== true) {
 
@@ -601,7 +610,6 @@
                                     return false;
                                 } else {
                                     pushMessage(msgs, match, returnValue);
-
                                 }
                             }
                         }
