@@ -99,8 +99,12 @@ function displayNoty(response, $this) {
     if ($this.data('hide')) {
         $.fn.easyModalHide();
     }
-}
 
+    if ($this.data('render')) {
+        var form = getForm($this);
+        form.submit();
+    }
+}
 
 function displayNoti(xhr, $this) {
     displayNoty(xhr.responseText, $this)
@@ -108,7 +112,6 @@ function displayNoti(xhr, $this) {
 
 
 $(document).ready(function () {
-
     $(document).on('click', '[data-href]', function (e) {
         e.preventDefault();
 
@@ -266,7 +269,6 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '[data-task]', function (e) {
-
         var $this = $(this);
         var form = getForm($this);
 
