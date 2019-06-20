@@ -1,6 +1,7 @@
 
 jQuery(document).ready(function ($) {
     karlaJs();
+    karlaBootJs();
     karlaSystemJs();
 
     $(document).on('ajax:modal:loaded', function (e, $this) {

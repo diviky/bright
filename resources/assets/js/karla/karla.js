@@ -75,6 +75,9 @@ function karlaJs() {
         });
     }
 
+}
+
+function karlaBootJs() {
     $(document).on('click', '[data-poload]', function (e) {
         var $this = $(this);
         //$this.off('hover');
@@ -161,7 +164,6 @@ function karlaJs() {
     $(document).on('click', '#search', function () {
         $(this).parents('div:first').toggleClass('active');
     });
-
 
     $('[data-bootstrap-select]').find('li').click(function (e) {
         e.preventDefault();
