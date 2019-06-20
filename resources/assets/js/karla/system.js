@@ -1,117 +1,4 @@
-
-function getForm($this) {
-
-    var form = null;
-    if ($this.parents('form:eq(0)').length > 0) {
-        var form = $this.parents('form:eq(0)');
-    } else if ($this.parents().find('[ajax-form]').length > 0) {
-        var form = $('[ajax-form]');
-    } else {
-        var form = $('[role="easyRender"]');
-    }
-
-    return form;
-}
-
-function isSuccess(status) {
-    if (status == 'OK' || status == 'success' || status == 200) {
-        return true;
-    }
-
-    return false;
-}
-
-function displayNoty(response, $this) {
-    res = parseJSON(response);
-
-    if (res.message) {
-        if (isSuccess(res.status)) {
-            notify({ text: res.message, type: 'success', layout: 'topCenter' });
-        } else if (res.status == 'INFO') {
-            notify({ text: res.message, type: 'info', layout: 'topCenter' });
-        } else {
-            notify({ text: res.message, type: 'error', layout: 'topCenter' });
-        }
-    }
-
-    if (res.login) {
-        var link = 'login';
-        link += (res.next) ? '?next=' + encodeURI(res.next) : '';
-
-        res.link = {};
-        res.link.url = link;
-    }
-
-    if (res.link && res.link.url) {
-        var opts = {
-            url: res.link.url,
-            event: 'ready',
-        };
-
-        if (res.link.options) {
-            var opts = $.extend({}, res.link.options, opts);
-        }
-
-        $.fn.easyModalShow(opts);
-
-        return true;
-    }
-
-    if (res.modal) {
-        if (!res.modal.body) {
-            notify({
-                text: 'Invalid response from server. Please try again.',
-                type: 'error'
-            });
-            return true;
-        }
-
-        var opts = {
-            content: res.modal.body,
-            event: 'ready',
-        };
-
-        if (res.modal.options) {
-            var opts = $.extend({}, res.modal.options, opts);
-        }
-
-        $.fn.easyModalShow(opts);
-
-        return true;
-    }
-
-    if (res.redirect) {
-        var url = res.redirect;
-        url = url.replace('&amp;', '&');
-        setTimeout(function () {
-            window.top.location.href = url;
-        }, 1000);
-    }
-
-    var callback = $this.data('callback');
-
-    if (typeof callback == 'function') {
-        callback(res, $this);
-    } else if (typeof window[callback] == 'function') {
-        window[callback](res, $this);
-    }
-
-    if ($this.data('hide')) {
-        $.fn.easyModalHide();
-    }
-
-    if ($this.data('render')) {
-        var form = getForm($this);
-        form.submit();
-    }
-}
-
-function displayNoti(xhr, $this) {
-    displayNoty(xhr.responseText, $this)
-}
-
-
-$(document).ready(function () {
+function karlaSystemJs() {
     $(document).on('click', '[data-href]', function (e) {
         e.preventDefault();
 
@@ -189,7 +76,6 @@ $(document).ready(function () {
 
     //common status change script
     $(document).on('click', '.ac-action-status a', function (e) {
-
         var $this = $(this);
         var parent = $this.parent('.ac-action-status');
 
@@ -244,7 +130,6 @@ $(document).ready(function () {
 
         e.preventDefault();
     });
-
 
     $(document).on("click", "[ajax-reset]", function (e) {
         var form = getForm($(this));
@@ -356,7 +241,6 @@ $(document).ready(function () {
         };
 
         var _gridSortUpdateHandler = function (e, ui) {
-
             var form = getForm($(this));
             var page = 1;
 
@@ -386,5 +270,146 @@ $(document).ready(function () {
             helper: _gridSortHelper,
             update: _gridSortUpdateHandler
         }).disableSelection();
+
+        $('[sortables]').sortable({
+            connectWith: ['.table_sortable_body'],
+            handle: '[sortable]',
+            opacity: 0.6
+        }).disableSelection();
     }
-});
+
+    $("[notchecked]").each(function () {
+        $(this).prev('[dummy-checkbox]').remove();
+        $(this).before('<input type="hidden" name="' + $(this).attr("name") + '" value="' + $(this).attr("notchecked") + '"  dummy-checkbox="true"/>');
+    });
+
+    $(document).on('change', '[notchecked]', function () {
+        $(this).prev('[dummy-checkbox]').remove();
+        $(this).before('<input type="hidden" name="' + $(this).attr("name") + '" value="' + $(this).attr("notchecked") + '"  dummy-checkbox="true"/>');
+    });
+
+    $(document).on("click", "[data-prevent]", function (e) {
+        e.preventDefault();
+        return false;
+    });
+
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+        }
+    });
+
+    $(document).on("click", ".noty_close", function (e) {
+        $(this)
+            .parents(".noty_bar:first")
+            .slideUp("slow");
+    });
+
+    $(document).on("click", "div.is-invalid-feedback", function () {
+        $(this).fadeOut();
+    });
+
+    $(document).on('form:reset', function (e) {
+        var form = getForm($(this));
+        form.find("input[name=page]").val(1);
+        $('#page').val(1);
+
+        var total = form.find('[data-total]').data('total');
+
+        if (total == '' || total == undefined) {
+            var total = form.find('input[name=total]').val();
+        }
+
+        form.find("input[name=total]").val(total);
+        form.find('[ajax-total]').html(total);
+    });
+
+    $(document).on("click", "[data-filter]", function () {
+        $(document).trigger('form:reset', $(this));
+    });
+
+    $(document).on("keyup blur", "[data-slug]", function (e) {
+        var target = $(this).data("slug");
+        var realTarget = "[data-slug-" + target + "]";
+
+        var value = $(this).val();
+        value = $.trim(value);
+        value = value
+            .replace(/[^a-z0-9-]/gi, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "");
+        value = value.toLowerCase();
+
+        $(realTarget).val(value);
+    });
+
+    $(document).on("keyup blur", "[data-copy]", function (e) {
+        var target = $(this).data("copy");
+        var realTarget = "[data-copy-" + target + "]";
+
+        $(realTarget).val(value);
+    });
+
+    $(document).on("click", "[data-add]", function (e) {
+        var target = $(this).parents('table:first');
+        var clone = target.find("tfoot:first tr").clone();
+        target.find('tbody:first').append(clone);
+
+        e.preventDefault();
+    });
+
+    $(document).on("click", "[data-remove]", function (e) {
+        $(this)
+            .parents("tr:eq(0)")
+            .remove();
+
+        e.preventDefault();
+    });
+
+    $(document).on('change', ".custom-file-input", function () {
+        var files = $(this).prop("files");
+
+        if (files.length > 0) {
+            var name = files[0]['name'];
+            $(this).parent().find('.custom-file-label').html(name);
+        }
+    });
+
+    //prevent hash url
+    $(document).on("click", 'a[href="#"]', function (e) {
+        e.preventDefault();
+    });
+
+    $(document).on("click", "[role=login]", function (e) {
+        if (is_user_logged_in) {
+            return true;
+        }
+
+        e.preventDefault();
+        var $this = $(this);
+        var url = $this.attr("href") ? $this.attr("href") : "/login";
+
+        $.fn.easyModalShow({
+            url: url,
+            event: 'ready'
+        });
+    });
+
+    if ($.support.pjax) {
+        $(document).on("click", "[data-pjax] a, a[data-pjax]", function (e) {
+            if ($(this).data('nojax')) {
+                return true;
+            }
+
+            var container = $(this).data("pjax-container") || "[data-pjax-container]";
+            $(this).parents("[data-pjax]").find("a").removeClass("active");
+            $(this).addClass("active");
+
+            $.pjax.click(e, { container: container });
+        });
+
+        $(document).on('pjax:end', function () {
+            $(document).trigger('ajax:loaded');
+        });
+    }
+};
