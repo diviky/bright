@@ -141,6 +141,7 @@ class Speed extends Capsule
             if ($row->ordering != $i) {
                 $this->get('db')->table($table)
                     ->where($field, $row->$field)
+                    ->timestamps(false)
                     ->update(['ordering' => $i]);
             }
         }
@@ -164,6 +165,7 @@ class Speed extends Capsule
                     $update = ['ordering' => $i];
                     $this->get('db')->table($table)
                         ->where($field, $id)
+                        ->timestamps(false)
                         ->update($update);
                 }
             }
