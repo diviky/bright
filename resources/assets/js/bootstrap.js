@@ -10,7 +10,6 @@ jQuery(document).ready(function ($) {
 
     $(document).on('ajax:loaded', function (e, $this) {
         karlaJs();
-        karlaSystemJs();
     });
 
     $(document).on('form:submit', function (e, $this) {
