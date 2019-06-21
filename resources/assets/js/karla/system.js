@@ -376,11 +376,11 @@ function karlaSystemJs() {
                 html: true,
                 placement: 'bottom'
             }).popover('show');
-        });
 
-        $this.on("show.bs.popover", function (e) {
-            $("[data-poload]").not(e.target).popover("dispose");
-            $(document).trigger('ajax:loaded');
+            $this.on("shown.bs.popover", function (e) {
+                $("[data-poload]").not(e.target).popover("dispose");
+                $(document).trigger('ajax:loaded');
+            });
         });
 
         e.preventDefault();
