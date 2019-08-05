@@ -16,9 +16,9 @@ trait Notifyable
             return false;
         }
 
-        $from = $this->getMailfrom($user_id);
+        $from = $this->getMailfrom($user_id) ?: config('app.name');
 
-        $data['subject'] = str_replace(['_sitename_'], [$from], $data['subject']);
+        $data['subject'] = str_replace(['_sitename_', ':app'], [$from, $from], $data['subject']);
 
         $mail = (new Mailable())
             ->subject($data['subject'])
@@ -37,7 +37,7 @@ trait Notifyable
             $mail->from(config('mail.from.address'), $from);
         }
 
-        return $mail->deliver(trim($to), true);
+        return $mail->deliver($to, true);
     }
 
     protected function getMailTo($user_id = null)
