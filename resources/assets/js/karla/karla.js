@@ -17,6 +17,14 @@ function karlaJs() {
         selector: '[data-toggle="popover"]'
     });
 
+    $('[data-toggle="tooltip"]').on('remove hide', function (e) {
+        $(this).tooltip('hide');
+    });
+
+    $('[data-toggle="popover"]').on('remove hide', function (e) {
+        $(this).popover('hide');
+    });
+
     if ($.fn.lazyload) {
         $("img[data-original]").lazyload({
             effect: "fadeIn"
@@ -75,6 +83,41 @@ function karlaJs() {
         });
     }
 
+    if ($.fn.selectize) {
+        $('[data-selectize]').selectize();
+
+        $('[data-selectize-ajax]').each(function () {
+            var $this = $(this);
+            var url = $this.data('selectize-ajax');
+
+            $this.selectize({
+                options: [],
+                valueField: 'id',
+                labelField: 'text',
+                searchField: 'text',
+                loadThrottle: 250,
+                create: false,
+                load: function (query, callback) {
+                    if (!query.length) return callback();
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                        delay: 250,
+                        data: { term: query },
+                        error: function () {
+                            callback();
+                        },
+                        success: function (res) {
+                            callback(res.rows);
+                        }
+                    });
+                }
+            });
+        });
+    }
+
     // Drag and drop sortable
     if ($.fn.sortable) {
         var _gridSortHelper = function (e, ui) {
@@ -123,7 +166,7 @@ function karlaJs() {
     }
 
     if ($.fn.waypoint) {
-        $('[data-waypoint]').livequery(function () {
+        $('[data-waypoint]').each(function () {
             var $this = $(this);
             $this.waypoint({
                 handler: function (direction) {

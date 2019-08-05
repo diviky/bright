@@ -99,6 +99,10 @@ function displayNoty(response, $this) {
         $.fn.easyModalHide();
     }
 
+    if ($this.data('remove')) {
+        $this.fadeOut();
+    }
+
     if ($this.data('render')) {
         var form = getForm($this);
         form.submit();
@@ -132,7 +136,11 @@ function notify(message) {
         type: message.type || 'error',
         layout: 'topRight',
         theme: 'nest',
-        timeout: (2 * 60 * 1000)
+        dismissQueue: false,
+        timeout: (1 * 60 * 1000),
+        progressBar: true,
+        maxVisible: 1,
+        killer: true
     }).show();
 }
 

@@ -141,8 +141,6 @@
         return { top: top, left: left };
     }
 
-
-
     // $.is("[type=xxx]") or $.filter("[type=xxx]") not working in jQuery 1.3.2 or 1.4.2
     function isType(type) {
         function fn() {
@@ -151,7 +149,6 @@
         fn.key = "[type=\"" + type + "\"]";
         return fn;
     }
-
 
     var fns = [], effects = {
 
@@ -177,6 +174,13 @@
                         msg = $(conf.message).addClass(conf.messageClass).appendTo(document.body);
                         input.data("msg.el", msg);
                     }
+
+                    input.on('remove hide', function (e) {
+                        var el = $(this).data('msg.el');
+                        if (el) {
+                            el.fadeOut();
+                        }
+                    });
 
                     // clear the container
                     msg.css({ visibility: 'hidden' }).find("p").remove();
@@ -493,7 +497,6 @@
 
             /* @param e - for internal use only */
             invalidate: function (errs, e) {
-
                 // errors are given manually: { fieldName1: 'message1', fieldName2: 'message2' }
                 if (!e) {
                     var errors = [];
@@ -503,7 +506,6 @@
 
                             // trigger HTML5 ininvalid event
                             input.trigger("OI", [val]);
-
                             errors.push({ input: input, messages: [val] });
                         }
                     });
@@ -551,16 +553,6 @@
                 els = els || inputs;
                 els = els.not(":disabled");
 
-                // filter duplicate elements by name
-                /*var names = {};
-                els = els.filter(function(){
-                    var name = $(this).attr("name");
-                    if (!names[name]) {
-                        names[name] = true;
-                        return $(this);
-                    }
-                });*/
-
                 if (!els.length) { return true; }
 
                 e = e || $.Event();
@@ -584,20 +576,17 @@
                     // cleanup previous validation event
                     el.off(event);
 
-
                     // loop all validator functions
                     $.each(fns, function () {
                         var fn = this, match = fn[0];
 
                         // match found
                         if (el.filter(match).length) {
-
                             // execute a validator function
                             var returnValue = fn[1].call(self, el, el.val());
 
                             // validation failed. multiple substitutions can be returned with an array
                             if (returnValue !== true) {
-
                                 // onBeforeFail
                                 e.type = "onBeforeFail";
                                 fire.trigger(e, [el, match]);
@@ -616,7 +605,6 @@
                     });
 
                     if (msgs.length) {
-
                         errs.push({ input: el, messages: msgs });
 
                         // trigger HTML5 ininvalid event
@@ -646,7 +634,6 @@
 
                     // no errors
                 } else {
-
                     // call the effect
                     eff[1].call(self, els, e);
 

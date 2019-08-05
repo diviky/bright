@@ -144,6 +144,7 @@
         $(self.settings.el).on('hidden.bs.modal', function () {
             $(this).data('bs.modal', null);
             $('.modal-backdrop').remove();
+            $('.is-invalid-feedback').remove();
         });
 
         $(document).trigger('ajax:loaded');

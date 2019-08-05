@@ -30,6 +30,8 @@
             this.form = element.parents('form:eq(0)');
         }
 
+        this.form.off();
+
         if (this.settings.validate == true) {
             this.validate();
         } else {
@@ -430,9 +432,10 @@
 
     $.fn.easySubmit = function (options) {
         return this.each(function () {
-            if (!$.data(this, pluginName)) {
-                $.data(this, pluginName, new easySubmit($(this), options));
-            }
+            //if (!$.data(this, pluginName)) {
+            $.removeData(this, pluginName);
+            $.data(this, pluginName, new easySubmit($(this), options));
+            //}
         });
     };
 

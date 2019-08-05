@@ -1,3 +1,19 @@
+function setTask($this, form, task) {
+    var task = task || $this.data('task');
+    var name = $this.data('task-name') || 'task';
+    var input = form.find("input[name='" + name + "']");
+
+    if (input.length > 0) {
+        input.val(task);
+    } else {
+        $('<input/>', {
+            name: name,
+            value: task,
+            type: 'hidden'
+        }).appendTo(form);
+    }
+}
+
 function karlaSystemJs() {
     $(document).on('click', '[data-href]', function (e) {
         e.preventDefault();
@@ -59,7 +75,6 @@ function karlaSystemJs() {
 
     //common delete script
     $(document).on('click', '[data-ajax]', function (e) {
-
         var $this = $(this);
         var link = $(this).attr('href') || $this.data('ajax');
 
@@ -153,33 +168,6 @@ function karlaSystemJs() {
         $this.attr('href', url + separator + form.serialize());
     });
 
-    $(document).on('click', '[data-task]', function (e) {
-        var $this = $(this);
-        var form = getForm($this);
-
-        var task = $this.data('task');
-        var name = $this.data('task-name') || 'task';
-        var input = form.find("input[name='" + name + "']");
-
-        if (input.length > 0) {
-            var oldtask = input.attr('task', input.val());
-            input.val(task);
-        } else {
-            $('<input/>', {
-                name: name,
-                value: task,
-                type: 'hidden'
-            }).appendTo(form);
-        }
-
-        $(document).trigger('form:reset', $this);
-
-        if ($this.attr('type') != "submit") {
-            form.submit();
-            e.preventDefault();
-        }
-    });
-
     $(document).on('click', '[data-order]', function (e) {
         e.preventDefault();
 
@@ -202,7 +190,7 @@ function karlaSystemJs() {
             $(this).removeClass('asc').addClass('desc');
             $(this).attr('data-order-type', 'DESC');
         }
-        var form = getForm($(this));;
+        var form = getForm($(this));
 
         if (form.find('.ac-sort-name').length > 0) {
             $('.ac-sort-name').val(name);
@@ -386,7 +374,6 @@ function karlaSystemJs() {
         e.preventDefault();
     });
 
-
     $('body').on('click', function (e) {
         $('[data-original-title]').each(function () {
             // hide any open popovers when the anywhere else in the body is clicked
@@ -453,44 +440,54 @@ function karlaSystemJs() {
         $(this).parents('div:first').toggleClass('active');
     });
 
+    $(document).on('click change', '[data-set-task]', function (e) {
+        var $this = $(this);
+        var form = getForm($this);
+        var task = $this.data('set-task');
+
+        setTask($this, form, task);
+    });
+
+    $(document).on('click change', '[data-task]', function (e) {
+        var $this = $(this);
+        var form = getForm($this);
+
+        setTask($this, form);
+
+        $(document).trigger('form:reset', $this);
+
+        if ($this.attr('type') != "submit") {
+            form.submit();
+            e.preventDefault();
+        }
+    });
+
     $(document).on('click', '[data-task-checkbox]', function (e) {
         e.preventDefault();
 
         var $this = $(this);
-        var form = getForm($this);
-
         var task = $this.data('task-checkbox');
-        var name = $this.data('task-name') || 'task';
-        var input = form.find("input[name='" + name + "']");
+
+        var form = getForm($this);
+        setTask($this, form, task);
 
         //check the checkbox
         $this.parents('tr:first').find('input[type="checkbox"]').attr('checked', true);
 
-        if (input.length > 0) {
-            var oldtask = input.attr('task', input.val());
-            input.val(task);
-        } else {
-            $('<input/>', {
-                name: name,
-                value: task,
-                type: 'hidden'
-            }).appendTo(form);
-        }
-
         form.submit();
     });
-
 
     var timer;
     $(document).on('change', '[auto-submit]', function () {
         var delay = 1000;
+        var $this = $(this);
 
         if (timer) {
             clearTimeout(timer);
         }
 
-        var form = getForm($(this));
         timer = setTimeout(function () {
+            var form = getForm($this);
             form.submit();
         }, delay);
 
@@ -525,7 +522,6 @@ function karlaSystemJs() {
         var dropdown = $(this).parents('.dropdown');
         var target = dropdown.find('.dropdown-toggle');
         target.prev('input').val($(this).data('value')).trigger('change');
-
         target.html($(this).html());
     });
 };

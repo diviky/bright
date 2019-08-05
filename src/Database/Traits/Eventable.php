@@ -160,13 +160,14 @@ trait Eventable
         $eventColumns = $this->getEventTables($type);
         $eventColumns = array_merge($eventColumns, $this->eventColumns);
         $from         = preg_split('/ as /i', $this->from);
-        $alias        = (count($from) > 1) ? last($from) . '.' : '';
+        $mainAlias    = (count($from) > 1) ? last($from) . '.' : '';
 
         foreach ($eventColumns as $columns) {
             if (!is_array($columns)) {
                 $columns = [$columns => $columns];
             }
 
+            $alias  = $mainAlias;
             $column = key($columns);
             if (strpos($column, '.') !== false) {
                 list($alias, $column) = explode('.', $column);

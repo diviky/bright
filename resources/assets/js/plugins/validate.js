@@ -13,15 +13,16 @@
             var obj = $(this);
             var opt = $.metadata ? $.extend({}, options, obj.metadata({ type: 'html5' })) : options; // metadata plugin support (applied on link element)
             if (obj.is("form")) {
-                var form = this;
+                var form = obj;
             } else {
-                var form = $(this).closest('form');
+                var form = obj.closest('form');
             }
             return $.fn.validate.isValid(form, opt);
         });
     };
+
     $.fn.validate.isValid = function (form, options) {
-        $(form).validator(options).submit(function (e) {
+        form.validator(options).submit(function (e) {
             if (!e.isDefaultPrevented()) {
                 $(form).attr({
                     valid: true
