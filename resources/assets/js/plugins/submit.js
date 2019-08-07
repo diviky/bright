@@ -267,14 +267,6 @@
         var widget = this;
         widget.event('onSuccess', res, xhr);
 
-        if (res.login) {
-            var link = 'login';
-            link += (res.next) ? '?next=' + encodeURI(res.next) : '';
-
-            res.link = {};
-            res.link.url = link;
-        }
-
         if (!res.preview) {
             var submit = widget.settings.submit;
             if (submit == 'parent') {
@@ -286,11 +278,22 @@
             }
         }
 
+        if (typeof res.form !== 'object') {
+            res.form = {}
+        }
+
         if (res.message) {
             notify({
                 text: res.message,
                 type: 'success'
             });
+        }
+
+        var callback = res.callback;
+        if (typeof callback == 'function') {
+            callback(res, widget);
+        } else if (typeof window[callback] == 'function') {
+            window[callback](res, widget);
         }
 
         if (res.modal) {
@@ -313,7 +316,31 @@
 
             $.fn.easyModalShow(opts);
 
+            if (typeof res.modal.form !== 'object') {
+                res.modal.form = {}
+            }
+
+            if (res.modal.form.hide) {
+                $.fn.easyModalHide();
+            }
+
+            if (res.modal.form.reset) {
+                widget.form.resetForm();
+            }
+
+            if (res.modal.form.clear) {
+                widget.form.clearForm();
+            }
+
             return true;
+        }
+
+        if (res.login) {
+            var link = 'login';
+            link += (res.next) ? '?next=' + encodeURI(res.next) : '';
+
+            res.link = {};
+            res.link.url = link;
         }
 
         if (res.link && res.link.url) {
@@ -331,19 +358,24 @@
             return true;
         }
 
-        if (widget.settings.hide) {
+        if (widget.settings.hide || res.form.hide) {
             $.fn.easyModalHide();
         }
 
-        if (widget.settings.reset) {
+        if (widget.settings.reset || res.form.reset) {
             widget.form.resetForm();
         }
-        if (widget.settings.clear) {
+
+        if (widget.settings.clear || res.form.clear) {
             widget.form.clearForm();
         }
 
         if (widget.settings.render) {
             widget.render(widget.settings.render);
+        }
+
+        if (res.form.render) {
+            widget.render(res.form.render);
         }
 
         var delay = (res.message) ? 2000 : 1000;
@@ -356,7 +388,7 @@
             setTimeout("location.reload(true);", delay);
         }
 
-        if (widget.settings.alert) {
+        if (widget.settings.alert || res.form.alert) {
             alert(res.message);
         }
 
