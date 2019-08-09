@@ -31,9 +31,11 @@ class Api
     protected function respond($response)
     {
         $original = $response->getOriginalContent();
-        $code     = $original['code'];
-        if ($code) {
-            $response->setStatusCode($code, $original['message']);
+        if (is_array($original)) {
+            $code = $original['code'];
+            if ($code) {
+                $response->setStatusCode($code, $original['message']);
+            }
         }
 
         return $response;
