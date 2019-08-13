@@ -25,7 +25,7 @@ trait HttpTrait
      * Retrieve an input item from the request.
      *
      * @param string            $key
-     * @param string|array|null $default
+     * @param string|array|null|int|bool $default
      *
      * @return string|array
      */
@@ -48,7 +48,7 @@ trait HttpTrait
      * Retrieve a query string item from the request.
      *
      * @param string            $key
-     * @param string|array|null $default
+     * @param string|array|null|int|bool $default
      *
      * @return string|array
      */
@@ -61,7 +61,7 @@ trait HttpTrait
      * Retrieve a cookie from the request.
      *
      * @param string            $key
-     * @param string|array|null $default
+     * @param string|array|null|int|bool $default
      *
      * @return string|array
      */
@@ -74,7 +74,7 @@ trait HttpTrait
      * Retrieve a files from the request.
      *
      * @param string            $key
-     * @param string|array|null $default
+     * @param string|array|null|int|bool $default
      *
      * @return string|array
      */
@@ -87,7 +87,7 @@ trait HttpTrait
      * Retrieve a post items from the request.
      *
      * @param string            $key
-     * @param string|array|null $default
+     * @param string|array|null|int|bool $default
      *
      * @return string|array
      */
@@ -100,7 +100,7 @@ trait HttpTrait
      * Retrieve a header from the request.
      *
      * @param string            $key
-     * @param string|array|null $default
+     * @param string|array|null|int|bool $default
      *
      * @return string|array
      */
@@ -113,7 +113,7 @@ trait HttpTrait
      * Retrieve a server variable from the request.
      *
      * @param string            $key
-     * @param string|array|null $default
+     * @param string|array|null|int|bool $default
      *
      * @return string|array
      */
