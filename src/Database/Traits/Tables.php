@@ -17,6 +17,11 @@ trait Tables
         return $this;
     }
 
+    public function complexPaginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
+    {
+        return $this->paginateComplex($perPage, $columns, $pageName, $page);
+    }
+
     public function paginateComplex($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
     {
         $total = $this->getCountForPagination($columns);

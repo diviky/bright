@@ -3,7 +3,6 @@
 namespace Karla\Database\Query;
 
 use Illuminate\Database\Query\Builder as LaravelBuilder;
-use Illuminate\Support\Carbon;
 use Karla\Database\Karla;
 use Karla\Database\Traits\Build;
 use Karla\Database\Traits\Cachable;
@@ -95,23 +94,11 @@ class Builder extends LaravelBuilder
             $rows = $this->paginate($perPage, $columns, $pageName, $page);
         }
 
-        $i = $rows->perPage() * ($rows->currentPage() - 1);
+        $rows->serial = $rows->firstItem();
 
+        $i = $rows->perPage() * ($rows->currentPage() - 1);
         $rows->transform(function ($row) use (&$i) {
             $row->serial = ++$i;
-
-            if (isset($row->created_at)) {
-                $row->created = carbon($row->created_at)->format('M d, Y h:i A');
-            }
-
-            if (isset($row->updated_at)) {
-                $row->updated = carbon($row->updated_at)->format('M d, Y h:i A');
-            }
-
-            if (isset($row->deleted_at)) {
-                $row->deleted = carbon($row->deleted_at)->format('M d, Y h:i A');
-            }
-
             return $row;
         });
 
