@@ -28,7 +28,7 @@
         "geocoder-php/host-ip-provider": "^4.0",
         "geoip2/geoip2": "^2.9",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "sentry/sentry-laravel": "^0.9",
+        "sentry/sentry-laravel": "^1.1",
         "willdurand/geocoder": "^4.2",
         "pragmarx/firewall": "^2.2",
         "pragmarx/google2fa-laravel": "^0.2"
