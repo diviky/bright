@@ -37,19 +37,18 @@ class FailedLogin
 
         $values = [
             'id'         => Str::uuid(),
-            'user_id'    => is_null($user) ? null : $user->id,
+            'user_id'    => \is_null($user) ? null : $user->id,
             'ip'         => $ip,
-            'ips'        => implode(',', $this->request->getClientIps()),
+            'ips'        => \implode(',', $this->request->getClientIps()),
             'host'       => $this->request->getHost(),
             'user_agent' => $user_agent,
             'created_at' => carbon(),
-            'meta'       => json_encode($event->credentials),
+            'meta'       => \json_encode($event->credentials),
             'status'     => 2,
         ];
 
-        $values = array_merge($values, $this->getDeviceDetails($ip, $user_agent));
+        $values = \array_merge($values, $this->getDeviceDetails($ip, $user_agent));
 
         $this->db->table('auth_login_history')->insert($values);
     }
-
 }

@@ -2,8 +2,8 @@
 
 namespace Karla\Http\Controllers\Auth\Models;
 
-use Spatie\Permission\PermissionRegistrar as BasePermissionRegistrar;
 use Spatie\Permission\Contracts\Permission;
+use Spatie\Permission\PermissionRegistrar as BasePermissionRegistrar;
 
 class PermissionRegistrar extends BasePermissionRegistrar
 {

@@ -15,15 +15,17 @@ class RoleMiddleware
     {
         if (Auth::guest()) {
             $this->theme($request);
+
             throw UnauthorizedException::notLoggedIn();
         }
 
-        $roles = is_array($role)
+        $roles = \is_array($role)
         ? $role
-        : explode('|', $role);
+        : \explode('|', $role);
 
         if (!Auth::user()->hasAnyRole($roles)) {
             $this->theme($request);
+
             throw UnauthorizedException::forRoles($roles);
         }
 

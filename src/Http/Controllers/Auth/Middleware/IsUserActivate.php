@@ -12,6 +12,7 @@ class IsUserActivate
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure                 $next
+     * @param null|mixed               $guard
      *
      * @return mixed
      */

@@ -14,6 +14,23 @@ trait Timestamps
     protected $timestamps = true;
 
     /**
+     * Get a fresh timestamp for the model.
+     *
+     * @return \Illuminate\Support\Carbon
+     */
+    public function freshTimestamp()
+    {
+        return new Carbon();
+    }
+
+    public function timestamps($allow = true)
+    {
+        $this->timestamps = $allow;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function setTimeStamps(array $values, $force = false)
@@ -39,16 +56,6 @@ trait Timestamps
     }
 
     /**
-     * Get a fresh timestamp for the model.
-     *
-     * @return \Illuminate\Support\Carbon
-     */
-    public function freshTimestamp()
-    {
-        return new Carbon();
-    }
-
-    /**
      * Determine if the builder uses timestamps.
      *
      * @return bool
@@ -56,12 +63,5 @@ trait Timestamps
     protected function usesTimestamps()
     {
         return $this->timestamps;
-    }
-
-    public function timestamps($allow = true)
-    {
-        $this->timestamps = $allow;
-
-        return $this;
     }
 }

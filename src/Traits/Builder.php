@@ -7,6 +7,29 @@ use Karla\Database\Karla;
 
 trait Builder
 {
+    public function updateOrInsert(array $attributes, array $values = [])
+    {
+        return $this->table()->updateOrInsert($attributes, $values);
+    }
+
+    public function pdo()
+    {
+        return DB::connection()->getPdo();
+    }
+
+    public function statement($sql, array $bindings = [])
+    {
+        $prefix = DB::getTablePrefix();
+        $sql    = \str_replace('#__', $prefix, $sql);
+
+        return $this->pdo()->exec($sql);
+    }
+
+    public function karla()
+    {
+        return new Karla();
+    }
+
     protected function table($table = null, $timestamps = true)
     {
         $table = $table ?: $this->table;
@@ -34,11 +57,6 @@ trait Builder
         return $this->table()
             ->where($column, $id)
             ->update($values);
-    }
-
-    public function updateOrInsert(array $attributes, array $values = [])
-    {
-        return $this->table()->updateOrInsert($attributes, $values);
     }
 
     protected function insert(array $values)
@@ -73,24 +91,6 @@ trait Builder
         $result = $this->insert($values);
 
         return $this->inserted($result, $name);
-    }
-
-    public function pdo()
-    {
-        return DB::connection()->getPdo();
-    }
-
-    public function statement($sql, array $bindings = [])
-    {
-        $prefix = DB::getTablePrefix();
-        $sql    = str_replace('#__', $prefix, $sql);
-
-        return $this->pdo()->exec($sql);
-    }
-
-    public function karla()
-    {
-        return new Karla();
     }
 
     protected function raw($column)

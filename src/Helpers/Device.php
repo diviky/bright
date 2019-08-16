@@ -61,7 +61,7 @@ class Device
         $return['browser_engine']  = $client['engine'];
 
         if (!$advanced) {
-            return array_map('trim', $return);
+            return \array_map('trim', $return);
         }
 
         //advanced params
@@ -78,6 +78,6 @@ class Device
 
         unset($os, $client, $osFamily, $browserFamily, $touch);
 
-        return array_map('trim', $return);
+        return \array_map('trim', $return);
     }
 }

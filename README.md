@@ -5,7 +5,6 @@ Query builder needs to overwrite with karla
 Illuminate/Database/Eloquent/Builder.php
 
 ```php
-sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Bulider.php
 
 sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
 

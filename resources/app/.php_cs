@@ -1,6 +1,9 @@
 <?php
 $finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__.'/src/')
+    ->notPath('bootstrap/cache')
+    ->notPath('storage')
+    ->notPath('vendor')
+    ->in(__DIR__)
     ->name('*.php')
     ->notName('*.blade.php')
     ->ignoreDotFiles(true)

@@ -6,7 +6,7 @@ class AuthTokenGuard extends AccessTokenGuard
 {
     public function user()
     {
-        if (!is_null($this->user)) {
+        if (!\is_null($this->user)) {
             return $this->user;
         }
 
@@ -19,11 +19,11 @@ class AuthTokenGuard extends AccessTokenGuard
             $user = $this->provider->retrieveByToken($this->storageKey, $token);
         }
 
-        if (is_null($user)) {
+        if (\is_null($user)) {
             return;
         }
 
-        if ($user->status != 1) {
+        if (1 != $user->status) {
             return;
         }
 

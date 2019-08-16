@@ -9,7 +9,7 @@ class Options
 {
     use CapsuleManager;
 
-    protected $table  = "app_options";
+    protected $table  = 'app_options';
     protected $values = [];
     protected $where  = [];
 
@@ -27,7 +27,7 @@ class Options
 
     public function updateOrInsert($key, $value = null, $type = null)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k => $val) {
                 $this->updateOrInsert($k, $val, $type);
             }
@@ -44,7 +44,7 @@ class Options
 
     public function update($key, $value = null)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k => $val) {
                 $this->update($k, $val);
             }
@@ -52,7 +52,7 @@ class Options
             return true;
         }
 
-        $time = new Carbon;
+        $time = new Carbon();
 
         $values = [
             'option_value' => $value,
@@ -66,12 +66,12 @@ class Options
 
     public function insert($key, $value, $type = null)
     {
-        $time = new Carbon;
+        $time = new Carbon();
 
         $type = $this->identifyType($value, $type);
 
-        if ($type == 'json') {
-            $value = json_encode($value);
+        if ('json' == $type) {
+            $value = \json_encode($value);
         }
 
         $values = [
@@ -82,31 +82,9 @@ class Options
             'updated_at'   => $time,
         ];
 
-        $values = array_merge($values, $this->values);
+        $values = \array_merge($values, $this->values);
 
         return $this->table()->insert($values);
-    }
-
-    protected function identifyType($value, $type = null)
-    {
-        if (!is_null($type)) {
-            return $type;
-        }
-
-        $type = 'string';
-        if (is_numeric($value)) {
-            $type = 'number';
-        }
-
-        if (is_bool($value)) {
-            $type = 'number';
-        }
-
-        if (is_array($value)) {
-            $type = 'json';
-        }
-
-        return $type;
     }
 
     public function first()
@@ -126,26 +104,13 @@ class Options
         return collect($this->first());
     }
 
-    protected function formatValue($value, $type = 'string')
-    {
-        if ($type == 'json') {
-            $value = json_decode($value);
-        }
-
-        if ($type == 'number') {
-            $value = intval($value);
-        }
-
-        return $value;
-    }
-
     public function where($key, $value = null, $operator = '=')
     {
-        if (!is_array($key)) {
+        if (!\is_array($key)) {
             $key = [$key => $value];
         }
 
-        $this->where = array_merge($this->where, $key);
+        $this->where = \array_merge($this->where, $key);
 
         return $this;
     }
@@ -162,7 +127,7 @@ class Options
             ->first();
 
         // Is value exists
-        if (!is_null($row) && isset($row->option_value)) {
+        if (!\is_null($row) && isset($row->option_value)) {
             return $this->formatValue($row->option_value, $row->option_type);
         }
 
@@ -184,9 +149,11 @@ class Options
     }
 
     /**
-     * Set the value of table
+     * Set the value of table.
      *
-     * @return  self
+     * @param mixed $table
+     *
+     * @return self
      */
     public function setTable($table)
     {
@@ -196,14 +163,51 @@ class Options
     }
 
     /**
-     * Set the value of values
+     * Set the value of values.
      *
-     * @return  self
+     * @param mixed $values
+     *
+     * @return self
      */
     public function values($values)
     {
-        $this->values = array_merge($this->values, $values);
+        $this->values = \array_merge($this->values, $values);
 
         return $this;
+    }
+
+    protected function identifyType($value, $type = null)
+    {
+        if (!\is_null($type)) {
+            return $type;
+        }
+
+        $type = 'string';
+        if (\is_numeric($value)) {
+            $type = 'number';
+        }
+
+        if (\is_bool($value)) {
+            $type = 'number';
+        }
+
+        if (\is_array($value)) {
+            $type = 'json';
+        }
+
+        return $type;
+    }
+
+    protected function formatValue($value, $type = 'string')
+    {
+        if ('json' == $type) {
+            $value = \json_decode($value);
+        }
+
+        if ('number' == $type) {
+            $value = \intval($value);
+        }
+
+        return $value;
     }
 }

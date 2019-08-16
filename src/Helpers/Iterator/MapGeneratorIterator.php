@@ -23,7 +23,7 @@ class MapGeneratorIterator extends Generator
     public function __construct(Traversable $iterator, $callback)
     {
         parent::__construct($iterator);
-        if (!is_callable($callback)) {
+        if (!\is_callable($callback)) {
             throw new InvalidArgumentException('The callback must be callable');
         }
         $this->callback = $callback;

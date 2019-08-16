@@ -24,10 +24,10 @@ trait HttpTrait
     /**
      * Retrieve an input item from the request.
      *
-     * @param string            $key
-     * @param string|array|null|int|bool $default
+     * @param string                     $key
+     * @param null|array|bool|int|string $default
      *
-     * @return string|array
+     * @return array|string
      */
     public function input($key = null, $default = null)
     {
@@ -37,7 +37,7 @@ trait HttpTrait
     /**
      * Retrieve an input item from the request.
      *
-     * @return string|array
+     * @return array|string
      */
     public function all()
     {
@@ -47,10 +47,10 @@ trait HttpTrait
     /**
      * Retrieve a query string item from the request.
      *
-     * @param string            $key
-     * @param string|array|null|int|bool $default
+     * @param string                     $key
+     * @param null|array|bool|int|string $default
      *
-     * @return string|array
+     * @return array|string
      */
     public function query($key = null, $default = null)
     {
@@ -60,10 +60,10 @@ trait HttpTrait
     /**
      * Retrieve a cookie from the request.
      *
-     * @param string            $key
-     * @param string|array|null|int|bool $default
+     * @param string                     $key
+     * @param null|array|bool|int|string $default
      *
-     * @return string|array
+     * @return array|string
      */
     public function cookie($key = null, $default = null)
     {
@@ -73,10 +73,10 @@ trait HttpTrait
     /**
      * Retrieve a files from the request.
      *
-     * @param string            $key
-     * @param string|array|null|int|bool $default
+     * @param string                     $key
+     * @param null|array|bool|int|string $default
      *
-     * @return string|array
+     * @return array|string
      */
     public function files($key = null, $default = null)
     {
@@ -86,10 +86,10 @@ trait HttpTrait
     /**
      * Retrieve a post items from the request.
      *
-     * @param string            $key
-     * @param string|array|null|int|bool $default
+     * @param string                     $key
+     * @param null|array|bool|int|string $default
      *
-     * @return string|array
+     * @return array|string
      */
     public function post($key = null, $default = null)
     {
@@ -99,10 +99,10 @@ trait HttpTrait
     /**
      * Retrieve a header from the request.
      *
-     * @param string            $key
-     * @param string|array|null|int|bool $default
+     * @param string                     $key
+     * @param null|array|bool|int|string $default
      *
-     * @return string|array
+     * @return array|string
      */
     public function header($key = null, $default = null)
     {
@@ -112,10 +112,10 @@ trait HttpTrait
     /**
      * Retrieve a server variable from the request.
      *
-     * @param string            $key
-     * @param string|array|null|int|bool $default
+     * @param string                     $key
+     * @param null|array|bool|int|string $default
      *
-     * @return string|array
+     * @return array|string
      */
     public function server($key = null, $default = null)
     {
@@ -127,14 +127,14 @@ trait HttpTrait
      *
      * @param string $type
      *
-     * @return string|bool
+     * @return bool|string
      */
     public function method($type = null)
     {
         $method = $this->get('request')->getMethod();
 
         if ($type) {
-            return strtoupper($type) == $method ? true : false;
+            return \strtoupper($type) == $method ? true : false;
         }
 
         return $method;
@@ -143,9 +143,10 @@ trait HttpTrait
     /**
      * Get the input method.
      *
-     * @param string $type
+     * @param string     $type
+     * @param null|mixed $name
      *
-     * @return string|bool
+     * @return bool|string
      */
     public function isMethod($name = null)
     {
@@ -155,13 +156,13 @@ trait HttpTrait
     /**
      * Sets a header by name.
      *
-     * @param string|array $key     The key
-     * @param string|array $values  The value or an array of values
+     * @param array|string $key     The key
+     * @param array|string $values  The value or an array of values
      * @param bool         $replace Whether to replace the actual value or not (true by default)
      */
     public function setHeader($key, $values = null, $replace = true)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $baseKey => $baseValue) {
                 $this->get('request')->setHeader($baseKey, $baseValue, $replace);
             }
@@ -183,7 +184,7 @@ trait HttpTrait
      * @param bool        $secure
      * @param bool        $httpOnly
      * @param bool        $raw
-     * @param string|null $sameSite
+     * @param null|string $sameSite
      *
      * @return \Illuminate\Cookie\CookieJar|\Symfony\Component\HttpFoundation\Cookie
      */
@@ -241,16 +242,16 @@ trait HttpTrait
     /**
      * Get an instance of the redirector.
      *
-     * @param string|null $to
+     * @param null|string $to
      * @param int         $status
      * @param array       $headers
      * @param bool        $secure
      *
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function redirect($to = null, $status = 302, $headers = [], $secure = null)
     {
-        if (is_null($to)) {
+        if (\is_null($to)) {
             return $this->get('redirect');
         }
 
@@ -283,7 +284,7 @@ trait HttpTrait
      */
     public function escape($text, $flags = ENT_COMPAT, $charset = null, $doubleEncode = true)
     {
-        return htmlspecialchars($text, $flags, $charset ?: $this['charset'], $doubleEncode);
+        return \htmlspecialchars($text, $flags, $charset ?: $this['charset'], $doubleEncode);
     }
 
     /**
@@ -333,10 +334,10 @@ trait HttpTrait
 
     protected function rules(array $rules = [], $data = null)
     {
-        if (is_array($data)) {
+        if (\is_array($data)) {
             return Validator::make($data, $rules)->validate();
         }
-        
+
         return $this->validate($this->request(), $rules);
     }
 

@@ -13,7 +13,7 @@ class PreflightResponse
      * @param \Closure                 $next
      *
      * @return mixed
-     **/
+     */
     public function handle($request, Closure $next)
     {
         if ('OPTIONS' === $request->getMethod()) {

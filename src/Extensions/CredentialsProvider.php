@@ -44,7 +44,7 @@ class CredentialsProvider implements UserProvider
 
         $row = $user->first();
 
-        if (is_null($row)) {
+        if (\is_null($row)) {
             return;
         }
 

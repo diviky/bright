@@ -18,6 +18,9 @@ class ForgetPassword extends Notification
 
     /**
      * Create a new notification instance.
+     *
+     * @param mixed $token
+     * @param mixed $channels
      */
     public function __construct($token, $channels = [])
     {
@@ -34,17 +37,17 @@ class ForgetPassword extends Notification
      */
     public function via($notifiable)
     {
-        if (count($this->channels) > 0) {
-            return array_merge(['database'], $this->channels);
+        if (\count($this->channels) > 0) {
+            return \array_merge(['database'], $this->channels);
         }
 
         $channels = config('karla.notifications');
 
-        if (count($channels) > 0) {
-            return array_merge(['database'], $channels);
+        if (\count($channels) > 0) {
+            return \array_merge(['database'], $channels);
         }
 
-        return array_merge(['database', 'mail', MobtextingChannel::class], $this->channels);
+        return \array_merge(['database', 'mail', MobtextingChannel::class], $this->channels);
     }
 
     /**

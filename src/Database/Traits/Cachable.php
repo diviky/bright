@@ -48,7 +48,7 @@ trait Cachable
      */
     public function get($columns = ['*'])
     {
-        if (!is_null($this->cacheMinutes) && $this->cacheEnabled()) {
+        if (!\is_null($this->cacheMinutes) && $this->cacheEnabled()) {
             return $this->getCached($columns);
         }
 
@@ -66,7 +66,7 @@ trait Cachable
      */
     public function getCached($columns = ['*'])
     {
-        if (is_null($this->columns)) {
+        if (\is_null($this->columns)) {
             $this->columns = $columns;
         }
         // If the query is requested to be cached, we will cache it using a unique key
@@ -96,7 +96,7 @@ trait Cachable
      */
     public function remember($minutes = 0, $key = null)
     {
-        if (is_null($minutes)) {
+        if (\is_null($minutes)) {
             $minutes = 10;
         }
 
@@ -168,6 +168,65 @@ trait Cachable
     }
 
     /**
+     * Get a unique cache key for the complete query.
+     *
+     * @return string
+     */
+    public function getCacheKey()
+    {
+        $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey());
+
+        return \str_replace(':uid:', user('id'), $cache);
+    }
+
+    /**
+     * Generate the unique cache key for the query.
+     *
+     * @return string
+     */
+    public function generateCacheKey()
+    {
+        $name = $this->connection->getName();
+        $key  = $name . $this->toSql() . \serialize($this->getBindings());
+
+        return \hash('sha256', $key);
+    }
+
+    /**
+     * Flush the cache for the current model or a given tag name.
+     *
+     * @param mixed $cacheTags
+     *
+     * @return bool
+     */
+    public function flushCache($cacheTags = null)
+    {
+        $cache = $this->getCacheDriver();
+        if (!\method_exists($cache, 'tags')) {
+            return false;
+        }
+
+        $cacheTags = $cacheTags ?: $this->cacheTags;
+        $cache->tags($cacheTags)->flush();
+
+        return true;
+    }
+
+    /**
+     * Set the cache prefix.
+     *
+     * @param string $prefix
+     *
+     * @return $this
+     */
+    public function prefix($prefix)
+    {
+        $this->cachePrefix = $prefix;
+
+        return $this;
+    }
+
+    /**
      * Get the cache object with tags assigned, if applicable.
      *
      * @return \Illuminate\Cache\CacheManager
@@ -200,52 +259,6 @@ trait Cachable
     }
 
     /**
-     * Get a unique cache key for the complete query.
-     *
-     * @return string
-     */
-    public function getCacheKey()
-    {
-        $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey());
-        $cache = str_replace(':uid:', user('id'), $cache);
-
-        return $cache;
-    }
-
-    /**
-     * Generate the unique cache key for the query.
-     *
-     * @return string
-     */
-    public function generateCacheKey()
-    {
-        $name = $this->connection->getName();
-        $key  = $name . $this->toSql() . serialize($this->getBindings());
-
-        return hash('sha256', $key);
-    }
-
-    /**
-     * Flush the cache for the current model or a given tag name.
-     *
-     * @param mixed $cacheTags
-     *
-     * @return bool
-     */
-    public function flushCache($cacheTags = null)
-    {
-        $cache = $this->getCacheDriver();
-        if (!method_exists($cache, 'tags')) {
-            return false;
-        }
-
-        $cacheTags = $cacheTags ?: $this->cacheTags;
-        $cache->tags($cacheTags)->flush();
-
-        return true;
-    }
-
-    /**
      * Get the Closure callback used when caching queries.
      *
      * @param array $columns
@@ -259,20 +272,6 @@ trait Cachable
 
             return $this->get($columns);
         };
-    }
-
-    /**
-     * Set the cache prefix.
-     *
-     * @param string $prefix
-     *
-     * @return $this
-     */
-    public function prefix($prefix)
-    {
-        $this->cachePrefix = $prefix;
-
-        return $this;
     }
 
     protected function cacheEnabled()

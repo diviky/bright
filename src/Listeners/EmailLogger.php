@@ -25,9 +25,9 @@ class EmailLogger
             'subject'     => $message->getSubject(),
             'body'        => $message->getBody(),
             'headers'     => (string) $message->getHeaders(),
-            'attachments' => $message->getChildren() ? implode("\n\n", $message->getChildren()) : null,
-            'created_at'  => date('Y-m-d H:i:s'),
-            'updated_at'  => date('Y-m-d H:i:s'),
+            'attachments' => $message->getChildren() ? \implode("\n\n", $message->getChildren()) : null,
+            'created_at'  => \date('Y-m-d H:i:s'),
+            'updated_at'  => \date('Y-m-d H:i:s'),
         ]);
     }
 
@@ -50,11 +50,11 @@ class EmailLogger
         foreach ($mailboxes as $email => $name) {
             $mailboxStr = $email;
             if (null !== $name) {
-                $mailboxStr = $name.' <'.$mailboxStr.'>';
+                $mailboxStr = $name . ' <' . $mailboxStr . '>';
             }
             $strings[] = $mailboxStr;
         }
 
-        return implode(', ', $strings);
+        return \implode(', ', $strings);
     }
 }

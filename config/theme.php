@@ -1,6 +1,6 @@
 <?php
 return [
-    'device' => 'computer',
+    'device'   => 'computer',
     /*
     |----------------------------------------------------------------------------
     | Default theme config all devices
@@ -9,10 +9,10 @@ return [
     | Default config will be applied for all devices. Devices are identified by
     | their headers
      */
-    'default' => [
-        'default' => 'tabler',
+    'default'  => [
+        'default'    => 'tabler',
         'auth.login' => 'tabler',
-        'auth.*' => 'tabler',
+        'auth.*'     => 'tabler',
     ],
     /*
     |----------------------------------------------------------------------------
@@ -42,12 +42,12 @@ return [
     | Theme configuration for mobile devices
     |----------------------------------------------------------------------------
      */
-    'phone' => [],
+    'phone'    => [],
 
     /*
     |----------------------------------------------------------------------------
     | Theme configuration for tablet devices
     |----------------------------------------------------------------------------
      */
-    'tablet' => [],
+    'tablet'   => [],
 ];

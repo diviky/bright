@@ -13,7 +13,7 @@ trait Message
                 'message' => __(':Name :action successfully', ['name' => $name, 'action' => $action . 'd']),
             ];
 
-            if ($id && !is_bool($result)) {
+            if ($id && !\is_bool($result)) {
                 $response['id'] = $result;
             }
 

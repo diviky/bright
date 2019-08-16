@@ -29,7 +29,7 @@ class Geo
         $geocoder = new ProviderAggregator();
         $adapter  = new GuzzleAdapter();
 
-        $reader        = new Reader(storage_path('geoip').'/'.$db);
+        $reader        = new Reader(storage_path('geoip') . '/' . $db);
         $geoIP2Adapter = new GeoIP2Adapter($reader);
 
         $chain = new Chain([
@@ -73,6 +73,6 @@ class Geo
             }
         }
 
-        return array_map('trim', $result);
+        return \array_map('trim', $result);
     }
 }

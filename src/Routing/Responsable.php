@@ -39,20 +39,20 @@ class Responsable implements BaseResponsable
 
         $route = $this->getRoute($this->action);
 
-        if (!is_array($response) && $response instanceof View) {
+        if (!\is_array($response) && $response instanceof View) {
             $this->setUpTheme($route);
 
             return $response;
         }
 
-        if (!is_array($response)) {
+        if (!\is_array($response)) {
             return $response;
         }
 
         $requestType = $request->input('_request');
         if ('iframe' == $requestType) {
             $html = '<textarea>';
-            $html .= json_encode($response);
+            $html .= \json_encode($response);
             $html .= '</textarea>';
 
             return $html;
@@ -62,8 +62,9 @@ class Responsable implements BaseResponsable
 
         if (!$ajax && isset($response['next'])) {
             return $this->getNextRedirect($response, 'next');
-        } elseif ($ajax && isset($response['redirect'])) {
-            if ('/' !== substr($response['redirect'], 0, 1)) {
+        }
+        if ($ajax && isset($response['redirect'])) {
+            if ('/' !== \substr($response['redirect'], 0, 1)) {
                 $redirect = $this->getNextRedirect($response, 'redirect');
 
                 $response['redirect'] = $redirect->getTargetUrl();
@@ -78,7 +79,7 @@ class Responsable implements BaseResponsable
             $format = 'html';
         }
 
-        list($component, $view) = explode('.', $route);
+        list($component, $view) = \explode('.', $route);
 
         $path   = $this->getViewsFrom($this->controller, $this->action);
         $theme  = $this->setUpTheme($route, $component, $path);

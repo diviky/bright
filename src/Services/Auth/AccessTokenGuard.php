@@ -28,7 +28,7 @@ class AccessTokenGuard implements Guard
 
     public function user()
     {
-        if (!is_null($this->user)) {
+        if (!\is_null($this->user)) {
             return $this->user;
         }
 
@@ -42,14 +42,14 @@ class AccessTokenGuard implements Guard
             $user = $this->provider->retrieveByToken($this->storageKey, $token);
         }
 
-        if (is_null($user)) {
+        if (\is_null($user)) {
             return;
         }
 
         $allowed_ips = $user->allowed_ip;
         $this->validateIp($allowed_ips);
 
-        if ($user->user->status != 1) {
+        if (1 != $user->user->status) {
             return;
         }
 
@@ -58,34 +58,6 @@ class AccessTokenGuard implements Guard
         $this->user->auth_token = $user->access_token;
 
         return $this->user;
-    }
-
-    protected function validateIp($allowed_ips = null)
-    {
-        if (empty($allowed_ips)) {
-            return true;
-        }
-
-        $ips         = $this->request->ips();
-        $allowed_ips = explode(',', $allowed_ips);
-        $allowed     = false;
-
-        foreach ($ips as $ip) {
-            foreach ($allowed_ips as $address) {
-                if (IpUtils::checkIp($ip, trim($address))) {
-                    $allowed = true;
-                    break 2;
-                }
-            }
-        }
-
-        if (!$allowed) {
-            abort(403, 'Ip Not allowed');
-
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -137,5 +109,34 @@ class AccessTokenGuard implements Guard
         }
 
         return false;
+    }
+
+    protected function validateIp($allowed_ips = null)
+    {
+        if (empty($allowed_ips)) {
+            return true;
+        }
+
+        $ips         = $this->request->ips();
+        $allowed_ips = \explode(',', $allowed_ips);
+        $allowed     = false;
+
+        foreach ($ips as $ip) {
+            foreach ($allowed_ips as $address) {
+                if (IpUtils::checkIp($ip, \trim($address))) {
+                    $allowed = true;
+
+                    break 2;
+                }
+            }
+        }
+
+        if (!$allowed) {
+            abort(403, 'Ip Not allowed');
+
+            return false;
+        }
+
+        return true;
     }
 }

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mv app clone-app && mv clone app && mv clone-app clone
+cd app && sh ./optimize
+cd ..

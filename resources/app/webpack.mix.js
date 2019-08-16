@@ -17,13 +17,27 @@ var resources = "./resources/";
 var public = "./public/";
 var theme = "resources/themes/tabler/";
 
-mix.scripts(
-  ["resources/assets/js/*.js", "resources/assets/js/*/*.js"],
+mix.babel(
+  [
+    resources + "assets/js/*.js",
+    resources + "assets/js/*/*.js"
+  ],
   "public/js/app.js"
 );
 
+mix.babel(
+  [
+    "vendor/sankar/laravel-karla/resources/assets/js/*.js",
+    "vendor/sankar/laravel-karla/resources/assets/js/*/*.js"
+  ],
+  "public/js/karla.js"
+);
+
 mix.styles(
-  ["resources/assets/js/*.css", "resources/assets/js/*/*.css"],
+  [
+    "resources/assets/js/*.css",
+    "resources/assets/js/*/*.css"
+  ],
   "public/css/assets.css"
 );
 
@@ -33,11 +47,10 @@ mix.scripts(
     node + "jquery/dist/jquery.min.js",
     node + "popper.js/dist/umd/popper.min.js",
     node + "bootstrap/dist/js/bootstrap.min.js",
-    bower + "jquery.livequery/dist/jquery.livequery.min.js",
     bower + "nprogress/nprogress.js",
     bower + "jquery-pjax/jquery.pjax.js",
-    //bower + "waypoints/lib/jquery.waypoints.min.js",
-    node+ 'clipboard/dist/clipboard.min.js',
+    bower + "moment/min/moment.min.js",
+    bower + "noty/lib/noty.min.js",
   ],
   public + "js/static.js"
 );
@@ -48,14 +61,15 @@ mix.options({ processCssUrls: false });
 mix.styles(
   [
     bower + "nprogress/nprogress.css",
-    bower + "font-awesome/css/font-awesome.min.css",
     bower + "animate.css/animate.min.css"
   ],
   public + "css/static.css"
 );
 
-mix.copy(bower + "font-awesome/fonts", public + "fonts");
 mix.copy(theme + "assets/scss/fonts", public + "fonts");
 
+mix.sass(theme + "assets/scss/app.scss", public + "css");
 
-mix.sass(theme+"assets/scss/app.scss", public + "css");
+if (mix.inProduction()) {
+  mix.version();
+}

@@ -6,19 +6,19 @@ trait Build
 {
     public function whereDateBetween($column, $values, $boolean = 'and', $not = false)
     {
-        if (!is_array($values)) {
+        if (!\is_array($values)) {
             return parent::whereDate($column, $values);
         }
 
-        $column = $this->raw('DATE('.$this->grammar->wrap($column).')');
+        $column = $this->raw('DATE(' . $this->grammar->wrap($column) . ')');
 
         return parent::whereBetween($column, $values, $boolean, $not);
     }
 
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
-        $val = 2 === func_num_args() ? $operator : $value;
-        if (is_array($val)) {
+        $val = 2 === \func_num_args() ? $operator : $value;
+        if (\is_array($val)) {
             return parent::whereIn($column, $val);
         }
 
@@ -36,6 +36,6 @@ trait Build
     {
         $query = $this->toQuery();
 
-        return $this->statement('DELETE '.substr($query, 6));
+        return $this->statement('DELETE ' . \substr($query, 6));
     }
 }

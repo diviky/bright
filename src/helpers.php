@@ -22,7 +22,7 @@ if (!function_exists('user')) {
         }
 
         if ($field) {
-            return Auth::user()->$field;
+            return Auth::user()->{$field};
         }
 
         return Auth::user();
@@ -100,7 +100,6 @@ if (!function_exists('disk')) {
             try {
                 return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
             } catch (\Exception $e) {
-
             }
         }
 

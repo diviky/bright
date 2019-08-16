@@ -25,9 +25,10 @@ trait Analytics
             case 'daily':
                 $group  = ['DATE(' . $column . ')'];
                 $format = 'dS M';
+
                 break;
             default:
-                list($start, $end, $day) = explode(' - ', $time);
+                list($start, $end, $day) = \explode(' - ', $time);
 
                 if ($day) {
                     return $this->getFormats($column, $day);

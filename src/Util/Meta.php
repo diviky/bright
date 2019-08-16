@@ -10,12 +10,12 @@ class Meta
     use CapsuleManager;
 
     protected $fields   = [];
-    protected $table    = "app_meta";
-    protected $relation = "app_meta_values";
+    protected $table    = 'app_meta';
+    protected $relation = 'app_meta_values';
 
     public function updateOrInsert($key, $value = null)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k => $val) {
                 $this->updateOrInsert($k, $val);
             }
@@ -32,12 +32,12 @@ class Meta
 
     public static function instance()
     {
-        return new self;
+        return new self();
     }
 
     public function update($key, $value = null)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k => $val) {
                 $this->update($k, $val);
             }
@@ -52,7 +52,7 @@ class Meta
             return false;
         }
 
-        $time = new Carbon;
+        $time = new Carbon();
 
         $values = [
             'meta_value' => $value,
@@ -74,7 +74,7 @@ class Meta
             return false;
         }
 
-        $time = new Carbon;
+        $time = new Carbon();
 
         $values = [
             'option_id'  => $id,
@@ -95,7 +95,7 @@ class Meta
             ->first();
 
         // Is value exists
-        if (!is_null($row) && isset($row->meta_value)) {
+        if (!\is_null($row) && isset($row->meta_value)) {
             return $row->meta_value;
         }
 
@@ -115,7 +115,7 @@ class Meta
             ->first();
 
         // Is value exists
-        if (!is_null($row) && isset($row->meta_value)) {
+        if (!\is_null($row) && isset($row->meta_value)) {
             return $row->meta_value;
         }
 
@@ -135,6 +135,34 @@ class Meta
             ->exists();
     }
 
+    /**
+     * Set the value of table.
+     *
+     * @param mixed $table
+     *
+     * @return self
+     */
+    public function setTable($table)
+    {
+        $this->table = $table;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of relation.
+     *
+     * @param mixed $relation
+     *
+     * @return self
+     */
+    public function setRelation($relation)
+    {
+        $this->relation = $relation;
+
+        return $this;
+    }
+
     protected function getField($key)
     {
         $fields = $this->getFields();
@@ -144,7 +172,7 @@ class Meta
 
     protected function getFields()
     {
-        if (!is_null($this->fields)) {
+        if (!\is_null($this->fields)) {
             return $this->fields;
         }
 
@@ -158,29 +186,5 @@ class Meta
         $this->fields = $fields;
 
         return $fields;
-    }
-
-    /**
-     * Set the value of table
-     *
-     * @return  self
-     */
-    public function setTable($table)
-    {
-        $this->table = $table;
-
-        return $this;
-    }
-
-    /**
-     * Set the value of relation
-     *
-     * @return  self
-     */
-    public function setRelation($relation)
-    {
-        $this->relation = $relation;
-
-        return $this;
     }
 }

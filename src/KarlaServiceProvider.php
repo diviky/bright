@@ -2,29 +2,24 @@
 
 namespace Karla;
 
-use Karla\Traits\Provider;
-use Karla\Routing\Resolver;
-use Karla\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Karla\Console\Commands\GeoipUpdate;
 use Karla\Extensions\AuthTokenProvider;
-use Karla\Extensions\TokenUserProvider;
-use Karla\Services\Auth\AuthTokenGuard;
 use Karla\Extensions\CredentialsProvider;
+use Karla\Extensions\TokenUserProvider;
+use Karla\Routing\Redirector;
+use Karla\Routing\Resolver;
 use Karla\Services\Auth\AccessTokenGuard;
+use Karla\Services\Auth\AuthTokenGuard;
 use Karla\Services\Auth\CredentialsGuard;
+use Karla\Traits\Provider;
 
 class KarlaServiceProvider extends ServiceProvider
 {
     use Provider;
-
-    protected function path()
-    {
-        return __DIR__ . '/..';
-    }
 
     public function boot()
     {
@@ -59,31 +54,6 @@ class KarlaServiceProvider extends ServiceProvider
         });
     }
 
-    protected function console()
-    {
-        $this->publishes([
-            $this->path() . '/config/permission.php' => config_path('permission.php'),
-            $this->path() . '/config/karla.php'      => config_path('karla.php'),
-            $this->path() . '/config/theme.php'      => config_path('theme.php'),
-            $this->path() . '/config/auth.php'       => config_path('auth.php'),
-            $this->path() . '/config/app.php'        => config_path('app.php'),
-        ], 'config');
-
-        $this->publishes([
-            $this->path() . '/resources/assets/js' => resource_path('assets/js'),
-            $this->path() . '/webpack.mix.js'      => base_path('webpack.mix.js'),
-            $this->path() . '/bower.json'          => base_path('bower.json'),
-        ], 'assets');
-
-        $this->publishes([
-            $this->path() . '/resources/views' => resource_path('views'),
-        ], 'views');
-
-        $this->commands([
-            GeoipUpdate::class,
-        ]);
-    }
-
     public function redirect()
     {
         $this->app->singleton('redirect', function ($app) {
@@ -97,6 +67,39 @@ class KarlaServiceProvider extends ServiceProvider
 
             return $redirector;
         });
+    }
+
+    protected function path()
+    {
+        return __DIR__ . '/..';
+    }
+
+    protected function console()
+    {
+        $this->publishes([
+            $this->path() . '/config/app.php'        => config_path('app.php'),
+            $this->path() . '/config/auth.php'       => config_path('auth.php'),
+            $this->path() . '/config/charts.php'     => config_path('charts.php'),
+            $this->path() . '/config/permission.php' => config_path('permission.php'),
+            $this->path() . '/config/karla.php'      => config_path('karla.php'),
+            $this->path() . '/config/theme.php'      => config_path('theme.php'),
+        ], 'config');
+
+        $this->publishes([
+            $this->path() . '/resources/assets/js' => resource_path('assets/js'),
+        ], 'assets');
+
+        $this->publishes([
+            $this->path() . '/resources/app/*' => base_path(),
+        ], 'setup');
+
+        $this->publishes([
+            $this->path() . '/resources/views' => resource_path('views'),
+        ], 'views');
+
+        $this->commands([
+            GeoipUpdate::class,
+        ]);
     }
 
     protected function auth()
@@ -127,14 +130,12 @@ class KarlaServiceProvider extends ServiceProvider
 
     /**
      * Register the Authentication Log's events.
-     *
-     * @return void
      */
     protected function registerEvents()
     {
         $events = $this->app['config']->get('karla.events');
 
-        if (is_array($events)) {
+        if (\is_array($events)) {
             foreach ($events as $event => $listeners) {
                 foreach ($listeners as $listener) {
                     Event::listen($event, $listener);

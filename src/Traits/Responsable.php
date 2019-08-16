@@ -20,35 +20,36 @@ trait Responsable
         $method    = $this->getMethod($action);
         $component = $this->getNamespace($action);
 
-        return strtolower($component . '.' . $method);
+        return \strtolower($component . '.' . $method);
     }
 
     /**
      * Get the method name of the route action.
      *
+     * @param mixed $action
+     *
      * @return string
      */
     protected function getMethod($action): string
     {
-        return Arr::last(explode('@', $action));
+        return Arr::last(\explode('@', $action));
     }
 
     protected function getNamespace($action): string
     {
-        $action     = explode('@', $action);
-        $controller = explode('\\', $action[0]);
-        $controller = strtolower($controller[count($controller) - 2]);
+        $action     = \explode('@', $action);
+        $controller = \explode('\\', $action[0]);
 
-        return $controller;
+        return \strtolower($controller[\count($controller) - 2]);
     }
 
     protected function getViewPath($action): string
     {
-        $action = explode('@', $action);
-        $action = explode('\\', $action[0]);
-        $action = array_filter($action);
-        array_pop($action);
-        $path = implode(DIRECTORY_SEPARATOR, array_slice($action, 1));
+        $action = \explode('@', $action);
+        $action = \explode('\\', $action[0]);
+        $action = \array_filter($action);
+        \array_pop($action);
+        $path = \implode(DIRECTORY_SEPARATOR, \array_slice($action, 1));
 
         return app_path($path . '/views');
     }
@@ -62,15 +63,15 @@ trait Responsable
 
         unset($response[$keyword]);
 
-        if (is_string($next)) {
-            if ('/' == substr($next, 0, 1)) {
+        if (\is_string($next)) {
+            if ('/' == \substr($next, 0, 1)) {
                 $redirect = redirect($next);
             } elseif ('back' == $next) {
                 $redirect = redirect()->back();
             } else {
                 $redirect = redirect()->route($next);
             }
-        } elseif (is_array($next)) {
+        } elseif (\is_array($next)) {
             if ($next['back']) {
                 $redirect = redirect()->back();
             } elseif ($next['path']) {
@@ -91,9 +92,9 @@ trait Responsable
 
     protected function getViewsFrom($controller, $action = null)
     {
-        if (method_exists($controller, 'getViewsFrom')) {
+        if (\method_exists($controller, 'getViewsFrom')) {
             $paths = $controller->getViewsFrom();
-            $paths = !is_array($paths) ? [$paths] : $paths;
+            $paths = !\is_array($paths) ? [$paths] : $paths;
             foreach ($paths as $key => $path) {
                 $paths[$key] = $path . '/views/';
             }

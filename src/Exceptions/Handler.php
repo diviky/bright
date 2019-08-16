@@ -55,7 +55,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof Exception) {
-            $view = 'errors.'.$exception->getCode();
+            $view = 'errors.' . $exception->getCode();
             if (view()->exists($view)) {
                 return response()->view($view, ['exception' => $exception]);
             }

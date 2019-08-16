@@ -15,7 +15,7 @@ trait Device
         $geoHelper = new Geo();
         $geo       = (array) $geoHelper->geocode($ip);
 
-        $values = [
+        return [
             'country'      => $geo['country'],
             'country_code' => $geo['country_code'],
             'region'       => $geo['region'],
@@ -25,7 +25,5 @@ trait Device
             'device'       => $details['device'],
             'brand'        => $details['brand'],
         ];
-
-        return $values;
     }
 }

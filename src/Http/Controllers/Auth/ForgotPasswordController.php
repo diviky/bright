@@ -18,16 +18,6 @@ class ForgotPasswordController extends Controller
 {
     use Token;
 
-    protected function username()
-    {
-        return 'username';
-    }
-
-    protected function address()
-    {
-        return 'mobile';
-    }
-
     public function reset(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -57,7 +47,7 @@ class ForgotPasswordController extends Controller
     {
         $id = session('reset-token');
 
-        if (is_null($id)) {
+        if (\is_null($id)) {
             return [
                 'message'  => 'Invalid request',
                 'redirect' => 'password.reset',
@@ -66,7 +56,7 @@ class ForgotPasswordController extends Controller
 
         $activation = Activation::where('id', $id)->first();
 
-        if (is_null($activation)) {
+        if (\is_null($activation)) {
             return [
                 'message'  => 'Invalid request',
                 'redirect' => 'password.reset',
@@ -90,7 +80,7 @@ class ForgotPasswordController extends Controller
     {
         $id = session('reset-token');
 
-        if (is_null($id)) {
+        if (\is_null($id)) {
             return [
                 'message'  => 'Invalid request',
                 'redirect' => 'password.reset',
@@ -135,7 +125,7 @@ class ForgotPasswordController extends Controller
     {
         $id = session('forget-userid');
 
-        if (is_null($id)) {
+        if (\is_null($id)) {
             return redirect()->route('password.reset')
                 ->with('message', 'Invalid request');
         }
@@ -159,6 +149,16 @@ class ForgotPasswordController extends Controller
         return redirect()->back()
             ->with('status', 'error')
             ->with('message', 'Unable to reset password');
+    }
+
+    protected function username()
+    {
+        return 'username';
+    }
+
+    protected function address()
+    {
+        return 'mobile';
     }
 
     /**
@@ -186,6 +186,6 @@ class ForgotPasswordController extends Controller
 
     protected function notificationVia($channels = [])
     {
-        return array_merge(['mail', MobtextingChannel::class], $channels);
+        return \array_merge(['mail', MobtextingChannel::class], $channels);
     }
 }

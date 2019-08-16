@@ -11,15 +11,16 @@ class Speed extends Capsule
 {
     public function formatToSave($save, $required = null)
     {
-        $required = ($required) ? explode(',', $required) : null;
-        $fields   = array_keys($save);
+        $required = ($required) ? \explode(',', $required) : null;
+        $fields   = \array_keys($save);
 
         $pass = true;
         // check all required keys exits in fields
         if (!empty($required)) {
             foreach ($required as $key) {
-                if (!in_array($key, $fields)) {
+                if (!\in_array($key, $fields)) {
                     $pass = false;
+
                     break;
                 }
             }
@@ -29,7 +30,7 @@ class Speed extends Capsule
             return [];
         }
 
-        $total = count($save[$fields[0]]);
+        $total = \count($save[$fields[0]]);
         $data  = [];
 
         for ($i = 0; $i < $total; ++$i) {
@@ -39,10 +40,11 @@ class Speed extends Capsule
                 $value = $save[$field][$i];
 
                 if (!empty($required)
-                    && in_array($field, $required)
+                    && \in_array($field, $required)
                     && empty($value)
                 ) {
                     $add = false;
+
                     continue;
                 }
 
@@ -61,16 +63,16 @@ class Speed extends Capsule
     public function formatFiles($files = [])
     {
         $data  = [];
-        $names = array_keys($files);
+        $names = \array_keys($files);
 
         foreach ($names as $name) {
             $file = $files[$name];
 
-            if (is_array($file['name'])) {
-                $fields = array_keys($file);
+            if (\is_array($file['name'])) {
+                $fields = \array_keys($file);
 
                 foreach ($file['name'] as $key => $value) {
-                    if (is_array($value)) {
+                    if (\is_array($value)) {
                         foreach ($value as $k => $v) {
                             $add    = true;
                             $values = [];
@@ -78,12 +80,13 @@ class Speed extends Capsule
                                 $val = $file[$field][$key][$k];
                                 if ('name' == $field && empty($val)) {
                                     $add = false;
+
                                     continue;
                                 }
                                 $values[$field] = $val;
                             }
                             if ($add) {
-                                if (is_numeric($key)) {
+                                if (\is_numeric($key)) {
                                     $data[$name][$key] = $values;
                                 } else {
                                     $data[$name][$key][] = $values;
@@ -97,12 +100,13 @@ class Speed extends Capsule
                             $val = $file[$field][$key];
                             if ('name' == $field && empty($val)) {
                                 $add = false;
+
                                 continue;
                             }
                             $values[$field] = $val;
                         }
                         if ($add) {
-                            if (is_numeric($key)) {
+                            if (\is_numeric($key)) {
                                 $data[$name][$key] = $values;
                             } else {
                                 $data[$name][$key][] = $values;
@@ -140,7 +144,7 @@ class Speed extends Capsule
             ++$i;
             if ($row->ordering != $i) {
                 $this->get('db')->table($table)
-                    ->where($field, $row->$field)
+                    ->where($field, $row->{$field})
                     ->timestamps(false)
                     ->update(['ordering' => $i]);
             }
@@ -157,7 +161,7 @@ class Speed extends Capsule
 
         $i = 0;
         foreach ($values as $id => $value) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $this->sorting($table, $value, $field);
             } else {
                 ++$i;

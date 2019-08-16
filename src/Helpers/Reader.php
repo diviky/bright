@@ -29,19 +29,19 @@ class Reader
     {
         $reader = $this->unzip($reader, $options);
 
-        set_time_limit(0);
+        \set_time_limit(0);
 
-        if (!is_string($reader)) {
+        if (!\is_string($reader)) {
             $ext = $options['ext'] ?: '.array';
         } else {
-            $ext = $options['ext'] ?: strrchr($reader, '.');
+            $ext = $options['ext'] ?: \strrchr($reader, '.');
             $ext = '.' == $ext ? '.xls' : $ext;
         }
 
-        $ext     = strtolower($ext);
-        $special = in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
+        $ext     = \strtolower($ext);
+        $special = \in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
 
-        if (!$special && (!is_file($reader) || !file_exists($reader))) {
+        if (!$special && (!\is_file($reader) || !\file_exists($reader))) {
             return new EmptyIterator();
         }
 
@@ -49,7 +49,7 @@ class Reader
         $file  = null;
 
         if (!$special) {
-            ini_set('auto_detect_line_endings', true);
+            \ini_set('auto_detect_line_endings', true);
             $file = new SplFileObject($reader);
             //Auto detect delimiter
             if (empty($options['delimiter'])) {
@@ -66,6 +66,7 @@ class Reader
                 } else {
                     $reader = new CsvReader($file);
                 }
+
                 break;
             case '.xls':
             case '.xlsx':
@@ -81,17 +82,17 @@ class Reader
 
                 break;
             case '.array':
-                if (!is_array($reader)) {
-                    $reader = explode("\n", $reader);
+                if (!\is_array($reader)) {
+                    $reader = \explode("\n", $reader);
                 }
 
                 $reader = new ArrayReader($reader);
-                break;
 
+                break;
             case '.generator':
                 $reader = new RewindableGenerator($reader);
-                break;
 
+                break;
             case '.iterator':
             default:
                 break;
@@ -118,7 +119,7 @@ class Reader
      */
     public function modify($reader, Closure $callable = null, $options = [])
     {
-        if (is_numeric($options['limit'])) {
+        if (\is_numeric($options['limit'])) {
             $offset = 0;
             if ($options['offset']) {
                 $offset = $options['offset'];
@@ -148,7 +149,7 @@ class Reader
             }
         }
 
-        if (!is_null($callable)) {
+        if (!\is_null($callable)) {
             if ($reader instanceof Generator) {
                 $reader = new MapGeneratorIterator($reader, $callable);
             } else {
@@ -184,7 +185,7 @@ class Reader
 
     public function count(Traversable $iterator)
     {
-        return iterator_count($iterator);
+        return \iterator_count($iterator);
     }
 
     public function hasNext(Traversable $iterator)
@@ -197,6 +198,7 @@ class Reader
         $fields = [];
         foreach ($iterator as $row) {
             $fields = $row;
+
             break;
         }
 
@@ -214,13 +216,13 @@ class Reader
 
     public function toArray(Traversable $iterator)
     {
-        return iterator_to_array($iterator);
+        return \iterator_to_array($iterator);
     }
 
     public function detectDelimiter($file, $sample = 5)
     {
         $delimsRegex = ",|;:\t"; // whichever is first in the list will be the default
-        $delims      = str_split($delimsRegex);
+        $delims      = \str_split($delimsRegex);
         $delimCount  = $delimiters  = [];
         foreach ($delims as $delim) {
             $delimCount[$delim] = 0;
@@ -230,13 +232,13 @@ class Reader
         $lines = $this->getLines($file, $sample);
 
         foreach ($lines as $row) {
-            $row      = preg_replace('/\r\n/', '', trim($row)); // clean up .. strip new line and line return chars
-            $row      = preg_replace("/[^$delimsRegex]/", '', $row); // clean up .. strip evthg which is not a dilim'r
-            $rowChars = str_split($row); // break it apart char by char
+            $row      = \preg_replace('/\r\n/', '', \trim($row)); // clean up .. strip new line and line return chars
+            $row      = \preg_replace("/[^${delimsRegex}]/", '', $row); // clean up .. strip evthg which is not a dilim'r
+            $rowChars = \str_split($row); // break it apart char by char
 
             foreach ($rowChars as $char) {
                 foreach ($delimiters as $delim) {
-                    if (false !== strpos($char, $delim)) {
+                    if (false !== \strpos($char, $delim)) {
                         // if the char is the delim ...
                         ++$delimCount[$delim]; // ... increment
                     }
@@ -244,47 +246,47 @@ class Reader
             }
         }
 
-        $max = max($delimCount);
+        $max = \max($delimCount);
 
         if ($max <= 0) {
             return null;
         }
 
-        $detected = array_keys($delimCount, $max);
+        $detected = \array_keys($delimCount, $max);
 
         return $detected[0];
     }
 
     public function getLines($file, $total = 5)
     {
-        $handle = fopen($file, 'r');
+        $handle = \fopen($file, 'r');
 
         $line  = 0;
         $lines = [];
-        while (!feof($handle)) {
-            $lines[] = fgets($handle, 1024);
+        while (!\feof($handle)) {
+            $lines[] = \fgets($handle, 1024);
             ++$line;
             if ($line >= $total) {
                 break;
             }
         }
 
-        fclose($handle);
+        \fclose($handle);
 
         return $lines;
     }
 
     public function unzip($zip, $options = [])
     {
-        if (is_string($zip)) {
-            $ext = $options['ext'] ?: strrchr($zip, '.');
-            $ext = strtolower($ext);
+        if (\is_string($zip)) {
+            $ext = $options['ext'] ?: \strrchr($zip, '.');
+            $ext = \strtolower($ext);
         }
 
-        if ($ext && in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
+        if ($ext && \in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
             $extensions = ['.csv', '.xls', '.xlsx', '.txt'];
-            $directory  = dirname($zip);
-            $extract    = '/tmp/' . uniqid() . '/';
+            $directory  = \dirname($zip);
+            $extract    = '/tmp/' . \uniqid() . '/';
 
             try {
                 $archive   = UnifiedArchive::open($zip);
@@ -293,20 +295,21 @@ class Reader
                 $extension = null;
 
                 foreach ($files as $file) {
-                    $extension = strtolower(strrchr($file, '.'));
-                    if (in_array($extension, $extensions)) {
+                    $extension = \strtolower(\strrchr($file, '.'));
+                    if (\in_array($extension, $extensions)) {
                         $tmpfile = $file;
+
                         break;
                     }
                 }
 
                 if ($extension && $tmpfile) {
                     $archive->extractFiles($extract);
-                    $reader = $directory . '/' . md5(uniqid()) . $extension;
+                    $reader = $directory . '/' . \md5(\uniqid()) . $extension;
 
-                    rename($extract . '/' . $tmpfile, $reader);
-                    chmod($reader, 0777);
-                    unlink($zip);
+                    \rename($extract . '/' . $tmpfile, $reader);
+                    \chmod($reader, 0777);
+                    \unlink($zip);
 
                     return $reader;
                 }

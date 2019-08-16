@@ -22,5 +22,4 @@ trait HasPermissions
             'permission_id'
         )->withPivot('is_exclude');
     }
-
 }

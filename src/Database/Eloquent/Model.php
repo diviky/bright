@@ -10,7 +10,8 @@ class Model extends BaseModel
     /**
      * Create a new Eloquent query builder for the model.
      *
-     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param \Illuminate\Database\Query\Builder $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder|static
      */
     public function newEloquentBuilder($query)
@@ -28,7 +29,9 @@ class Model extends BaseModel
         $connection = $this->getConnection();
 
         return new QueryBuilder(
-            $connection, $connection->getQueryGrammar(), $connection->getPostProcessor()
+            $connection,
+            $connection->getQueryGrammar(),
+            $connection->getPostProcessor()
         );
     }
 }

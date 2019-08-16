@@ -86,9 +86,9 @@ class Builder extends LaravelBuilder
 
     public function paging($perPage = 25, $columns = ['*'], $pageName = 'page', $page = null)
     {
-        $perPage = is_null($perPage) ? 25 : $perPage;
+        $perPage = \is_null($perPage) ? 25 : $perPage;
 
-        if (count($this->tables) > 0) {
+        if (\count($this->tables) > 0) {
             $rows = $this->paginateComplex($perPage, $columns, $pageName, $page);
         } else {
             $rows = $this->paginate($perPage, $columns, $pageName, $page);
@@ -99,6 +99,7 @@ class Builder extends LaravelBuilder
         $i = $rows->perPage() * ($rows->currentPage() - 1);
         $rows->transform(function ($row) use (&$i) {
             $row->serial = ++$i;
+
             return $row;
         });
 
@@ -107,7 +108,7 @@ class Builder extends LaravelBuilder
 
     public function statement($sql, $bindings = [], $useReadPdo = false)
     {
-        $type = trim(strtolower(explode(' ', $sql)[0]));
+        $type = \trim(\strtolower(\explode(' ', $sql)[0]));
 
         if ($useReadPdo) {
             return $this->connection->statement($sql, $bindings, $useReadPdo);
@@ -116,22 +117,27 @@ class Builder extends LaravelBuilder
         switch ($type) {
             case 'delete':
                 return $this->connection->delete($sql, $bindings);
+
                 break;
             case 'update':
                 return $this->connection->update($sql, $bindings);
+
                 break;
             case 'insert':
                 return $this->connection->insert($sql, $bindings);
+
                 break;
             case 'select':
-                if (preg_match('/outfile\s/i', $sql)) {
+                if (\preg_match('/outfile\s/i', $sql)) {
                     return $this->connection->statement($sql, $bindings, true);
-                } else {
-                    return $this->connection->select($sql, $bindings);
                 }
+
+                    return $this->connection->select($sql, $bindings);
+
                 break;
             case 'load':
                 return $this->connection->affectingStatement($sql, $bindings);
+
                 break;
         }
 
@@ -142,7 +148,7 @@ class Builder extends LaravelBuilder
     {
         $results = $this->forPage($page = 1, $count)->get();
 
-        while (count($results) > 0) {
+        while (\count($results) > 0) {
             if ($callback) {
                 foreach ($results as $result) {
                     yield $result = $callback($result);
@@ -184,8 +190,8 @@ class Builder extends LaravelBuilder
         $sql = $this->toSql();
 
         foreach ($this->getBindings() as $binding) {
-            $value = is_numeric($binding) ? $binding : "'" . $binding . "'";
-            $sql   = preg_replace('/\?/', $value, $sql, 1);
+            $value = \is_numeric($binding) ? $binding : "'" . $binding . "'";
+            $sql   = \preg_replace('/\?/', $value, $sql, 1);
         }
 
         return $sql;

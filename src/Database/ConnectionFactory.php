@@ -11,7 +11,7 @@ class ConnectionFactory extends LaravelConnectionFactory
      * Create a new connection instance.
      *
      * @param string        $driver
-     * @param \PDO|\Closure $connection
+     * @param \Closure|\PDO $connection
      * @param string        $database
      * @param string        $prefix
      * @param array         $config

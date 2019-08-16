@@ -14,7 +14,7 @@ trait Provider
     public function directive()
     {
         Blade::directive('form', function ($expression) {
-            $expression = substr(substr($expression, 0, -1), 1);
+            $expression = \substr(\substr($expression, 0, -1), 1);
 
             return '<?php echo config("vajax.' . $expression . '"); ?>';
         });
@@ -26,14 +26,14 @@ trait Provider
         });
 
         Blade::directive('dispatch', function ($expression) {
-            if (!is_array($expression)) {
+            if (!\is_array($expression)) {
                 $expression = ['url' => $expression, 'method' => 'GET', 'params' => []];
             }
 
             //$request = Request::create('/people');
             //$response = app()->handle($request)->getContent();;
             //$response = Route::dispatchToRoute($request)->getContent();
-    
+
             return '<?php echo "dispatched"; ?>';
         });
     }
@@ -43,11 +43,11 @@ trait Provider
         Validator::extend('extension', function ($attribute, $value, $parameters) {
             $ext = $value->getClientOriginalExtension();
 
-            return in_array(strtolower($ext), $parameters);
+            return \in_array(\strtolower($ext), $parameters);
         }, 'The :attribute must be a file of type: :values.');
 
         Validator::replacer('extension', function ($message, $attribute, $rule, $parameters) {
-            return str_replace([':attribute', ':values'], [$attribute, implode(',', $parameters)], $message);
+            return \str_replace([':attribute', ':values'], [$attribute, \implode(',', $parameters)], $message);
         });
     }
 
@@ -56,8 +56,8 @@ trait Provider
         $parent = $this;
 
         Builder::macro('log', function () {
-            if (1 === func_num_args()) {
-                $message = func_get_arg(0);
+            if (1 === \func_num_args()) {
+                $message = \func_get_arg(0);
             }
             Log::debug((empty($message) ? '' : $message . ': ') . $this->toQuery());
 

@@ -15,7 +15,7 @@ class Meta
 
     public function updateOrInsert($key, $value = null)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k => $val) {
                 $this->updateOrInsert($k, $val);
             }
@@ -37,7 +37,7 @@ class Meta
 
     public function update($key, $value = null)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k => $val) {
                 $this->update($k, $val);
             }
@@ -95,7 +95,7 @@ class Meta
             ->first();
 
         // Is value exists
-        if (!is_null($row) && isset($row->meta_value)) {
+        if (!\is_null($row) && isset($row->meta_value)) {
             return $row->meta_value;
         }
 
@@ -115,7 +115,7 @@ class Meta
             ->first();
 
         // Is value exists
-        if (!is_null($row) && isset($row->meta_value)) {
+        if (!\is_null($row) && isset($row->meta_value)) {
             return $row->meta_value;
         }
 
@@ -135,33 +135,10 @@ class Meta
             ->exists();
     }
 
-    protected function getField($key)
-    {
-        $fields = $this->getFields();
-
-        return $fields[$key];
-    }
-
-    protected function getFields()
-    {
-        if (!is_null($this->fields)) {
-            return $this->fields;
-        }
-
-        $rows = $this->db->table($this->table)->get();
-
-        $fields = [];
-        foreach ($rows as $row) {
-            $fields[$row->colum_name] = (array) $row;
-        }
-
-        $this->fields = $fields;
-
-        return $fields;
-    }
-
     /**
      * Set the value of table.
+     *
+     * @param mixed $table
      *
      * @return self
      */
@@ -175,6 +152,8 @@ class Meta
     /**
      * Set the value of relation.
      *
+     * @param mixed $relation
+     *
      * @return self
      */
     public function setRelation($relation)
@@ -182,5 +161,30 @@ class Meta
         $this->relation = $relation;
 
         return $this;
+    }
+
+    protected function getField($key)
+    {
+        $fields = $this->getFields();
+
+        return $fields[$key];
+    }
+
+    protected function getFields()
+    {
+        if (!\is_null($this->fields)) {
+            return $this->fields;
+        }
+
+        $rows = $this->db->table($this->table)->get();
+
+        $fields = [];
+        foreach ($rows as $row) {
+            $fields[$row->colum_name] = (array) $row;
+        }
+
+        $this->fields = $fields;
+
+        return $fields;
     }
 }

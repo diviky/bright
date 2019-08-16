@@ -10,7 +10,7 @@ trait Token
 
     public function generateToken()
     {
-        return sprintf('%06d', mt_rand(1, 999999));
+        return \sprintf('%06d', \mt_rand(1, 999999));
     }
 
     public function saveToken($user)

@@ -34,7 +34,7 @@ class Options
 
     public function updateOrInsert($key, $value = null, $type = null)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k => $val) {
                 $this->updateOrInsert($k, $val, $type);
             }
@@ -51,7 +51,7 @@ class Options
 
     public function update($key, $value = null)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k => $val) {
                 $this->update($k, $val);
             }
@@ -62,7 +62,7 @@ class Options
         $type = $this->identifyType($value);
 
         if ('json' == $type) {
-            $value = json_encode($value);
+            $value = \json_encode($value);
         }
 
         $time = new Carbon();
@@ -73,8 +73,8 @@ class Options
             'updated_at'   => $time,
         ];
 
-        $values = array_merge($values, $this->updates);
-        $values = array_merge($values, $this->extra);
+        $values = \array_merge($values, $this->updates);
+        $values = \array_merge($values, $this->extra);
 
         return $this->table()
             ->where('option_name', $key)
@@ -88,7 +88,7 @@ class Options
         $type = $this->identifyType($value, $type);
 
         if ('json' == $type) {
-            $value = json_encode($value);
+            $value = \json_encode($value);
         }
 
         $values = [
@@ -99,32 +99,10 @@ class Options
             'updated_at'   => $time,
         ];
 
-        $values = array_merge($values, $this->values);
-        $values = array_merge($values, $this->extra);
+        $values = \array_merge($values, $this->values);
+        $values = \array_merge($values, $this->extra);
 
         return $this->table()->insert($values);
-    }
-
-    protected function identifyType($value, $type = null)
-    {
-        if (!is_null($type)) {
-            return $type;
-        }
-
-        $type = 'string';
-        if (is_numeric($value)) {
-            $type = 'number';
-        }
-
-        if (is_bool($value)) {
-            $type = 'number';
-        }
-
-        if (is_array($value)) {
-            $type = 'json';
-        }
-
-        return $type;
     }
 
     public function first()
@@ -144,26 +122,13 @@ class Options
         return collect($this->first());
     }
 
-    protected function formatValue($value, $type = 'string')
-    {
-        if ('json' == $type) {
-            $value = json_decode($value, true);
-        }
-
-        if ('number' == $type) {
-            $value = (int) $value;
-        }
-
-        return $value;
-    }
-
     public function where($key, $value = null, $operator = '=')
     {
-        if (!is_array($key)) {
+        if (!\is_array($key)) {
             $key = [$key => $value];
         }
 
-        $this->where = array_merge($this->where, $key);
+        $this->where = \array_merge($this->where, $key);
 
         return $this;
     }
@@ -184,9 +149,8 @@ class Options
     public function keyBy($name = 'option_name')
     {
         $rows = $this->find();
-        $rows = $rows->keyBy($name);
 
-        return $rows;
+        return $rows->keyBy($name);
     }
 
     public function value($key, $default = null)
@@ -196,7 +160,7 @@ class Options
             ->first();
 
         // Is value exists
-        if (!is_null($row) && isset($row->option_value)) {
+        if (!\is_null($row) && isset($row->option_value)) {
             return $this->formatValue($row->option_value, $row->option_type);
         }
 
@@ -222,6 +186,8 @@ class Options
     /**
      * Set the value of table.
      *
+     * @param mixed $table
+     *
      * @return self
      */
     public function setTable($table)
@@ -234,23 +200,27 @@ class Options
     /**
      * Set the value of values.
      *
+     * @param mixed $values
+     *
      * @return self
      */
     public function values($values)
     {
-        $this->values = array_merge($this->values, $values);
+        $this->values = \array_merge($this->values, $values);
 
         return $this;
     }
 
     /**
      * Set the value of values.
+     *
+     * @param mixed $values
      *
      * @return self
      */
     public function updates($values)
     {
-        $this->updates = array_merge($this->updates, $values);
+        $this->updates = \array_merge($this->updates, $values);
 
         return $this;
     }
@@ -258,12 +228,49 @@ class Options
     /**
      * Set the value of values.
      *
+     * @param mixed $values
+     *
      * @return self
      */
     public function extra($values)
     {
-        $this->extra = array_merge($this->extra, $values);
+        $this->extra = \array_merge($this->extra, $values);
 
         return $this;
+    }
+
+    protected function identifyType($value, $type = null)
+    {
+        if (!\is_null($type)) {
+            return $type;
+        }
+
+        $type = 'string';
+        if (\is_numeric($value)) {
+            $type = 'number';
+        }
+
+        if (\is_bool($value)) {
+            $type = 'number';
+        }
+
+        if (\is_array($value)) {
+            $type = 'json';
+        }
+
+        return $type;
+    }
+
+    protected function formatValue($value, $type = 'string')
+    {
+        if ('json' == $type) {
+            $value = \json_decode($value, true);
+        }
+
+        if ('number' == $type) {
+            $value = (int) $value;
+        }
+
+        return $value;
     }
 }

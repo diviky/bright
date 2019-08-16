@@ -8,23 +8,23 @@ trait Authorize
 {
     protected function getRouteFromAction($action): string
     {
-        $action     = explode('@', $action);
-        $method     = end($action);
-        $controller = explode('\\', $action[0]);
+        $action     = \explode('@', $action);
+        $method     = \end($action);
+        $controller = \explode('\\', $action[0]);
 
-        $component = strtolower($controller[count($controller) - 2]);
-        $method    = strtolower($method);
-        $namespace = strtolower($controller[count($controller) - 5]);
+        $component = \strtolower($controller[\count($controller) - 2]);
+        $method    = \strtolower($method);
+        $namespace = \strtolower($controller[\count($controller) - 5]);
 
         $mappings = config('permission.grouping');
 
-        if ($mappings && is_array($mappings[$namespace]) && isset($mappings[$namespace][$component])) {
+        if ($mappings && \is_array($mappings[$namespace]) && isset($mappings[$namespace][$component])) {
             $mapping = $mappings[$namespace][$component];
 
-            return is_array($mapping) ? $mapping[0] : $mapping;
+            return \is_array($mapping) ? $mapping[0] : $mapping;
         }
 
-        if ($mappings && isset($mappings[$component]) && !is_array($mappings[$component])) {
+        if ($mappings && isset($mappings[$component]) && !\is_array($mappings[$component])) {
             return $mappings[$component];
         }
 

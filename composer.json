@@ -20,7 +20,18 @@
         "php": ">=7.1",
         "spatie/laravel-permission": "^2.12",
         "schuppo/password-strength": "^1.11",
-        "piwik/device-detector": "^3.10"
+        "piwik/device-detector": "^3.10",
+        "geocoder-php/chain-provider": "^4.0",
+        "geocoder-php/common-http": "^4.0",
+        "geocoder-php/free-geoip-provider": "^4.0",
+        "geocoder-php/geoip2-provider": "^4.0",
+        "geocoder-php/host-ip-provider": "^4.0",
+        "geoip2/geoip2": "^2.9",
+        "league/flysystem-aws-s3-v3": "^1.0",
+        "sentry/sentry-laravel": "^0.9",
+        "willdurand/geocoder": "^4.2",
+        "pragmarx/firewall": "^2.2",
+        "pragmarx/google2fa-laravel": "^0.2"
     },
     "require-dev": {
         "orchestra/testbench": "~3.3.0|~3.4.2|^3.5.0",
@@ -40,7 +51,10 @@
         "geocoder-php/geoip2-provider": "^4.0",
         "geocoder-php/host-ip-provider": "^4.0",
         "geoip2/geoip2": "^2.9",
-        "consoletvs/charts": "^6.2"
+        "consoletvs/charts": "^6.2",
+        "pragmarx/firewall": "^2.2",
+        "pragmarx/google2fa-laravel": "^0.2",
+        "predis/predis": "^1.1"
     },
     "autoload": {
         "psr-4": {
@@ -66,7 +80,8 @@
             "providers": [
                 "Karla\\KarlaServiceProvider",
                 "Karla\\Providers\\DatabaseServiceProvider",
-                "Karla\\Providers\\ServiceProvider"
+                "Karla\\Providers\\ServiceProvider",
+                "Karla\\Providers\\ViewServiceProvider"
             ]
         }
     }

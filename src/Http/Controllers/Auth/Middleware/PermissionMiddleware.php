@@ -14,12 +14,13 @@ class PermissionMiddleware
     {
         if (app('auth')->guest()) {
             $this->theme($request);
+
             throw UnauthorizedException::notLoggedIn();
         }
 
-        $permissions = is_array($permission)
+        $permissions = \is_array($permission)
         ? $permission
-        : explode('|', $permission);
+        : \explode('|', $permission);
 
         foreach ($permissions as $permission) {
             if (app('auth')->user()->can($permission)) {
@@ -28,12 +29,13 @@ class PermissionMiddleware
         }
 
         $this->theme($request);
+
         throw UnauthorizedException::forPermissions($permissions);
     }
 
     protected function theme($request)
     {
-        $route = $request->route();
+        $route  = $request->route();
         $action = $route->getActionName();
         $this->setUpThemeFromAction($action);
     }

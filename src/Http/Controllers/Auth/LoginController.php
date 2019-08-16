@@ -2,15 +2,13 @@
 
 namespace Karla\Http\Controllers\Auth;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Karla\Routing\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Karla\Routing\Controller;
 
 class LoginController extends Controller
 {
-    protected $maxAttempts  = 5;
-    protected $decayMinutes = 10;
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -23,6 +21,8 @@ class LoginController extends Controller
      */
 
     use AuthenticatesUsers;
+    protected $maxAttempts  = 5;
+    protected $decayMinutes = 10;
 
     /**
      * Where to redirect users after login.
@@ -39,15 +39,16 @@ class LoginController extends Controller
     /**
      * Get the throttle key for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return string
      */
     protected function throttleKey(Request $request)
     {
-        if (config('auth.throttle_key') == 'ip') {
+        if ('ip' == config('auth.throttle_key')) {
             return $request->ip();
-        } else {
-            return Str::lower($request->input($this->username())) . '|' . $request->ip();
         }
+
+        return Str::lower($request->input($this->username())) . '|' . $request->ip();
     }
 }

@@ -70,7 +70,7 @@ trait UserTrait
                 $results[$role][$id]['customers'] = $users;
             }
 
-            $results['users'] = array_merge($results['users'], array_keys($users));
+            $results['users'] = \array_merge($results['users'], \array_keys($users));
         }
 
         return $results;
@@ -96,9 +96,7 @@ trait UserTrait
     {
         $user = $this->getUserById($user_id);
 
-        $users = $this->getUserParentsLoop($user->parent_id);
-
-        return $users;
+        return $this->getUserParentsLoop($user->parent_id);
     }
 
     protected function getUserParentsLoop($parent_id, &$users = [])

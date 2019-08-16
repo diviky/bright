@@ -23,7 +23,7 @@ trait ViewTrait
             $class           = 'render-' . Str::slug($url);
             $params['class'] = '.' . $class;
 
-            $action = '/' !== substr($url, 0, 1) ? $this->route($url) : url($url);
+            $action = '/' !== \substr($url, 0, 1) ? $this->route($url) : url($url);
 
             $start          = '<form role="krender" class="' . $class . '" method="' . $method . '" action="' . $action . '">';
             $form['start']  = $start . $inputs . csrf_field();
@@ -40,7 +40,7 @@ trait ViewTrait
 
     public function share($key, $value = null)
     {
-        if (is_array($key)) {
+        if (\is_array($key)) {
             foreach ($key as $k => $v) {
                 View::share($k, $v);
             }

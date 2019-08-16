@@ -42,14 +42,14 @@ class SuccessLogin
             'id'         => Str::uuid(),
             'user_id'    => $user->id,
             'ip'         => $ip,
-            'ips'        => implode(',', $this->request->getClientIps()),
+            'ips'        => \implode(',', $this->request->getClientIps()),
             'host'       => $this->request->getHost(),
             'user_agent' => $user_agent,
             'created_at' => carbon(),
             'status'     => 1,
         ];
 
-        $values = array_merge($values, $this->getDeviceDetails($ip, $user_agent));
+        $values = \array_merge($values, $this->getDeviceDetails($ip, $user_agent));
 
         $this->db->table('auth_login_history')->insert($values);
     }

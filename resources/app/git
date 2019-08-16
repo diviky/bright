@@ -1,0 +1,16 @@
+#!/bin/bash
+
+git reset --hard 
+git pull
+
+base=${PWD}/../
+
+rm -rf storage/app && ln -s ${base}storage/app ./storage/app
+
+chmod 777 storage
+chmod 777 bootstrap
+chmod 777 bootstrap/cache
+find storage -type d -exec chmod 777 {} \;
+
+sh ./optimize
+php artisan firewall:updategeoip

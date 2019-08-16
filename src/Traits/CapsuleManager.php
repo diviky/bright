@@ -14,7 +14,32 @@ trait CapsuleManager
      *
      * @var \Illuminate\Container\Container
      */
-    protected $app = null;
+    protected $app;
+
+    /**
+     * magic method to get property.
+     *
+     * @param string $key value to get
+     *
+     * @return bool
+     */
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * magic method to get property.
+     *
+     * @param string $key   value to get
+     * @param mixed  $value
+     *
+     * @return bool
+     */
+    public function __set($key, $value)
+    {
+        return $this->set($key, $value);
+    }
 
     /**
      * Make this capsule instance available globally.
@@ -46,18 +71,6 @@ trait CapsuleManager
     public function setContainer(Container $app)
     {
         $this->app = $app;
-    }
-
-    /**
-     * magic method to get property.
-     *
-     * @param string $key value to get
-     *
-     * @return bool
-     */
-    public function __get($key)
-    {
-        return $this->get($key);
     }
 
     /**
@@ -107,18 +120,6 @@ trait CapsuleManager
     }
 
     /**
-     * magic method to get property.
-     *
-     * @param string $key value to get
-     *
-     * @return bool
-     */
-    public function __set($key, $value)
-    {
-        return $this->set($key, $value);
-    }
-
-    /**
      * Get / set the specified configuration value.
      *
      * If an array is passed as the key, we will assume you want to set an array of values.
@@ -126,7 +127,7 @@ trait CapsuleManager
      * @param array|string $key
      * @param mixed        $default
      *
-     * @return mixed|\Illuminate\Config\Repository
+     * @return \Illuminate\Config\Repository|mixed
      */
     public function config($key = null, $default = null)
     {

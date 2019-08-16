@@ -15,16 +15,16 @@ class Sms extends Capsule
     {
         $config = $this->config('sms');
 
-        $tags = (is_array($data['tags'])) ? $data['tags'] : [];
+        $tags = (\is_array($data['tags'])) ? $data['tags'] : [];
 
         $tags['sitename'] = config('app.name');
 
         if ($data['template']) {
-            $name = strtolower($data['template']);
-            $name = str_replace(['.txt'], '', $name);
+            $name = \strtolower($data['template']);
+            $name = \str_replace(['.txt'], '', $name);
             $from = $config['from_list'];
 
-            if (is_array($from) && $from[$name]) {
+            if (\is_array($from) && $from[$name]) {
                 $data['from'] = $from[$name];
             }
 
@@ -65,7 +65,7 @@ class Sms extends Capsule
         $provider  = $config['provider'];
         $providers = $config['providers'];
         $config    = $providers[$provider];
-        $config    = array_merge(['from' => $data['from']], $config);
+        $config    = \array_merge(['from' => $data['from']], $config);
         $driver    = $config['driver'];
 
         try {
@@ -92,48 +92,15 @@ class Sms extends Capsule
         return false;
     }
 
-    private function formatMobileNumber($mobile, $blacklist = true)
-    {
-        if (empty($mobile)) {
-            return [];
-        }
-
-        if (!is_array($mobile)) {
-            if (preg_match('/,[^\S]*/', $mobile)) {
-                $mobile = explode(',', $mobile);
-            } else {
-                $mobile = [$mobile];
-            }
-        }
-
-        $mobile = array_map('trim', $mobile);
-
-        if ($blacklist) {
-            $mobile = $this->checkBlackList($mobile);
-        }
-
-        return $mobile;
-    }
-
-    private function checkBlackList($mobiles = [])
-    {
-        $blacklist = $this->get('db')
-            ->table('addon_sms_blacklist')
-            ->whereIn('mobile', $mobiles)
-            ->pluck('mobile');
-
-        return array_diff($mobiles, $blacklist);
-    }
-
     public function getContent($filename)
     {
         $message = null;
-        $path    = resource_path('email').'/en/';
+        $path    = resource_path('email') . '/en/';
 
-        $filename = $path.$filename;
+        $filename = $path . $filename;
 
-        if (file_exists($filename)) {
-            $message = file_get_contents($filename);
+        if (\file_exists($filename)) {
+            $message = \file_get_contents($filename);
         }
 
         return $message;
@@ -141,9 +108,9 @@ class Sms extends Capsule
 
     public function replace($vars = [], $message = [])
     {
-        if (preg_match_all('~\{\$([^{}]+)\}~', $message, $matches) && count($matches[0]) > 0) {
+        if (\preg_match_all('~\{\$([^{}]+)\}~', $message, $matches) && \count($matches[0]) > 0) {
             foreach ($matches[0] as $key => $match) {
-                $message = str_replace($match, $this->find($matches[1][$key], $vars), $message);
+                $message = \str_replace($match, $this->find($matches[1][$key], $vars), $message);
             }
         }
 
@@ -152,7 +119,7 @@ class Sms extends Capsule
 
     public function find($string, $vars)
     {
-        $str = explode('.', $string);
+        $str = \explode('.', $string);
         foreach ($str as $key) {
             $vars = $vars[$key];
         }
@@ -169,12 +136,45 @@ class Sms extends Capsule
 
         $values               = [];
         $values['sender']     = $data['from'];
-        $values['mobile']     = implode(', ', $data['to']);
+        $values['mobile']     = \implode(', ', $data['to']);
         $values['message']    = $data['message'];
         $values['created_at'] = new Carbon();
         $values['reason']     = $data['reason'];
         $values['status']     = ($status) ? 1 : 0;
 
         $this->get('db')->table('addon_sms_logs')->insert($values);
+    }
+
+    private function formatMobileNumber($mobile, $blacklist = true)
+    {
+        if (empty($mobile)) {
+            return [];
+        }
+
+        if (!\is_array($mobile)) {
+            if (\preg_match('/,[^\S]*/', $mobile)) {
+                $mobile = \explode(',', $mobile);
+            } else {
+                $mobile = [$mobile];
+            }
+        }
+
+        $mobile = \array_map('trim', $mobile);
+
+        if ($blacklist) {
+            $mobile = $this->checkBlackList($mobile);
+        }
+
+        return $mobile;
+    }
+
+    private function checkBlackList($mobiles = [])
+    {
+        $blacklist = $this->get('db')
+            ->table('addon_sms_blacklist')
+            ->whereIn('mobile', $mobiles)
+            ->pluck('mobile');
+
+        return \array_diff($mobiles, $blacklist);
     }
 }

@@ -22,14 +22,14 @@ class Chart extends BaseChart
      */
     public function formatApiDatasets()
     {
-
         return Encoder::encode(
             Collection::make($this->datasets)
                 ->each(function ($dataset) {
-                    $dataset->matchValues(count($this->labels));
+                    $dataset->matchValues(\count($this->labels));
                 })
                 ->map(function ($dataset) {
                     $dataset->options(['labels' => $this->labels]);
+
                     return $dataset->format($this->labels);
                 })
                 ->toArray()
@@ -38,8 +38,6 @@ class Chart extends BaseChart
 
     /**
      * Alias for the formatDatasets() method.
-     *
-     * @return void
      */
     public function api()
     {

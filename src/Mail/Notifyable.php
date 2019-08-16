@@ -18,7 +18,7 @@ trait Notifyable
 
         $from = $this->getMailfrom($user_id) ?: config('app.name');
 
-        $data['subject'] = str_replace(['_sitename_', ':app'], [$from, $from], $data['subject']);
+        $data['subject'] = \str_replace(['_sitename_', ':app'], [$from, $from], $data['subject']);
 
         $mail = (new Mailable())
             ->subject($data['subject'])

@@ -8,7 +8,7 @@ trait Authorizable
 {
     protected function isMatched($ability)
     {
-        list($option, $view) = explode('.', $ability);
+        list($option, $view) = \explode('.', $ability);
 
         $matches = [
             '*',
@@ -27,10 +27,12 @@ trait Authorizable
                     $pivot = $permission->pivot;
                     if ($pivot && $pivot->is_exclude) {
                         $revoke = true;
+
                         break 2;
                     }
 
                     $granted = $permission;
+
                     break 2;
                 }
             }
@@ -49,6 +51,7 @@ trait Authorizable
                     $pivot = $permission->pivot;
                     if ($pivot && $pivot->is_exclude) {
                         $revoke = true;
+
                         break 2;
                     }
                 }
@@ -64,6 +67,7 @@ trait Authorizable
             foreach ($matches as $match) {
                 if (Str::is($permission->name, $match)) {
                     $granted = $permission;
+
                     break 2;
                 }
             }

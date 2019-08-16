@@ -11,14 +11,14 @@ class RedirectResponse extends BaseRedirectResponse
     /**
      * Flash a piece of data to the session.
      *
-     * @param string|array $key
+     * @param array|string $key
      * @param mixed        $value
      *
      * @return \Illuminate\Http\RedirectResponse
      */
     public function with($key, $value = null)
     {
-        $key = is_array($key) ? $key : [$key => $value];
+        $key = \is_array($key) ? $key : [$key => $value];
 
         foreach ($key as $k => $v) {
             $this->with[$k] = $v;
@@ -48,7 +48,7 @@ class RedirectResponse extends BaseRedirectResponse
         $data             = $this->with;
         $data['redirect'] = $url;
 
-        $this->setContent(json_encode($data));
+        $this->setContent(\json_encode($data));
 
         return $this;
     }

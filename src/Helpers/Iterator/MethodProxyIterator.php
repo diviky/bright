@@ -22,6 +22,6 @@ class MethodProxyIterator extends \IteratorIterator
             $i = $i->getInnerIterator();
         }
 
-        return call_user_func_array([$i, $name], $args);
+        return \call_user_func_array([$i, $name], $args);
     }
 }

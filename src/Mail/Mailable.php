@@ -12,15 +12,15 @@ class Mailable extends BaseMailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    protected $theme;
-    protected $prefix = 'emails.';
-
     /**
      * The number of times the job may be attempted.
      *
      * @var int
      */
     public $tries = 5;
+
+    protected $theme;
+    protected $prefix = 'emails.';
 
     /**
      * Build the message.
@@ -43,7 +43,7 @@ class Mailable extends BaseMailable implements ShouldQueue
     public function view($view, array $data = [])
     {
         $this->view     = $this->prefix . $view;
-        $this->viewData = array_merge($this->viewData, $data);
+        $this->viewData = \array_merge($this->viewData, $data);
 
         return $this;
     }
@@ -59,7 +59,7 @@ class Mailable extends BaseMailable implements ShouldQueue
     public function text($textView, array $data = [])
     {
         $this->textView = $this->prefix . $textView;
-        $this->viewData = array_merge($this->viewData, $data);
+        $this->viewData = \array_merge($this->viewData, $data);
 
         return $this;
     }
@@ -75,7 +75,7 @@ class Mailable extends BaseMailable implements ShouldQueue
     public function markdown($view, array $data = [])
     {
         $this->markdown = $this->prefix . $view;
-        $this->viewData = array_merge($this->viewData, $data);
+        $this->viewData = \array_merge($this->viewData, $data);
 
         return $this;
     }
@@ -109,6 +109,8 @@ class Mailable extends BaseMailable implements ShouldQueue
     /**
      * Set the value of prefix.
      *
+     * @param mixed $prefix
+     *
      * @return self
      */
     public function prefix($prefix)
@@ -123,9 +125,10 @@ class Mailable extends BaseMailable implements ShouldQueue
      *
      * All recipients are stored internally as [['name' => ?, 'address' => ?]]
      *
-     * @param  object|array|string  $address
-     * @param  string|null  $name
-     * @param  string  $property
+     * @param array|object|string $address
+     * @param null|string         $name
+     * @param string              $property
+     *
      * @return $this
      */
     protected function setAddress($address, $name = null, $property = 'to')
@@ -147,14 +150,15 @@ class Mailable extends BaseMailable implements ShouldQueue
     /**
      * Convert the given recipient arguments to an array.
      *
-     * @param  object|array|string  $address
-     * @param  string|null  $name
+     * @param array|object|string $address
+     * @param null|string         $name
+     *
      * @return array
      */
     protected function addressesToArray($address, $name)
     {
-        if (!is_array($address) && !$address instanceof Collection) {
-            $address = is_string($name) ? [['name' => $name, 'email' => $address]] : [$address];
+        if (!\is_array($address) && !$address instanceof Collection) {
+            $address = \is_string($name) ? [['name' => $name, 'email' => $address]] : [$address];
         }
 
         return $address;
@@ -162,42 +166,42 @@ class Mailable extends BaseMailable implements ShouldQueue
 
     protected function format($address, $from = null)
     {
-        if (is_array($address)) {
-            return array_map('trim', $address);
+        if (\is_array($address)) {
+            return \array_map('trim', $address);
         }
 
-        if (!is_string($address)) {
+        if (!\is_string($address)) {
             return $address;
         }
 
         $addresses = [];
-        if (preg_match('/>[^\S]*;/', $address)) {
-            $address = explode(';', $address);
+        if (\preg_match('/>[^\S]*;/', $address)) {
+            $address = \explode(';', $address);
             foreach ($address as $v) {
-                $v     = explode('<', $v);
-                $email = ($v[1]) ? rtrim(trim($v[1]), '>') : $v[0];
+                $v     = \explode('<', $v);
+                $email = ($v[1]) ? \rtrim(\trim($v[1]), '>') : $v[0];
                 $name  = ($v[1]) ? $v[0] : $from;
 
-                $addresses[] = ['email' => trim($email), 'name' => trim($name)];
+                $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
             }
-        } elseif (strstr($address, '|')) {
-            $delim   = (strstr($address, ',')) ? ',' : ';';
-            $address = explode('|', $address);
+        } elseif (\strstr($address, '|')) {
+            $delim   = (\strstr($address, ',')) ? ',' : ';';
+            $address = \explode('|', $address);
             foreach ($address as $v) {
-                $v     = explode($delim, $v);
+                $v     = \explode($delim, $v);
                 $email = $v[1] ?: $v[0];
                 $name  = $v[1] ?: $from;
 
-                $addresses[] = ['email' => trim($email), 'name' => trim($name)];
+                $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
             }
         } else {
-            $address = preg_split("/[,|\n]/", $address);
+            $address = \preg_split("/[,|\n]/", $address);
             foreach ($address as $v) {
-                $v     = explode(';', $v);
+                $v     = \explode(';', $v);
                 $email = $v[1] ?: $v[0];
                 $name  = $v[1] ?: $from;
 
-                $addresses[] = ['email' => trim($email), 'name' => trim($name)];
+                $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
             }
         }
 

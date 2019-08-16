@@ -11,8 +11,8 @@ class SelectIterator implements Iterator
 {
     protected $position      = 0;
     protected $totalPosition = 0;
-    protected $next          = null;
-    protected $results       = null;
+    protected $next;
+    protected $results;
     protected $builder;
     protected $page = 1;
     protected $callback;
@@ -27,40 +27,11 @@ class SelectIterator implements Iterator
     {
         $chunkSize = (int) $chunkSize;
         if ($chunkSize < 0) {
-            throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; $chunkSize given");
+            throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; ${chunkSize} given");
         }
         $this->chunkSize = $chunkSize;
         $this->builder   = $builder;
         $this->callback  = $callback;
-    }
-
-    protected function reset()
-    {
-        $this->position      = 0;
-        $this->totalPosition = 0;
-        $this->next          = null;
-        $this->page          = 1;
-    }
-
-    protected function query()
-    {
-        $rows = $this->builder
-            ->forPage($this->page, $this->chunkSize)
-            ->get();
-
-        if ($rows->count() > 0) {
-            $this->next = true;
-        }
-
-        if ($this->callback) {
-            $rows->transform($this->callback);
-        }
-
-        ++$this->page;
-        $this->position = 0;
-        $this->results  = $rows->toArray();
-
-        unset($rows);
     }
 
     public function rewind()
@@ -91,10 +62,39 @@ class SelectIterator implements Iterator
 
     public function valid()
     {
-        if (!is_array($this->results)) {
+        if (!\is_array($this->results)) {
             return false;
         }
 
         return isset($this->results[$this->position]) && $this->next;
+    }
+
+    protected function reset()
+    {
+        $this->position      = 0;
+        $this->totalPosition = 0;
+        $this->next          = null;
+        $this->page          = 1;
+    }
+
+    protected function query()
+    {
+        $rows = $this->builder
+            ->forPage($this->page, $this->chunkSize)
+            ->get();
+
+        if ($rows->count() > 0) {
+            $this->next = true;
+        }
+
+        if ($this->callback) {
+            $rows->transform($this->callback);
+        }
+
+        ++$this->page;
+        $this->position = 0;
+        $this->results  = $rows->toArray();
+
+        unset($rows);
     }
 }

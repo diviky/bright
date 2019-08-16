@@ -15,8 +15,6 @@ use Karla\Routing\Controller;
 
 class RegisterController extends Controller
 {
-    protected $role = 'default';
-
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -31,6 +29,7 @@ class RegisterController extends Controller
     use RegistersUsers;
     use Notifiable;
     use Token;
+    protected $role = 'default';
 
     /**
      * Where to redirect users after registration.
@@ -49,9 +48,9 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name'     => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             //'username' => 'required|string|regex:([0-9A-Za-z]+)|max:50|unique:auth_users',
-            'mobile'   => [
+            'mobile' => [
                 'required',
                 'number',
                 'unique:auth_users,username',
@@ -109,7 +108,7 @@ class RegisterController extends Controller
         return [
             'redirect' => $next,
             'status'   => 'OK',
-            'message'  => _('Registration success. Redirecting..'),
+            'message'  => \_('Registration success. Redirecting..'),
         ];
     }
 }

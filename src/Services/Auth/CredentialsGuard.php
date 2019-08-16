@@ -21,7 +21,7 @@ class CredentialsGuard implements Guard
 
     public function user()
     {
-        if (!is_null($this->user)) {
+        if (!\is_null($this->user)) {
             return $this->user;
         }
 
@@ -31,11 +31,11 @@ class CredentialsGuard implements Guard
 
         $user = $this->provider->retrieveByCredentials($credentials);
 
-        if (is_null($user)) {
+        if (\is_null($user)) {
             return;
         }
 
-        if ($user->status != 1) {
+        if (1 != $user->status) {
             return;
         }
 

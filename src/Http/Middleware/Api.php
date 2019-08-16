@@ -28,19 +28,6 @@ class Api
         return $this->respond($response);
     }
 
-    protected function respond($response)
-    {
-        $original = $response->getOriginalContent();
-        if (is_array($original)) {
-            $code = $original['code'];
-            if ($code) {
-                $response->setStatusCode($code, $original['message']);
-            }
-        }
-
-        return $response;
-    }
-
     public function addCorsHeaders($response)
     {
         $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
@@ -48,6 +35,19 @@ class Api
         $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('Access-Control-Max-Age', 1000);
         $response->headers->set('Access-Control-Allow-Credentials', 'true');
+
+        return $response;
+    }
+
+    protected function respond($response)
+    {
+        $original = $response->getOriginalContent();
+        if (\is_array($original)) {
+            $code = $original['code'];
+            if ($code) {
+                $response->setStatusCode($code, $original['message']);
+            }
+        }
 
         return $response;
     }

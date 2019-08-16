@@ -16,36 +16,6 @@ class MySqlConnection extends LaravelMySqlConnection
     const ATTEMPTS_COUNT = 3;
 
     /**
-     * Run a SQL statement.
-     *
-     * @param string   $query
-     * @param array    $bindings
-     * @param \Closure $callback
-     *
-     * @return mixed
-     *
-     * @throws \Illuminate\Database\QueryException
-     */
-    protected function runQueryCallback($query, $bindings, Closure $callback)
-    {
-        $attempts_count = self::ATTEMPTS_COUNT;
-
-        for ($attempt = 1; $attempt <= $attempts_count; ++$attempt) {
-            try {
-                return parent::runQueryCallback($query, $bindings, $callback);
-            } catch (QueryException $e) {
-                if ($attempt >= $attempts_count) {
-                    throw $e;
-                }
-
-                if (!$this->causedByDeadlock($e)) {
-                    throw $e;
-                }
-            }
-        }
-    }
-
-    /**
      * Get a new query builder instance.
      *
      * @return \Karla\Database\Query\Builder
@@ -53,28 +23,19 @@ class MySqlConnection extends LaravelMySqlConnection
     public function query()
     {
         return new QueryBuilder(
-            $this, $this->getQueryGrammar(), $this->getPostProcessor()
+            $this,
+            $this->getQueryGrammar(),
+            $this->getPostProcessor()
         );
-    }
-
-    /**
-     * Get the default query grammar instance.
-     *
-     * @return \Karla\Database\Grammar
-     */
-    protected function getDefaultQueryGrammar()
-    {
-        $grammar = new MySqlGrammar();
-        $grammar->setConfig($this->config['karla']);
-
-        return $this->withTablePrefix($grammar);
     }
 
     /**
      * Execute an SQL statement and return the boolean result.
      *
-     * @param  string  $query
-     * @param  array   $bindings
+     * @param string $query
+     * @param array  $bindings
+     * @param mixed  $useReadPdo
+     *
      * @return bool
      */
     public function statement($query, $bindings = [], $useReadPdo = false)
@@ -98,4 +59,46 @@ class MySqlConnection extends LaravelMySqlConnection
         });
     }
 
+    /**
+     * Run a SQL statement.
+     *
+     * @param string   $query
+     * @param array    $bindings
+     * @param \Closure $callback
+     *
+     * @throws \Illuminate\Database\QueryException
+     *
+     * @return mixed
+     */
+    protected function runQueryCallback($query, $bindings, Closure $callback)
+    {
+        $attempts_count = self::ATTEMPTS_COUNT;
+
+        for ($attempt = 1; $attempt <= $attempts_count; ++$attempt) {
+            try {
+                return parent::runQueryCallback($query, $bindings, $callback);
+            } catch (QueryException $e) {
+                if ($attempt >= $attempts_count) {
+                    throw $e;
+                }
+
+                if (!$this->causedByDeadlock($e)) {
+                    throw $e;
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the default query grammar instance.
+     *
+     * @return \Karla\Database\Grammar
+     */
+    protected function getDefaultQueryGrammar()
+    {
+        $grammar = new MySqlGrammar();
+        $grammar->setConfig($this->config['karla']);
+
+        return $this->withTablePrefix($grammar);
+    }
 }
