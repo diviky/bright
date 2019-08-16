@@ -10,7 +10,7 @@ class ViewServiceProvider extends BaseServiceProvider
     /**
      * Register the application services.
      */
-    public function boot()
+    public function register()
     {
         $this->registerFactory();
     }
