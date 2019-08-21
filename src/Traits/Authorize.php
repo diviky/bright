@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 
 trait Authorize
 {
-    protected function getRouteFromAction($action): string
+    protected function getRouteFromAction($action): array
     {
         $action     = \explode('@', $action);
         $method     = \end($action);
@@ -21,23 +21,31 @@ trait Authorize
         if ($mappings && \is_array($mappings[$namespace]) && isset($mappings[$namespace][$component])) {
             $mapping = $mappings[$namespace][$component];
 
-            return \is_array($mapping) ? $mapping[0] : $mapping;
+            return \is_array($mapping) ? array_unique($mapping) : [$mapping];
         }
 
         if ($mappings && isset($mappings[$component]) && !\is_array($mappings[$component])) {
-            return $mappings[$component];
+            $mapping = $mappings[$component];
+
+            return \is_array($mapping) ? array_unique($mapping) : [$mapping];
         }
 
-        return $component . '.' . $method;
+        return [$component . '.' . $method];
     }
 
-    protected function isAuthorized($action)
+    protected function isAuthorized($action): bool
     {
-        $routeName = $this->getRouteFromAction($action);
+        $route_names = $this->getRouteFromAction($action);
 
         // Check user has permission
         $user = Auth::user();
-        if ($user && !$user->can($routeName)) {
+        if ($user) {
+            foreach ($route_names as $route) {
+                if ($user->can($route)) {
+                    return true;
+                }
+            }
+
             return false;
         }
 

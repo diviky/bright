@@ -18,7 +18,7 @@ trait Timestamps
      *
      * @return \Illuminate\Support\Carbon
      */
-    public function freshTimestamp()
+    protected function freshTimestamp()
     {
         return new Carbon();
     }

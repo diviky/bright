@@ -1,6 +1,6 @@
 <?php
 
-namespace Mobtexting\Common\Traits;
+namespace Karla\Http\Controllers\Auth\Traits;
 
 trait UserTrait
 {

@@ -2,19 +2,21 @@
 
 namespace Karla\Database\Query;
 
-use Illuminate\Database\Query\Builder as LaravelBuilder;
 use Karla\Database\Karla;
-use Karla\Database\Traits\Build;
-use Karla\Database\Traits\Cachable;
-use Karla\Database\Traits\Eventable;
-use Karla\Database\Traits\Filter;
-use Karla\Database\Traits\Ordering;
-use Karla\Database\Traits\Outfile;
 use Karla\Database\Traits\Raw;
+use Karla\Database\Traits\Build;
+use Karla\Database\Traits\Filter;
+use Karla\Database\Traits\Paging;
 use Karla\Database\Traits\Remove;
 use Karla\Database\Traits\Tables;
+use Karla\Database\Traits\Outfile;
+use Karla\Database\Traits\Cachable;
+use Karla\Database\Traits\Ordering;
+use Karla\Database\Traits\Eventable;
 use Karla\Database\Traits\Timestamps;
+use Karla\Database\Traits\SoftDeletes;
 use Karla\Helpers\Iterator\SelectIterator;
+use Illuminate\Database\Query\Builder as LaravelBuilder;
 
 class Builder extends LaravelBuilder
 {
@@ -30,6 +32,8 @@ class Builder extends LaravelBuilder
     use Filter;
     use Remove;
     use Tables;
+    use SoftDeletes;
+    use Paging;
 
     /**
      * {@inheritdoc}
@@ -49,61 +53,6 @@ class Builder extends LaravelBuilder
         $this->atomicEvent('select');
 
         return $this->cacheGet($columns);
-    }
-
-    public function softDelete($id = null, $column = 'id', $updated_at = true)
-    {
-        if ($id) {
-            $this->where($column, $id);
-        }
-
-        $time = $this->freshTimestamp();
-
-        $values = [
-            'deleted_at' => $time,
-        ];
-
-        if ($updated_at) {
-            $values['updated_at'] = $time;
-        }
-
-        return $this->update($values);
-    }
-
-    public function noTrash()
-    {
-        $this->where('deleted_at', null);
-
-        return $this;
-    }
-
-    public function onlyTrash()
-    {
-        $this->where('deleted_at', '<>', null);
-
-        return $this;
-    }
-
-    public function paging($perPage = 25, $columns = ['*'], $pageName = 'page', $page = null)
-    {
-        $perPage = \is_null($perPage) ? 25 : $perPage;
-
-        if (\count($this->tables) > 0) {
-            $rows = $this->paginateComplex($perPage, $columns, $pageName, $page);
-        } else {
-            $rows = $this->paginate($perPage, $columns, $pageName, $page);
-        }
-
-        $rows->serial = $rows->firstItem();
-
-        $i = $rows->perPage() * ($rows->currentPage() - 1);
-        $rows->transform(function ($row) use (&$i) {
-            $row->serial = ++$i;
-
-            return $row;
-        });
-
-        return $rows;
     }
 
     public function statement($sql, $bindings = [], $useReadPdo = false)
@@ -132,7 +81,7 @@ class Builder extends LaravelBuilder
                     return $this->connection->statement($sql, $bindings, true);
                 }
 
-                    return $this->connection->select($sql, $bindings);
+                return $this->connection->select($sql, $bindings);
 
                 break;
             case 'load':

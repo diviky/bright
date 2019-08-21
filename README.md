@@ -19,7 +19,13 @@ sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query
 add in kernal.php route middleware
 ```php
 
-'auth.verified' => \Karla\Http\Controllers\Auth\Middleware\IsUserActivate::class,
+'auth.verified'      => \Karla\Http\Controllers\Auth\Middleware\IsUserActivated::class,
+'firewall.blacklist' => \PragmaRX\Firewall\Middleware\FirewallBlacklist::class,
+'firewall.whitelist' => \PragmaRX\Firewall\Middleware\FirewallWhitelist::class,
+'firewall.attacks'   => \PragmaRX\Firewall\Middleware\BlockAttacks::class,
+'permission'         => \Karla\Http\Controllers\Auth\Middleware\PermissionMiddleware::class,
+'role'               => \Karla\Http\Controllers\Auth\Middleware\RoleMiddleware::class,
+'theme'              => \Karla\Http\Middleware\ThemeMiddleware::class,
 ```
 
 ## Config changes
@@ -41,13 +47,6 @@ Replace passwords array with below
             'expire' => 60,
         ],
     ],
-```
-
-Add in providers array in app.php
-```php
-    //app.php
-    
-    Karla\View\ViewServiceProvider::class,
 ```
 
 ###Sorting task
@@ -159,6 +158,88 @@ $rows = DB::table('users')
 $rows = DB::table('users')
     ->whereDateBetween('created_at', [date(), date()])
     ->get();
+
+```
+
+##### Get Trashed && Non Trashed
+
+Get non deleted items
+
+```php
+
+$rows = DB::table('users')
+    ->withOutTrashed()
+    ->get();
+
+```
+
+Get only deleted items
+```php
+
+$rows = DB::table('users')
+    ->onlyTrashed()
+    ->get();
+
+```
+
+##### Raw Expressions
+
+```php
+
+$rows = DB::table('orders')
+    ->groupByRaw(['username']);
+    ->groupByRaw('price * ? as price_with_tax', [1.0825]);
+    ->get()
+```
+
+```php
+
+$rows = DB::table('orders')
+    ->selectRaw(['max(price)', 'order_id']);
+    ->groupByRaw('price * ? as price_with_tax', [1.0825]);
+    ->get()
+```
+
+```php
+
+$rows = DB::table('orders')
+    ->selectRaw(['max(price)', 'order_id']);
+    ->whereBetweenRaw('max(price)', [1.0825, 2]);
+    ->get()
+```
+
+##### Ordering
+
+```php
+
+$rows = DB::table('orders')
+    ->ordering($data, ['order_id' => 'desc']);
+    ->groupByRaw('price * ? as price_with_tax', [1.0825]);
+    ->get()
+```
+
+##### Timestamps
+
+Set the timestamps 'created_at` and `updated_at` for insert and `updated_at` for update
+
+```php
+    $result = DB::table('orders')
+        ->timestamps()
+        ->insert($values)
+
+```
+
+```php
+    $result = DB::table('orders')
+        ->timestamps()
+        ->update($values)
+
+```
+
+```php
+    $result = DB::table('orders')
+        ->timestamps(false)
+        ->update($values)
 
 ```
 
