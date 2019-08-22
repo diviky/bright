@@ -37,6 +37,10 @@ trait Authorize
     {
         $route_names = $this->getRouteFromAction($action);
 
+        if (!is_array($route_names)) {
+            $route_names = [$route_names];
+        }
+
         // Check user has permission
         $user = Auth::user();
         if ($user) {
