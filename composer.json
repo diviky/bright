@@ -30,12 +30,9 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "sentry/sentry-laravel": "^1.1",
         "willdurand/geocoder": "^4.2",
-        "pragmarx/firewall": "^2.2",
-        "pragmarx/google2fa-laravel": "^0.2"
+        "pragmarx/firewall": "^2.2"
     },
     "require-dev": {
-        "orchestra/testbench": "~3.3.0|~3.4.2|^3.5.0",
-        "phpunit/phpunit": "^5.7|6.2|^7.0",
         "xethron/migrations-generator": "^2.0",
         "bpocallaghan/generators": "^5.0"
     },

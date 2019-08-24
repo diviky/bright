@@ -9,7 +9,7 @@ trait Tables
     protected $tables      = [];
     protected $tableTotals = [];
 
-    public function tables($tables)
+    public function tables($tables): self
     {
         \array_shift($tables);
         $this->tables = $tables;

@@ -39,11 +39,5 @@ return [
         'Illuminate\Mail\Events\MessageSending' => [
             Karla\Listeners\EmailLogger::class,
         ],
-        'Illuminate\Auth\Events\Login'          => [
-            Karla\Listeners\SuccessLogin::class,
-        ],
-        'Illuminate\Auth\Events\Failed'         => [
-            Karla\Listeners\FailedLogin::class,
-        ],
     ],
 ];

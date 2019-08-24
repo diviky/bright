@@ -23,29 +23,29 @@ trait SoftDeletes
         return $this->update($values);
     }
 
-    public function noTrash()
+    public function noTrash(): self
     {
         return $this->withOutTrashed();
     }
 
-    public function onlyTrash()
+    public function onlyTrash(): self
     {
         return $this->onlyTrashed();
     }
 
-    public function onlyTrashed()
+    public function onlyTrashed(): self
     {
         $this->where('deleted_at', '<>', null);
 
         return $this;
     }
 
-    public function withTrashed()
+    public function withTrashed(): self
     {
         return $this;
     }
 
-    public function withOutTrashed()
+    public function withOutTrashed(): self
     {
         $this->whereNull('deleted_at');
 

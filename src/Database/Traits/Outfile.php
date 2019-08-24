@@ -42,7 +42,7 @@ trait Outfile
         return $this->statement($sql);
     }
 
-    protected function outLoop($file = null, $count = 10000, $options = [])
+    protected function outLoop($file = null, $count = 10000, $options = []): string
     {
         $file          = $file ?: \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
         $this->outpath = $file;
@@ -60,7 +60,7 @@ trait Outfile
         return $file;
     }
 
-    protected function outFile($file = null, $options = [])
+    protected function outFile($file = null, $options = []): string
     {
         $file          = $file ?: \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
         $this->outpath = $file;

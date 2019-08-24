@@ -23,7 +23,7 @@ trait Timestamps
         return new Carbon();
     }
 
-    public function timestamps($allow = true)
+    public function timestamps($allow = true): self
     {
         $this->timestamps = $allow;
 
@@ -33,7 +33,7 @@ trait Timestamps
     /**
      * {@inheritdoc}
      */
-    protected function setTimeStamps(array $values, $force = false)
+    protected function setTimeStamps(array $values, $force = false): array
     {
         if ($this->usesTimestamps() || $force) {
             $time = $this->freshTimestamp();
@@ -45,7 +45,7 @@ trait Timestamps
         return $values;
     }
 
-    protected function setTimeStamp(array $values, $force = false)
+    protected function setTimeStamp(array $values, $force = false): array
     {
         if ($this->usesTimestamps() || $force) {
             $time                 = $this->freshTimestamp();
@@ -60,7 +60,7 @@ trait Timestamps
      *
      * @return bool
      */
-    protected function usesTimestamps()
+    protected function usesTimestamps(): bool
     {
         return $this->timestamps;
     }

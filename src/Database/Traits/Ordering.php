@@ -10,9 +10,9 @@ trait Ordering
      * @param array &$data
      * @param mixed $ordering
      *
-     * @return array
+     * @return self
      */
-    public function ordering($data = [], $ordering = [])
+    public function ordering($data = [], $ordering = []): self
     {
         if (isset($data['sort'])) {
             if (empty($data['order'])) {

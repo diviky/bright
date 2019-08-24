@@ -3,12 +3,13 @@
 namespace Karla\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
-use Karla\Http\Controllers\Auth\Models\Activation;
-use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Notifications\SendActivationToken;
 use Karla\Routing\Controller;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\Notifiable;
+use Karla\Notifications\SendActivationToken;
+use Karla\Http\Controllers\Auth\Traits\Token;
+use Karla\Http\Controllers\Auth\Models\Activation;
 
 class ActivationController extends Controller
 {
@@ -22,8 +23,9 @@ class ActivationController extends Controller
         }
 
         $token = $request->input('token');
+        $user = user();
 
-        if (1 == auth()->user()->status) {
+        if (1 == $user->status) {
             return [
                 'status'   => 'OK',
                 'message'  => 'Your account is already activated',
@@ -32,7 +34,7 @@ class ActivationController extends Controller
         }
 
         $activation = Activation::where('token', $token)
-            ->where('user_id', auth()->user()->id)
+            ->where('user_id', $user->id)
             ->first();
 
         if (empty($activation)) {
@@ -41,6 +43,8 @@ class ActivationController extends Controller
                 'message' => 'Invalid activation key.',
             ];
         }
+
+        event(new Verified($user));
 
         Auth::user()->status = 1;
         Auth::user()->save();
