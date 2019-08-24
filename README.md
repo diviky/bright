@@ -18,14 +18,17 @@ sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query
 
 add in kernal.php route middleware
 ```php
+// $middleware
+    \Karla\Http\Middleware\PreflightResponse::class,
 
+// $routeMiddleware
 'auth.verified'      => \Karla\Http\Controllers\Auth\Middleware\IsUserActivated::class,
-'firewall.blacklist' => \PragmaRX\Firewall\Middleware\FirewallBlacklist::class,
-'firewall.whitelist' => \PragmaRX\Firewall\Middleware\FirewallWhitelist::class,
-'firewall.attacks'   => \PragmaRX\Firewall\Middleware\BlockAttacks::class,
 'permission'         => \Karla\Http\Controllers\Auth\Middleware\PermissionMiddleware::class,
 'role'               => \Karla\Http\Controllers\Auth\Middleware\RoleMiddleware::class,
 'theme'              => \Karla\Http\Middleware\ThemeMiddleware::class,
+'accept'             => \Karla\Http\Middleware\Api::class,
+'ajax'               => \Karla\Http\Middleware\Ajax::class,
+
 ```
 
 ## Config changes

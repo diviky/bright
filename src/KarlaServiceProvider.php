@@ -5,7 +5,6 @@ namespace Karla;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\ServiceProvider;
 use Karla\Console\Commands\GeoipUpdate;
 use Karla\Extensions\AuthTokenProvider;
 use Karla\Extensions\CredentialsProvider;
@@ -15,6 +14,7 @@ use Karla\Routing\Resolver;
 use Karla\Services\Auth\AccessTokenGuard;
 use Karla\Services\Auth\AuthTokenGuard;
 use Karla\Services\Auth\CredentialsGuard;
+use Karla\Support\ServiceProvider;
 use Karla\Traits\Provider;
 
 class KarlaServiceProvider extends ServiceProvider
@@ -27,9 +27,10 @@ class KarlaServiceProvider extends ServiceProvider
         $this->macros();
         $this->validates();
 
-        $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
         $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
         $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
+
+        $this->replaceConfigRecursive($this->path() . '/config/auth.php', 'auth', true);
 
         $this->loadMigrationsFrom($this->path() . '/database/migrations/');
         $this->loadViewsFrom($this->path() . '/resources/views/', 'karla');
@@ -45,6 +46,9 @@ class KarlaServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+        $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
+
+        $this->registerMiddlewares();
         $this->redirect();
         $this->auth();
         $this->app->bind('Illuminate\Routing\Contracts\ControllerDispatcher', 'Karla\Routing\ControllerDispatcher');
@@ -77,8 +81,6 @@ class KarlaServiceProvider extends ServiceProvider
     protected function console()
     {
         $this->publishes([
-            $this->path() . '/config/app.php'        => config_path('app.php'),
-            $this->path() . '/config/auth.php'       => config_path('auth.php'),
             $this->path() . '/config/charts.php'     => config_path('charts.php'),
             $this->path() . '/config/permission.php' => config_path('permission.php'),
             $this->path() . '/config/karla.php'      => config_path('karla.php'),
@@ -142,5 +144,28 @@ class KarlaServiceProvider extends ServiceProvider
                 }
             }
         }
+    }
+
+    protected function registerMiddlewares()
+    {
+        $router = $this->app['router'];
+
+        $router->aliasMiddleware('permission', \Karla\Http\Controllers\Auth\Middleware\PermissionMiddleware::class);
+        $router->aliasMiddleware('role', \Karla\Http\Controllers\Auth\Middleware\RoleMiddleware::class);
+        $router->aliasMiddleware('theme', \Karla\Http\Middleware\ThemeMiddleware::class);
+        $router->aliasMiddleware('accept', \Karla\Http\Middleware\Api::class);
+        $router->aliasMiddleware('ajax', \Karla\Http\Middleware\Ajax::class);
+        $router->aliasMiddleware('auth.verified', \Karla\Http\Controllers\Auth\Middleware\IsUserActivated::class);
+        $router->aliasMiddleware('preflight', \Karla\Http\Middleware\PreflightResponse::class);
+
+        $router->pushMiddlewareToGroup('web', 'ajax');
+        $router->pushMiddlewareToGroup('api', 'accept');
+        $router->pushMiddlewareToGroup('rest', 'accept');
+
+        $router->pushMiddlewareToGroup('rest', 'auth:api,token,credentials');
+
+        $router->pushMiddlewareToGroup('rest', 'preflight');
+        $router->pushMiddlewareToGroup('api', 'preflight');
+        $router->pushMiddlewareToGroup('web', 'preflight');
     }
 }

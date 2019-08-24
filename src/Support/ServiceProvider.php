@@ -12,10 +12,35 @@ class ServiceProvider extends LaravelServiceProvider
      * @param string $path
      * @param string $key
      */
-    protected function mergeConfigRecursive($path, $key)
+    protected function mergeConfigRecursive($path, $key, $force = false)
     {
         $config = $this->app['config']->get($key, []);
 
-        $this->app['config']->set($key, \array_merge_recursive(require $path, $config));
+        if ($force) {
+            $config = \array_merge_recursive($config, require $path);
+        } else {
+            $config = \array_merge_recursive(require $path, $config);
+        }
+
+        $this->app['config']->set($key, $config);
+    }
+
+    /**
+     * Merge the given configuration with the existing configuration.
+     *
+     * @param string $path
+     * @param string $key
+     */
+    protected function replaceConfigRecursive($path, $key, $force = false)
+    {
+        $config = $this->app['config']->get($key, []);
+
+        if ($force) {
+            $config = \array_replace_recursive($config, require $path);
+        } else {
+            $config = \array_replace_recursive(require $path, $config);
+        }
+
+        $this->app['config']->set($key, $config);
     }
 }
