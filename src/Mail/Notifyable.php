@@ -20,18 +20,25 @@ trait Notifyable
 
         $data['subject'] = \str_replace(['_sitename_', ':app'], [$from, $from], $data['subject']);
 
+        $template = $data['template'];
+
         $mail = (new Mailable())
             ->subject($data['subject'])
-            ->with($data['with'])
-            ->markdown($data['template']);
+            ->with($data['with']);
 
         if ($data['cc']) {
             $mail->cc($data['cc']);
         }
 
+        if ($data['prefix']) {
+            $mail->prefix($data['prefix']);
+        }
+
         if ($data['bcc']) {
             $mail->bcc($data['bcc']);
         }
+
+        $mail->markdown($template);
 
         if ($from) {
             $mail->from(config('mail.from.address'), $from);

@@ -21,6 +21,7 @@ class LoginController extends Controller
      */
 
     use AuthenticatesUsers;
+
     protected $maxAttempts  = 5;
     protected $decayMinutes = 10;
 
@@ -33,7 +34,7 @@ class LoginController extends Controller
 
     protected function username()
     {
-        return 'username';
+        return config('auth.columns.username', 'email');
     }
 
     /**

@@ -69,4 +69,14 @@ return [
     |
      */
     'throttle_key' => 'ip',
+
+    // Set columns for username and other
+    'columns'      => [
+        'username' => 'username',
+        'address'  => 'mobile',
+    ],
+
+    'user'         => [
+        'role' => 'default',
+    ],
 ];

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Karla\Http\Controllers\Auth\Traits\Token;
 use Karla\Notifications\SendActivationToken;
 use Karla\Routing\Controller;
@@ -29,7 +30,9 @@ class RegisterController extends Controller
     use RegistersUsers;
     use Notifiable;
     use Token;
-    protected $role = 'default';
+    use ColumnsTrait;
+
+    protected $role;
 
     /**
      * Where to redirect users after registration.
@@ -48,20 +51,15 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:100',
+            'name'     => 'required|string|max:100',
             //'username' => 'required|string|regex:([0-9A-Za-z]+)|max:50|unique:auth_users',
-            'mobile' => [
+            'mobile'   => [
                 'required',
                 'number',
                 'unique:auth_users,username',
             ],
             'password' => 'required|case_diff|numbers|letters|min:6|max:20',
         ]);
-    }
-
-    protected function username()
-    {
-        return 'username';
     }
 
     /**
@@ -94,8 +92,10 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         //Assign a role to user
-        $user->assignRole($this->role);
-        $user->assignOwnRole($this->role);
+        $role = $this->role ?: config('auth.user.role');
+
+        $user->assignRole($role);
+        $user->assignOwnRole($role);
         $user->assignParent();
 
         if (0 == $user->status) {

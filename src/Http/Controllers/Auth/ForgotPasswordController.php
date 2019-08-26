@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Karla\Http\Controllers\Auth\Models\Activation;
+use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Karla\Http\Controllers\Auth\Traits\Token;
 use Karla\Notifications\ForgetPassword;
 use Karla\Routing\Controller;
@@ -17,6 +18,7 @@ use NotificationChannels\Mobtexting\MobtextingChannel;
 class ForgotPasswordController extends Controller
 {
     use Token;
+    use ColumnsTrait;
 
     public function reset(Request $request)
     {
@@ -149,16 +151,6 @@ class ForgotPasswordController extends Controller
         return redirect()->back()
             ->with('status', 'error')
             ->with('message', 'Unable to reset password');
-    }
-
-    protected function username()
-    {
-        return 'username';
-    }
-
-    protected function address()
-    {
-        return 'mobile';
     }
 
     /**
