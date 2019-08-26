@@ -10,11 +10,13 @@ use Illuminate\Notifications\Notifiable;
 use Karla\Notifications\SendActivationToken;
 use Karla\Http\Controllers\Auth\Traits\Token;
 use Karla\Http\Controllers\Auth\Models\Activation;
+use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
 
 class ActivationController extends Controller
 {
     use Notifiable;
     use Token;
+    use ColumnsTrait;
 
     public function activate(Request $request)
     {
@@ -68,7 +70,7 @@ class ActivationController extends Controller
 
         return [
             'status'  => 'OK',
-            'message' => 'Verification code resent to your registered mobile number.',
+            'message' => __('Verification code resent to your registered :username.', ['username' => $this->address()],
         ];
     }
 }

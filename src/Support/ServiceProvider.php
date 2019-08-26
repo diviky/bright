@@ -11,8 +11,10 @@ class ServiceProvider extends LaravelServiceProvider
      *
      * @param string $path
      * @param string $key
+     * @param bool $force
+     * @return void
      */
-    protected function mergeConfigRecursive($path, $key, $force = false)
+    protected function mergeConfigRecursive($path, $key, $force = false): void
     {
         $config = $this->app['config']->get($key, []);
 
@@ -30,8 +32,10 @@ class ServiceProvider extends LaravelServiceProvider
      *
      * @param string $path
      * @param string $key
+     * @param bool $force
+     * @return void
      */
-    protected function replaceConfigRecursive($path, $key, $force = false)
+    protected function replaceConfigRecursive($path, $key, $force = false): void
     {
         $config = $this->app['config']->get($key, []);
 
@@ -39,6 +43,27 @@ class ServiceProvider extends LaravelServiceProvider
             $config = \array_replace_recursive($config, require $path);
         } else {
             $config = \array_replace_recursive(require $path, $config);
+        }
+
+        $this->app['config']->set($key, $config);
+    }
+
+    /**
+     * Merge the given configuration with the existing configuration.
+     *
+     * @param  string  $path
+     * @param  string  $key
+     * @param bool $force
+     * @return void
+     */
+    protected function mergeConfigFrom($path, $key, $force = false): void
+    {
+        $config = $this->app['config']->get($key, []);
+
+        if ($force) {
+            $config = \array_merge($config, require $path);
+        } else {
+            $config = \array_merge(require $path, $config);
         }
 
         $this->app['config']->set($key, $config);

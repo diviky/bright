@@ -13,7 +13,6 @@ use Karla\Http\Controllers\Auth\Traits\Token;
 use Karla\Notifications\ForgetPassword;
 use Karla\Routing\Controller;
 use Karla\User;
-use NotificationChannels\Mobtexting\MobtextingChannel;
 
 class ForgotPasswordController extends Controller
 {
@@ -36,7 +35,7 @@ class ForgotPasswordController extends Controller
             $user->notify(new ForgetPassword($token, $this->notificationVia()));
 
             return [
-                'status'   => 'success',
+                'status'   => 'OK',
                 'message'  => __('Verification code sent to your registered :username.', ['username' => $this->address()]),
                 'redirect' => 'password.verify',
             ];
@@ -51,6 +50,7 @@ class ForgotPasswordController extends Controller
 
         if (\is_null($id)) {
             return [
+                'status'   => 'ERROR',
                 'message'  => 'Invalid request',
                 'redirect' => 'password.reset',
             ];
@@ -60,6 +60,7 @@ class ForgotPasswordController extends Controller
 
         if (\is_null($activation)) {
             return [
+                'status'   => 'ERROR',
                 'message'  => 'Invalid request',
                 'redirect' => 'password.reset',
             ];
@@ -70,11 +71,8 @@ class ForgotPasswordController extends Controller
         $user->notify(new ForgetPassword($activation->token, $this->notificationVia()));
 
         return [
-            'status'  => 'success',
+            'status'  => 'OK',
             'message' => __('Verification code resent to your registered  :username.', ['username' => $this->address()]),
-            'next'    => [
-                'back' => true,
-            ],
         ];
     }
 
@@ -84,6 +82,7 @@ class ForgotPasswordController extends Controller
 
         if (\is_null($id)) {
             return [
+                'status'   => 'ERROR',
                 'message'  => 'Invalid request',
                 'redirect' => 'password.reset',
             ];
@@ -105,9 +104,8 @@ class ForgotPasswordController extends Controller
 
         if (empty($activation)) {
             return [
-                'status'   => 'ERROR',
-                'message'  => 'Invalid verification code.',
-                'redirect' => 'password.verify',
+                'status'  => 'ERROR',
+                'message' => 'Invalid verification code.',
             ];
         }
 
@@ -149,7 +147,7 @@ class ForgotPasswordController extends Controller
         }
 
         return redirect()->back()
-            ->with('status', 'error')
+            ->with('status', 'ERROR')
             ->with('message', 'Unable to reset password');
     }
 
@@ -178,6 +176,6 @@ class ForgotPasswordController extends Controller
 
     protected function notificationVia($channels = [])
     {
-        return \array_merge(['mail', MobtextingChannel::class], $channels);
+        return \array_merge(['mail'], $channels);
     }
 }

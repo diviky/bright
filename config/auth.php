@@ -72,8 +72,8 @@ return [
 
     // Set columns for username and other
     'columns'      => [
-        'username' => 'username',
-        'address'  => 'mobile',
+        'username' => 'email',
+        'address'  => 'email',
     ],
 
     'user'         => [

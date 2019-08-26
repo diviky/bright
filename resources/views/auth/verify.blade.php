@@ -5,12 +5,6 @@
 <div class="card card-small">
     <div class="card-body p-6">
     <div class="card-title">{{ __('Verify Your Account') }}</div>
-
-        @if (session('status'))
-            <div class="alert alert-{{ session('status') }}">
-                {{ session('message') }}
-            </div>
-        @endif
         <p class="text-muted">Enter the code sent to your mobile number.</p>
 
         <form method="POST" action="{{ route('password.verify') }}" role="ksubmit">

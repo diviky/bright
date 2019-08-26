@@ -5,7 +5,7 @@ namespace Karla\Http\Controllers\Auth\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class IsUserActivate
+class IsUserActivated
 {
     /**
      * Handle an incoming request.
@@ -22,11 +22,17 @@ class IsUserActivate
             return $next($request);
         }
 
-        if (0 == Auth::user()->status) {
+        $user = Auth::user();
+
+        if (0 == $user->status) {
             return redirect()->route('user.activate');
         }
 
-        if (1 != Auth::user()->status) {
+        if (!empty($user->deleted_at)) {
+            return abort(401, 'Account Deleted');
+        }
+
+        if (1 != $user->status) {
             return abort(401, 'Account Suspended');
         }
 
