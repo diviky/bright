@@ -2,7 +2,7 @@
 
 <div class="card card-small">
 
-    <div class="card-body">
+    <div class="card-body form-float">
         <div class="card-title">{{ __('Change Your Password') }}</div>
 
         <form method="POST" action="{{ route('password.change') }}" role="ksubmit">

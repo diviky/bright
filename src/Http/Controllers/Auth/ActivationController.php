@@ -2,15 +2,15 @@
 
 namespace Karla\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
-use Karla\Routing\Controller;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
-use Karla\Notifications\SendActivationToken;
-use Karla\Http\Controllers\Auth\Traits\Token;
+use Illuminate\Support\Facades\Auth;
 use Karla\Http\Controllers\Auth\Models\Activation;
 use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
+use Karla\Http\Controllers\Auth\Traits\Token;
+use Karla\Notifications\SendActivationToken;
+use Karla\Routing\Controller;
 
 class ActivationController extends Controller
 {
@@ -21,11 +21,11 @@ class ActivationController extends Controller
     public function activate(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('auth.activate');
+            return view('karla::auth.activate');
         }
 
         $token = $request->input('token');
-        $user = user();
+        $user  = user();
 
         if (1 == $user->status) {
             return [
@@ -70,7 +70,7 @@ class ActivationController extends Controller
 
         return [
             'status'  => 'OK',
-            'message' => __('Verification code resent to your registered :username.', ['username' => $this->address()],
+            'message' => __('Verification code resent to your registered :username.', ['username' => $this->address()]),
         ];
     }
 }

@@ -41,7 +41,7 @@ class ForgotPasswordController extends Controller
             ];
         }
 
-        return view('auth.passwords.token');
+        return view('karla::auth.passwords.token');
     }
 
     public function resend(Request $request)
@@ -89,7 +89,7 @@ class ForgotPasswordController extends Controller
         }
 
         if ($request->isMethod('get')) {
-            return view('auth.verify');
+            return view('karla::auth.verify');
         }
 
         $this->validate($request, [
@@ -131,7 +131,7 @@ class ForgotPasswordController extends Controller
         }
 
         if ($request->isMethod('get')) {
-            return view('auth.passwords.change');
+            return view('karla::auth.passwords.change');
         }
 
         $this->validate($request, [

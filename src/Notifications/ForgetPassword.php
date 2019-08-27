@@ -61,7 +61,7 @@ class ForgetPassword extends Notification
     {
         return (new MailMessage())
             ->subject('Password change request from ' . config('app.name'))
-            ->markdown('emails.auth.password', [
+            ->markdown('karla::emails.auth.password', [
                 'token'      => $this->token,
                 'notifiable' => $notifiable,
             ]);

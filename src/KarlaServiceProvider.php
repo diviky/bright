@@ -27,12 +27,12 @@ class KarlaServiceProvider extends ServiceProvider
         $this->macros();
         $this->validates();
 
+        $this->loadRoutesFrom($this->path() . '/routes/web.php');
+
         $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
         $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
-
         $this->replaceConfigRecursive($this->path() . '/config/auth.php', 'auth', true);
 
-        $this->loadMigrationsFrom($this->path() . '/database/migrations/');
         $this->loadViewsFrom($this->path() . '/resources/views/', 'karla');
 
         $this->registerEvents();
@@ -80,6 +80,8 @@ class KarlaServiceProvider extends ServiceProvider
 
     protected function console()
     {
+        $this->loadMigrationsFrom($this->path() . '/database/migrations/');
+
         $this->publishes([
             $this->path() . '/config/charts.php'     => config_path('charts.php'),
             $this->path() . '/config/permission.php' => config_path('permission.php'),
@@ -96,7 +98,11 @@ class KarlaServiceProvider extends ServiceProvider
         ], 'setup');
 
         $this->publishes([
-            $this->path() . '/resources/views' => resource_path('views'),
+            $this->path() . '/resources/views' => resource_path('views/vendor/karla'),
+        ], 'views');
+
+        $this->publishes([
+            $this->path() . '/resources/vendor' => resource_path('views'),
         ], 'views');
 
         $this->commands([
@@ -159,6 +165,7 @@ class KarlaServiceProvider extends ServiceProvider
         $router->aliasMiddleware('preflight', \Karla\Http\Middleware\PreflightResponse::class);
 
         $router->pushMiddlewareToGroup('web', 'ajax');
+        $router->pushMiddlewareToGroup('web', 'theme');
         $router->pushMiddlewareToGroup('api', 'accept');
         $router->pushMiddlewareToGroup('rest', 'accept');
 

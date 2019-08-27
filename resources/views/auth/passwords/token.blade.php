@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="card card-small">
-    <div class="card-body p-6">
+    <div class="card-body p-6 form-float">
     <div class="card-title">{{ __('Reset Password') }}</div>
 
         @if (session('status'))
@@ -11,25 +11,20 @@
                 {{ session('status') }}
             </div>
         @endif
-        <p class="text-muted">Enter your username and your password reset token will be messaged to you.</p>
+        <p class="text-muted">Enter your email address and your password reset token will be emailed to you.</p>
 
-        <form method="POST" action="{{ route('password.reset') }}" role="ksubmit">
+        <form method="POST" action="{{ url('password/reset') }}" role="ksubmit">
             @csrf
 
             <div class="form-group">
-                <label for="username" class="form-label">{{ __('Username') }}</label>
+                <label for="username" class="form-label">{{ __('Email Address') }}</label>
 
-                <input name="username" id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" value="{{ old('username') }}" required>
-
-                @if ($errors->has('username'))
-                    <span class="invalid-feedback">
-                        <strong>{{ $errors->first('username') }}</strong>
-                    </span>
-                @endif
+                <input name="email" id="username" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" required>
+                <span class="invalid-feedback">{{ $errors->first('email') }}</span>
             </div>
 
             <div class="form-footer">
-                <button type="submit" class="btn btn-primary btn-block">
+                <button type="submit" class="btn btn-bold btn-primary btn-block">
                     {{ __('Send Password Reset Token') }}
                 </button>
             </div>

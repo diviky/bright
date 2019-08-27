@@ -11,29 +11,38 @@
 |
  */
 
-Route::group(['middleware' => ['web', 'guest']], function () {
+Route::group([
+    'middleware' => ['web', 'guest', 'firewall'],
+    'namespace'  => 'Karla\Http\Controllers',
+], function () {
+
+    Route::get('account/sniff/{id}', 'Account\Controller@sniff');
     // Authentication Routes...
-    Route::get('login', '\Karla\Http\Controllers\Auth\LoginController@showLoginForm')->name('login');
-    Route::post('login', '\Karla\Http\Controllers\Auth\LoginController@login');
+    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post('login', 'Auth\LoginController@login');
 
     // Registration Routes...
-    Route::get('register', '\Karla\Http\Controllers\Auth\RegisterController@showRegistrationForm')->name('register');
-    Route::post('register', '\Karla\Http\Controllers\Auth\RegisterController@register');
+    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+    Route::post('register', 'Auth\RegisterController@register');
 
     // Password Reset Routes...
-    Route::any('password/reset', '\Karla\Http\Controllers\Auth\ForgotPasswordController@reset')->name('password.reset');
-    Route::any('password/verify', '\Karla\Http\Controllers\Auth\ForgotPasswordController@verify')->name('password.verify');
-    Route::any('password/resend', '\Karla\Http\Controllers\Auth\ForgotPasswordController@resend')->name('password.resend');
-    Route::any('password/change', '\Karla\Http\Controllers\Auth\ForgotPasswordController@change')->name('password.change');
+    Route::any('password/reset', 'Auth\ForgotPasswordController@reset')->name('password.reset');
+    Route::any('password/verify', 'Auth\ForgotPasswordController@verify')->name('password.verify');
+    Route::any('password/resend', 'Auth\ForgotPasswordController@resend')->name('password.resend');
+    Route::any('password/change', 'Auth\ForgotPasswordController@change')->name('password.change');
 });
 
-Route::group(['middleware' => ['web', 'auth']], function () {
-    Route::any('activate', '\Karla\Http\Controllers\Auth\ActivationController@activate')->name('user.activate');
-    Route::any('resend', '\Karla\Http\Controllers\Auth\ActivationController@resend')->name('activate.resend');
+Route::group([
+    'middleware' => ['web', 'auth'],
+    'namespace'  => 'Karla\Http\Controllers',
+], function () {
+    Route::any('activate', 'Auth\ActivationController@activate')->name('user.activate');
+    Route::any('resend', 'Auth\ActivationController@resend')->name('activate.resend');
+    Route::any('logout', 'Auth\LoginController@logout')->name('logout');
 
-    Route::group(['middleware' => ['auth.verified']], function () {
-        Route::any('logout', '\Karla\Http\Controllers\Auth\LoginController@logout')->name('logout');
-
-        Route::any('/', 'Users\Controller@index')->name('home');
+    Route::group(['middleware' => ['auth.verified', '2fa']], function () {
+        Route::any('account', 'Account\Controller@index');
+        Route::any('account/password', 'Account\Controller@password');
+        Route::get('account/search', 'Account\Controller@search');
     });
 });

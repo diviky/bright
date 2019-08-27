@@ -32,6 +32,16 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/';
 
+    /**
+     * Show the application's login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showLoginForm()
+    {
+        return view('karla::auth.login');
+    }
+
     protected function username()
     {
         return config('auth.columns.username', 'email');
