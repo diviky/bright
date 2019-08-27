@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Karla\Mail\Mailable;
 
 class Controller extends BaseController
 {
@@ -136,7 +137,8 @@ class Controller extends BaseController
                         'row'  => $values,
                         'user' => $user,
                     ])
-                    ->markdown('karla::emails.auth.password_changed')
+                    ->prefix('karla::emails.')
+                    ->markdown('auth.password_changed')
                     ->deliver($user);
             }
 
