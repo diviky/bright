@@ -31,7 +31,8 @@ class KarlaServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
         $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
-        $this->replaceConfigRecursive($this->path() . '/config/auth.php', 'auth', true);
+
+        $this->replaceConfigRecursive($this->path() . '/config/auth.php', 'auth');
 
         $this->loadViewsFrom($this->path() . '/resources/views/', 'karla');
 
