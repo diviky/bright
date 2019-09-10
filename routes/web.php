@@ -40,7 +40,7 @@ Route::group([
     Route::any('resend', 'Auth\ActivationController@resend')->name('activate.resend');
     Route::any('logout', 'Auth\LoginController@logout')->name('logout');
 
-    Route::group(['middleware' => ['auth.verified', '2fa']], function () {
+    Route::group(['middleware' => ['auth.verified', '2fa.remember']], function () {
         Route::any('account', 'Account\Controller@index');
         Route::any('account/password', 'Account\Controller@password');
         Route::get('account/search', 'Account\Controller@search');

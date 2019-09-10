@@ -6,22 +6,25 @@ use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Client\Browser;
 use DeviceDetector\Parser\Device\DeviceParserAbstract;
 use DeviceDetector\Parser\OperatingSystem;
+use DeviceDetector\Yaml\Symfony;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
  */
 class Device
 {
-    public function detect($userAgent = null, $advanced = false)
+    public function detect($userAgent = null, $advanced = false, $bot = false)
     {
         $userAgent = $userAgent ?: env('HTTP_USER_AGENT');
         DeviceParserAbstract::setVersionTruncation(DeviceParserAbstract::VERSION_TRUNCATION_NONE);
-        $detect = new DeviceDetector($userAgent);
-        $detect->parse();
+        $dd = new DeviceDetector($userAgent);
+        $dd->skipBotDetection();
+        $dd->setYamlParser(new Symfony());
+        $dd->parse();
 
         $return = [];
-        if ($detect->isBot()) {
-            $return['bot'] = $detect->getBot();
+        if ($bot && $dd->isBot()) {
+            $return['bot'] = $d->getBot();
 
             return $return;
         }
@@ -41,16 +44,16 @@ class Device
             'portable media player' => 'phone',
         ];
 
-        $devicename = $detect->getDeviceName();
-        $devicetype = (isset($devicelist[$devicename])) ? $devicelist[$devicename] : 'computer';
+        $device = $dd->getDeviceName();
+        $type   = (isset($devicelist[$device])) ? $devicelist[$device] : 'computer';
 
-        $os     = $detect->getOs();
-        $client = $detect->getClient();
+        $os     = $dd->getOs();
+        $client = $dd->getClient();
 
         //legacy params
-        $return['device']          = $devicename;
-        $return['type']            = $devicetype;
-        $return['brand']           = $detect->getBrandName();
+        $return['device']          = $device;
+        $return['type']            = $device;
+        $return['brand']           = $dd->getBrandName();
         $return['os']              = $os['name'];
         $return['os_version']      = $os['version'];
         $return['os_code']         = $os['short_name'];
@@ -68,12 +71,12 @@ class Device
         $osFamily            = OperatingSystem::getOsFamily($os['short_name']);
         $return['os_family'] = (false !== $osFamily) ? $osFamily : 'Unknown';
 
-        $return['model'] = $detect->getModel();
+        $return['model'] = $dd->getModel();
 
         $browserFamily            = Browser::getBrowserFamily($client['short_name']);
         $return['browser_family'] = (false !== $browserFamily) ? $browserFamily : 'Unknown';
 
-        $touch           = $detect->isTouchEnabled();
+        $touch           = $dd->isTouchEnabled();
         $return['touch'] = $touch[0];
 
         unset($os, $client, $osFamily, $browserFamily, $touch);
