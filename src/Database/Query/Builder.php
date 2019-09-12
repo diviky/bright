@@ -4,6 +4,7 @@ namespace Karla\Database\Query;
 
 use Karla\Database\Karla;
 use Karla\Database\Traits\Raw;
+use Karla\Database\Traits\Async;
 use Karla\Database\Traits\Build;
 use Karla\Database\Traits\Filter;
 use Karla\Database\Traits\Paging;
@@ -23,6 +24,7 @@ class Builder extends LaravelBuilder
     use Cachable {
         Cachable::get as cacheGet;
     }
+    use Async;
     use Outfile;
     use Timestamps;
     use Raw;
