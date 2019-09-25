@@ -35,7 +35,7 @@ class Api
 
     protected function respond($response)
     {
-        $original = $response->getOriginalContent();
+        $original = $response->getContent();
         if (\is_array($original)) {
             $code = $original['code'];
             if ($code) {
