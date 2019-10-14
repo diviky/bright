@@ -176,6 +176,16 @@ class ForgotPasswordController extends Controller
 
     protected function notificationVia($channels = [])
     {
+        if (\count($channels) > 0) {
+            return \array_merge(['database'], $channels);
+        }
+
+        $channels = config('karla.notifications');
+
+        if (\count($channels) > 0) {
+            return \array_merge(['database'], $channels);
+        }
+
         return \array_merge(['mail'], $channels);
     }
 }
