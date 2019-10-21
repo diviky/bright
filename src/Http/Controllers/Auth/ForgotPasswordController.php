@@ -32,7 +32,7 @@ class ForgotPasswordController extends Controller
 
             session(['reset-token' => $this->getTokenId()]);
 
-            $user->notify(new ForgetPassword($token, $this->notificationVia()));
+            $user->notify(new ForgetPassword($token));
 
             return [
                 'status'   => 'OK',
@@ -172,20 +172,5 @@ class ForgotPasswordController extends Controller
         Auth::guard()->login($user);
 
         return true;
-    }
-
-    protected function notificationVia($channels = [])
-    {
-        if (\count($channels) > 0) {
-            return \array_merge(['database'], $channels);
-        }
-
-        $channels = config('karla.notifications');
-
-        if (\count($channels) > 0) {
-            return \array_merge(['database'], $channels);
-        }
-
-        return \array_merge(['mail'], $channels);
     }
 }
