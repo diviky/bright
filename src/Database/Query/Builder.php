@@ -2,22 +2,22 @@
 
 namespace Karla\Database\Query;
 
+use Illuminate\Database\Query\Builder as LaravelBuilder;
 use Karla\Database\Karla;
-use Karla\Database\Traits\Raw;
 use Karla\Database\Traits\Async;
 use Karla\Database\Traits\Build;
-use Karla\Database\Traits\Filter;
-use Karla\Database\Traits\Paging;
-use Karla\Database\Traits\Remove;
-use Karla\Database\Traits\Tables;
-use Karla\Database\Traits\Outfile;
 use Karla\Database\Traits\Cachable;
-use Karla\Database\Traits\Ordering;
 use Karla\Database\Traits\Eventable;
-use Karla\Database\Traits\Timestamps;
+use Karla\Database\Traits\Filter;
+use Karla\Database\Traits\Ordering;
+use Karla\Database\Traits\Outfile;
+use Karla\Database\Traits\Paging;
+use Karla\Database\Traits\Raw;
+use Karla\Database\Traits\Remove;
 use Karla\Database\Traits\SoftDeletes;
+use Karla\Database\Traits\Tables;
+use Karla\Database\Traits\Timestamps;
 use Karla\Helpers\Iterator\SelectIterator;
-use Illuminate\Database\Query\Builder as LaravelBuilder;
 
 class Builder extends LaravelBuilder
 {
@@ -55,6 +55,59 @@ class Builder extends LaravelBuilder
         $this->atomicEvent('select');
 
         return $this->cacheGet($columns);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function exists()
+    {
+        $this->atomicEvent('select');
+
+        return parent::exists();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function insert(array $values)
+    {
+        $values = $this->insertEvent($values);
+
+        return parent::insert($values);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function insertGetId(array $values, $sequence = null)
+    {
+        $values = $this->insertEvent($values);
+
+        $id = parent::insertGetId($values[0], $sequence);
+
+        if (empty($id)) {
+            $id = $this->getLastId();
+        }
+
+        return $id;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete($id = null)
+    {
+        $this->atomicEvent('delete');
+
+        return parent::delete($id);
+    }
+
+    public function update(array $values)
+    {
+        $values = $this->updateEvent($values);
+
+        return parent::update($values);
     }
 
     public function statement($sql, $bindings = [], $useReadPdo = false)

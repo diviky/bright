@@ -32,9 +32,9 @@ class Reader
         \set_time_limit(0);
 
         if (!\is_string($reader)) {
-            $ext = $options['ext'] ?: '.array';
+            $ext = isset($options['ext']) ? $options['ext'] : '.array';
         } else {
-            $ext = $options['ext'] ?: \strrchr($reader, '.');
+            $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
             $ext = '.' == $ext ? '.xls' : $ext;
         }
 
@@ -98,7 +98,7 @@ class Reader
                 break;
         }
 
-        if (!$special && $options['header']) {
+        if (!$special && !empty($options['header'])) {
             $reader->setHeaderRowNumber($options['header'] - 1, $duplicates);
         }
 
@@ -119,11 +119,11 @@ class Reader
      */
     public function modify($reader, Closure $callable = null, $options = [])
     {
-        if (\is_numeric($options['limit'])) {
+        if (isset($options['limit']) && \is_numeric($options['limit'])) {
             $offset = 0;
-            if ($options['offset']) {
+            if (isset($options['offset']) && $options['offset']) {
                 $offset = $options['offset'];
-            } elseif ($options['page']) {
+            } elseif (isset($options['page']) && $options['page']) {
                 $offset = $options['limit'] * ($options['page'] - 1);
             }
 
@@ -132,7 +132,7 @@ class Reader
             }
 
             // number of records to fetch total
-            if ($options['total']) {
+            if (isset($options['total']) && $options['total']) {
                 $total = $offset + $options['limit'];
                 if ($total > $options['total']) {
                     $options['limit'] = $options['total'] - $offset;
@@ -140,7 +140,8 @@ class Reader
             }
 
             $options['offset'] = $offset;
-            $count             = $options['total'];
+            
+            $count             = isset($options['total']) ? $options['total'] : null;
 
             if (null !== $count && $offset >= $count) {
                 $reader = new EmptyIterator();
@@ -201,10 +202,6 @@ class Reader
 
             break;
         }
-
-        //$iterator->rewind();
-        //$fields = (array) $iterator->current();
-        //$fields = array_keys($fields);
 
         return $fields;
     }
@@ -278,8 +275,9 @@ class Reader
 
     public function unzip($zip, $options = [])
     {
+        $ext = null;
         if (\is_string($zip)) {
-            $ext = $options['ext'] ?: \strrchr($zip, '.');
+            $ext = isset($options['ext']) ? $options['ext'] : \strrchr($zip, '.');
             $ext = \strtolower($ext);
         }
 

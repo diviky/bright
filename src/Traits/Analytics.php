@@ -28,7 +28,7 @@ trait Analytics
 
                 break;
             default:
-                list($start, $end, $day) = \explode(' - ', $time);
+                list($start, $end, $day) = array_pad(\explode(' - ', $time), 3, null);
 
                 if ($day) {
                     return $this->getFormats($column, $day);

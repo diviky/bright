@@ -58,7 +58,7 @@ class Branding
         $row->favico  = disk($row->favico, 's3');
         $row->icon    = $row->icon ? disk($row->icon, 's3') : $row->logo;
         $row->options = json_decode($row->options, true);
-        $row->style   = $row->options['style'] ?: 'app';
+        $row->style   = isset($row->options['style']) ? $row->options['style'] : 'app';
 
         if ($row->name) {
             config(['mail.from.name' => $row->name]);

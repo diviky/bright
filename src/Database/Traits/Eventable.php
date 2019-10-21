@@ -46,59 +46,6 @@ trait Eventable
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function insert(array $values)
-    {
-        $values = $this->insertEvent($values);
-
-        return parent::insert($values);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function insertGetId(array $values, $sequence = null)
-    {
-        $values = $this->insertEvent($values);
-
-        $id = parent::insertGetId($values[0], $sequence);
-
-        if (empty($id)) {
-            $id = $this->getLastId();
-        }
-
-        return $id;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function delete($id = null)
-    {
-        $this->atomicEvent('delete');
-
-        return parent::delete($id);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function exists()
-    {
-        $this->atomicEvent('select');
-
-        return parent::exists();
-    }
-
-    public function update(array $values)
-    {
-        $values = $this->updateEvent($values);
-
-        return parent::update($values);
-    }
-
-    /**
      * Get the value of event.
      */
     protected function useEvent(): bool
@@ -106,7 +53,7 @@ trait Eventable
         return $this->eventState;
     }
 
-    protected function setPrimaryKey(array $values, $id = null)
+    protected function setPrimaryKey(array $values, $id = null): array
     {
         if (!isset($values['id'])) {
             $values['id'] = (string) $id;
@@ -117,7 +64,7 @@ trait Eventable
         return $values;
     }
 
-    protected function setUserId(array $values)
+    protected function setUserId(array $values): array
     {
         if (!isset($values['user_id']) && user('id')) {
             $values['user_id'] = user('id');
@@ -126,7 +73,7 @@ trait Eventable
         return $values;
     }
 
-    protected function getEventTables($type)
+    protected function getEventTables($type): array
     {
         $karla = $this->connection->getConfig('karla');
         $karla = $karla['tables'];
@@ -146,7 +93,7 @@ trait Eventable
         return isset($tables[$from]) ? $tables[$from] : [];
     }
 
-    protected function insertEvent($values)
+    protected function insertEvent(array $values): array
     {
         if (!$this->useEvent()) {
             return $values;
@@ -238,7 +185,7 @@ trait Eventable
                 $alias = $alias . '.';
             }
 
-            $field = $columns[$column];
+            $field = isset($columns[$column]) ? $columns[$column] : null;
 
             switch ($column) {
                 case 'user_id':
@@ -256,7 +203,7 @@ trait Eventable
 
                     break;
                 default:
-                    if (app()->has($field)) {
+                    if ($field && app()->has($field)) {
                         $this->where($alias . $column, app()->get($field));
                     }
 

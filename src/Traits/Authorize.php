@@ -18,16 +18,16 @@ trait Authorize
 
         $mappings = config('permission.grouping');
 
-        if ($mappings && \is_array($mappings[$namespace]) && isset($mappings[$namespace][$component])) {
+        if ($mappings && isset($mappings[$namespace]) && \is_array($mappings[$namespace]) && isset($mappings[$namespace][$component])) {
             $mapping = $mappings[$namespace][$component];
 
-            return \is_array($mapping) ? array_unique($mapping) : [$mapping];
+            return \is_array($mapping) ? \array_unique($mapping) : [$mapping];
         }
 
         if ($mappings && isset($mappings[$component]) && !\is_array($mappings[$component])) {
             $mapping = $mappings[$component];
 
-            return \is_array($mapping) ? array_unique($mapping) : [$mapping];
+            return \is_array($mapping) ? \array_unique($mapping) : [$mapping];
         }
 
         return [$component . '.' . $method];
@@ -37,7 +37,7 @@ trait Authorize
     {
         $route_names = $this->getRouteFromAction($action);
 
-        if (!is_array($route_names)) {
+        if (!\is_array($route_names)) {
             $route_names = [$route_names];
         }
 

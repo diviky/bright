@@ -8,7 +8,7 @@ trait Authorizable
 {
     protected function isMatched($ability)
     {
-        list($option, $view) = \explode('.', $ability);
+        list($option, $view) = array_pad(\explode('.', $ability), 2, null);
 
         $matches = [
             '*',
