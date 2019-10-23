@@ -163,7 +163,6 @@ class KarlaServiceProvider extends ServiceProvider
         $router->aliasMiddleware('accept', \Karla\Http\Middleware\Accept::class);
         $router->aliasMiddleware('api.response', \Karla\Http\Middleware\Api::class);
         $router->aliasMiddleware('ajax', \Karla\Http\Middleware\Ajax::class);
-        $router->aliasMiddleware('auth.verified', \Karla\Http\Controllers\Auth\Middleware\IsUserActivated::class);
         $router->aliasMiddleware('preflight', \Karla\Http\Middleware\PreflightResponse::class);
         $router->aliasMiddleware('branding', \Karla\Http\Middleware\Branding::class);
 
