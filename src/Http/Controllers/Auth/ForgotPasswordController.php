@@ -68,7 +68,7 @@ class ForgotPasswordController extends Controller
 
         $user = User::where('id', $activation->user_id)->first();
 
-        $user->notify(new ForgetPassword($activation->token, $this->notificationVia()));
+        $user->notify(new ForgetPassword($activation->token));
 
         return [
             'status'  => 'OK',
