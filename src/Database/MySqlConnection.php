@@ -5,6 +5,7 @@ namespace Karla\Database;
 use Closure;
 use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 use Illuminate\Database\QueryException;
+use Karla\Database\Jobs\Query;
 use Karla\Database\Query\Builder as QueryBuilder;
 use Karla\Database\Query\Grammars\MySqlGrammar;
 
@@ -14,6 +15,8 @@ class MySqlConnection extends LaravelMySqlConnection
      * Number of attempts to retry.
      */
     const ATTEMPTS_COUNT = 3;
+
+    protected $async = null;
 
     /**
      * Get a new query builder instance.
@@ -100,5 +103,35 @@ class MySqlConnection extends LaravelMySqlConnection
         $grammar->setConfig($this->config['karla']);
 
         return $this->withTablePrefix($grammar);
+    }
+
+    /**
+     * Run an SQL statement and get the number of rows affected.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return int
+     */
+    public function affectingStatement($query, $bindings = [])
+    {
+        if (is_array($this->async)) {
+            Query::dispatch($query, $bindings)
+                ->onConnection($this->async[0])
+                ->onQueue($this->async[1]);
+
+            return 1;
+        }
+
+        return parent::affectingStatement($query, $bindings);
+    }
+
+    public function async($connection = null, $queue = null)
+    {
+        $this->async = $connection;
+        if ($connection) {
+            $this->async = [$connection, $query];
+        }
+
+        return $this;
     }
 }
