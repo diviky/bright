@@ -171,6 +171,10 @@ class Options
      */
     public function values($values)
     {
+        foreach ($values as $key => $value) {
+            $this->where($key, $value);
+        }
+
         $this->values = \array_merge($this->values, $values);
 
         return $this;
