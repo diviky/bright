@@ -24,11 +24,15 @@ class Stream
     ];
 
     protected $separator = ',';
+    protected $lineEnd   = "\r\n";
+    protected $handle    = null;
 
-    protected $lineEnd = "\r\n";
-
-    public function start($filename)
+    public function start($filename, $write = false)
     {
+        if ($write) {
+            return $this->write($filename);
+        }
+
         $ext  = \strtolower(\strrchr($filename, '.'));
         $type = $this->mime_types[$ext];
 
@@ -125,6 +129,10 @@ class Stream
             $this->flush($row, $fields);
         }
 
+        if ($this->handle) {
+            return $this->stopFile();
+        }
+
         return $this;
     }
 
@@ -149,6 +157,10 @@ class Stream
 
         foreach ($rows as $row) {
             $this->implode($row, true);
+        }
+
+        if ($this->handle) {
+            return $this->stopFile();
         }
 
         return $this;
@@ -199,10 +211,43 @@ class Stream
             $row = \array_map([$this, 'clean'], $row);
         }
 
+        if ($this->handle) {
+            return $this->writeFile(\implode($this->separator, $row) . $this->lineEnd);
+        }
+
         echo \implode($this->separator, $row) . $this->lineEnd;
 
         \flush();
         \ob_flush();
+
+        return $this;
+    }
+
+    public function write($filepath)
+    {
+        $ext = \strtolower(\strrchr($filepath, '.'));
+
+        if ('.csv' == $ext) {
+            $this->separator = ',';
+        }
+
+        $this->handle = fopen($filepath, 'w');
+
+        \set_time_limit(0);
+
+        return $this;
+    }
+
+    public function writeFile($content)
+    {
+        fwrite($this->handle, $content);
+
+        return $this;
+    }
+
+    public function stopFile()
+    {
+        fclose($this->handle);
 
         return $this;
     }
