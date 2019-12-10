@@ -1,0 +1,54 @@
+<?php
+
+namespace Karla\Notifications\Channels;
+
+use Illuminate\Notifications\Channels\SlackWebhookChannel;
+use Illuminate\Notifications\Messages\SlackAttachment;
+use Illuminate\Notifications\Messages\SlackMessage;
+use Illuminate\Notifications\Notification;
+use Karla\Notifications\Messages\SlackAttachmentAction;
+
+class SlackChannel extends SlackWebhookChannel
+{
+    protected function attachments(SlackMessage $message)
+    {
+        return collect($message->attachments)->map(function ($attachment) use ($message) {
+            return array_filter([
+                'author_icon' => $attachment->authorIcon,
+                'author_link' => $attachment->authorLink,
+                'author_name' => $attachment->authorName,
+                'color'       => $attachment->color ?: $message->color(),
+                'fallback'    => $attachment->fallback,
+                'fields'      => $this->fields($attachment),
+                'actions'     => $this->actions($attachment),
+                'footer'      => $attachment->footer,
+                'callback_id' => $attachment->callback_id,
+                'footer_icon' => $attachment->footerIcon,
+                'image_url'   => $attachment->imageUrl,
+                'mrkdwn_in'   => $attachment->markdown,
+                'pretext'     => $attachment->pretext,
+                'text'        => $attachment->content,
+                'thumb_url'   => $attachment->thumbUrl,
+                'title'       => $attachment->title,
+                'title_link'  => $attachment->url,
+                'ts'          => $attachment->timestamp,
+            ]);
+        })->all();
+    }
+    /**
+     * Format the attachment's fields.
+     *
+     * @param  \Illuminate\Notifications\Messages\SlackAttachment  $attachment
+     * @return array
+     */
+    protected function actions(SlackAttachment $attachment)
+    {
+        return collect($attachment->actions)->map(function ($value, $key) {
+            if ($value instanceof SlackAttachmentAction) {
+                return $value->toArray();
+            }
+
+            return $value;
+        })->values()->all();
+    }
+}
