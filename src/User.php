@@ -10,6 +10,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\Access\Authorizable as BaseAuthorizable;
 use Illuminate\Notifications\Notifiable;
 use Karla\Database\Eloquent\Model;
+use Karla\Http\Controllers\Auth\Traits\AccessToken;
 use Karla\Http\Controllers\Auth\Traits\Authorizable;
 use Karla\Http\Controllers\Auth\Traits\HasRoles;
 
@@ -24,18 +25,25 @@ CanResetPasswordContract
     use Notifiable;
     use HasRoles;
     use Authorizable;
+    use AccessToken;
 
     public $guard_name = 'web';
     protected $admin   = 'super-admin';
     protected $table   = 'auth_users';
 
     /**
+     * The column name of the "Api Token" token.
+     *
+     * @var string
+     */
+    protected $apiTokenName = 'access_token';
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'mobile', 'password', 'access_token', 'status',
+        'name', 'username', 'email', 'mobile', 'password', 'access_token', 'api_token', 'status',
     ];
 
     /**

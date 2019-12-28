@@ -20,17 +20,22 @@ return [
      */
 
     'guards'       => [
-        'token'       => [
+        'token'        => [
             'driver'   => 'access_token',
-            'provider' => 'token',
+            'provider' => 'access_token',
         ],
 
-        'auth_token'  => [
+        'access_token' => [
+            'driver'   => 'access_token',
+            'provider' => 'access_token',
+        ],
+
+        'auth_token'   => [
             'driver'   => 'auth_token',
-            'provider' => 'token',
+            'provider' => 'auth_token',
         ],
 
-        'credentials' => [
+        'credentials'  => [
             'driver'   => 'credentials',
             'provider' => 'credentials',
         ],

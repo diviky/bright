@@ -39,14 +39,12 @@ class CredentialsGuard implements Guard
             return;
         }
 
-        $user->auth_token = $user->access_token;
-
         return $this->user = $user;
     }
 
     public function getCredentials()
     {
-        $credentials = ['username', 'password'];
+        $credentials = [$this->username(), 'password'];
         $return      = [];
         foreach ($credentials as $key) {
             $token = $this->request->query($key);
@@ -57,6 +55,11 @@ class CredentialsGuard implements Guard
         }
 
         return $return;
+    }
+
+    protected function username()
+    {
+        return config('auth.columns.username', 'username');
     }
 
     /**

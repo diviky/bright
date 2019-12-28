@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,6 +11,29 @@ use Illuminate\Http\Request;
 |
  */
 
-Route::middleware('auth:token')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    'middleware' => ['api', 'auth:credentials'],
+    'prefix'     => 'api/v1',
+    'namespace'  => 'Karla\Http\Controllers',
+], function () {
+    Route::post('login', 'Auth\Api@login');
+});
+
+Route::group([
+    'middleware' => ['api'],
+    'namespace'  => 'Karla\Http\Controllers',
+    'prefix'     => 'api/v1',
+], function () {
+    // Password Reset Routes...
+    Route::post('password/reset', 'Auth\Api@reset');
+    Route::get('password/resend/{id}', 'Auth\Api@resend');
+    Route::post('password/verify/{id}', 'Auth\Api@verify');
+});
+
+Route::group([
+    'middleware' => ['api', 'rest'],
+    'namespace'  => 'Karla\Http\Controllers',
+    'prefix'     => 'api/v1',
+], function () {
+    Route::post('password/change', 'Auth\Api@change');
 });

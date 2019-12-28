@@ -63,6 +63,7 @@ class Responsable implements BaseResponsable
         if (!$ajax && isset($response['next'])) {
             return $this->getNextRedirect($response, 'next');
         }
+
         if ($ajax && isset($response['redirect'])) {
             if ('/' !== \substr($response['redirect'], 0, 1)) {
                 $redirect = $this->getNextRedirect($response, 'redirect');

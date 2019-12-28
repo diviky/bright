@@ -16,7 +16,7 @@ class AuthTokenGuard extends AccessTokenGuard
 
         if (!empty($token)) {
             // the token was found, how you want to pass?
-            $user = $this->provider->retrieveByToken($this->storageKey, $token);
+            $user = $this->provider->retrieveByCredentials([$this->storageKey => $token]);
         }
 
         if (\is_null($user)) {
@@ -26,8 +26,6 @@ class AuthTokenGuard extends AccessTokenGuard
         if (1 != $user->status) {
             return;
         }
-
-        $user->auth_token = $user->access_token;
 
         return $this->user = $user;
     }

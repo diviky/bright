@@ -1,6 +1,6 @@
 @component('mail::message')
 
-Hi {{ $user->name }},
+Hi {{ $user->name }}, <br/>
 Greetings for the day!
 
 This is a confirmation, that your password has been successfully changed and your account is secure again.

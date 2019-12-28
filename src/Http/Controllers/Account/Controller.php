@@ -4,10 +4,10 @@ namespace Karla\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller as BaseController;
 use App\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Karla\Mail\Mailable;
 
 class Controller extends BaseController
 {
@@ -119,27 +119,7 @@ class Controller extends BaseController
             $result = $user->save();
 
             if ($result) {
-                $save               = [];
-                $save['user_id']    = $user_id;
-                $save['created_at'] = carbon();
-                $save['password']   = $user->password;
-
-                $this->table('auth_password_history', false)
-                    ->insert($save);
-
-                $values = [
-                    'password' => $inputpwd,
-                ];
-
-                (new Mailable())
-                    ->subject('Your password has been changed!!!')
-                    ->with([
-                        'row'  => $values,
-                        'user' => $user,
-                    ])
-                    ->prefix('karla::emails.')
-                    ->markdown('auth.password_changed')
-                    ->deliver($user);
+                event(new PasswordReset($user));
             }
 
             return $this->updated($result, 'password');

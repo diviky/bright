@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Extensions;
+namespace Karla\Services\Auth\Providers;
 
 use App\User;
 use Illuminate\Contracts\Auth\Authenticatable;

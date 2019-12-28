@@ -1,19 +1,22 @@
 <?php
 
-namespace Karla\Extensions;
+namespace Karla\Services\Auth\Providers;
 
 use App\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
+use Karla\Http\Controllers\Auth\Models\Token;
 
-class CredentialsProvider implements UserProvider
+class AccessTokenProvider implements UserProvider
 {
+    protected $token;
     protected $user;
 
-    public function __construct(User $user)
+    public function __construct(User $user, Token $token)
     {
-        $this->user = $user;
+        $this->user  = $user;
+        $this->token = $token;
     }
 
     public function retrieveById($identifier)
@@ -23,8 +26,21 @@ class CredentialsProvider implements UserProvider
             ->find($identifier);
     }
 
+    public function retrieveByAcess($identifier, $token)
+    {
+        $user = $this->user->where($identifier, $token)->first();
+
+        return $user ? $user : null;
+    }
+
     public function retrieveByToken($identifier, $token)
     {
+        $token = $this->token->with('user')
+            ->remember(null, 'token:' . $token)
+            ->where($identifier, $token)
+            ->first();
+
+        return $token && $token->user ? $token : null;
     }
 
     public function updateRememberToken(Authenticatable $user, $token)
@@ -38,23 +54,11 @@ class CredentialsProvider implements UserProvider
         $user = $this->user;
         foreach ($credentials as $credentialKey => $credentialValue) {
             if (!Str::contains($credentialKey, 'password')) {
-                $user = $user->where($credentialKey, $credentialValue);
+                $user->where($credentialKey, $credentialValue);
             }
         }
 
-        $row = $user->first();
-
-        if (\is_null($row)) {
-            return;
-        }
-
-        $valid = $this->validateCredentials($row, $credentials);
-
-        if (!$valid) {
-            return;
-        }
-
-        return $row;
+        return $user->first();
     }
 
     public function validateCredentials(Authenticatable $user, array $credentials)

@@ -39,5 +39,8 @@ return [
         'Illuminate\Mail\Events\MessageSending' => [
             Karla\Listeners\EmailLogger::class,
         ],
+        'Illuminate\Auth\Events\PasswordReset'  => [
+            Karla\Listeners\PasswordReset::class,
+        ],
     ],
 ];

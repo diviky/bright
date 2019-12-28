@@ -6,14 +6,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Karla\Console\Commands\GeoipUpdate;
-use Karla\Extensions\AuthTokenProvider;
-use Karla\Extensions\CredentialsProvider;
-use Karla\Extensions\TokenUserProvider;
 use Karla\Routing\Redirector;
 use Karla\Routing\Resolver;
 use Karla\Services\Auth\AccessTokenGuard;
 use Karla\Services\Auth\AuthTokenGuard;
 use Karla\Services\Auth\CredentialsGuard;
+use Karla\Services\Auth\Providers\AccessTokenProvider;
+use Karla\Services\Auth\Providers\AuthTokenProvider;
+use Karla\Services\Auth\Providers\CredentialsProvider;
 use Karla\Support\ServiceProvider;
 use Karla\Traits\Provider;
 
@@ -28,6 +28,7 @@ class KarlaServiceProvider extends ServiceProvider
         $this->validates();
 
         $this->loadRoutesFrom($this->path() . '/routes/web.php');
+        $this->loadRoutesFrom($this->path() . '/routes/api.php');
 
         $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
         $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
@@ -115,7 +116,7 @@ class KarlaServiceProvider extends ServiceProvider
     {
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
-            $userProvider = app(TokenUserProvider::class);
+            $userProvider = app(AccessTokenProvider::class);
             $request      = app('request');
 
             return new AccessTokenGuard($userProvider, $request, $config);
@@ -171,7 +172,7 @@ class KarlaServiceProvider extends ServiceProvider
         $router->pushMiddlewareToGroup('api', 'accept');
         $router->pushMiddlewareToGroup('rest', 'accept');
 
-        $router->pushMiddlewareToGroup('rest', 'auth:api,token,credentials');
+        //$router->pushMiddlewareToGroup('rest', 'auth:api,token,credentials');
 
         $router->pushMiddlewareToGroup('rest', 'preflight');
         $router->pushMiddlewareToGroup('api', 'preflight');
