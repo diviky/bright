@@ -43,7 +43,7 @@ class AuthTokenProvider implements UserProvider
         $user = $this->user;
         foreach ($credentials as $credentialKey => $credentialValue) {
             if (!Str::contains($credentialKey, 'password')) {
-                $user->where($credentialKey, $credentialValue);
+                $user = $user->where($credentialKey, $credentialValue);
             }
         }
 
