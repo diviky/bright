@@ -79,8 +79,13 @@ trait Cachable
         // If we've been given a DateTime instance or a "minutes" value that is
         // greater than zero then we'll pass it on to the remember method.
         // Otherwise we'll cache it indefinitely.
-        if ($minutes instanceof DateTime || $minutes > 0) {
+        if ($minutes instanceof DateTime) {
             return $cache->remember($key, $minutes, $callback);
+        }
+
+        // Convert minutes to seconds for laravel 5.8+
+        if ($minutes > 0) {
+            return $cache->remember($key, ($minutes * 60), $callback);
         }
 
         return $cache->rememberForever($key, $callback);

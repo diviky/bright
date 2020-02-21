@@ -2,12 +2,10 @@
 
 namespace Karla\Helpers;
 
+use Geocoder\ProviderAggregator;
 use Geocoder\Provider\Chain\Chain;
-use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
 use Geocoder\Provider\GeoIP2\GeoIP2;
 use Geocoder\Provider\GeoIP2\GeoIP2Adapter;
-use Geocoder\Provider\HostIp\HostIp;
-use Geocoder\ProviderAggregator;
 use GeoIp2\Database\Reader;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
@@ -34,8 +32,6 @@ class Geo
 
         $chain = new Chain([
             new GeoIP2($geoIP2Adapter),
-            new FreeGeoIp($adapter),
-            new HostIp($adapter),
         ]);
 
         $geocoder->registerProvider($chain);

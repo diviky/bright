@@ -3,12 +3,13 @@
 namespace Karla\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Mobtexting\MobtextingChannel;
 use NotificationChannels\Mobtexting\MobtextingSmsMessage;
 
-class ForgetPassword extends Notification
+class ForgetPassword extends Notification implements ShouldQueue
 {
     use Queueable;
 

@@ -19,6 +19,10 @@ function karlaSystemJs() {
         e.preventDefault();
 
         var $this = $(this);
+        var message = $this.attr('data-confirm');
+        if (message && message != undefined && !confirm(message)) {
+            return false;
+        }
 
         $.ajax({
             url: $(this).data('href'),
@@ -33,6 +37,11 @@ function karlaSystemJs() {
         e.preventDefault();
 
         var $this = $(this);
+        var message = $this.attr('data-confirm');
+        if (message && message != undefined && !confirm(message)) {
+            return false;
+        }
+
         var data = $this.data('post-data');
 
         $.ajax({
@@ -75,8 +84,14 @@ function karlaSystemJs() {
 
     //common delete script
     $(document).on('click', '[data-ajax]', function (e) {
+
         var $this = $(this);
-        var link = $(this).attr('href') || $this.data('ajax');
+        var message = $this.attr('data-confirm');
+        if (message && message != undefined && !confirm(message)) {
+            return false;
+        }
+
+        var link = $this.attr('href') || $this.data('ajax');
 
         $.ajax({
             url: link,
@@ -130,10 +145,12 @@ function karlaSystemJs() {
 
     //common delete script
     $(document).on('click', '[ajax-confirm]', function (e) {
-        if (!confirm('Are you sure want to proceed?'))
-            return false;
 
         var $this = $(this);
+        var message = $this.attr('ajax-config') || 'Are you sure want to proceed?';
+        if (!confirm(message)) {
+            return false;
+        }
 
         $.ajax({
             url: $(this).attr('href'),
