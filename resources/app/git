@@ -13,4 +13,3 @@ chmod 777 bootstrap/cache
 find storage -type d -exec chmod 777 {} \;
 
 sh ./optimize
-php artisan firewall:updategeoip

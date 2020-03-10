@@ -66,7 +66,6 @@ mix.styles(
   public + "css/static.css"
 );
 
-mix.copy(theme + "assets/scss/fonts", public + "fonts");
 
 mix.sass(theme + "assets/scss/app.scss", public + "css");
 

@@ -5,7 +5,6 @@ namespace Karla;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
-use Karla\Console\Commands\GeoipUpdate;
 use Karla\Routing\Redirector;
 use Karla\Routing\Resolver;
 use Karla\Services\Auth\AccessTokenGuard;
@@ -106,10 +105,6 @@ class KarlaServiceProvider extends ServiceProvider
         $this->publishes([
             $this->path() . '/resources/vendor' => resource_path('views'),
         ], 'views');
-
-        $this->commands([
-            GeoipUpdate::class,
-        ]);
     }
 
     protected function auth()
