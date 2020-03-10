@@ -159,7 +159,6 @@ class KarlaServiceProvider extends ServiceProvider
         $router->aliasMiddleware('accept', \Karla\Http\Middleware\Accept::class);
         $router->aliasMiddleware('api.response', \Karla\Http\Middleware\Api::class);
         $router->aliasMiddleware('ajax', \Karla\Http\Middleware\Ajax::class);
-        $router->aliasMiddleware('preflight', \Karla\Http\Middleware\PreflightResponse::class);
         $router->aliasMiddleware('branding', \Karla\Http\Middleware\Branding::class);
 
         $router->pushMiddlewareToGroup('web', 'ajax');
@@ -168,10 +167,6 @@ class KarlaServiceProvider extends ServiceProvider
         $router->pushMiddlewareToGroup('rest', 'accept');
 
         //$router->pushMiddlewareToGroup('rest', 'auth:api,token,credentials');
-
-        $router->pushMiddlewareToGroup('rest', 'preflight');
-        $router->pushMiddlewareToGroup('api', 'preflight');
-        $router->pushMiddlewareToGroup('web', 'preflight');
 
         $router->pushMiddlewareToGroup('rest', 'api.response');
         $router->pushMiddlewareToGroup('api', 'api.response');

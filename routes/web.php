@@ -12,7 +12,7 @@
  */
 
 Route::group([
-    'middleware' => ['web', 'guest', 'firewall'],
+    'middleware' => ['web', 'guest'],
     'namespace'  => 'Karla\Http\Controllers',
 ], function () {
 
