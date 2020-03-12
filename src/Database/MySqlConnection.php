@@ -5,11 +5,14 @@ namespace Karla\Database;
 use Closure;
 use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 use Illuminate\Database\QueryException;
+use Karla\Database\DetectsConcurrencyErrors;
 use Karla\Database\Query\Builder as QueryBuilder;
 use Karla\Database\Query\Grammars\MySqlGrammar;
 
 class MySqlConnection extends LaravelMySqlConnection
 {
+    use DetectsConcurrencyErrors;
+
     /**
      * Number of attempts to retry.
      */
@@ -82,7 +85,7 @@ class MySqlConnection extends LaravelMySqlConnection
                     throw $e;
                 }
 
-                if (!$this->causedByDeadlock($e)) {
+                if (!$this->causedByConcurrencyError($e)) {
                     throw $e;
                 }
             }
