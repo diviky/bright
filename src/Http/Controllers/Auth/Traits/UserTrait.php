@@ -6,28 +6,28 @@ trait UserTrait
 {
     public function getUserBy($value, $column = 'id')
     {
-        return $this->table('users_view')
+        return $this->db->table('users_view')
             ->where($column, $value)
             ->first();
     }
 
     public function getUsersBy($value, $column = 'id')
     {
-        return $this->table('users_role_view')
+        return $this->db->table('users_role_view')
             ->where($column, $value)
             ->get(['id', 'username', 'parent_id', 'role_name as role', 'status']);
     }
 
     public function getUserById($id)
     {
-        return $this->table('users_role_view')
+        return $this->db->table('users_role_view')
             ->where('id', $id)
             ->first(['id', 'username', 'parent_id', 'role_name as role', 'status']);
     }
 
     public function getParentById($id)
     {
-        return $this->table('users_role_view')
+        return $this->db->table('users_role_view')
             ->where('parent_id', $id)
             ->first(['id', 'username', 'parent_id', 'role_name as role', 'status']);
     }

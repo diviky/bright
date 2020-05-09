@@ -53,7 +53,7 @@ trait Notifyable
             return;
         }
 
-        return $this->table('auth_users')
+        return $this->db->table('auth_users')
             ->where('id', $user_id)
             ->first(['email', 'name']);
     }
@@ -64,12 +64,12 @@ trait Notifyable
             return;
         }
 
-        $parent_id = $this->table('auth_users')
+        $parent_id = $this->db->table('auth_users')
             ->where('id', $user_id)
             ->value('parent_id');
 
         if ($parent_id) {
-            $row = $this->table('app_branding')
+            $row = $this->db->table('app_branding')
                 ->where('user_id', $parent_id)
                 ->first();
         }
@@ -81,12 +81,12 @@ trait Notifyable
             return;
         }
 
-        $parent_id = $this->table('auth_users')
+        $parent_id = $this->db->table('auth_users')
             ->where('id', $user_id)
             ->value('parent_id');
 
         if ($parent_id) {
-            return $this->table('app_branding')
+            return $this->db->table('app_branding')
                 ->where('user_id', $parent_id)
                 ->value('name');
         }

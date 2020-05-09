@@ -2,9 +2,9 @@
 
 namespace Karla\Exceptions;
 
-use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -27,60 +27,46 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
-     *
-     * @param \Exception $exception
-     */
-    public function report(Exception $exception)
-    {
-        if (!config('app.debug') && app()->bound('sentry') && $this->shouldReport($exception)) {
-            app('sentry')->captureException($exception);
-        }
-
-        parent::report($exception);
-    }
-
-    /**
      * Render an exception into an HTTP response.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Exception               $exception
+     * @param \Throwable               $e
      *
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $e)
     {
         if ($request->expectsJson()) {
-            return parent::render($request, $exception);
+            return parent::render($request, $e);
         }
 
-        if ($exception instanceof Exception) {
-            $view = 'errors.' . $exception->getCode();
+        if ($e instanceof Throwable) {
+            $view = 'errors.' . $e->getCode();
             if (view()->exists($view)) {
-                return response()->view($view, ['exception' => $exception]);
+                return response()->view($view, ['exception' => $e]);
             }
         }
 
-        return parent::render($request, $exception);
+        return parent::render($request, $e);
     }
 
-    protected function convertExceptionToArray(Exception $e)
+    protected function convertExceptionToArray(Throwable $e)
     {
         $response = parent::convertExceptionToArray($e);
 
-        if ($e instanceof Exception) {
+        if ($e instanceof Throwable) {
             $response['status'] = $e->getCode();
         }
 
         return $response;
     }
 
-    protected function unauthenticated($request, AuthenticationException $exception)
+    protected function unauthenticated($request, AuthenticationException $e)
     {
         $format = $request->input('format');
 
         if ('json' == $format || $request->expectsJson()) {
-            return response()->json(['status' => 401, 'message' => $exception->getMessage()], 401);
+            return response()->json(['status' => 401, 'message' => $e->getMessage()], 401);
         }
 
         return redirect()->guest(route('login'));

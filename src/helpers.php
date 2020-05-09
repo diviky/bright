@@ -1,10 +1,11 @@
 <?php
 
 use Carbon\Carbon;
+use Karla\View\View;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Karla\View\View;
+use League\CommonMark\CommonMarkConverter;
 
 if (!function_exists('printr')) {
     function printr($data)
@@ -76,9 +77,16 @@ if (!function_exists('ip')) {
 if (!function_exists('markdown')) {
     function markdown($text)
     {
-        $parsedown = new Parsedown();
+        if (is_null($text)) {
+            return null;
+        }
 
-        return $parsedown->text($text);
+        $converter = new CommonMarkConverter([
+            'html_input'         => 'strip',
+            'allow_unsafe_links' => false,
+        ]);
+
+        return $converter->convertToHtml($text);
     }
 }
 

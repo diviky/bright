@@ -39,7 +39,7 @@ class Controller extends BaseController
             $email = $this->input('email');
             // Check email is changed
             if ($user->email != $email) {
-                $exists = $this->table('auth_users')
+                $exists = $this->db->table('auth_users')
                     ->where('email', $email)
                     ->where('id', '!=', $user_id)
                     ->exists();
@@ -178,7 +178,7 @@ class Controller extends BaseController
             return [];
         }
 
-        $rows = $this->table('auth_users')
+        $rows = $this->db->table('auth_users')
             ->where('name', 'like', '%' . $term . '%')
             ->where('id', '<>', user('id'))
             ->get(['name as text', 'id']);
