@@ -166,10 +166,10 @@ trait Eventable
         $karla = $this->connection->getConfig('karla');
 
         if (false !== $karla['timestamps']) {
-            return $this->setTimeStamp($values);
+            $values = $this->setTimeStamp($values);
         }
 
-        return $this;
+        return $values;
     }
 
     protected function atomicEvent($type = 'update')
