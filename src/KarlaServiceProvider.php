@@ -81,8 +81,6 @@ class KarlaServiceProvider extends ServiceProvider
 
     protected function console()
     {
-        $this->loadMigrationsFrom($this->path() . '/database/migrations/');
-
         $this->publishes([
             $this->path() . '/config/charts.php'     => config_path('charts.php'),
             $this->path() . '/config/permission.php' => config_path('permission.php'),
@@ -105,6 +103,10 @@ class KarlaServiceProvider extends ServiceProvider
         $this->publishes([
             $this->path() . '/resources/vendor' => resource_path('views'),
         ], 'views');
+
+        $this->publishes([
+            $this->path() . '/database/migrations/*' => database_path('migrations'),
+        ], 'migrations');
     }
 
     protected function auth()

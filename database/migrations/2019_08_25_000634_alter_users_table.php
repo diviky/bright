@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Add2faToUsers extends Migration
+class AlterUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -19,7 +19,7 @@ class Add2faToUsers extends Migration
             $table->string('mobile', 15)->nullable()->after('password');
             $table->string('avatar', 191)->nullable()->after('mobile');
             $table->string('google2fa_secret', 50)->nullable()->after('remember_token');
-            $table->json('options')->nullable();
+            $table->text('options')->nullable();
             $table->string('access_token', 100)->nullable()->index('auth_users_token_index');
             $table->timestamp('last_password_at')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->dateTime('last_login_at')->nullable();

@@ -43,4 +43,6 @@ return [
             Karla\Listeners\PasswordReset::class,
         ],
     ],
+
+    'timestamps'    => false,
 ];

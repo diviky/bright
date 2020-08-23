@@ -104,6 +104,7 @@ trait Eventable
         }
 
         $tables = $this->getEventTables('insert');
+
         foreach ($tables as $columns) {
             if (!\is_array($columns)) {
                 $columns = [$columns => $columns];
@@ -147,8 +148,12 @@ trait Eventable
             }
         }
 
-        foreach ($values as &$value) {
-            $value = $this->setTimeStamps($value);
+        $karla = $this->connection->getConfig('karla');
+
+        if (false !== $karla['timestamps']) {
+            foreach ($values as &$value) {
+                $value = $this->setTimeStamps($value);
+            }
         }
 
         return $values;
@@ -158,7 +163,13 @@ trait Eventable
     {
         $this->atomicEvent('update');
 
-        return $this->setTimeStamp($values);
+        $karla = $this->connection->getConfig('karla');
+
+        if (false !== $karla['timestamps']) {
+            return $this->setTimeStamp($values);
+        }
+
+        return $this;
     }
 
     protected function atomicEvent($type = 'update')
