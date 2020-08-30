@@ -21,7 +21,7 @@ function isSuccess(status) {
 }
 
 function displayNoty(response, $this) {
-    res = parseJSON(response);
+    var res = parseJSON(response);
 
     if (res.message) {
         if (isSuccess(res.status)) {
