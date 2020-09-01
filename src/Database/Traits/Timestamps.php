@@ -20,7 +20,7 @@ trait Timestamps
      */
     protected function freshTimestamp()
     {
-        return new Carbon();
+        return utcTime();
     }
 
     public function timestamps($allow = true): self
@@ -48,8 +48,7 @@ trait Timestamps
     protected function setTimeStamp(array $values, $force = false): array
     {
         if ($this->usesTimestamps() || $force) {
-            $time                 = $this->freshTimestamp();
-            $values['updated_at'] = $time;
+            $values['updated_at'] = $this->freshTimestamp();
         }
 
         return $values;

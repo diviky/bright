@@ -5,6 +5,8 @@ namespace Karla;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
+use Karla\Console\Commands\GeoipUpdate;
+use Karla\Contracts\Util as UtilContract;
 use Karla\Routing\Redirector;
 use Karla\Routing\Resolver;
 use Karla\Services\Auth\AccessTokenGuard;
@@ -15,6 +17,7 @@ use Karla\Services\Auth\Providers\AuthTokenProvider;
 use Karla\Services\Auth\Providers\CredentialsProvider;
 use Karla\Support\ServiceProvider;
 use Karla\Traits\Provider;
+use Karla\Util\Util;
 
 class KarlaServiceProvider extends ServiceProvider
 {
@@ -37,10 +40,18 @@ class KarlaServiceProvider extends ServiceProvider
         $this->loadViewsFrom($this->path() . '/resources/views/', 'karla');
 
         $this->registerEvents();
+        $this->binds();
 
         if ($this->app->runningInConsole()) {
             $this->console();
         }
+    }
+
+    public function binds()
+    {
+        $this->app->singleton(UtilContract::class, function ($app) {
+            return new Util();
+        });
     }
 
     public function register()

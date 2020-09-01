@@ -27,21 +27,35 @@ class Handler extends ExceptionHandler
     ];
 
     /**
+     * Report or log an exception.
+     *
+     * @param \Throwable $exception
+     */
+    public function report(Throwable $e)
+    {
+        if (!config('app.debug') && app()->bound('sentry') && $this->shouldReport($e)) {
+            app('sentry')->captureException($e);
+        }
+
+        parent::report($e);
+    }
+
+    /**
      * Render an exception into an HTTP response.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Throwable               $e
+     * @param \Throwable               $exception
      *
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $exception)
     {
         if ($request->expectsJson()) {
             return parent::render($request, $e);
         }
 
-        if ($e instanceof Throwable) {
-            $view = 'errors.' . $e->getCode();
+        if ($exception instanceof Throwable) {
+            $view = 'errors.' . $exception->getCode();
             if (view()->exists($view)) {
                 return response()->view($view, ['exception' => $e]);
             }
