@@ -2,9 +2,9 @@
 
 namespace Karla\Exceptions;
 
-use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -29,32 +29,32 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param \Exception $exception
+     * @param \Throwable $exception
      */
-    public function report(Exception $exception)
+    public function report(Throwable $e)
     {
-        if (!config('app.debug') && app()->bound('sentry') && $this->shouldReport($exception)) {
-            app('sentry')->captureException($exception);
+        if (!config('app.debug') && app()->bound('sentry') && $this->shouldReport($e)) {
+            app('sentry')->captureException($e);
         }
 
-        parent::report($exception);
+        parent::report($e);
     }
 
     /**
      * Render an exception into an HTTP response.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Exception               $exception
+     * @param \Throwable               $exception
      *
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $exception)
     {
         if ($request->expectsJson()) {
             return parent::render($request, $exception);
         }
 
-        if ($exception instanceof Exception) {
+        if ($exception instanceof Throwable) {
             $view = 'errors.' . $exception->getCode();
             if (view()->exists($view)) {
                 return response()->view($view, ['exception' => $exception]);
@@ -64,11 +64,11 @@ class Handler extends ExceptionHandler
         return parent::render($request, $exception);
     }
 
-    protected function convertExceptionToArray(Exception $e)
+    protected function convertExceptionToArray(Throwable $e)
     {
         $response = parent::convertExceptionToArray($e);
 
-        if ($e instanceof Exception) {
+        if ($e instanceof Throwable) {
             $response['status'] = $e->getCode();
         }
 
