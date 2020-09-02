@@ -29,7 +29,7 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param \Throwable $exception
+     * @param \Throwable $e
      */
     public function report(Throwable $e)
     {
@@ -44,18 +44,18 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Throwable               $exception
+     * @param \Throwable               $e
      *
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
         if ($request->expectsJson()) {
             return parent::render($request, $e);
         }
 
-        if ($exception instanceof Throwable) {
-            $view = 'errors.' . $exception->getCode();
+        if ($e instanceof Throwable) {
+            $view = 'errors.' . $e->getCode();
             if (view()->exists($view)) {
                 return response()->view($view, ['exception' => $e]);
             }
