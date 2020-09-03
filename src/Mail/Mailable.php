@@ -19,7 +19,6 @@ class Mailable extends BaseMailable implements ShouldQueue
      */
     public $tries = 5;
 
-    protected $theme;
     protected $prefix = 'emails.';
 
     /**
