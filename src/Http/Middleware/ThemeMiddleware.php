@@ -19,9 +19,7 @@ class ThemeMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $route  = $request->route();
-        $action = $route->getActionName();
-        $this->setUpThemeFromAction($action);
+        $this->setUpThemeFromRequest($request);
 
         return $next($request);
     }

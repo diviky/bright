@@ -2,6 +2,8 @@
 
 namespace Karla\Mail;
 
+use App\User;
+
 trait Notifyable
 {
     public function sendAnEmail($data = [], $user_id = null)
@@ -53,8 +55,7 @@ trait Notifyable
             return;
         }
 
-        return $this->db->table('auth_users')
-            ->where('id', $user_id)
+        return User::where('id', $user_id)
             ->first(['email', 'name']);
     }
 
@@ -64,8 +65,7 @@ trait Notifyable
             return;
         }
 
-        $parent_id = $this->db->table('auth_users')
-            ->where('id', $user_id)
+        $parent_id = User::where('id', $user_id)
             ->value('parent_id');
 
         if ($parent_id) {
@@ -81,8 +81,7 @@ trait Notifyable
             return;
         }
 
-        $parent_id = $this->db->table('auth_users')
-            ->where('id', $user_id)
+        $parent_id = User::where('id', $user_id)
             ->value('parent_id');
 
         if ($parent_id) {

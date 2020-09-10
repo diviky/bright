@@ -39,8 +39,7 @@ class Controller extends BaseController
             $email = $this->input('email');
             // Check email is changed
             if ($user->email != $email) {
-                $exists = $this->db->table('auth_users')
-                    ->where('email', $email)
+                $exists = User::where('email', $email)
                     ->where('id', '!=', $user_id)
                     ->exists();
 
@@ -131,6 +130,8 @@ class Controller extends BaseController
     public function sniff($key)
     {
         $decrypted = null;
+        session()->forget('sniffed');
+        session()->forget('sniff');
 
         try {
             $decrypted = decrypt($key);
@@ -158,6 +159,7 @@ class Controller extends BaseController
             abort(401, 'Time mismatch');
         }
 
+        session(['sniffed' => true]);
         Auth::guard()->logout();
         $result = Auth::guard()->loginUsingId($user->id);
 
@@ -178,8 +180,7 @@ class Controller extends BaseController
             return [];
         }
 
-        $rows = $this->db->table('auth_users')
-            ->where('name', 'like', '%' . $term . '%')
+        $rows = User::where('name', 'like', '%' . $term . '%')
             ->where('id', '<>', user('id'))
             ->get(['name as text', 'id']);
 

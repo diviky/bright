@@ -5,8 +5,7 @@ namespace Karla;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
-use Karla\Console\Commands\GeoipUpdate;
-use Karla\Contracts\Util as UtilContract;
+use Karla\Contracts\UtilInterface;
 use Karla\Routing\Redirector;
 use Karla\Routing\Resolver;
 use Karla\Services\Auth\AccessTokenGuard;
@@ -49,7 +48,7 @@ class KarlaServiceProvider extends ServiceProvider
 
     public function binds()
     {
-        $this->app->singleton(UtilContract::class, function ($app) {
+        $this->app->singleton(UtilInterface::class, function ($app) {
             return new Util();
         });
     }
@@ -168,6 +167,8 @@ class KarlaServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware('permission', \Karla\Http\Controllers\Auth\Middleware\PermissionMiddleware::class);
         $router->aliasMiddleware('role', \Karla\Http\Controllers\Auth\Middleware\RoleMiddleware::class);
+        $router->aliasMiddleware('roleorpermission', \Karla\Http\Controllers\Auth\Middleware\RoleOrPermissionMiddleware::class);
+        $router->aliasMiddleware('authorize', \Karla\Http\Controllers\Auth\Middleware\AuthorizeMiddleware::class);
         $router->aliasMiddleware('theme', \Karla\Http\Middleware\ThemeMiddleware::class);
         $router->aliasMiddleware('accept', \Karla\Http\Middleware\Accept::class);
         $router->aliasMiddleware('api.response', \Karla\Http\Middleware\Api::class);

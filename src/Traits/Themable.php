@@ -118,4 +118,11 @@ trait Themable
 
         return $themes;
     }
+
+    protected function setUpThemeFromRequest($request)
+    {
+        $route  = $request->route();
+        $action = $route->getActionName();
+        $this->setUpThemeFromAction($action);
+    }
 }

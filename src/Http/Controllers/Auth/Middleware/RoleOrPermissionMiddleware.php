@@ -7,26 +7,25 @@ use Illuminate\Support\Facades\Auth;
 use Karla\Traits\Themable;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
-class RoleMiddleware
+class RoleOrPermissionMiddleware
 {
     use Themable;
 
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, $roleOrPermission)
     {
         if (Auth::guest()) {
             $this->setUpThemeFromRequest($request);
-
             throw UnauthorizedException::notLoggedIn();
         }
 
-        $roles = \is_array($role)
-        ? $role
-        : \explode('|', $role);
+        $rolesOrPermissions = is_array($roleOrPermission)
+        ? $roleOrPermission
+        : explode('|', $roleOrPermission);
 
-        if (!Auth::user()->hasAnyRole($roles)) {
+        if (!Auth::user()->hasAnyRole($rolesOrPermissions) && !Auth::user()->hasAnyPermission($rolesOrPermissions)) {
             $this->setUpThemeFromRequest($request);
 
-            throw UnauthorizedException::forRoles($roles);
+            throw UnauthorizedException::forRolesOrPermissions($rolesOrPermissions);
         }
 
         return $next($request);

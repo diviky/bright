@@ -1,9 +1,9 @@
 <?php
 
 use Carbon\Carbon;
-use Karla\View\View;
-use Karla\Contracts\Util;
 use Illuminate\Support\Str;
+use Karla\Contracts\UtilInterface as Util;
+use Karla\View\View;
 use League\CommonMark\CommonMarkConverter;
 
 if (!function_exists('printr')) {

@@ -5,9 +5,9 @@ namespace Karla\Util;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Karla\Contracts\Util as UtilContracts;
+use Karla\Contracts\UtilInterface;
 
-class Util implements UtilContracts
+class Util implements UtilInterface
 {
     public function carbon($time = null, $format = null, $timezone = null)
     {

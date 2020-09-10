@@ -3,13 +3,16 @@
 namespace Karla\Traits;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 trait Authorize
 {
-    protected function getRouteFromAction($action): array
+    protected function getRouteFromAction($route): array
     {
+        $action = $route->getActionName();
+
         $action     = \explode('@', $action);
-        $method     = \end($action);
+        $method     = $route->getActionMethod();
         $controller = \explode('\\', $action[0]);
 
         $component = \strtolower($controller[\count($controller) - 2]);
@@ -33,18 +36,33 @@ trait Authorize
         return [$component . '.' . $method];
     }
 
-    protected function isAuthorized($action): bool
+    public function isAuthorized($names): bool
     {
-        $route_names = $this->getRouteFromAction($action);
+        if (is_null($names)) {
+            return false;
+        }
 
-        if (!\is_array($route_names)) {
-            $route_names = [$route_names];
+        if (!\is_array($names)) {
+            $names = [$names];
+        }
+
+        $public = config('permission.public');
+
+        // is public permission
+        if (is_array($public)) {
+            foreach ($names as $route) {
+                foreach ($public as $permission) {
+                    if (Str::is($permission, $route)) {
+                        return true;
+                    }
+                }
+            }
         }
 
         // Check user has permission
         $user = Auth::user();
         if ($user) {
-            foreach ($route_names as $route) {
+            foreach ($names as $route) {
                 if ($user->can($route)) {
                     return true;
                 }
@@ -54,5 +72,72 @@ trait Authorize
         }
 
         return true;
+    }
+
+    public function isActionAuthorized($route): bool
+    {
+        $names = $this->getRouteFromAction($route);
+
+        return $this->isAuthorized($names);
+    }
+
+    public function isRouteAuthorized($route): bool
+    {
+        $name = $route->getName();
+        if (is_null($name)) {
+            return false;
+        }
+
+        return $this->isAuthorized('name:' . $name);
+    }
+
+    public function isPrefixAuthorized($route): bool
+    {
+        $prefix = $route->getPrefix();
+
+        if (is_null($prefix)) {
+            return false;
+        }
+
+        return $this->isAuthorized('prefix:' . $prefix);
+    }
+
+    public function isUriAuthorized($route): bool
+    {
+        $uri = $route->uri();
+
+        if (is_null($uri)) {
+            return false;
+        }
+
+        $methods = $route->methods();
+
+        $names = [];
+        foreach ($methods as $method) {
+            $names[] = 'uri:' . $method . ':' . $uri;
+        }
+
+        return $this->isAuthorized($names);
+    }
+
+    public function isAuthorizedAny($route): bool
+    {
+        if ($this->isActionAuthorized($route)) {
+            return true;
+        }
+
+        if ($this->isRouteAuthorized($route)) {
+            return true;
+        }
+
+        if ($this->isPrefixAuthorized($route)) {
+            return true;
+        }
+
+        if ($this->isUriAuthorized($route)) {
+            return true;
+        }
+
+        return false;
     }
 }

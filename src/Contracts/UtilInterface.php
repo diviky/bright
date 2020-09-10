@@ -2,7 +2,7 @@
 
 namespace Karla\Contracts;
 
-interface Util
+interface UtilInterface
 {
 
 }

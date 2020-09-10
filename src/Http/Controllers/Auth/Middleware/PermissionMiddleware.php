@@ -3,6 +3,7 @@
 namespace Karla\Http\Controllers\Auth\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Karla\Traits\Themable;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
@@ -12,8 +13,8 @@ class PermissionMiddleware
 
     public function handle($request, Closure $next, $permission)
     {
-        if (app('auth')->guest()) {
-            $this->theme($request);
+        if (Auth::guest()) {
+            $this->setUpThemeFromRequest($request);
 
             throw UnauthorizedException::notLoggedIn();
         }
@@ -23,20 +24,13 @@ class PermissionMiddleware
         : \explode('|', $permission);
 
         foreach ($permissions as $permission) {
-            if (app('auth')->user()->can($permission)) {
+            if (Auth::user()->can($permission)) {
                 return $next($request);
             }
         }
 
-        $this->theme($request);
+        $this->setUpThemeFromRequest($request);
 
         throw UnauthorizedException::forPermissions($permissions);
-    }
-
-    protected function theme($request)
-    {
-        $route  = $request->route();
-        $action = $route->getActionName();
-        $this->setUpThemeFromAction($action);
     }
 }
