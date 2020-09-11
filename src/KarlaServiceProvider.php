@@ -58,6 +58,7 @@ class KarlaServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
+        $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
 
         $this->registerMiddlewares();
         $this->redirect();
@@ -96,27 +97,27 @@ class KarlaServiceProvider extends ServiceProvider
             $this->path() . '/config/permission.php' => config_path('permission.php'),
             $this->path() . '/config/karla.php'      => config_path('karla.php'),
             $this->path() . '/config/theme.php'      => config_path('theme.php'),
-        ], 'config');
+        ], 'karla-config');
 
         $this->publishes([
-            $this->path() . '/resources/assets/js' => resource_path('assets/js'),
-        ], 'assets');
+            $this->path() . '/resources/assets/js' => resource_path('js'),
+        ], 'karla-assets');
 
         $this->publishes([
-            $this->path() . '/resources/app/*' => base_path(),
-        ], 'setup');
+            $this->path() . '/resources/app' => base_path(),
+        ], 'karla-setup');
 
         $this->publishes([
             $this->path() . '/resources/views' => resource_path('views/vendor/karla'),
-        ], 'views');
+        ], 'karla-views');
 
         $this->publishes([
             $this->path() . '/resources/vendor' => resource_path('views'),
-        ], 'views');
+        ], 'karla-views');
 
         $this->publishes([
-            $this->path() . '/database/migrations/*' => database_path('migrations'),
-        ], 'migrations');
+            $this->path() . '/database/migrations' => database_path('migrations'),
+        ], 'karla-migrations');
     }
 
     protected function auth()

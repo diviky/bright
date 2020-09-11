@@ -1,4 +1,5 @@
-let mix = require("laravel-mix");
+let mix = require('laravel-mix');
+const glob = require('glob');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,63 +12,48 @@ let mix = require("laravel-mix");
  |
  */
 
-var bower = "./bower_components/";
-var node = "./node_modules/";
-var resources = "./resources/";
-var public = "./public/";
-var theme = "resources/themes/tabler/";
+var bower = './bower_components/';
+var node = './node_modules/';
+var resources = './resources/';
+var public = './public/';
+var theme = 'resources/themes/tabler/';
 
 mix.babel(
-  [
-    resources + "assets/js/*.js",
-    resources + "assets/js/*/*.js"
-  ],
-  "public/js/app.js"
-);
+    glob.sync(resources + 'js/*.js').concat(glob.sync(resources + 'js/*/*.js')),
+    'public/js/app.js');
 
 mix.babel(
-  [
-    "vendor/sankar/laravel-karla/resources/assets/js/*.js",
-    "vendor/sankar/laravel-karla/resources/assets/js/*/*.js"
-  ],
-  "public/js/karla.js"
-);
+    glob.sync('vendor/sankar/laravel-karla/resources/assets/js/*.js')
+        .concat(glob.sync(
+            'vendor/sankar/laravel-karla/resources/assets/js/*/*.js')),
+    'public/js/karla.js');
 
 mix.styles(
-  [
-    "resources/assets/js/*.css",
-    "resources/assets/js/*/*.css"
-  ],
-  "public/css/assets.css"
-);
+    glob.sync('resources/css/*.css').concat(glob.sync('resources/css/*/*.css')),
+    'public/css/assets.css');
 
 // Bower Scripts
 mix.scripts(
-  [
-    node + "jquery/dist/jquery.min.js",
-    node + "popper.js/dist/umd/popper.min.js",
-    node + "bootstrap/dist/js/bootstrap.min.js",
-    bower + "nprogress/nprogress.js",
-    bower + "jquery-pjax/jquery.pjax.js",
-    bower + "moment/min/moment.min.js",
-    bower + "noty/lib/noty.min.js",
-  ],
-  public + "js/static.js"
-);
+    [
+      node + 'jquery/dist/jquery.min.js',
+      node + 'popper.js/dist/umd/popper.min.js',
+      node + 'bootstrap/dist/js/bootstrap.min.js',
+      bower + 'nprogress/nprogress.js',
+      bower + 'jquery-pjax/jquery.pjax.js',
+      bower + 'moment/min/moment.min.js',
+      bower + 'noty/lib/noty.min.js',
+    ],
+    public + 'js/static.js');
 
-mix.options({ processCssUrls: false });
+mix.options({processCssUrls: false});
 
 // Bower Styles
 mix.styles(
-  [
-    bower + "nprogress/nprogress.css",
-    bower + "animate.css/animate.min.css"
-  ],
-  public + "css/static.css"
-);
+    [bower + 'nprogress/nprogress.css', bower + 'animate.css/animate.min.css'],
+    public + 'css/static.css');
 
 
-mix.sass(theme + "assets/scss/app.scss", public + "css");
+mix.sass(theme + 'assets/scss/app.scss', public + 'css');
 
 if (mix.inProduction()) {
   mix.version();

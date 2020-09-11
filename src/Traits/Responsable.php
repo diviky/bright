@@ -35,16 +35,25 @@ trait Responsable
         return Arr::last(\explode('@', $action));
     }
 
-    protected function getNamespace($action): string
+    protected function getNamespace($action): ?string
     {
+        if (strpos($action, '@') === false) {
+            return null;
+        }
+
         $action     = \explode('@', $action);
         $controller = \explode('\\', $action[0]);
+        $controller = $controller[\count($controller) - 2];
 
-        return \strtolower($controller[\count($controller) - 2]);
+        return \strtolower($controller);
     }
 
-    protected function getViewPath($action): string
+    protected function getViewPath($action): ?string
     {
+        if (strpos($action, '@') === false) {
+            return null;
+        }
+
         $action = \explode('@', $action);
         $action = \explode('\\', $action[0]);
         $action = \array_filter($action);

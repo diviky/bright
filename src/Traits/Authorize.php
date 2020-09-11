@@ -10,6 +10,9 @@ trait Authorize
     protected function getRouteFromAction($route): array
     {
         $action = $route->getActionName();
+        if (strpos($action, '@') === false) {
+            return [];
+        }
 
         $action     = \explode('@', $action);
         $method     = $route->getActionMethod();
