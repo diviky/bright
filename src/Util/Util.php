@@ -77,11 +77,12 @@ class Util implements UtilInterface
             return app()->get('user_id');
         }
 
+        $user = Auth::user();
         if ($field) {
-            return Auth::user()->{$field};
+            return $user ? $user->{$field} : null;
         }
 
-        return Auth::user();
+        return $user;
     }
 
     public function datetime($time, $format = 'M d, Y h:i A')
