@@ -3,8 +3,8 @@
 namespace Karla\Listeners;
 
 use Illuminate\Mail\Events\MessageSending;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Karla\Models\Models;
 
 class EmailLogger
 {
@@ -16,7 +16,7 @@ class EmailLogger
     public function handle(MessageSending $event)
     {
         $message = $event->message;
-        DB::table('addon_email_logs')->insert([
+        Models::emailLogs()::create([
             'id'          => Str::uuid(),
             'from'        => $this->formatAddressField($message, 'From'),
             'to'          => $this->formatAddressField($message, 'To'),

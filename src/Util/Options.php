@@ -3,6 +3,7 @@
 namespace Karla\Util;
 
 use Illuminate\Support\Carbon;
+use Karla\Models\Models;
 use Karla\Traits\CapsuleManager;
 
 class Options
@@ -145,7 +146,7 @@ class Options
     {
         $name = $name ?: $this->table;
 
-        return $this->db->table($name)->where($this->where);
+        return Models::table($name)::where($this->where);
     }
 
     /**

@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Karla\Models\Models;
 
 class Controller extends BaseController
 {
@@ -96,8 +97,7 @@ class Controller extends BaseController
 
             $limit = 3;
 
-            $rows = $this->db->table('auth_password_history')
-                ->where('user_id', $user_id)
+            $rows = Models::passwordHistory()::where('user_id', $user_id)
                 ->orderBy('created_at', 'DESC')
                 ->take($limit)
                 ->pluck('password');

@@ -2,10 +2,11 @@
 
 namespace Karla\Listeners;
 
-use Karla\Mail\Mailable;
-use Illuminate\Http\Request;
-use Karla\Traits\CapsuleManager;
 use Illuminate\Auth\Events\PasswordReset as LaravelPasswordReset;
+use Illuminate\Http\Request;
+use Karla\Mail\Mailable;
+use Karla\Models\Models;
+use Karla\Traits\CapsuleManager;
 
 class PasswordReset
 {
@@ -50,8 +51,6 @@ class PasswordReset
         $save['created_at'] = carbon();
         $save['password']   = $user->password;
 
-        $this->db->table('auth_password_history')
-            ->timestamps(false)
-            ->insert($save);
+        Models::passwordHistory()::create($save);
     }
 }

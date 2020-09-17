@@ -6,6 +6,7 @@ use Illuminate\Auth\Events\Failed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Karla\Listeners\Traits\Device;
+use Karla\Models\Models;
 use Karla\Traits\CapsuleManager;
 
 class FailedLogin
@@ -49,6 +50,6 @@ class FailedLogin
 
         $values = \array_merge($values, $this->getDeviceDetails($ip, $user_agent));
 
-        $this->db->table('auth_login_history')->insert($values);
+        Models::passwordHistory()::create($values);
     }
 }

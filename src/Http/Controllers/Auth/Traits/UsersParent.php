@@ -2,7 +2,7 @@
 
 namespace Karla\Http\Controllers\Auth\Traits;
 
-use Illuminate\Support\Facades\DB;
+use Karla\Models\Models;
 
 trait UsersParent
 {
@@ -13,23 +13,17 @@ trait UsersParent
             'user_id'   => $this->id,
         ];
 
-        return DB::table('auth_user_users')
-            ->timestamps(false)
-            ->insert($values);
+        return Models::users()::create($values);
     }
 
     public function removeParent()
     {
-        return DB::table('auth_user_users')
-            ->where('user_id', $this->id)
+        return Models::users()::where('user_id', $this->id)
             ->delete();
     }
 
     public function getParent()
     {
-        return DB::table('auth_users as u')
-            ->join('auth_user_users as p', 'p.parent_id', 'u.id')
-            ->where('p.user_id', $this->id)
-            ->first(['u.*']);
+        return Models::users()::where('user_id', $this->id)->parent;
     }
 }

@@ -3,8 +3,8 @@
 namespace Karla\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Karla\Models\Models;
 use stdClass;
 
 class Branding
@@ -20,8 +20,7 @@ class Branding
     {
         $domain = $request->getHost();
 
-        $row = DB::table('app_branding')
-            ->where('domain', $domain)
+        $row = Models::branding()::where('domain', $domain)
             ->eventState(false)
             ->first();
 
@@ -29,7 +28,7 @@ class Branding
             $row = new stdClass();
         }
 
-        if ($row->is_ssl && !$request->secure()) {
+        if (isset($row->is_ssl) && !$request->secure()) {
             return redirect()->secure($request->getRequestUri());
         }
 

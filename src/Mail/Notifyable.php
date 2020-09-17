@@ -3,6 +3,7 @@
 namespace Karla\Mail;
 
 use App\User;
+use Karla\Models\Models;
 
 trait Notifyable
 {
@@ -69,8 +70,7 @@ trait Notifyable
             ->value('parent_id');
 
         if ($parent_id) {
-            $row = $this->db->table('app_branding')
-                ->where('user_id', $parent_id)
+            $row = Models::branding()::where('user_id', $parent_id)
                 ->first();
         }
     }
@@ -85,8 +85,7 @@ trait Notifyable
             ->value('parent_id');
 
         if ($parent_id) {
-            return $this->db->table('app_branding')
-                ->where('user_id', $parent_id)
+            return Models::branding()::where('user_id', $parent_id)
                 ->value('name');
         }
     }
