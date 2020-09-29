@@ -2,10 +2,18 @@
 
 namespace Karla\Models;
 
-use Karla\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class EmailLogs extends Model
 {
-    protected $table = 'addon_email_logs';
-    public $guarded  = [];
+    public $guarded      = [];
+    public $incrementing = false;
+    public $timestamps   = false;
+
+    protected $keyType = 'string';
+
+    public function getTable()
+    {
+        return config('karla.table.email_logs', 'email_logs');
+    }
 }

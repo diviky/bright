@@ -10,10 +10,10 @@ class CreateAuthUserDomainsTable extends Migration
      */
     public function up()
     {
-        Schema::create('auth_user_domains', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->integer('user_id')->unsigned();
-            $table->integer('domain_id')->unsigned();
+        Schema::create(config('karla.table.user_domains'), function (Blueprint $table) {
+            $table->id('id');
+            $table->foreignId('user_id');
+            $table->foreignId('domain_id');
             $table->unique(['user_id', 'domain_id'], 'user_domain_id');
         });
     }
@@ -23,6 +23,6 @@ class CreateAuthUserDomainsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('auth_user_domains');
+        Schema::drop(config('karla.table.user_domains'));
     }
 }

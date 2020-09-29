@@ -10,8 +10,8 @@ class AddForeignKeysToAuthPasswordHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::table('auth_password_history', function (Blueprint $table) {
-            $table->foreign('user_id', 'auth_password_history_ibfk_1')->references('id')->on('auth_users')->onUpdate('CASCADE')->onDelete('CASCADE');
+        Schema::table(config('karla.table.password_history'), function (Blueprint $table) {
+            $table->foreign('user_id', 'password_history')->references('id')->on(config('karla.table.users'))->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
@@ -20,8 +20,8 @@ class AddForeignKeysToAuthPasswordHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::table('auth_password_history', function (Blueprint $table) {
-            $table->dropForeign('auth_password_history_ibfk_1');
+        Schema::table(config('karla.table.password_history'), function (Blueprint $table) {
+            $table->dropForeign('password_history');
         });
     }
 }

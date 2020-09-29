@@ -17,6 +17,7 @@
             @csrf
 
             <div class="form-group">
+                <label class="form-label">Code</label>
                 <input name="token" id="token" type="text" class="form-control" value="" required>
             </div>
 

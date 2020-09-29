@@ -1,5 +1,12 @@
 #!/bin/bash
 
 mv app clone-app && mv clone app && mv clone-app clone
-cd app && sh ./optimize
+cd app
+
+[ -L public/storage ] && unlink public/storage
+php artisan view:clear && php artisan view:cache
+php artisan storage:link
+php artisan horizon:terminate
+php artisan queue:restart
+
 cd ..

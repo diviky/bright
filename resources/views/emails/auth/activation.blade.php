@@ -1,5 +1,5 @@
 @component('mail::message')
-<p>Hi  {{ $user->name }},</p>
+<p>Hi  {{ $notifiable->name }},</p>
 <p>Thanks for registering!</p>
 
 <p>We would like to verify your email address.</p>

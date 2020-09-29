@@ -10,7 +10,7 @@ class CreateAuthRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('auth_roles', function (Blueprint $table) {
+        Schema::create(config('karla.table.roles'), function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 191)->index('name');
             $table->string('guard_name', 191);
@@ -24,6 +24,6 @@ class CreateAuthRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('auth_roles');
+        Schema::drop(config('karla.table.roles'));
     }
 }

@@ -13,6 +13,7 @@ use Karla\Database\Eloquent\Model;
 use Karla\Http\Controllers\Auth\Traits\AccessToken;
 use Karla\Http\Controllers\Auth\Traits\Authorizable;
 use Karla\Http\Controllers\Auth\Traits\HasRoles;
+use Karla\Http\Controllers\Auth\Traits\UserParent;
 
 class User extends Model implements
 AuthenticatableContract,
@@ -26,10 +27,10 @@ CanResetPasswordContract
     use HasRoles;
     use Authorizable;
     use AccessToken;
+    use UserParent;
 
     public $guard_name = 'web';
     protected $admin   = 'super-admin';
-    protected $table   = 'auth_users';
 
     /**
      * The column name of the "Api Token" token.
@@ -43,7 +44,13 @@ CanResetPasswordContract
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'mobile', 'password', 'access_token', 'api_token', 'status',
+        'name',
+        'username',
+        'email',
+        'mobile',
+        'password',
+        'access_token',
+        'status',
     ];
 
     /**
@@ -52,8 +59,14 @@ CanResetPasswordContract
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
+
+    public function getTable()
+    {
+        return config('karla.table.users', 'users');
+    }
 
     public function hasPermissionTo($permission, $guardName = null): bool
     {

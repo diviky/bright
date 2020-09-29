@@ -10,9 +10,9 @@ class CreateAuthTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('auth_tokens', function (Blueprint $table) {
+        Schema::create(config('karla.table.tokens'), function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->index('auth_tokens_user_id_foreign');
+            $table->foreignId('user_id')->index('tokens_user_id_foreign');
             $table->string('access_token', 100)->unique('access_token');
             $table->string('refresh_token', 100)->nullable();
             $table->text('allowed_ip', 65535)->nullable();
@@ -27,6 +27,6 @@ class CreateAuthTokensTable extends Migration
      */
     public function down()
     {
-        Schema::drop('auth_tokens');
+        Schema::drop(config('karla.table.tokens'));
     }
 }

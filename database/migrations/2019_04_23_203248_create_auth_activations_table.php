@@ -10,9 +10,9 @@ class CreateAuthActivationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('auth_activations', function (Blueprint $table) {
+        Schema::create(config('karla.table.activations'), function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->index('auth_activations_user_id_foreign');
+            $table->foreignId('user_id')->index('activations_user_id_index');
             $table->string('token', 100)->nullable();
             $table->timestamps();
         });
@@ -23,6 +23,6 @@ class CreateAuthActivationsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('auth_activations');
+        Schema::drop(config('karla.table.activations'));
     }
 }

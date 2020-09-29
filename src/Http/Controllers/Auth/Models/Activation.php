@@ -3,14 +3,18 @@
 namespace Karla\Http\Controllers\Auth\Models;
 
 use Karla\Database\Eloquent\Model;
-use Karla\User;
+use Karla\Models\Models;
 
 class Activation extends Model
 {
-    protected $table = 'auth_activations';
+    public function getTable()
+    {
+        return config('karla.table.activations', 'activations');
+    }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Models::user());
     }
+
 }

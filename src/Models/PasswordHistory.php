@@ -6,6 +6,10 @@ use Karla\Database\Eloquent\Model;
 
 class PasswordHistory extends Model
 {
-    protected $table = 'auth_password_history';
-    public $guarded  = [];
+    public $guarded = [];
+
+    public function getTable()
+    {
+        return config('karla.table.password_history', 'password_history');
+    }
 }

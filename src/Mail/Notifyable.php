@@ -56,7 +56,7 @@ trait Notifyable
             return;
         }
 
-        return User::where('id', $user_id)
+        return Models::user()::where('id', $user_id)
             ->first(['email', 'name']);
     }
 
@@ -66,7 +66,7 @@ trait Notifyable
             return;
         }
 
-        $parent_id = User::where('id', $user_id)
+        $parent_id = Models::user()::where('id', $user_id)
             ->value('parent_id');
 
         if ($parent_id) {
@@ -81,7 +81,7 @@ trait Notifyable
             return;
         }
 
-        $parent_id = User::where('id', $user_id)
+        $parent_id = Models::user()::where('id', $user_id)
             ->value('parent_id');
 
         if ($parent_id) {

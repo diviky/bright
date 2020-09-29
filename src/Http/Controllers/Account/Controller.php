@@ -20,7 +20,7 @@ class Controller extends BaseController
     public function index(): array
     {
         $user_id = user('id');
-        $user    = User::find($user_id);
+        $user    = Models::user()::find($user_id);
 
         if ($this->isMethod('post')) {
             $this->rules([
@@ -40,7 +40,7 @@ class Controller extends BaseController
             $email = $this->input('email');
             // Check email is changed
             if ($user->email != $email) {
-                $exists = User::where('email', $email)
+                $exists = Models::user()::where('email', $email)
                     ->where('id', '!=', $user_id)
                     ->exists();
 
@@ -76,7 +76,7 @@ class Controller extends BaseController
             ]);
 
             $user_id = user('id');
-            $user    = User::find($user_id);
+            $user    = Models::user()::find($user_id);
 
             $password = $user->password;
             $inputpwd = $this->input('password');
@@ -145,7 +145,7 @@ class Controller extends BaseController
         $login   = carbon($values[1]);
 
         // get UserById
-        $user = User::where('id', $user_id)
+        $user = Models::user()::where('id', $user_id)
             ->where('status', 1)
             ->first();
 
@@ -180,7 +180,7 @@ class Controller extends BaseController
             return [];
         }
 
-        $rows = User::where('name', 'like', '%' . $term . '%')
+        $rows = Models::user()::where('name', 'like', '%' . $term . '%')
             ->where('id', '<>', user('id'))
             ->get(['name as text', 'id']);
 

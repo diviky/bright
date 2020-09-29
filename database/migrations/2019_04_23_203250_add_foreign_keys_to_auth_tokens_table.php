@@ -10,8 +10,8 @@ class AddForeignKeysToAuthTokensTable extends Migration
      */
     public function up()
     {
-        Schema::table('auth_tokens', function (Blueprint $table) {
-            $table->foreign('user_id', 'auth_tokens_user_id_foreign')->references('id')->on('auth_users')->onUpdate('RESTRICT')->onDelete('CASCADE');
+        Schema::table(config('karla.table.tokens'), function (Blueprint $table) {
+            $table->foreign('user_id', 'tokens_user_id_foreign')->references('id')->on(config('karla.table.users'))->onUpdate('RESTRICT')->onDelete('CASCADE');
         });
     }
 
@@ -20,8 +20,8 @@ class AddForeignKeysToAuthTokensTable extends Migration
      */
     public function down()
     {
-        Schema::table('auth_tokens', function (Blueprint $table) {
-            $table->dropForeign('auth_tokens_user_id_foreign');
+        Schema::table(config('karla.table.tokens'), function (Blueprint $table) {
+            $table->dropForeign('tokens_user_id_foreign');
         });
     }
 }

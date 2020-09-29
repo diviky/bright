@@ -10,13 +10,13 @@ class CreateAuthUserPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('auth_user_permissions', function (Blueprint $table) {
+        Schema::create(config('karla.table.user_permissions'), function (Blueprint $table) {
             $table->integer('permission_id')->unsigned();
             $table->string('model_type', 191);
-            $table->bigInteger('model_id')->unsigned();
+            $table->foreignId('model_id');
             $table->boolean('is_exclude')->default(0);
             $table->primary(['permission_id', 'model_id', 'model_type']);
-            $table->index(['model_type', 'model_id'], 'auth_user_permissions_model_type_model_id_index');
+            $table->index(['model_type', 'model_id'], 'user_permissions_model_type_model_id_index');
         });
     }
 
@@ -25,6 +25,6 @@ class CreateAuthUserPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('auth_user_permissions');
+        Schema::drop(config('karla.table.user_permissions'));
     }
 }

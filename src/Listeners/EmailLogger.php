@@ -26,8 +26,8 @@ class EmailLogger
             'body'        => $message->getBody(),
             'headers'     => (string) $message->getHeaders(),
             'attachments' => $message->getChildren() ? \implode("\n\n", $message->getChildren()) : null,
-            'created_at'  => \date('Y-m-d H:i:s'),
-            'updated_at'  => \date('Y-m-d H:i:s'),
+            'created_at'  => carbon(),
+            'updated_at'  => carbon(),
         ]);
     }
 

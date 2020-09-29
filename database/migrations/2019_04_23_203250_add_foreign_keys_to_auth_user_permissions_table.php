@@ -10,8 +10,8 @@ class AddForeignKeysToAuthUserPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('auth_user_permissions', function (Blueprint $table) {
-            $table->foreign('permission_id', 'auth_user_permissions_permission_id_foreign')->references('id')->on('auth_permissions')->onUpdate('RESTRICT')->onDelete('CASCADE');
+        Schema::table(config('karla.table.user_permissions'), function (Blueprint $table) {
+            $table->foreign('permission_id', 'user_permissions_permission_id_foreign')->references('id')->on(config('karla.table.permissions'))->onUpdate('RESTRICT')->onDelete('CASCADE');
         });
     }
 
@@ -20,8 +20,8 @@ class AddForeignKeysToAuthUserPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('auth_user_permissions', function (Blueprint $table) {
-            $table->dropForeign('auth_user_permissions_permission_id_foreign');
+        Schema::table(config('karla.table.user_permissions'), function (Blueprint $table) {
+            $table->dropForeign('user_permissions_permission_id_foreign');
         });
     }
 }

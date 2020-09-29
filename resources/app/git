@@ -1,15 +1,15 @@
 #!/bin/bash
 
-git reset --hard 
+git reset --hard
 git pull
 
 base=${PWD}/../
 
-rm -rf storage/app && ln -s ${base}storage/app ./storage/app
+[ -d "${base}storage/app" ] && rm -rf storage/app && ln -s ${base}storage/app ./storage/app
 
-chmod 777 storage
-chmod 777 bootstrap
-chmod 777 bootstrap/cache
+chmod -R 777 storage
+chmod -R 777 bootstrap
+chmod -R 777 bootstrap/cache
 find storage -type d -exec chmod 777 {} \;
 
 sh ./optimize

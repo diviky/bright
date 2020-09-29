@@ -6,6 +6,10 @@ use Karla\Database\Eloquent\Model;
 
 class Meta extends Model
 {
-    protected $table = 'app_meta';
-    public $guarded  = [];
+    public $guarded = [];
+
+    public function getTable()
+    {
+        return config('karla.table.meta', 'app_meta');
+    }
 }

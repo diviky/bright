@@ -10,9 +10,9 @@ class CreateAuthRolePermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('auth_role_permissions', function (Blueprint $table) {
+        Schema::create(config('karla.table.role_permissions'), function (Blueprint $table) {
             $table->integer('permission_id')->unsigned();
-            $table->integer('role_id')->unsigned()->index('auth_role_permissions_role_id_foreign');
+            $table->integer('role_id')->unsigned()->index('role_permissions_role_id_foreign');
             $table->boolean('is_exclude')->default(0);
             $table->primary(['permission_id', 'role_id']);
         });
@@ -23,6 +23,6 @@ class CreateAuthRolePermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('auth_role_permissions');
+        Schema::drop(config('karla.table.role_permissions'));
     }
 }

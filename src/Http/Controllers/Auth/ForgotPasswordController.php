@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Karla\Http\Controllers\Auth\Models\Activation;
 use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Karla\Http\Controllers\Auth\Traits\Token;
+use Karla\Models\Models;
 use Karla\Notifications\ForgetPassword;
 use Karla\Routing\Controller;
 use Karla\User;
@@ -23,10 +24,10 @@ class ForgotPasswordController extends Controller
     {
         if ($request->isMethod('post')) {
             $this->validate($request, [
-                $this->username() => 'required|exists:auth_users',
+                $this->username() => 'required|exists:' . config('karla.table.users'),
             ]);
 
-            $user = User::where($this->username(), $request->input($this->username()))->first();
+            $user = Models::user()::where($this->username(), $request->input($this->username()))->first();
 
             $token = $this->saveToken($user);
 
@@ -66,7 +67,7 @@ class ForgotPasswordController extends Controller
             ];
         }
 
-        $user = User::where('id', $activation->user_id)->first();
+        $user = Models::user()::where('id', $activation->user_id)->first();
 
         $user->notify(new ForgetPassword($activation->token));
 
@@ -138,7 +139,7 @@ class ForgotPasswordController extends Controller
             'password' => 'required|confirmed|min:8',
         ]);
 
-        $user = User::where('id', $id)->first();
+        $user = Models::user()::where('id', $id)->first();
 
         if ($this->resetPassword($user, $request->input('password'))) {
             session()->forget('forget-userid');

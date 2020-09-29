@@ -10,9 +10,9 @@ class CreateAuthUserUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('auth_user_users', function (Blueprint $table) {
-            $table->integer('parent_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+        Schema::create(config('karla.table.user_users'), function (Blueprint $table) {
+            $table->foreignId('parent_id');
+            $table->foreignId('user_id');
             $table->unique(['parent_id', 'user_id'], 'parent_user_id');
         });
     }
@@ -22,6 +22,6 @@ class CreateAuthUserUsersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('auth_user_users');
+        Schema::drop(config('karla.table.user_users'));
     }
 }

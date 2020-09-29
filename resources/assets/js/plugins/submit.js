@@ -35,34 +35,34 @@
         if (this.settings.validate == true) {
             this.validate();
         } else {
-            var widget = this;
+            var self = this;
             this.form.submit(function () {
-                widget.formSubmit();
+                self.formSubmit();
             })
         }
     };
 
     easySubmit.prototype.validate = function () {
-        var widget = this;
+        var self = this;
 
-        this.form.validator(widget.settings).submit(function (e) {
+        this.form.validator(self.settings).submit(function (e) {
             // client-side validation OK.
             if (!e.isDefaultPrevented()) {
-                widget.event('onValidationSuccess', {});
+                self.event('onValidationSuccess', {});
 
-                widget.form.attr({
+                self.form.attr({
                     valid: true
                 });
-                widget.formSubmit();
+                self.formSubmit();
                 return false;
             }
-            widget.event('onValidationFail', {});
+            self.event('onValidationFail', {});
             e.preventDefault();
-            widget.form.attr({
+            self.form.attr({
                 valid: false
             });
 
-            var msg = widget.form.attr('message') || 'Please correct the highlighted error(s)';
+            var msg = self.form.attr('message') || 'Please correct the highlighted error(s)';
             notify({
                 text: msg,
                 type: 'error'
@@ -71,27 +71,71 @@
     };
 
     easySubmit.prototype.formSubmit = function () {
-        var widget = this;
-        var beforeSubmit = widget.settings.beforeSubmit || widget.beforeSubmit;
-        var success = widget.settings.success || widget.success;
-        var progress = widget.settings.onProgress || widget.progress;
+        var self = this;
 
         var fromOptions = {
             beforeSubmit: function () {
-                widget.beforeSubmit();
+                let next = true;
+                let fnc = self.settings.beforesubmit;
+                if (fnc != '' && fnc != undefined) {
+                    var fn = window[fnc];
+                    if (typeof fn === 'function') {
+                        next = fn(self);
+                    }
+                }
+
+                if (next) {
+                    self.beforeSubmit(self);
+                }
             },
             success: function (response, code, xhr) {
-                widget.success(response, code, xhr)
+                let next = true;
+                let fnc = self.settings.success;
+
+                if (fnc != '' && fnc != undefined) {
+                    var fn = window[fnc];
+                    if (typeof fn === 'function') {
+                        next = fn(response, code, xhr);
+                    }
+                }
+
+                if (next) {
+                    self.success(response, code, xhr);
+                }
             },
             uploadProgress: function (e, position, total, percentComplete) {
-                widget.progress(percentComplete, total, position);
+                let next = true;
+
+                let fnc = self.settings.progress;
+
+                if (fnc != '' && fnc != undefined) {
+                    var fn = window[fnc];
+                    if (typeof fn === 'function') {
+                        next = fn(percentComplete, total, position);
+                    }
+                }
+
+                if (next) {
+                    self.progress(percentComplete, total, position);
+                }
             },
             complete: function (xhr) {
-                widget.onComplete(xhr);
+                let next = true;
+                let fnc = self.settings.complete;
+                if (fnc != '' && fnc != undefined) {
+                    var fn = window[fnc];
+                    if (typeof fn === 'function') {
+                        next = fn(xhr, self);
+                    }
+                }
+
+                if (next) {
+                    self.onComplete(xhr);
+                }
             },
             error: function (xhr) {
-                var response = widget.parse(xhr.responseText);
-                widget.onError(response);
+                var response = self.parse(xhr.responseText);
+                self.onError(response);
             },
             format: 'json',
             data: {
@@ -103,7 +147,7 @@
         this.element.ajaxSubmit(options);
     };
 
-    easySubmit.prototype.beforeSubmit = function () {
+    easySubmit.prototype.beforeSubmit = function (self) {
         var confirm = this.form.data('confirm')
         if (undefined != confirm && '' != confirm) {
             if (!confirm(confirm)) {
@@ -178,8 +222,8 @@
     }
 
     easySubmit.prototype.onComplete = function (xhr) {
-        var widget = this;
-        widget.removeLoading();
+        var self = this;
+        self.removeLoading();
 
         //reload captcha
         $('.ac-captcha').each(function () {
@@ -193,8 +237,8 @@
     }
 
     easySubmit.prototype.success = function (response, code, xhr) {
-        var widget = this;
-        var res = widget.parse(response);
+        var self = this;
+        var res = self.parse(response);
 
         if (res === false || res === null) {
             notify({
@@ -204,10 +248,10 @@
             return true;
         }
 
-        widget.event('onComplete', res);
+        self.event('onComplete', res);
 
         if (res.status == "OK" || res.status == "success" || res.status == 200) {
-            widget.onSuccess(res, xhr)
+            self.onSuccess(res, xhr)
         } else if (res.status == 'INFO') {
             if (res.message) {
                 notify({
@@ -215,18 +259,18 @@
                     type: 'information'
                 });
             }
-            widget.event('onInfo', res, xhr);
+            self.event('onInfo', res, xhr);
         } else {
-            widget.onError(res, xhr)
+            self.onError(res, xhr)
         }
 
-        if (widget.settings.target) {
-            $(widget.settings.target).empty().show().html(message);
+        if (self.settings.target) {
+            $(self.settings.target).empty().show().html(message);
         }
     };
 
     easySubmit.prototype.onError = function (res, xhr) {
-        var widget = this;
+        var self = this;
 
         if (res === false || res === null) {
             notify({
@@ -236,15 +280,15 @@
             return true;
         }
 
-        widget.event('onError', res, xhr);
+        self.event('onError', res, xhr);
 
         if ('undefined' === typeof res.status && res.redirect) {
-            widget.redirect(res.redirect, 1000);
+            self.redirect(res.redirect, 1000);
             return true;
         }
 
         if (res.errors) {
-            widget.form.data("validator").invalidate(res.errors);
+            self.form.data("validator").invalidate(res.errors);
             notify({
                 text: res.errors[Object.keys(res.errors)[0]][0],
                 type: 'error'
@@ -264,17 +308,17 @@
     }
 
     easySubmit.prototype.onSuccess = function (res, xhr) {
-        var widget = this;
-        widget.event('onSuccess', res, xhr);
+        var self = this;
+        self.event('onSuccess', res, xhr);
 
         if (!res.preview) {
-            var submit = widget.settings.submit;
+            var submit = self.settings.submit;
             if (submit == 'parent') {
-                widget.form.closest('form').submit();
+                self.form.closest('form').submit();
             } else if (submit == 'render' || submit == true) {
                 $('[role="krender"]').submit();
             } else if (submit) {
-                $(widget.settings.submit).submit();
+                $(self.settings.submit).submit();
             }
         }
 
@@ -291,9 +335,9 @@
 
         var callback = res.callback;
         if (typeof callback == 'function') {
-            callback(res, widget);
+            callback(res, self);
         } else if (typeof window[callback] == 'function') {
-            window[callback](res, widget);
+            window[callback](res, self);
         }
 
         if (res.modal) {
@@ -325,11 +369,11 @@
             }
 
             if (res.modal.form.reset) {
-                widget.form.resetForm();
+                self.form.resetForm();
             }
 
             if (res.modal.form.clear) {
-                widget.form.clearForm();
+                self.form.clearForm();
             }
 
             return true;
@@ -358,54 +402,54 @@
             return true;
         }
 
-        if (widget.settings.hide || res.form.hide) {
+        if (self.settings.hide || res.form.hide) {
             $.fn.easyModalHide();
         }
 
-        if (widget.settings.reset || res.form.reset) {
-            widget.form.resetForm();
+        if (self.settings.reset || res.form.reset) {
+            self.form.resetForm();
         }
 
-        if (widget.settings.clear || res.form.clear) {
-            widget.form.clearForm();
+        if (self.settings.clear || res.form.clear) {
+            self.form.clearForm();
         }
 
-        if (widget.settings.render) {
-            widget.render(widget.settings.render);
+        if (self.settings.render) {
+            self.render(self.settings.render);
         }
 
         if (res.form.render) {
-            widget.render(res.form.render);
+            self.render(res.form.render);
         }
 
         var delay = (res.message) ? 2000 : 1000;
-        var redirect = widget.form.find('#return_url').val();
-        if (widget.settings.return_url) {
-            widget.redirect(return_url, delay);
+        var redirect = self.form.find('#return_url').val();
+        if (self.settings.return_url) {
+            self.redirect(return_url, delay);
         } else if (redirect != '' && redirect != undefined) {
-            widget.redirect(redirect, delay);
-        } else if (widget.settings.reload) {
+            self.redirect(redirect, delay);
+        } else if (self.settings.reload) {
             setTimeout("location.reload(true);", delay);
         }
 
-        if (widget.settings.alert || res.form.alert) {
+        if (self.settings.alert || res.form.alert) {
             alert(res.message);
         }
 
         if (res.redirect) {
-            widget.redirect(res.redirect, delay);
+            self.redirect(res.redirect, delay);
         }
 
         if (res.next) {
-            widget.redirect(res.next, 1000);
+            self.redirect(res.next, 1000);
         }
     }
 
     easySubmit.prototype.render = function (value) {
-        var widget = this;
+        var self = this;
 
         if (value == 'parent') {
-            var element = widget.form.closest('form');
+            var element = self.form.closest('form');
         } else if (value == 'render' || value == true) {
             var element = $('[role="krender"]');
         } else if (value && value != false) {
@@ -425,39 +469,39 @@
     };
 
     easySubmit.prototype.event = function (name, res, xhr) {
-        var widget = this;
+        var self = this;
 
-        var fnc = widget.settings[name];
+        var fnc = self.settings[name];
         if (fnc && 'undefined' !== typeof fnc) {
             if ('function' == typeof fnc) {
-                fnc(res, widget, widget.settings);
+                fnc(res, self, self.settings);
             } else {
                 var fn = window[fnc];
                 if (typeof fn === 'function') {
-                    fn(res, widget, widget.settings);
+                    fn(res, self, self.settings);
                 }
             }
         }
 
         //lower case
         var fnn = name.toLowerCase();
-        var fnc = widget.settings[fnn];
+        var fnc = self.settings[fnn];
         if (fnc && 'undefined' !== typeof fnc) {
             if ('function' == typeof fnc) {
-                fnc(res, widget, widget.settings);
+                fnc(res, self, self.settings);
             } else {
                 var fn = window[fnc];
                 if (typeof fn === 'function') {
-                    fn(res, widget, widget.settings);
+                    fn(res, self, self.settings);
                 }
             }
         }
 
-        var fnc = widget.form.find("#" + name).val();
+        var fnc = self.form.find("#" + name).val();
         if (fnc != '' && 'undefined' !== typeof fnc) {
             var fn = window[fnc];
             if (typeof fn === 'function') {
-                fn(res, widget, widget.settings);
+                fn(res, self, self.settings);
             }
         }
     };

@@ -3,12 +3,11 @@
 namespace Karla\Http\Controllers\Auth\Models;
 
 use Karla\Database\Eloquent\Model;
+use Karla\Models\Models;
 use Karla\User;
 
 class Token extends Model
 {
-    protected $table = 'auth_tokens';
-
     protected $fillable = [
         'access_token',
         'user_id',
@@ -17,8 +16,14 @@ class Token extends Model
         'expires_in',
     ];
 
+    public function getTable()
+    {
+        return config('karla.table.tokens', 'tokens');
+    }
+
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Models::user(), 'user_id', 'id');
     }
+
 }

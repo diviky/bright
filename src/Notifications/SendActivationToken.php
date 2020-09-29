@@ -6,8 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Mobtexting\MobtextingChannel;
-use NotificationChannels\Mobtexting\MobtextingSmsMessage;
 
 class SendActivationToken extends Notification implements ShouldQueue
 {
@@ -48,7 +46,7 @@ class SendActivationToken extends Notification implements ShouldQueue
             return \array_merge(['database'], $channels);
         }
 
-        return \array_merge(['database', 'mail', MobtextingChannel::class], $this->channels);
+        return \array_merge(['database', 'mail'], $this->channels);
     }
 
     /**
@@ -66,12 +64,6 @@ class SendActivationToken extends Notification implements ShouldQueue
                 'token'      => $this->token,
                 'notifiable' => $notifiable,
             ]);
-    }
-
-    public function toMobtexting($notifiable)
-    {
-        return (new MobtextingSmsMessage())
-            ->text($this->token . ' OTP for activating or login into account');
     }
 
     /**

@@ -10,9 +10,9 @@ class AddForeignKeysToAuthUserRolesTable extends Migration
      */
     public function up()
     {
-        Schema::table('auth_user_roles', function (Blueprint $table) {
-            $table->foreign('role_id', 'auth_user_roles_role_id_foreign')->references('id')->on('auth_roles')->onUpdate('RESTRICT')->onDelete('CASCADE');
-            $table->foreign('model_id', 'auth_user_roles_ibfk_1')->references('id')->on('auth_users')->onUpdate('CASCADE')->onDelete('CASCADE');
+        Schema::table(config('karla.table.user_roles'), function (Blueprint $table) {
+            $table->foreign('role_id', 'user_roles_role_id_foreign')->references('id')->on(config('karla.table.roles'))->onUpdate('RESTRICT')->onDelete('CASCADE');
+            $table->foreign('model_id', 'user_roles_ibfk_1')->references('id')->on(config('karla.table.users'))->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
@@ -21,9 +21,9 @@ class AddForeignKeysToAuthUserRolesTable extends Migration
      */
     public function down()
     {
-        Schema::table('auth_user_roles', function (Blueprint $table) {
-            $table->dropForeign('auth_user_roles_role_id_foreign');
-            $table->dropForeign('auth_user_roles_ibfk_1');
+        Schema::table(config('karla.table.user_roles'), function (Blueprint $table) {
+            $table->dropForeign('user_roles_role_id_foreign');
+            $table->dropForeign('user_roles_ibfk_1');
         });
     }
 }

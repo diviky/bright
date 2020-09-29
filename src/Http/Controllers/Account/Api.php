@@ -4,6 +4,7 @@ namespace Karla\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller as BaseController;
 use App\User;
+use Karla\Models\Models;
 
 class Api extends BaseController
 {
@@ -20,7 +21,7 @@ class Api extends BaseController
             return [];
         }
 
-        $row = User::where('id', $user_id)
+        $row = Models::user()::where('id', $user_id)
             ->first();
 
         return [

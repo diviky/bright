@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Karla\Http\Controllers\Auth\Traits\Token;
+use Karla\Models\Models;
 use Karla\Notifications\SendActivationToken;
 use Karla\Routing\Controller;
 
@@ -62,7 +63,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name'     => 'required|string|max:100',
-            'email'    => 'required|string|email|unique:auth_users',
+            'email'    => 'required|string|email|unique:' . config('karla.table.users'),
             'password' => 'required|case_diff|numbers|letters|min:6|max:20',
         ]);
     }
@@ -76,7 +77,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = User::create([
+        $user = Models::user()::create([
             'name'         => $data['name'],
             'email'        => $data['email'],
             'password'     => Hash::make($data['password']),
@@ -100,8 +101,10 @@ class RegisterController extends Controller
         //Assign a role to user
         $role = $this->role ?: config('auth.user.role');
 
-        $user->assignRole($role);
-        $user->assignOwnRole($role);
+        if ($role) {
+            $user->assignRole($role);
+            $user->assignOwnRole($role);
+        }
         $user->assignParent();
 
         if (0 == $user->status) {

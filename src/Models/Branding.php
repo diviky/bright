@@ -6,6 +6,11 @@ use Karla\Database\Eloquent\Model;
 
 class Branding extends Model
 {
-    protected $table = 'app_branding';
-    public $guarded  = [];
+    public $guarded = [];
+
+    public function getTable()
+    {
+        return config('karla.table.branding', 'branding');
+    }
+
 }

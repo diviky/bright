@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Karla\Http\Controllers\Auth\Models\Activation;
 use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Karla\Http\Controllers\Auth\Traits\Token;
+use Karla\Models\Models;
 use Karla\Notifications\ForgetPassword;
 
 class Api extends Controller
@@ -28,10 +29,10 @@ class Api extends Controller
     public function reset()
     {
         $this->rules([
-            $this->username() => 'required|exists:auth_users',
+            $this->username() => 'required|exists:' . config('karla.table.users'),
         ]);
 
-        $user = User::where($this->username(), $this->input($this->username()))->first();
+        $user = Models::user()::where($this->username(), $this->input($this->username()))->first();
 
         $token = $this->saveToken($user);
 
@@ -64,7 +65,7 @@ class Api extends Controller
             ];
         }
 
-        $user = User::where('id', $activation->user_id)->first();
+        $user = Models::user()::where('id', $activation->user_id)->first();
 
         $user->notify(new ForgetPassword($activation->token));
 
@@ -101,7 +102,7 @@ class Api extends Controller
             ];
         }
 
-        $user = User::where('id', $activation->user_id)->first();
+        $user = Models::user()::where('id', $activation->user_id)->first();
 
         $activation->delete();
 

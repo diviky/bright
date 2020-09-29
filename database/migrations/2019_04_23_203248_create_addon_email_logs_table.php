@@ -10,7 +10,7 @@ class CreateAddonEmailLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('addon_email_logs', function (Blueprint $table) {
+        Schema::create(config('karla.table.email_logs'), function (Blueprint $table) {
             $table->char('id', 36)->primary();
             $table->string('from', 191)->nullable();
             $table->string('to', 191)->nullable();
@@ -29,6 +29,6 @@ class CreateAddonEmailLogsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('addon_email_logs');
+        Schema::drop(config('karla.table.email_logs'));
     }
 }

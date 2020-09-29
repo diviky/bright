@@ -52,7 +52,7 @@ trait Themable
         $themes = config('theme');
         $device = $themes['device'];
 
-        if (empty($device)) {
+        if (empty($device) || $device == 'auto') {
             $device = (new Device())->detect();
             config(['theme.device' => $device]);
         }
@@ -67,6 +67,7 @@ trait Themable
         if (empty($themes[$deviceType])) {
             $deviceType = 'computer';
         }
+
         $theme = $themes[$deviceType];
 
         list($option, $view) = \explode('.', $route);

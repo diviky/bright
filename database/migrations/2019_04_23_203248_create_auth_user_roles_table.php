@@ -10,12 +10,12 @@ class CreateAuthUserRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('auth_user_roles', function (Blueprint $table) {
+        Schema::create(config('karla.table.user_roles'), function (Blueprint $table) {
             $table->integer('role_id')->unsigned();
             $table->string('model_type', 191);
-            $table->integer('model_id')->unsigned()->index('model_id');
+            $table->foreignId('model_id')->index('model_id');
             $table->primary(['role_id', 'model_id', 'model_type']);
-            $table->index(['model_type', 'model_id'], 'auth_user_roles_model_type_model_id_index');
+            $table->index(['model_type', 'model_id'], 'user_roles_model_type_model_id_index');
         });
     }
 
@@ -24,6 +24,6 @@ class CreateAuthUserRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('auth_user_roles');
+        Schema::drop(config('karla.table.user_roles'));
     }
 }

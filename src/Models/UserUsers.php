@@ -7,10 +7,14 @@ use Karla\Models\Models;
 
 class UserUsers extends Model
 {
-    protected $table      = 'auth_user_users';
     protected $timestamps = false;
 
     public $guarded = [];
+
+    public function getTable()
+    {
+        return config('karla.table.user_users', 'user_users');
+    }
 
     public function parent()
     {

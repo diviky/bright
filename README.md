@@ -1,5 +1,7 @@
 # An extension to laravel for quick develpment
 
+User mode should extends with Karla\Models\User
+
 Query builder needs to overwrite with karla
 
 Illuminate/Database/Eloquent/Builder.php
@@ -11,44 +13,41 @@ sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query
 ```
 
 ```php
-    php artisan vendor:publish --provider="Karla\KarlaServiceProvider" --tag="config"
-    php artisan vendor:publish --provider="Karla\KarlaServiceProvider" --tag="assets"
-    php artisan vendor:publish --provider="Karla\KarlaServiceProvider" --tag="views"
+    php artisan vendor:publish --tag="karla-config"
+    php artisan vendor:publish --tag="karla-assets"
+    php artisan vendor:publish --tag="karla-views"
+    php artisan vendor:publish --tag="karla-migrations"
+
+    //Copy bower, webpack and some other files
+    php artisan vendor:publish --tag="karla-setup"
+```
+
+```
+    bower install selectize --save
+    npm install jquery --save
+    npm install popper.js --save
+    npm install bootstrap --save
 ```
 
 add in kernal.php route middleware
+
 ```php
 // $middleware
     \Karla\Http\Middleware\PreflightResponse::class,
 
 // $routeMiddleware
 'auth.verified'      => \Karla\Http\Controllers\Auth\Middleware\IsUserActivated::class,
-'permission'         => \Karla\Http\Controllers\Auth\Middleware\PermissionMiddleware::class,
-'role'               => \Karla\Http\Controllers\Auth\Middleware\RoleMiddleware::class,
-'theme'              => \Karla\Http\Middleware\ThemeMiddleware::class,
-'accept'             => \Karla\Http\Middleware\Api::class,
-'ajax'               => \Karla\Http\Middleware\Ajax::class,
 
 ```
 
 ## Config changes
 
 add in auth.php guards array
+
 ```php
     'token' => [
         'driver' => 'access_token',
         'provider' => 'token'
-    ],
-```
-
-Replace passwords array with below
-```php
-    'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'auth_password_resets',
-            'expire' => 60,
-        ],
     ],
 ```
 
@@ -59,8 +58,13 @@ Replace passwords array with below
     ...
     <td sortable>
         <i class="fa fa-arrows-v fa-lg"></i>
-        <input type="hidden" name="sorting[{{ $row->id }}]" value="{{ $row->ordering }}">
+        <input
+            type="hidden"
+            name="sorting[{{ $row->id }}]"
+            value="{{ $row->ordering }}"
+        />
     </td>
+</tbody>
 ```
 
 ```php
@@ -127,11 +131,11 @@ $filters[] = ['date[created_at]' => date('Y-m-d')];
 $filters[] = ['range[created_at]' => date('Y-m-d') .' - '. date('Y-m-d')];
 
 // $query->whereBetween('created between ? and ? ', [strtotime('-1 day'), time()])
-$filters[] = ['timestamp[created]' => date('Y-m-d') .' - '. date('Y-m-d')]; 
+$filters[] = ['timestamp[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
 
 //
-$filters[] = ['unixtime[created]' => date('Y-m-d') .' - '. date('Y-m-d')]; 
-$filters[] = ['between[created]' => date('Y-m-d') .' - '. date('Y-m-d')]; 
+$filters[] = ['unixtime[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
+$filters[] = ['between[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
 
 $filters[] = ['filter[name]' => 'karla']; // $query->where('name', '=', 'karla')
 $filters[] = ['filter[first_name|last_name]' => 'karla']; // $query->where('first_name', '=', 'karla')->orWhere()
@@ -155,7 +159,6 @@ $rows = DB::table('users')
 
 ```
 
-
 ```php
 
 $rows = DB::table('users')
@@ -177,6 +180,7 @@ $rows = DB::table('users')
 ```
 
 Get only deleted items
+
 ```php
 
 $rows = DB::table('users')
@@ -223,7 +227,7 @@ $rows = DB::table('orders')
 
 ##### Timestamps
 
-Set the timestamps 'created_at` and `updated_at` for insert and `updated_at` for update
+Set the timestamps 'created_at`and`updated_at`for insert and`updated_at` for update
 
 ```php
     $result = DB::table('orders')

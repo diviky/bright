@@ -19,14 +19,14 @@ var public = './public/';
 var theme = 'resources/themes/tabler/';
 
 mix.babel(
-    glob.sync(resources + 'js/*.js').concat(glob.sync(resources + 'js/*/*.js')),
-    'public/js/app.js');
-
-mix.babel(
     glob.sync('vendor/sankar/laravel-karla/resources/assets/js/*.js')
         .concat(glob.sync(
             'vendor/sankar/laravel-karla/resources/assets/js/*/*.js')),
     'public/js/karla.js');
+
+mix.babel(
+    glob.sync(resources + 'js/*.js').concat(glob.sync(resources + 'js/*/*.js')),
+    'public/js/app.js');
 
 mix.styles(
     glob.sync('resources/css/*.css').concat(glob.sync('resources/css/*/*.css')),
@@ -42,6 +42,9 @@ mix.scripts(
       bower + 'jquery-pjax/jquery.pjax.js',
       bower + 'moment/min/moment.min.js',
       bower + 'noty/lib/noty.min.js',
+      bower + 'microplugin/src/microplugin.js',
+      bower + 'sifter/sifter.min.js',
+      bower + 'selectize/dist/js/selectize.min.js',
     ],
     public + 'js/static.js');
 
@@ -49,10 +52,17 @@ mix.options({processCssUrls: false});
 
 // Bower Styles
 mix.styles(
-    [bower + 'nprogress/nprogress.css', bower + 'animate.css/animate.min.css'],
+    [
+      bower + 'nprogress/nprogress.css',
+      bower + 'animate.css/animate.min.css',
+      bower + 'select2/dist/css/select2.min.css',
+      bower + 'password-strength-meter/dist/password.min.css',
+    ],
+
     public + 'css/static.css');
 
 
+mix.sass(theme + 'assets/scss/theme.scss', public + 'css');
 mix.sass(theme + 'assets/scss/app.scss', public + 'css');
 
 if (mix.inProduction()) {

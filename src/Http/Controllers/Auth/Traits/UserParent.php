@@ -2,7 +2,7 @@
 
 namespace Karla\Http\Controllers\Auth\Traits;
 
-use App\User;
+use Karla\Models\Models;
 
 trait UserParent
 {
@@ -12,7 +12,7 @@ trait UserParent
             if (app()->has('owner')) {
                 $parent_id = app()->get('owner');
             } else {
-                $parent_id = User::where('role', $this->admin)
+                $parent_id = Models::user()::where('role', $this->admin)
                     ->orderBy('id', 'asc')
                     ->take(1)
                     ->value('id');
@@ -33,6 +33,6 @@ trait UserParent
 
     public function parent()
     {
-        return $this->hasOne('App\Users', 'parent_id');
+        return $this->hasOne(Models::user(), 'parent_id');
     }
 }

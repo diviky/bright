@@ -2,7 +2,7 @@
 
 namespace Karla\Models;
 
-use App\User;
+use App\Models\User;
 use Karla\Models\Branding;
 use Karla\Models\EmailLogs;
 use Karla\Models\Meta;
@@ -15,7 +15,7 @@ class Models
 {
     public static function user()
     {
-        return User::class;
+        return config('karla.models.user', User::class);
     }
 
     public static function passwordHistory()
