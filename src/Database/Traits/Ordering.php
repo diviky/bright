@@ -19,7 +19,7 @@ trait Ordering
                 $sort = \explode('|', $data['sort'], 2);
 
                 $data['sort']  = $sort[0];
-                $data['order'] = $sort[1];
+                $data['order'] = $sort[1] ?? 'asc';
             }
 
             return $this->orderBy($data['sort'], \strtolower($data['order']));

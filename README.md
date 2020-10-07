@@ -1,10 +1,10 @@
 # An extension to laravel for quick develpment
 
-User mode should extends with Karla\Models\User
+`\App\Models\User` model should extends with `\Karla\Models\User`
+
+`\App\Http\Controllers\Controller` should extends with `\Karla\Routing\Controller`
 
 Query builder needs to overwrite with karla
-
-Illuminate/Database/Eloquent/Builder.php
 
 ```php
 
@@ -247,6 +247,17 @@ Set the timestamps 'created_at`and`updated_at`for insert and`updated_at` for upd
     $result = DB::table('orders')
         ->timestamps(false)
         ->update($values)
+
+```
+
+```
+
+    <div class="form-group">
+        <label class="form-label">Sent By Employee</label>
+        <select name="sent_by" class="form-control" data-select-ajax="{{ url('search/employee') }}">
+            <option value="">Search Employee</option>
+        </select>
+    </div>
 
 ```
 

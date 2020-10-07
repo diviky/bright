@@ -111,6 +111,16 @@ trait Responsable
             return $paths;
         }
 
+        if (\method_exists($controller, 'loadViewsFrom')) {
+            $paths = $controller->loadViewsFrom();
+            $paths = !\is_array($paths) ? [$paths] : $paths;
+            foreach ($paths as $key => $path) {
+                $paths[$key] = $path . '/views/';
+            }
+
+            return $paths;
+        }
+
         if ($action) {
             return $this->getViewPath($action);
         }

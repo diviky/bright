@@ -38,11 +38,10 @@ class KarlaServiceProvider extends ServiceProvider
 
         $this->replaceConfigRecursive($this->path() . '/config/auth.php', 'auth');
 
-        $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
         $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
-
-        //$this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
-        //$this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
+        // $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
+        // $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
+        $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
 
         $this->loadViewsFrom($this->path() . '/resources/views/', 'karla');
 
@@ -58,8 +57,8 @@ class KarlaServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+        $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
         $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
-        $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
 
         $this->redirect();
         $this->auth();

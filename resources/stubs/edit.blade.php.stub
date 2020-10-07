@@ -1,0 +1,38 @@
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Edit Courier</h3>
+    </div>
+
+    <div class="card-body p-4 form-float">
+
+        <form method="POST" action="{{ url('courier/edit/'.$row->id) }}" data-hide="true" data-render="true"
+            role="ksubmit">
+            @csrf
+
+            <div class="input-group">
+                <label class="form-label">Tracking Code</label>
+                <input type="text" class="form-control" name="tracking_code" value="{{ $row->tracking_code }}" placeholder="Tracking Code" />
+
+                <div class="input-group-append w100">
+                    <label class="form-label">Quantity</label>
+                    <input type="number" class="form-control" name="quantity" value="{{ $row->quantity }}" placeholder="Quantity" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Vendor Name</label>
+                <input type="text" class="form-control" name="vendor_name" value="{{ $row->vendor_name }}" placeholder="Vendor Name" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea class="form-control" name="notes" cols="30" rows="2">{{ $row->notes }}</textarea>
+            </div>
+
+            <div class="form-group mb-0">
+                <button type="submit" class="btn btn-primary btn-block"> Save </button>
+            </div>
+        </form>
+
+    </div>
+</div>

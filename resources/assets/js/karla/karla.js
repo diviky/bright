@@ -48,7 +48,10 @@ function karlaJs() {
             $(e.trigger).tooltip('update')
         });
         clipboard.on('error', function (e) {
-            noty({ text: 'Error!', type: "info" });
+            noty({
+                text: 'Error!',
+                type: "info"
+            });
         });
     }
 
@@ -147,12 +150,20 @@ function karlaJs() {
 }
 
 function karlaBootJs() {
-    $('[data-bootstrap-select]').find('li').click(function (e) {
+    $(document).on('click', '[data-bootstrap-select] li', function (e) {
         e.preventDefault();
         var param = $(this).data("param");
         var concept = $(this).text();
-        $(this).parent('div').find('[data-concept]').text(concept);
-        $(this).parent('div').find('[data-param]').val(param);
+        $(this).parents('div:first').find('[data-concept]').text(concept);
+        $(this).parents('div:first').find('[data-param]').val(param).trigger('change');
+    });
+
+    $(document).on('click', '.dropdown-select .dropdown-item', function (e) {
+        let $this = $(this);
+        var dropdown = $this.parents('.dropdown:first');
+        var target = dropdown.find('.dropdown-toggle');
+        target.prev('input').val($this.data('value')).trigger('change');
+        target.html($this.html());
     });
 
     $(window).on('scroll', function () {
@@ -169,7 +180,6 @@ function karlaBootJs() {
         });
         return false;
     });
-
 
     $('[data-interval]').each(function () {
         var $this = $(this);

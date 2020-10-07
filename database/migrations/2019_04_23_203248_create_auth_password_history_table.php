@@ -14,7 +14,7 @@ class CreateAuthPasswordHistoryTable extends Migration
             $table->increments('id');
             $table->foreignId('user_id')->index('user_id');
             $table->string('password', 191);
-            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('created_at')->useCurrent();
         });
     }
 

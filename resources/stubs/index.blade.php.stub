@@ -1,0 +1,92 @@
+@view('ajax') @form('start')
+
+<div class="card" style="min-height: 400px">
+    <div class="card-header">
+        <h2 class="card-title">Courier </h2>
+        <div class="card-options">
+            <div class="input-group">
+                <input type="text" class="form-control" size="30" data-datepicker name="datetime[created_at]"
+                    placeholder="Choose Date">
+
+                <select name="dfilter[search]" data-select class="form-control">
+                    <option value="">Search field</option>
+                    <option value="business_name">Courier</option>
+                    <option value="security_name">Security</option>
+                </select>
+
+                <input type="text" class="form-control" name="search" placeholder="Search value">
+                <button type="submit" class="btn btn-primary"> <i class="fe fe-arrow-right"></i> </button>
+                <a href="{{ url('courier/create') }}" tooltip="modal" class="btn btn-primary ml-1"><i class="fe fe-arrow-up"></i> Out</a>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table card-table table-vcenter text-nowrap">
+            <thead>
+                <tr>
+                    <th class="w-1"></th>
+                    <th>Courier</th>
+                    <th data-order="sent_by">Sent By</th>
+                    <th>Vendor</th>
+                    <th>Remarks</th>
+                    <th data-order="created_at">Created_at</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody ajax-content>
+                @endview @forelse($rows as $row)
+                <tr>
+                    <td class="text-center">
+                        @if ($row->type == 'I')
+                        <i class="fe fe-arrow-down"></i>
+                        @else
+                        <i class="fe fe-arrow-up"></i>
+                        @endif
+                    </td>
+                    <td>
+                        <div class="text-bold">{{ $row->business_name }}</div>
+                        <div class="text-muted">Tracking: {{ $row->tracking_code }}</div>
+                    </td>
+                    <td>
+                        {{ $row->sent_by_name }}
+                        <div class="small text-muted">Security: {{ $row->security_name }}</div>
+                    </td>
+                    <td>
+                        {{ $row->vendor_name }}
+                        <div class="small text-muted">{{ $row->department_name }}</div>
+                    </td>
+                    <td>{!! nl2br(wordwrap($row->remarks,30)) !!}</td>
+                    <td>{{ datetime($row->created_at) }}</td>
+                    <td class="text-right">
+                        <a tooltip="modal" href="{{ url('courier/edit/'.$row->id) }}"
+                            class="btn btn-secondary btn-sm">Edit</a>
+                        <a data-delete href="{{ url('courier/delete/'.$row->id) }}"
+                            class="btn btn-secondary btn-sm">Delete</a>
+                    </td>
+                </tr>
+                @empty
+                <tr class="no-results">
+                    <td colspan="10" align="center">
+                        <div class="no-result">
+                            <img src="/icons/courier.svg" class="icon icon-xxl">
+                            <h2>Create your first entry.</h2>
+                            <a href="{{ url('courier/create') }}" tooltip="modal" class="btn btn-primary">Add a
+                                Courier</a>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
+                <tr>
+                    <td colspan="10" align="center">
+                        <div class="d-flex" class="ac-load-more-remove">
+                            {{ $rows->links() }}
+                        </div>
+                    </td>
+                </tr>
+                @view('ajax')
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@form('end') @endview

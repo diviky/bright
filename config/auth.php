@@ -20,11 +20,6 @@ return [
      */
 
     'guards'       => [
-        'token'        => [
-            'driver'   => 'access_token',
-            'provider' => 'access_token',
-        ],
-
         'access_token' => [
             'driver'   => 'access_token',
             'provider' => 'access_token',

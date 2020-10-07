@@ -97,3 +97,8 @@ function utcTime($date = null, $timezone = null)
 {
     return app(Util::class)->utcTime($date, $timezone);
 }
+
+function json($data)
+{
+    return response()->json($data);
+}

@@ -17,11 +17,16 @@ var node = './node_modules/';
 var resources = './resources/';
 var public = './public/';
 var theme = 'resources/themes/tabler/';
+mix.options({
+    processCssUrls: false
+});
 
 mix.babel(
-    glob.sync('vendor/sankar/laravel-karla/resources/assets/js/*.js')
-        .concat(glob.sync(
-            'vendor/sankar/laravel-karla/resources/assets/js/*/*.js')),
+    glob.sync('vendor/sankar/laravel-karla/resources/assets/js/bootstrap/*.js')
+    .concat(glob.sync(
+        'vendor/sankar/laravel-karla/resources/assets/js/karla/*.js'))
+    .concat(glob.sync(
+        'vendor/sankar/laravel-karla/resources/assets/js/plugins/*.js')),
     'public/js/karla.js');
 
 mix.babel(
@@ -35,36 +40,41 @@ mix.styles(
 // Bower Scripts
 mix.scripts(
     [
-      node + 'jquery/dist/jquery.min.js',
-      node + 'popper.js/dist/umd/popper.min.js',
-      node + 'bootstrap/dist/js/bootstrap.min.js',
-      bower + 'nprogress/nprogress.js',
-      bower + 'jquery-pjax/jquery.pjax.js',
-      bower + 'moment/min/moment.min.js',
-      bower + 'noty/lib/noty.min.js',
-      bower + 'microplugin/src/microplugin.js',
-      bower + 'sifter/sifter.min.js',
-      bower + 'selectize/dist/js/selectize.min.js',
+        node + 'jquery/dist/jquery.min.js',
+        node + 'popper.js/dist/umd/popper.min.js',
+        node + 'bootstrap/dist/js/bootstrap.min.js',
+        bower + 'nprogress/nprogress.js', bower + 'jquery-pjax/jquery.pjax.js',
+        bower + 'moment/min/moment.min.js', bower + 'noty/lib/noty.min.js',
+        bower + 'microplugin/src/microplugin.js', bower + 'sifter/sifter.min.js',
+        bower + 'selectize/dist/js/selectize.min.js',
+        bower + 'password-strength-meter/dist/password.min.js',
+        // bower +
+        // "eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js",
+        // node + "daterangepicker/daterangepicker.js",
+
     ],
     public + 'js/static.js');
 
-mix.options({processCssUrls: false});
 
 // Bower Styles
 mix.styles(
     [
-      bower + 'nprogress/nprogress.css',
-      bower + 'animate.css/animate.min.css',
-      bower + 'select2/dist/css/select2.min.css',
-      bower + 'password-strength-meter/dist/password.min.css',
-    ],
+        bower + 'nprogress/nprogress.css', bower + 'animate.css/animate.min.css',
+        bower + 'select2/dist/css/select2.min.css',
+        bower + 'password-strength-meter/dist/password.min.css',
+        // bower +
+        // "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
+        // node + "daterangepicker/daterangepicker.css",
 
+    ],
     public + 'css/static.css');
 
+mix.copy(
+    bower + 'password-strength-meter/dist/passwordstrength.jpg',
+    public + 'images/');
+mix.copy(theme + 'assets/scss/fonts', public + 'fonts');
 
 mix.sass(theme + 'assets/scss/theme.scss', public + 'css');
 mix.sass(theme + 'assets/scss/app.scss', public + 'css');
 
-if (mix.inProduction()) {
-  mix.version();
-}
+mix.version();

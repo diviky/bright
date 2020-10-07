@@ -36,7 +36,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'roles'                 => config('karla.table.roles'),
+        'roles'                 => config('karla.table.roles', 'roles'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -44,7 +44,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'permissions'           => config('karla.table.permissions'),
+        'permissions'           => config('karla.table.permissions', 'permissions'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -52,7 +52,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_permissions' => config('karla.table.user_permissions'),
+        'model_has_permissions' => config('karla.table.user_permissions', 'user_permissions'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -60,7 +60,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_roles'       => config('karla.table.user_roles'),
+        'model_has_roles'       => config('karla.table.user_roles', 'user_roles'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -68,7 +68,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'role_has_permissions'  => config('karla.table.role_permissions'),
+        'role_has_permissions'  => config('karla.table.role_permissions', 'role_permissions'),
     ],
 
     'column_names'                    => [
@@ -83,13 +83,28 @@ return [
 
         'model_morph_key' => 'model_id',
     ],
+
     /*
-     * When set to true, the required permission/role names are added to the exception
+     * When set to true, the required permission names are added to the exception
      * message. This could be considered an information leak in some contexts, so
      * the default setting is false here for optimum safety.
      */
 
     'display_permission_in_exception' => false,
+
+    /*
+     * When set to true, the required role names are added to the exception
+     * message. This could be considered an information leak in some contexts, so
+     * the default setting is false here for optimum safety.
+     */
+
+    'display_role_in_exception'       => false,
+
+    /*
+     * By default wildcard permission lookups are disabled.
+     */
+
+    'enable_wildcard_permission'      => true,
 
     'cache'                           => [
 
