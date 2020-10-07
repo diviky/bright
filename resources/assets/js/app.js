@@ -13,7 +13,7 @@ function bootstrapOnce() {
   load_drop();
 }
 
-$(document).ready(function() {
+$(document).on('ready', function() {
   appJs();
   bootstrapJs();
   bootstrapOnce();

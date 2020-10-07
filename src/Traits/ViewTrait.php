@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 trait ViewTrait
 {
-    public function ajax($url = null, $params = [], $method = 'post')
+    public function ajax($url = null, $params = [], $method = 'post', $attributes = [])
     {
         $form         = [];
         $form['pjax'] = $this->get('request')->pjax();
@@ -16,6 +16,10 @@ trait ViewTrait
 
         if (!$form['ajax']) {
             $inputs = '';
+            if (!is_array($params)) {
+                $params = [];
+            }
+
             foreach ($params as $k => $v) {
                 $inputs .= '<input type="hidden" name="' . $k . '" value="' . $v . '" />';
             }
@@ -23,9 +27,18 @@ trait ViewTrait
             $class           = 'render-' . Str::slug($url);
             $params['class'] = '.' . $class;
 
+            if (!is_array($attributes)) {
+                $attributes = [];
+            }
+
             $action = '/' !== \substr($url, 0, 1) ? $this->route($url) : url($url);
 
-            $start          = '<form role="krender" class="' . $class . '" method="' . $method . '" action="' . $action . '">';
+            $attributes['role']   = 'krender';
+            $attributes['class']  = $class;
+            $attributes['method'] = $method ?? 'POST';
+            $attributes['action'] = $action;
+
+            $start          = '<form ' . $this->toAttribs($attributes) . '>';
             $form['start']  = $start . $inputs . csrf_field();
             $form['inputs'] = $inputs;
             $form['end']    = '</form>';
@@ -49,5 +62,15 @@ trait ViewTrait
         }
 
         return $this;
+    }
+
+    protected function toAttribs($attributes)
+    {
+        $output = "";
+        foreach ($attributes as $key => $value) {
+            $output .= $key . '="' . $value . '" ';
+        }
+
+        return $output;
     }
 }
