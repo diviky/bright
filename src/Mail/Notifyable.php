@@ -2,7 +2,6 @@
 
 namespace Karla\Mail;
 
-use App\User;
 use Karla\Models\Models;
 
 trait Notifyable

@@ -55,10 +55,10 @@ return [
         'role'             => \Karla\Http\Controllers\Auth\Middleware\RoleMiddleware::class,
         'roleorpermission' => \Karla\Http\Controllers\Auth\Middleware\RoleOrPermissionMiddleware::class,
         'authorize'        => \Karla\Http\Controllers\Auth\Middleware\AuthorizeMiddleware::class,
-        'theme'            => \Karla\Http\Middleware\ThemeMiddleware::class,
         'accept'           => \Karla\Http\Middleware\Accept::class,
         'api.response'     => \Karla\Http\Middleware\Api::class,
         'ajax'             => \Karla\Http\Middleware\Ajax::class,
+        'theme'            => \Karla\Http\Middleware\ThemeMiddleware::class,
         'branding'         => \Karla\Http\Middleware\Branding::class,
     ],
 

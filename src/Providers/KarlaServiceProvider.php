@@ -183,7 +183,7 @@ class KarlaServiceProvider extends ServiceProvider
             $router->pushMiddlewareToGroup('rest', 'accept');
             $router->pushMiddlewareToGroup('rest', 'api.response');
 
-            //$router->pushMiddlewareToGroup('rest', 'auth:api,token,credentials');
+            //$router->pushMiddlewareToGroup('rest', 'auth:api,access_token,access_token,credentials');
         }
 
     }

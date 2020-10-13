@@ -15,7 +15,7 @@ class Models
 {
     public static function user()
     {
-        return config('karla.models.user', User::class);
+        return config('auth.providers.users.model', User::class);
     }
 
     public static function passwordHistory()

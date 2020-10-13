@@ -3,7 +3,6 @@
 namespace Karla\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller as BaseController;
-use App\User;
 use Karla\Models\Models;
 
 class Api extends BaseController

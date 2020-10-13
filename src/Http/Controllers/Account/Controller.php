@@ -3,7 +3,6 @@
 namespace Karla\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller as BaseController;
-use App\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
