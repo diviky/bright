@@ -21,11 +21,7 @@ return [
 
         'include'        => [
             'paths'      => [
-                'css',
-                'js',
-                'images',
-                'fonts',
-                'svg',
+                'assets',
                 'vendor',
             ],
             'files'      => [

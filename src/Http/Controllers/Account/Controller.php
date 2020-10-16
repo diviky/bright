@@ -67,15 +67,15 @@ class Controller extends BaseController
 
     public function password(): array
     {
+        $user_id = user('id');
+        $user    = Models::user()::find($user_id);
+
         if ($this->isMethod('post')) {
             $this->rules([
                 'oldpassword'      => 'required',
                 'password'         => 'required|min:6',
                 'password_confirm' => 'required|same:password',
             ]);
-
-            $user_id = user('id');
-            $user    = Models::user()::find($user_id);
 
             $password = $user->password;
             $inputpwd = $this->input('password');
@@ -123,7 +123,9 @@ class Controller extends BaseController
             return $this->updated($result, 'password');
         }
 
-        return [];
+        return [
+            'user' => $user,
+        ];
     }
 
     public function sniff($key)
@@ -187,5 +189,4 @@ class Controller extends BaseController
             'rows' => $rows,
         ];
     }
-
 }

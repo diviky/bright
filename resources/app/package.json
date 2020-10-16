@@ -2,7 +2,7 @@
     "private": true,
     "scripts": {
         "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch": "npm run development -- --watch",
         "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -22,9 +22,19 @@
         "sass-loader": "^8.0.2"
     },
     "dependencies": {
+        "animate.css": "^4.1.1",
         "bootbox": "^5.4.0",
-        "daterangepicker": "^3.0.3",
+        "daterangepicker": "^3.1.0",
         "intl-tel-input": "^14.1.0",
-        "laravel-echo": "^1.6.1"
+        "jquery-pjax": "^2.0.1",
+        "laravel-echo": "^1.6.1",
+        "microplugin": "0.0.3",
+        "moment": "^2.29.1",
+        "noty": "^3.2.0-beta",
+        "nprogress": "^0.2.0",
+        "password-strength-meter": "^2.1.0",
+        "select2": "^4.0.13",
+        "selectize": "^0.12.6",
+        "sifter": "^0.5.4"
     }
 }

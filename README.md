@@ -1,14 +1,18 @@
 # An extension to laravel for quick develpment
 
 `\App\Models\User` model should extends with `\Karla\Models\User`
-
+`\App\Exceptions\Handler` should extends with `\Karla\Exceptions\Handler`
 `\App\Http\Controllers\Controller` should extends with `\Karla\Routing\Controller`
 
 Query builder needs to overwrite with karla
 
 ```php
 
-sed -i -e 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
+sed -i '' 's/Illuminate\\Foundation\\Auth\\/Karla\\Models\\/g' app/Models/User.php
+sed -i '' 's/Illuminate\\Foundation\\/Karla\\/g' app/Exceptions/Handler.php
+sed -i '' 's/Illuminate\\Routing\\/Karla\\Routing\\/g' app/Http/Controllers/Controller.php
+
+sed -i '' 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
 
 ```
 
@@ -250,15 +254,17 @@ Set the timestamps 'created_at`and`updated_at`for insert and`updated_at` for upd
 
 ```
 
-```
-
-    <div class="form-group">
-        <label class="form-label">Sent By Employee</label>
-        <select name="sent_by" class="form-control" data-select-ajax="{{ url('search/employee') }}">
-            <option value="">Search Employee</option>
-        </select>
-    </div>
-
+```html
+<div class="form-group">
+    <label class="form-label">Sent By Employee</label>
+    <select
+        name="sent_by"
+        class="form-control"
+        data-select-ajax="{{ url('search/employee') }}"
+    >
+        <option value="">Search Employee</option>
+    </select>
+</div>
 ```
 
 ## License

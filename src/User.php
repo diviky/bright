@@ -2,32 +2,22 @@
 
 namespace Karla;
 
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Illuminate\Foundation\Auth\Access\Authorizable as BaseAuthorizable;
-use Illuminate\Notifications\Notifiable;
-use Karla\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Karla\Http\Controllers\Auth\Traits\AccessToken;
 use Karla\Http\Controllers\Auth\Traits\Authorizable;
 use Karla\Http\Controllers\Auth\Traits\HasRoles;
 use Karla\Http\Controllers\Auth\Traits\UserParent;
+use Karla\Http\Controllers\Auth\Traits\UserRole;
+use Karla\Http\Controllers\Auth\Traits\UsersParent;
 
-class User extends Model implements
-AuthenticatableContract,
-AuthorizableContract,
-CanResetPasswordContract
+class User extends Authenticatable
 {
-    use Authenticatable;
-    use BaseAuthorizable;
-    use CanResetPassword;
-    use Notifiable;
     use HasRoles;
     use Authorizable;
     use AccessToken;
     use UserParent;
+    use UserRole;
+    use UsersParent;
 
     public $guard_name = 'web';
     protected $admin   = 'super-admin';

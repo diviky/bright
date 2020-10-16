@@ -8,4 +8,4 @@ php artisan route:clear && php artisan route:cache
 php artisan view:clear && php artisan view:cache
 php artisan cache:clear
 
-unlink public/storage && php artisan storage:link
+[ -L public/storage ] && unlink public/storage && php artisan storage:link

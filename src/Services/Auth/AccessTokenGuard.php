@@ -21,7 +21,7 @@ class AccessTokenGuard implements Guard
         $this->provider = $provider;
         $this->request  = $request;
         // key to check in request
-        $this->inputKeys = ['access_token', 'access_key', 'token', 'api_token'];
+        $this->inputKeys = ['access_token', 'api_token'];
         // key to check in database
         $this->storageKey = 'access_token';
     }
@@ -97,8 +97,6 @@ class AccessTokenGuard implements Guard
 
     /**
      * Validate a user's credentials.
-     *
-     * @param array $credentials
      *
      * @return bool
      */

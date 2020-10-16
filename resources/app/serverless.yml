@@ -1,0 +1,86 @@
+service: laravel
+
+provider:
+  name: aws
+  region: ap-south-1
+  stage: dev # The stage of the application, e.g. dev, production, staging… ('dev' is the default)
+  runtime: provided
+  environment:
+    VAPOR_SSM_PATH: 1
+    BREF_PING_DISABLE: 1
+    CACHE_DRIVER: dynamodb
+    VAPOR_ENVIRONMENT: dev
+    VAPOR_PROJECT: laravel
+    SESSION_DRIVER: array
+    # MIX_URL: ${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: 'arn:aws:dynamodb:${self:provider.region}:*:*'
+
+package:
+  # Directories to exclude from deployment
+  exclude:
+    - node_modules/**
+    - bower_components/**
+    - database/**
+    - public/storage
+    - public/css
+    - public/js
+    - public/fonts
+    - public/assets
+    - public/images
+    - resources/assets/**
+    - resources/themes/tabler/assets/**
+    - storage/**
+    - tests/**
+    - .git/**
+
+functions:
+  # This function runs the Laravel website/API
+  web:
+    handler: public/index.php
+    timeout: 28 # in seconds (API Gateway has a timeout of 29 seconds)
+    memorySize: 1024 # set to 512M instead of 1024M (the default)
+    layers:
+      - ${bref:layer.php-74-fpm}
+    events:
+      - http: 'ANY /'
+      - http: 'ANY /{proxy+}'
+      - schedule:
+          rate: rate(5 minutes)
+          input:
+            warmer: true
+  # This function lets us run artisan commands in Lambda
+  artisan:
+    handler: artisan
+    timeout: 120 # in seconds
+    layers:
+      - ${bref:layer.php-74} # PHP
+      - ${bref:layer.console} # The "console" layer
+
+plugins:
+  # We need to include the Bref plugin
+  - ./vendor/bref/bref
+
+resources: # CloudFormation template syntax from here on.
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: cache
+        AttributeDefinitions:
+          - AttributeName: key
+            AttributeType: S
+        KeySchema:
+          - AttributeName: key
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

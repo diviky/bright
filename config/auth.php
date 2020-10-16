@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -56,6 +55,8 @@ return [
     ],
 
     'user'         => [
-        'role' => null,
+        'role' => 'customer',
+        // Default user status if 0 user should verify email address
+        'status' => 0,
     ],
 ];

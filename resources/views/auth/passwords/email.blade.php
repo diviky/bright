@@ -11,7 +11,7 @@
             {{ session('status') }}
         </div>
         @endif
-        <p class="text-muted">Enter your email address and your password reset link will be emailed to you.</p>
+        <p class="text-muted">Enter your email address and your password reset link will be mailed to you.</p>
 
         <form method="POST" action="{{ route('password.email') }}" role="ksubmit">
             @csrf

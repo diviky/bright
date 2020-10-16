@@ -5,6 +5,8 @@ namespace Karla\Providers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
+use Karla\Console\Commands\Migrate;
+use Karla\Console\Commands\Setup;
 use Karla\Contracts\UtilInterface;
 use Karla\Routing\Redirector;
 use Karla\Routing\Resolver;
@@ -22,11 +24,6 @@ class KarlaServiceProvider extends ServiceProvider
 {
     use Provider;
 
-    protected function path()
-    {
-        return __DIR__ . '/../..';
-    }
-
     public function boot()
     {
         $this->directive();
@@ -39,8 +36,6 @@ class KarlaServiceProvider extends ServiceProvider
         $this->replaceConfigRecursive($this->path() . '/config/auth.php', 'auth');
 
         $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
-        // $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
-        // $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
         $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
 
         $this->loadViewsFrom($this->path() . '/resources/views/', 'karla');
@@ -92,6 +87,11 @@ class KarlaServiceProvider extends ServiceProvider
         });
     }
 
+    protected function path()
+    {
+        return __DIR__ . '/../..';
+    }
+
     protected function console()
     {
         $this->publishes([
@@ -117,6 +117,15 @@ class KarlaServiceProvider extends ServiceProvider
         $this->publishes([
             $this->path() . '/database/migrations' => database_path('migrations'),
         ], 'karla-migrations');
+
+        $this->publishes([
+            $this->path() . '/database/seeders' => database_path('seeders'),
+        ], 'karla-seeders');
+
+        $this->commands([
+            Setup::class,
+            Migrate::class,
+        ]);
 
         //$this->loadMigrationsFrom($this->path() . '/database/migrations');
     }
@@ -169,7 +178,7 @@ class KarlaServiceProvider extends ServiceProvider
 
         $middlewares = $this->app['config']->get('karla.middlewares');
 
-        if (is_array($middlewares)) {
+        if (\is_array($middlewares)) {
             foreach ($middlewares as $name => $value) {
                 $router->aliasMiddleware($name, $value);
             }
@@ -185,6 +194,5 @@ class KarlaServiceProvider extends ServiceProvider
 
             //$router->pushMiddlewareToGroup('rest', 'auth:api,access_token,access_token,credentials');
         }
-
     }
 }

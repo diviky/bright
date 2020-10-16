@@ -1,4 +1,9 @@
 function load_password() {
+    if (!$.fn.password) {
+        console.info('node install password-strength-meter --save');
+        return;
+    }
+
     $('[data-password]').password();
 
     $('[data-password-show]').each(function () {
