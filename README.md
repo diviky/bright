@@ -39,23 +39,9 @@ add in kernal.php route middleware
 // $middleware
     \Karla\Http\Middleware\PreflightResponse::class,
 
-// $routeMiddleware
-'auth.verified'      => \Karla\Http\Controllers\Auth\Middleware\IsUserActivated::class,
-
 ```
 
-## Config changes
-
-add in auth.php guards array
-
-```php
-    'token' => [
-        'driver' => 'access_token',
-        'provider' => 'token'
-    ],
-```
-
-###Sorting task
+### Sorting task
 
 ```html
 <tbody ajax-content class="table_sortable_body">

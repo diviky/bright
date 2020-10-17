@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'timestamps'    => false,
 
     /*
@@ -55,6 +54,7 @@ return [
         'role'             => \Karla\Http\Controllers\Auth\Middleware\RoleMiddleware::class,
         'roleorpermission' => \Karla\Http\Controllers\Auth\Middleware\RoleOrPermissionMiddleware::class,
         'authorize'        => \Karla\Http\Controllers\Auth\Middleware\AuthorizeMiddleware::class,
+        'auth.verified'    => \Karla\Http\Controllers\Auth\Middleware\IsUserActivated::class,
         'accept'           => \Karla\Http\Middleware\Accept::class,
         'api.response'     => \Karla\Http\Middleware\Api::class,
         'ajax'             => \Karla\Http\Middleware\Ajax::class,
