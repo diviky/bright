@@ -16,6 +16,20 @@ class Chart extends BaseChart
     public $dataset = Dataset::class;
 
     /**
+     * Initiates the Chartjs Line Chart.
+     *
+     * @return self
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        return $this->options([
+            'responsive' => true,
+        ]);
+    }
+
+    /**
      * Formats the datasets for the output.
      *
      * @return string

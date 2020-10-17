@@ -128,7 +128,7 @@ function load_dateranges() {
         }
     });
 
-    $('[data-dateranges], [data-daterange]')
+    $('[data-dateranges]')
         .on('apply.daterangepicker', function (e, picker) {
             if (picker.autoUpdateInput == false) {
                 $(this).val(
@@ -137,7 +137,7 @@ function load_dateranges() {
             }
 
             var t = $(e.currentTarget);
-            if (typeof t.attr('auto-submit') != undefined) {
+            if (typeof t.data('auto-submit') != undefined) {
                 t.trigger('change');
                 $(document).trigger('form:submit', [t]);
             }
