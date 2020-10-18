@@ -281,6 +281,6 @@ trait Cachable
 
     protected function cacheEnabled()
     {
-        return $this->connection->getConfig('cache');
+        return $this->connection->getConfig('karla.db_cache') ?: $this->connection->getConfig('cache');
     }
 }

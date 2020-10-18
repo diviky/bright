@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'timestamps'    => false,
+    'timestamps'       => false,
+    'db_cache'         => false,
 
     /*
     |--------------------------------------------------------------------------

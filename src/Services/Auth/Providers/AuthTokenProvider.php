@@ -39,12 +39,17 @@ class AuthTokenProvider implements UserProvider
 
     public function retrieveByCredentials(array $credentials)
     {
-        // let's try to assume that the credentials ['username', 'password'] given
+        $key  = null;
         $user = $this->user;
         foreach ($credentials as $credentialKey => $credentialValue) {
             if (!Str::contains($credentialKey, 'password')) {
                 $user = $user->where($credentialKey, $credentialValue);
+                $key .= $credentialKey . ':' . $credentialValue;
             }
+        }
+
+        if ($key) {
+            $user = $user->remember(null, 'cre:' . $key);
         }
 
         return $user->first();

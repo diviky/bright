@@ -46,6 +46,10 @@ class AccessTokenGuard implements Guard
             return;
         }
 
+        if (!is_null($user->deleted_at)) {
+            return;
+        }
+
         if (1 != $user->status) {
             return;
         }

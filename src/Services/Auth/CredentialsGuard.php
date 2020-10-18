@@ -35,6 +35,10 @@ class CredentialsGuard implements Guard
             return;
         }
 
+        if (!\is_null($user->deleted_at)) {
+            return;
+        }
+
         if (1 != $user->status) {
             return;
         }
@@ -57,15 +61,8 @@ class CredentialsGuard implements Guard
         return $return;
     }
 
-    protected function username()
-    {
-        return config('auth.columns.username', 'username');
-    }
-
     /**
      * Validate a user's credentials.
-     *
-     * @param array $credentials
      *
      * @return bool
      */
@@ -82,5 +79,10 @@ class CredentialsGuard implements Guard
         }
 
         return false;
+    }
+
+    protected function username()
+    {
+        return config('auth.columns.username', 'username');
     }
 }

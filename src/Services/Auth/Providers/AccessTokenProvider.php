@@ -26,7 +26,7 @@ class AccessTokenProvider implements UserProvider
             ->find($identifier);
     }
 
-    public function retrieveByAcess($identifier, $token)
+    public function retrieveByAccess($identifier, $token)
     {
         $user = $this->user->where($identifier, $token)->first();
 
@@ -50,12 +50,18 @@ class AccessTokenProvider implements UserProvider
 
     public function retrieveByCredentials(array $credentials)
     {
+        $key = null;
         // let's try to assume that the credentials ['username', 'password'] given
         $user = $this->user;
         foreach ($credentials as $credentialKey => $credentialValue) {
             if (!Str::contains($credentialKey, 'password')) {
                 $user = $user->where($credentialKey, $credentialValue);
+                $key .= $credentialKey.':'.$credentialValue;
             }
+        }
+
+        if ($key) {
+            $user = $user->remember(null, 'cre:' . $key);
         }
 
         return $user->first();
