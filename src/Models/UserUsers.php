@@ -2,7 +2,7 @@
 
 namespace Diviky\Bright\Models;
 
-use Diviky\Bright\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class UserUsers extends Model
 {

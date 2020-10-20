@@ -3,7 +3,7 @@
 namespace Diviky\Bright\Services\Auth\Providers;
 
 use App\Models\User;
-use Diviky\Bright\Http\Controllers\Auth\Models\Token;
+use Diviky\Bright\Models\Token;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;

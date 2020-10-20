@@ -1,6 +1,6 @@
 <?php
 
-namespace Diviky\Bright\Http\Controllers\Auth\Middleware;
+namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;

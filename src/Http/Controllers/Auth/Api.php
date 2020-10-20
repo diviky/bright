@@ -3,7 +3,7 @@
 namespace Diviky\Bright\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Diviky\Bright\Http\Controllers\Auth\Models\Activation;
+use Diviky\Bright\Models\Activation;
 use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
 use Diviky\Bright\Models\Models;

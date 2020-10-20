@@ -2,7 +2,7 @@
 
 namespace Diviky\Bright\Http\Controllers\Auth\Traits;
 
-use Diviky\Bright\Http\Controllers\Auth\Models\Activation;
+use Diviky\Bright\Models\Activation;
 
 trait Token
 {

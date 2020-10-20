@@ -60,4 +60,9 @@ class Models
             return static::metaValues();
         }
     }
+
+    public static function activation()
+    {
+        return config('bright.models.email_logs', Activation::class);
+    }
 }

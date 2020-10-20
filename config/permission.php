@@ -11,7 +11,7 @@ return [
          * `Spatie\Permission\Contracts\Permission` contract.
          */
 
-        'permission' => \Diviky\Bright\Http\Controllers\Auth\Models\Permission::class,
+        'permission' => \Diviky\Bright\Models\Permission::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -22,7 +22,7 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        'role'       => \Diviky\Bright\Http\Controllers\Auth\Models\Role::class,
+        'role'       => \Diviky\Bright\Models\Role::class,
     ],
 
     'table_names'                     => [

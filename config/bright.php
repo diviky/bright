@@ -2,7 +2,7 @@
 
 return [
     'timestamps'       => false,
-    'db_cache'         => false,
+    'db_cache'         => env('DB_CACHE', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,11 +51,11 @@ return [
     ],
 
     'middlewares'   => [
-        'permission'       => \Diviky\Bright\Http\Controllers\Auth\Middleware\PermissionMiddleware::class,
-        'role'             => \Diviky\Bright\Http\Controllers\Auth\Middleware\RoleMiddleware::class,
-        'roleorpermission' => \Diviky\Bright\Http\Controllers\Auth\Middleware\RoleOrPermissionMiddleware::class,
-        'authorize'        => \Diviky\Bright\Http\Controllers\Auth\Middleware\AuthorizeMiddleware::class,
-        'auth.verified'    => \Diviky\Bright\Http\Controllers\Auth\Middleware\IsUserActivated::class,
+        'permission'       => \Diviky\Bright\Http\Middleware\PermissionMiddleware::class,
+        'role'             => \Diviky\Bright\Http\Middleware\RoleMiddleware::class,
+        'roleorpermission' => \Diviky\Bright\Http\Middleware\RoleOrPermissionMiddleware::class,
+        'authorize'        => \Diviky\Bright\Http\Middleware\AuthorizeMiddleware::class,
+        'auth.verified'    => \Diviky\Bright\Http\Middleware\IsUserActivated::class,
         'accept'           => \Diviky\Bright\Http\Middleware\Accept::class,
         'api.response'     => \Diviky\Bright\Http\Middleware\Api::class,
         'ajax'             => \Diviky\Bright\Http\Middleware\Ajax::class,

@@ -1,9 +1,8 @@
 <?php
 
-namespace Diviky\Bright\Http\Controllers\Auth\Models;
+namespace Diviky\Bright\Models;
 
 use Diviky\Bright\Database\Eloquent\Model;
-use Diviky\Bright\Models\Models;
 use Diviky\Bright\User;
 
 class Token extends Model
