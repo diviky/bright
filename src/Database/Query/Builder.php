@@ -2,7 +2,6 @@
 
 namespace Diviky\Bright\Database\Query;
 
-use Diviky\Bright\Bright\Database\Traits\Outfile;
 use Diviky\Bright\Database\Bright;
 use Diviky\Bright\Database\Traits\Async;
 use Diviky\Bright\Database\Traits\Build;
@@ -10,6 +9,7 @@ use Diviky\Bright\Database\Traits\Cachable;
 use Diviky\Bright\Database\Traits\Eventable;
 use Diviky\Bright\Database\Traits\Filter;
 use Diviky\Bright\Database\Traits\Ordering;
+use Diviky\Bright\Database\Traits\Outfile;
 use Diviky\Bright\Database\Traits\Paging;
 use Diviky\Bright\Database\Traits\Raw;
 use Diviky\Bright\Database\Traits\Remove;

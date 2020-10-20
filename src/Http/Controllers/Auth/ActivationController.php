@@ -2,7 +2,7 @@
 
 namespace Diviky\Bright\Http\Controllers\Auth;
 
-use Diviky\Bright\Bright\Http\Controllers\Auth\Traits\Token;
+use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
 use Diviky\Bright\Http\Controllers\Auth\Models\Activation;
 use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Diviky\Bright\Notifications\SendActivationToken;

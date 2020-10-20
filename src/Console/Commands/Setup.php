@@ -2,7 +2,7 @@
 
 namespace Diviky\Bright\Console\Commands;
 
-use Diviky\Bright\Console\Command;
+use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 
 class Setup extends Command

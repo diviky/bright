@@ -2,7 +2,7 @@
 
 namespace Diviky\Bright\Console\Commands;
 
-use Diviky\Bright\Console\Command;
+use Illuminate\Console\Command;
 
 class Migrate extends Command
 {
