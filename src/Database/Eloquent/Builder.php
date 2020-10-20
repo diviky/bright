@@ -9,8 +9,6 @@ class Builder extends BaseBuilder
 {
     /**
      * Create a new Eloquent query builder instance.
-     *
-     * @param \Karla\Database\Query\Builder $query
      */
     public function __construct(QueryBuilder $query)
     {

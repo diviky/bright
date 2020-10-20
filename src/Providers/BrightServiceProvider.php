@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 
-class KarlaServiceProvider extends ServiceProvider
+class BrightServiceProvider extends ServiceProvider
 {
     use Provider;
 
@@ -58,7 +58,7 @@ class KarlaServiceProvider extends ServiceProvider
         $this->redirect();
         $this->auth();
         $this->binds();
-        $this->app->bind('Illuminate\Routing\Contracts\ControllerDispatcher', 'Karla\Routing\ControllerDispatcher');
+        $this->app->bind('Illuminate\Routing\Contracts\ControllerDispatcher', 'Diviky\Bright\Routing\ControllerDispatcher');
 
         $this->app->singleton('resolver', function ($app) {
             return new Resolver($app);

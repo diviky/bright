@@ -71,7 +71,7 @@ class Resolver
                 ];
 
                 $paths[] = [
-                    'class' => 'Karla\\' . $helperClass,
+                    'class' => '\\Diviky\\Bright\\' . $helperClass,
                 ];
             }
         }

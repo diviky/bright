@@ -20,7 +20,7 @@ class MySqlConnection extends LaravelMySqlConnection
     /**
      * Get a new query builder instance.
      *
-     * @return \Karla\Database\Query\Builder
+     * @return \Diviky\Bright\Database\Query\Builder
      */
     public function query()
     {
@@ -93,7 +93,7 @@ class MySqlConnection extends LaravelMySqlConnection
     /**
      * Get the default query grammar instance.
      *
-     * @return \Karla\Database\Grammar
+     * @return \Diviky\bright\Database\Grammar
      */
     protected function getDefaultQueryGrammar()
     {

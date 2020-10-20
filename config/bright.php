@@ -40,27 +40,27 @@ return [
 
     'events'        => [
         'Illuminate\Mail\Events\MessageSending' => [
-            \Karla\Listeners\EmailLogger::class,
+            \Diviky\Bright\Listeners\EmailLogger::class,
         ],
         'Illuminate\Auth\Events\PasswordReset'  => [
-            \Karla\Listeners\PasswordReset::class,
+            \Diviky\Bright\Listeners\PasswordReset::class,
         ],
         'Illuminate\Auth\Events\Login'          => [
-            \Karla\Listeners\SuccessLogin::class,
+            \Diviky\Bright\Listeners\SuccessLogin::class,
         ],
     ],
 
     'middlewares'   => [
-        'permission'       => \Karla\Http\Controllers\Auth\Middleware\PermissionMiddleware::class,
-        'role'             => \Karla\Http\Controllers\Auth\Middleware\RoleMiddleware::class,
-        'roleorpermission' => \Karla\Http\Controllers\Auth\Middleware\RoleOrPermissionMiddleware::class,
-        'authorize'        => \Karla\Http\Controllers\Auth\Middleware\AuthorizeMiddleware::class,
-        'auth.verified'    => \Karla\Http\Controllers\Auth\Middleware\IsUserActivated::class,
-        'accept'           => \Karla\Http\Middleware\Accept::class,
-        'api.response'     => \Karla\Http\Middleware\Api::class,
-        'ajax'             => \Karla\Http\Middleware\Ajax::class,
-        'theme'            => \Karla\Http\Middleware\ThemeMiddleware::class,
-        'branding'         => \Karla\Http\Middleware\Branding::class,
+        'permission'       => \Diviky\Bright\Http\Controllers\Auth\Middleware\PermissionMiddleware::class,
+        'role'             => \Diviky\Bright\Http\Controllers\Auth\Middleware\RoleMiddleware::class,
+        'roleorpermission' => \Diviky\Bright\Http\Controllers\Auth\Middleware\RoleOrPermissionMiddleware::class,
+        'authorize'        => \Diviky\Bright\Http\Controllers\Auth\Middleware\AuthorizeMiddleware::class,
+        'auth.verified'    => \Diviky\Bright\Http\Controllers\Auth\Middleware\IsUserActivated::class,
+        'accept'           => \Diviky\Bright\Http\Middleware\Accept::class,
+        'api.response'     => \Diviky\Bright\Http\Middleware\Api::class,
+        'ajax'             => \Diviky\Bright\Http\Middleware\Ajax::class,
+        'theme'            => \Diviky\Bright\Http\Middleware\ThemeMiddleware::class,
+        'branding'         => \Diviky\Bright\Http\Middleware\Branding::class,
     ],
 
     'models'        => [

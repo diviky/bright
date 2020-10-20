@@ -2,8 +2,8 @@
 
 namespace Diviky\Bright\Models;
 
-use Diviky\Bright\User as KarlaUser;
+use Diviky\Bright\User as BrightUser;
 
-class User extends KarlaUser
+class User extends BrightUser
 {
 }

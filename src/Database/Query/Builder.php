@@ -3,7 +3,7 @@
 namespace Diviky\Bright\Database\Query;
 
 use Diviky\Bright\Bright\Database\Traits\Outfile;
-use Diviky\Bright\Database\Karla;
+use Diviky\Bright\Database\Bright;
 use Diviky\Bright\Database\Traits\Async;
 use Diviky\Bright\Database\Traits\Build;
 use Diviky\Bright\Database\Traits\Cachable;
@@ -182,7 +182,7 @@ class Builder extends LaravelBuilder
 
     public function whereWith($where = [], $bindings = [])
     {
-        $sql = (new Karla())->conditions($where);
+        $sql = (new Bright())->conditions($where);
 
         return $this->whereRaw($sql, $bindings);
     }

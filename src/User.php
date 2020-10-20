@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla;
+namespace Diviky\Bright;
 
 use Diviky\Bright\Http\Controllers\Auth\Traits\AccessToken;
 use Diviky\Bright\Http\Controllers\Auth\Traits\Authorizable;
