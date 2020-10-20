@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -343,8 +343,6 @@ trait HttpTrait
 
     /**
      * Get a validator for an incoming registration request.
-     *
-     * @param array $rules
      *
      * @return \Illuminate\Contracts\Validation\Validator
      */

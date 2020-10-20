@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Mail;
+namespace Diviky\Bright\Mail;
 
-use Karla\Models\Models;
+use Diviky\Bright\Models\Models;
 
 trait Notifyable
 {

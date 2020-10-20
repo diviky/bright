@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Routing;
+namespace Diviky\Bright\Routing;
 
 use Illuminate\Routing\ControllerDispatcher as BaseControllerDispatcher;
 use Illuminate\Routing\Route;
@@ -10,9 +10,8 @@ class ControllerDispatcher extends BaseControllerDispatcher
     /**
      * Dispatch a request to a given controller and method.
      *
-     * @param \Illuminate\Routing\Route $route
-     * @param mixed                     $controller
-     * @param string                    $method
+     * @param mixed  $controller
+     * @param string $method
      *
      * @return mixed
      */

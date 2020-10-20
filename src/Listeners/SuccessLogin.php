@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Listeners;
+namespace Diviky\Bright\Listeners;
 
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
@@ -9,8 +9,6 @@ class SuccessLogin
 {
     /**
      * Create the event listener.
-     *
-     * @param Request $request
      */
     public function __construct(Request $request)
     {
@@ -19,8 +17,6 @@ class SuccessLogin
 
     /**
      * Handle the event.
-     *
-     * @param Login $event
      */
     public function handle(Login $event)
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Database\Traits;
+namespace Diviky\Bright\Database\Traits;
 
 trait Build
 {

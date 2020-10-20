@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Helpers\Iterator;
+namespace Diviky\Bright\Helpers\Iterator;
 
 use Iterator;
 
@@ -27,7 +27,7 @@ class SelectIterator implements Iterator
     {
         $chunkSize = (int) $chunkSize;
         if ($chunkSize < 0) {
-            throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; ${chunkSize} given");
+            throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
         }
         $this->chunkSize = $chunkSize;
         $this->builder   = $builder;

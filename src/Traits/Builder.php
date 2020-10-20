@@ -1,9 +1,9 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
+use Diviky\Bright\Database\Bright;
 use Illuminate\Support\Facades\DB;
-use Karla\Database\Karla;
 
 trait Builder
 {
@@ -25,9 +25,9 @@ trait Builder
         return $this->pdo()->exec($sql);
     }
 
-    public function karla()
+    public function bright()
     {
-        return new Karla();
+        return new Bright();
     }
 
     protected function table($table = null, $timestamps = true)

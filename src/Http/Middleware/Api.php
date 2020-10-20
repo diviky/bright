@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Http\Middleware;
+namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
 
@@ -10,7 +10,6 @@ class Api
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
      *
      * @return mixed
      */
@@ -40,7 +39,7 @@ class Api
             $code = $original['code'];
             if ($code) {
                 $response->setStatusCode($code, $original['message']);
-            } else if (\is_numeric($original['status'])) {
+            } elseif (\is_numeric($original['status'])) {
                 $response->setStatusCode($original['status'], $original['message']);
             }
 

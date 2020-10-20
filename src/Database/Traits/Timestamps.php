@@ -1,8 +1,6 @@
 <?php
 
-namespace Karla\Database\Traits;
-
-use Illuminate\Support\Carbon;
+namespace Diviky\Bright\Database\Traits;
 
 trait Timestamps
 {
@@ -13,6 +11,13 @@ trait Timestamps
      */
     protected $timestamps = true;
 
+    public function timestamps($allow = true): self
+    {
+        $this->timestamps = $allow;
+
+        return $this;
+    }
+
     /**
      * Get a fresh timestamp for the model.
      *
@@ -21,13 +26,6 @@ trait Timestamps
     protected function freshTimestamp()
     {
         return utcTime();
-    }
-
-    public function timestamps($allow = true): self
-    {
-        $this->timestamps = $allow;
-
-        return $this;
     }
 
     /**
@@ -56,8 +54,6 @@ trait Timestamps
 
     /**
      * Determine if the builder uses timestamps.
-     *
-     * @return bool
      */
     protected function usesTimestamps(): bool
     {

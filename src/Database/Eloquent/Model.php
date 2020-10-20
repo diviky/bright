@@ -1,9 +1,9 @@
 <?php
 
-namespace Karla\Database\Eloquent;
+namespace Diviky\Bright\Database\Eloquent;
 
+use Diviky\Bright\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model as BaseModel;
-use Karla\Database\Query\Builder as QueryBuilder;
 
 class Model extends BaseModel
 {

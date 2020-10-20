@@ -1,11 +1,11 @@
 <?php
 
-namespace Karla\Models;
+namespace Diviky\Bright\Models;
 
-use Karla\Database\Eloquent\Model;
+use Diviky\Bright\Database\Eloquent\Model;
 
 class MetaValues extends Model
 {
-    protected $table = 'app_meta_values';
     public $guarded  = [];
+    protected $table = 'app_meta_values';
 }

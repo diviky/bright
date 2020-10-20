@@ -1,10 +1,10 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Models;
+namespace Diviky\Bright\Http\Controllers\Auth\Models;
 
-use Karla\Database\Eloquent\Model;
-use Karla\Models\Models;
-use Karla\User;
+use Diviky\Bright\Database\Eloquent\Model;
+use Diviky\Bright\Models\Models;
+use Diviky\Bright\User;
 
 class Token extends Model
 {
@@ -18,12 +18,11 @@ class Token extends Model
 
     public function getTable()
     {
-        return config('karla.table.tokens', 'tokens');
+        return config('bright.table.tokens', 'tokens');
     }
 
     public function user()
     {
         return $this->belongsTo(Models::user(), 'user_id', 'id');
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\View;
+namespace Diviky\Bright\View;
 
 use Illuminate\View\Factory as BaseFactory;
 

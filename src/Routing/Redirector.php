@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Routing;
+namespace Diviky\Bright\Routing;
 
 use Illuminate\Routing\Redirector as BaseRedirector;
 

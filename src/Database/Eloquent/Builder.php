@@ -1,17 +1,16 @@
 <?php
 
-namespace Karla\Database\Eloquent;
+namespace Diviky\Bright\Database\Eloquent;
 
+use Diviky\Bright\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as BaseBuilder;
-use Karla\Database\Query\Builder as QueryBuilder;
 
 class Builder extends BaseBuilder
 {
     /**
      * Create a new Eloquent query builder instance.
      *
-     * @param  \Karla\Database\Query\Builder  $query
-     * @return void
+     * @param \Karla\Database\Query\Builder $query
      */
     public function __construct(QueryBuilder $query)
     {

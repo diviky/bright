@@ -1,17 +1,16 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth;
+namespace Diviky\Bright\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Diviky\Bright\Http\Controllers\Auth\Models\Activation;
+use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
+use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
+use Diviky\Bright\Models\Models;
+use Diviky\Bright\Notifications\ForgetPassword;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Karla\Http\Controllers\Auth\Models\Activation;
-use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
-use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Models\Models;
-use Karla\Notifications\ForgetPassword;
 
 class Api extends Controller
 {
@@ -28,7 +27,7 @@ class Api extends Controller
     public function reset()
     {
         $this->rules([
-            $this->username() => 'required|exists:' . config('karla.table.users'),
+            $this->username() => 'required|exists:' . config('bright.table.users'),
         ]);
 
         $user = Models::user()::where($this->username(), $this->input($this->username()))->first();

@@ -1,19 +1,19 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth;
+namespace Diviky\Bright\Http\Controllers\Auth;
 
 use App\User;
+use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
+use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
+use Diviky\Bright\Models\Models;
+use Diviky\Bright\Notifications\SendActivationToken;
+use Diviky\Bright\Routing\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
-use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Models\Models;
-use Karla\Notifications\SendActivationToken;
-use Karla\Routing\Controller;
 
 class RegisterController extends Controller
 {
@@ -49,7 +49,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('karla::auth.register');
+        return view('bright::auth.register');
     }
 
     /**
@@ -61,7 +61,7 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name'     => 'required|string|max:100',
-            'email'    => 'required|string|email|unique:' . config('karla.table.users'),
+            'email'    => 'required|string|email|unique:' . config('bright.table.users'),
             'password' => 'required|case_diff|numbers|letters|min:6|max:20',
         ]);
     }

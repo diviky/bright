@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Models;
+namespace Diviky\Bright\Models;
 
-use Karla\Database\Eloquent\Model;
+use Diviky\Bright\Database\Eloquent\Model;
 
 class Meta extends Model
 {
@@ -10,6 +10,6 @@ class Meta extends Model
 
     public function getTable()
     {
-        return config('karla.table.meta', 'app_meta');
+        return config('bright.table.meta', 'app_meta');
     }
 }

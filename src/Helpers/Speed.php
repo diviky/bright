@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Helpers;
+namespace Diviky\Bright\Helpers;
 
-use Karla\Routing\Capsule;
+use Diviky\Bright\Routing\Capsule;
 
 /**
  * @author Sankar <sankar.suda@gmail.com>

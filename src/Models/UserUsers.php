@@ -1,19 +1,17 @@
 <?php
 
-namespace Karla\Models;
+namespace Diviky\Bright\Models;
 
-use Karla\Database\Eloquent\Model;
-use Karla\Models\Models;
+use Diviky\Bright\Database\Eloquent\Model;
 
 class UserUsers extends Model
 {
+    public $guarded       = [];
     protected $timestamps = false;
-
-    public $guarded = [];
 
     public function getTable()
     {
-        return config('karla.table.user_users', 'user_users');
+        return config('bright.table.user_users', 'user_users');
     }
 
     public function parent()

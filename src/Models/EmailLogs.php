@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Models;
+namespace Diviky\Bright\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +14,6 @@ class EmailLogs extends Model
 
     public function getTable()
     {
-        return config('karla.table.email_logs', 'email_logs');
+        return config('bright.table.email_logs', 'email_logs');
     }
 }

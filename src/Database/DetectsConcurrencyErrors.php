@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Database;
+namespace Diviky\Bright\Database;
 
 use Illuminate\Support\Str;
 use PDOException;
@@ -11,12 +11,11 @@ trait DetectsConcurrencyErrors
     /**
      * Determine if the given exception was caused by a concurrency error such as a deadlock or serialization failure.
      *
-     * @param  \Throwable  $e
      * @return bool
      */
     protected function causedByConcurrencyError(Throwable $e)
     {
-        if ($e instanceof PDOException && $e->getCode() === '40001') {
+        if ($e instanceof PDOException && '40001' === $e->getCode()) {
             return true;
         }
 

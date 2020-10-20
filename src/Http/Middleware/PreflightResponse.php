@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Http\Middleware;
+namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
 
@@ -10,7 +10,6 @@ class PreflightResponse
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
      *
      * @return mixed
      */

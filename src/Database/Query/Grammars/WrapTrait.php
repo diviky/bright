@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Database\Query\Grammars;
+namespace Diviky\Bright\Database\Query\Grammars;
 
 trait WrapTrait
 {

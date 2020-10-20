@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Helpers\Iterator;
+namespace Diviky\Bright\Helpers\Iterator;
 
 /**
  * Pulls out chunks from an inner iterator and yields the chunks as arrays.
@@ -23,7 +23,7 @@ class ChunkedIterator extends \IteratorIterator
     {
         $chunkSize = (int) $chunkSize;
         if ($chunkSize < 0) {
-            throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; ${chunkSize} given");
+            throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
         }
 
         parent::__construct($iterator);

@@ -1,6 +1,6 @@
 jQuery.fn.bstooltip = jQuery.fn.tooltip;
 
-function karlaJs() {
+function brightJs() {
     jQuery('[role="validate"]').validate();
     jQuery('[role="validator"]').validator();
     jQuery('[role="krender"]').easyRender();
@@ -149,7 +149,7 @@ function karlaJs() {
     }
 }
 
-function karlaBootJs() {
+function brightBootJs() {
     $(document).on('click', '[data-bootstrap-select] li', function (e) {
         e.preventDefault();
         var param = $(this).data("param");

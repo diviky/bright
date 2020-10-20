@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Helpers;
+namespace Diviky\Bright\Helpers;
 
 use Illuminate\Support\Collection;
 use Iterator;
@@ -25,7 +25,7 @@ class Stream
 
     protected $separator = ',';
     protected $lineEnd   = "\r\n";
-    protected $handle    = null;
+    protected $handle;
 
     public function start($filename, $write = false)
     {
@@ -201,6 +201,35 @@ class Stream
         return \fclose($handle);
     }
 
+    public function write($filepath)
+    {
+        $ext = \strtolower(\strrchr($filepath, '.'));
+
+        if ('.csv' == $ext) {
+            $this->separator = ',';
+        }
+
+        $this->handle = \fopen($filepath, 'w');
+
+        \set_time_limit(0);
+
+        return $this;
+    }
+
+    public function writeFile($content)
+    {
+        \fwrite($this->handle, $content);
+
+        return $this;
+    }
+
+    public function stopFile()
+    {
+        \fclose($this->handle);
+
+        return $this;
+    }
+
     protected function implode($row = [], $clean = false)
     {
         if (\is_object($row)) {
@@ -219,35 +248,6 @@ class Stream
 
         \flush();
         \ob_flush();
-
-        return $this;
-    }
-
-    public function write($filepath)
-    {
-        $ext = \strtolower(\strrchr($filepath, '.'));
-
-        if ('.csv' == $ext) {
-            $this->separator = ',';
-        }
-
-        $this->handle = fopen($filepath, 'w');
-
-        \set_time_limit(0);
-
-        return $this;
-    }
-
-    public function writeFile($content)
-    {
-        fwrite($this->handle, $content);
-
-        return $this;
-    }
-
-    public function stopFile()
-    {
-        fclose($this->handle);
 
         return $this;
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Models;
+namespace Diviky\Bright\Models;
 
-use Karla\Database\Eloquent\Model;
+use Diviky\Bright\Database\Eloquent\Model;
 
 class Branding extends Model
 {
@@ -10,7 +10,6 @@ class Branding extends Model
 
     public function getTable()
     {
-        return config('karla.table.branding', 'branding');
+        return config('bright.table.branding', 'branding');
     }
-
 }

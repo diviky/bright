@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Routing;
+namespace Diviky\Bright\Routing;
 
 class Api extends Controller
 {

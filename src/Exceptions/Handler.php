@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Exceptions;
+namespace Diviky\Bright\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;

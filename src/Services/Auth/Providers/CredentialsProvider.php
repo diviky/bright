@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Services\Auth\Providers;
+namespace Diviky\Bright\Services\Auth\Providers;
 
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;

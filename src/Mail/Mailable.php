@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Mail;
+namespace Diviky\Bright\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Mail;
 
 class Mailable extends BaseMailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of times the job may be attempted.
@@ -35,7 +36,6 @@ class Mailable extends BaseMailable implements ShouldQueue
      * Set the view and view data for the message.
      *
      * @param string $view
-     * @param array  $data
      *
      * @return $this
      */
@@ -51,7 +51,6 @@ class Mailable extends BaseMailable implements ShouldQueue
      * Set the plain text view for the message.
      *
      * @param string $textView
-     * @param array  $data
      *
      * @return $this
      */
@@ -67,7 +66,6 @@ class Mailable extends BaseMailable implements ShouldQueue
      * Set the Markdown template for the message.
      *
      * @param string $view
-     * @param array  $data
      *
      * @return $this
      */

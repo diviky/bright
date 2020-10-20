@@ -1,9 +1,9 @@
 <?php
 
-namespace Karla\Http\Controllers\Account;
+namespace Diviky\Bright\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller as BaseController;
-use Karla\Models\Models;
+use Diviky\Bright\Models\Models;
 
 class Api extends BaseController
 {
@@ -26,6 +26,5 @@ class Api extends BaseController
         return [
             'user' => $row,
         ];
-
     }
 }

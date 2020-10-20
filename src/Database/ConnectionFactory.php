@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Database;
+namespace Diviky\Bright\Database;
 
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory as LaravelConnectionFactory;
@@ -14,7 +14,6 @@ class ConnectionFactory extends LaravelConnectionFactory
      * @param \Closure|\PDO $connection
      * @param string        $database
      * @param string        $prefix
-     * @param array         $config
      *
      * @throws \InvalidArgumentException
      *

@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Util;
+namespace Diviky\Bright\Util;
 
-use Karla\Database\Options as DbOptions;
+use Diviky\Bright\Database\Options as DbOptions;
 
 class Options extends DbOptions
 {

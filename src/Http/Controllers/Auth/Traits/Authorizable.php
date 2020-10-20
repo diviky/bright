@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Traits;
+namespace Diviky\Bright\Http\Controllers\Auth\Traits;
 
 use Illuminate\Support\Str;
 
@@ -8,7 +8,7 @@ trait Authorizable
 {
     protected function isMatched($ability)
     {
-        list($option, $view) = array_pad(\explode('.', $ability), 2, null);
+        list($option, $view) = \array_pad(\explode('.', $ability), 2, null);
 
         $matches = [
             '*',

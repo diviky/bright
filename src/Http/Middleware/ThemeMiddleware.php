@@ -1,9 +1,9 @@
 <?php
 
-namespace Karla\Http\Middleware;
+namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
-use Karla\Traits\Themable;
+use Diviky\Bright\Traits\Themable;
 
 class ThemeMiddleware
 {
@@ -13,7 +13,6 @@ class ThemeMiddleware
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
      *
      * @return mixed
      */

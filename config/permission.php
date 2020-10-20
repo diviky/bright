@@ -36,7 +36,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'roles'                 => config('karla.table.roles', 'roles'),
+        'roles'                 => config('bright.table.roles', 'roles'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -44,7 +44,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'permissions'           => config('karla.table.permissions', 'permissions'),
+        'permissions'           => config('bright.table.permissions', 'permissions'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -52,7 +52,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_permissions' => config('karla.table.user_permissions', 'user_permissions'),
+        'model_has_permissions' => config('bright.table.user_permissions', 'user_permissions'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -60,7 +60,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_roles'       => config('karla.table.user_roles', 'user_roles'),
+        'model_has_roles'       => config('bright.table.user_roles', 'user_roles'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -68,7 +68,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'role_has_permissions'  => config('karla.table.role_permissions', 'role_permissions'),
+        'role_has_permissions'  => config('bright.table.role_permissions', 'role_permissions'),
     ],
 
     'column_names'                    => [

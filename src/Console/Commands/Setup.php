@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Console\Commands;
+namespace Diviky\Bright\Console\Commands;
 
-use Karla\Console\Command;
+use Diviky\Bright\Console\Command;
 use Symfony\Component\Process\Process;
 
 class Setup extends Command
@@ -12,14 +12,14 @@ class Setup extends Command
      *
      * @var string
      */
-    protected $signature = 'karla:setup';
+    protected $signature = 'bright:setup';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Setup the karla package';
+    protected $description = 'Setup the bright package';
 
     /**
      * Execute the console command.
@@ -29,26 +29,26 @@ class Setup extends Command
     public function handle()
     {
         if ($this->confirm('Do you wish to replace required files?', true)) {
-            $this->shell("sed -i '' 's/Illuminate\\\\Foundation\\\\Auth\\\\/Karla\\\\Models\\\\/g' app/Models/User.php");
-            $this->shell("sed -i '' 's/Illuminate\\\\Foundation\\\\/Karla\\\\/g' app/Exceptions/Handler.php");
-            $this->shell("sed -i '' 's/Illuminate\\\\Routing\\\\/Karla\\\\Routing\\\\/g' app/Http/Controllers/Controller.php");
+            $this->shell("sed -i '' 's/Illuminate\\\\Foundation\\\\Auth\\\\/Diviky\\\\Bright\\\\Models\\\\/g' app/Models/User.php");
+            $this->shell("sed -i '' 's/Illuminate\\\\Foundation\\\\/Diviky\\\\Bright\\\\/g' app/Exceptions/Handler.php");
+            $this->shell("sed -i '' 's/Illuminate\\\\Routing\\\\/Diviky\\\\Bright\\\\Routing\\\\/g' app/Http/Controllers/Controller.php");
         }
 
         if ($this->confirm('Do you wish to publish config?', true)) {
             $this->call('vendor:publish', [
-                '--tag' => 'karla-config',
+                '--tag' => 'bright-config',
             ]);
         }
 
         if ($this->confirm('Do you wish to publish app boostrap js?', true)) {
             $this->call('vendor:publish', [
-                '--tag' => 'karla-config',
+                '--tag' => 'bright-config',
             ]);
         }
 
         if ($this->confirm('Do you wish to publish setup files?', true)) {
             $this->call('vendor:publish', [
-                '--tag'   => 'karla-setup',
+                '--tag'   => 'bright-setup',
                 '--force' => 1,
             ]);
 

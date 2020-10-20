@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Database\Traits;
+namespace Diviky\Bright\Database\Traits;
 
 trait Paging
 {
@@ -27,5 +27,4 @@ trait Paging
 
         return $rows;
     }
-
 }

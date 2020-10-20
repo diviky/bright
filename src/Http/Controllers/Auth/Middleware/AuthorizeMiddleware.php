@@ -1,11 +1,10 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Middleware;
+namespace Diviky\Bright\Http\Controllers\Auth\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Auth;
-use Karla\Traits\Authorize;
-use Karla\Traits\Themable;
+use Diviky\Bright\Traits\Authorize;
+use Diviky\Bright\Traits\Themable;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class AuthorizeMiddleware
@@ -20,6 +19,7 @@ class AuthorizeMiddleware
         if (!$this->isAuthorizedAny($route)) {
             $action = $route->getActionName();
             $this->setUpThemeFromRequest($request);
+
             throw UnauthorizedException::forPermissions([$action]);
         }
 

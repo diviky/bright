@@ -1,29 +1,29 @@
 # An extension to laravel for quick develpment
 
-`\App\Models\User` model should extends with `\Karla\Models\User`
-`\App\Exceptions\Handler` should extends with `\Karla\Exceptions\Handler`
-`\App\Http\Controllers\Controller` should extends with `\Karla\Routing\Controller`
+`\App\Models\User` model should extends with `\Diviky\Bright\Models\User`
+`\App\Exceptions\Handler` should extends with `\Diviky\Bright\Exceptions\Handler`
+`\App\Http\Controllers\Controller` should extends with `\Diviky\Bright\Routing\Controller`
 
-Query builder needs to overwrite with karla
+Query builder needs to overwrite with bright
 
 ```php
 
-sed -i '' 's/Illuminate\\Foundation\\Auth\\/Karla\\Models\\/g' app/Models/User.php
-sed -i '' 's/Illuminate\\Foundation\\/Karla\\/g' app/Exceptions/Handler.php
-sed -i '' 's/Illuminate\\Routing\\/Karla\\Routing\\/g' app/Http/Controllers/Controller.php
+sed -i '' 's/Illuminate\\Foundation\\Auth\\/Diviky\\Bright\\Models\\/g' app/Models/User.php
+sed -i '' 's/Illuminate\\Foundation\\/Diviky\\Bright\\/g' app/Exceptions/Handler.php
+sed -i '' 's/Illuminate\\Routing\\/Diviky\\Bright\\Routing\\/g' app/Http/Controllers/Controller.php
 
-sed -i '' 's/use Illuminate\\Database\\Query\\Builder/use Karla\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
+sed -i '' 's/use Illuminate\\Database\\Query\\Builder/use Diviky\\Bright\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
 
 ```
 
 ```php
-    php artisan vendor:publish --tag="karla-config"
-    php artisan vendor:publish --tag="karla-assets"
-    php artisan vendor:publish --tag="karla-views"
-    php artisan vendor:publish --tag="karla-migrations"
+    php artisan vendor:publish --tag="bright-config"
+    php artisan vendor:publish --tag="bright-assets"
+    php artisan vendor:publish --tag="bright-views"
+    php artisan vendor:publish --tag="bright-migrations"
 
     //Copy bower, webpack and some other files
-    php artisan vendor:publish --tag="karla-setup"
+    php artisan vendor:publish --tag="bright-setup"
 ```
 
 ```
@@ -37,7 +37,7 @@ add in kernal.php route middleware
 
 ```php
 // $middleware
-    \Karla\Http\Middleware\PreflightResponse::class,
+    \Diviky\Bright\Http\Middleware\PreflightResponse::class,
 
 ```
 
@@ -127,11 +127,11 @@ $filters[] = ['timestamp[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
 $filters[] = ['unixtime[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
 $filters[] = ['between[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
 
-$filters[] = ['filter[name]' => 'karla']; // $query->where('name', '=', 'karla')
-$filters[] = ['filter[first_name|last_name]' => 'karla']; // $query->where('first_name', '=', 'karla')->orWhere()
-$filters[] = ['lfilter[name]' => 'karla']; // $query->where('name', 'like', '%karla%')
-$filters[] = ['rfilter[name]' => 'karla']; // $query->where('name', 'like', 'karla%')
-$filters[] = ['efilter[name]' => 'karla']; // $query->where('name', 'like', '%karla')
+$filters[] = ['filter[name]' => 'bright']; // $query->where('name', '=', 'bright')
+$filters[] = ['filter[first_name|last_name]' => 'bright']; // $query->where('first_name', '=', 'bright')->orWhere()
+$filters[] = ['lfilter[name]' => 'bright']; // $query->where('name', 'like', '%bright%')
+$filters[] = ['rfilter[name]' => 'bright']; // $query->where('name', 'like', 'bright%')
+$filters[] = ['efilter[name]' => 'bright']; // $query->where('name', 'like', '%bright')
 
 $rows = DB::table('users')
     ->filter($filters)

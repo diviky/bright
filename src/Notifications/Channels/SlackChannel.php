@@ -1,19 +1,18 @@
 <?php
 
-namespace Karla\Notifications\Channels;
+namespace Diviky\Bright\Notifications\Channels;
 
+use Diviky\Bright\Notifications\Messages\SlackAttachmentAction;
 use Illuminate\Notifications\Channels\SlackWebhookChannel;
 use Illuminate\Notifications\Messages\SlackAttachment;
 use Illuminate\Notifications\Messages\SlackMessage;
-use Illuminate\Notifications\Notification;
-use Karla\Notifications\Messages\SlackAttachmentAction;
 
 class SlackChannel extends SlackWebhookChannel
 {
     protected function attachments(SlackMessage $message)
     {
         return collect($message->attachments)->map(function ($attachment) use ($message) {
-            return array_filter([
+            return \array_filter([
                 'author_icon' => $attachment->authorIcon,
                 'author_link' => $attachment->authorLink,
                 'author_name' => $attachment->authorName,
@@ -35,10 +34,10 @@ class SlackChannel extends SlackWebhookChannel
             ]);
         })->all();
     }
+
     /**
      * Format the attachment's fields.
      *
-     * @param  \Illuminate\Notifications\Messages\SlackAttachment  $attachment
      * @return array
      */
     protected function actions(SlackAttachment $attachment)

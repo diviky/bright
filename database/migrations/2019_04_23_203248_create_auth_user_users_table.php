@@ -10,7 +10,7 @@ class CreateAuthUserUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('karla.table.user_users'), function (Blueprint $table) {
+        Schema::create(config('bright.table.user_users'), function (Blueprint $table) {
             $table->foreignId('parent_id');
             $table->foreignId('user_id');
             $table->unique(['parent_id', 'user_id'], 'parent_user_id');
@@ -22,6 +22,6 @@ class CreateAuthUserUsersTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('karla.table.user_users'));
+        Schema::drop(config('bright.table.user_users'));
     }
 }

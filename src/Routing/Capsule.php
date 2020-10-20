@@ -1,9 +1,9 @@
 <?php
 
-namespace Karla\Routing;
+namespace Diviky\Bright\Routing;
 
-use Karla\Traits\Builder;
-use Karla\Traits\CapsuleManager;
+use Diviky\Bright\Traits\Builder;
+use Diviky\Bright\Traits\CapsuleManager;
 
 class Capsule
 {

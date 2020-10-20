@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;

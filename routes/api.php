@@ -14,14 +14,14 @@
 Route::group([
     'middleware' => ['api', 'auth:credentials'],
     'prefix'     => 'api/v1',
-    'namespace'  => 'Karla\Http\Controllers',
+    'namespace'  => '\Diviky\Bright\Http\Controllers',
 ], function () {
     Route::post('login', 'Auth\Api@login');
 });
 
 Route::group([
     'middleware' => ['api'],
-    'namespace'  => 'Karla\Http\Controllers',
+    'namespace'  => '\Diviky\Bright\Http\Controllers',
     'prefix'     => 'api/v1',
 ], function () {
     // Password Reset Routes...
@@ -32,7 +32,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['api', 'rest'],
-    'namespace'  => 'Karla\Http\Controllers',
+    'namespace'  => '\Diviky\Bright\Http\Controllers',
     'prefix'     => 'api/v1',
 ], function () {
     Route::post('password/change', 'Auth\Api@change');

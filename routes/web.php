@@ -13,7 +13,7 @@
 
 Route::group([
     'middleware' => ['web', 'guest'],
-    'namespace'  => 'Karla\Http\Controllers',
+    'namespace'  => '\Diviky\Bright\Http\Controllers',
 ], function () {
 
     Route::get('account/sniff/{id}', 'Account\Controller@sniff');
@@ -34,7 +34,7 @@ Route::group([
 
 Route::group([
     'middleware' => ['web', 'auth'],
-    'namespace'  => 'Karla\Http\Controllers',
+    'namespace'  => '\Diviky\Bright\Http\Controllers',
 ], function () {
     Route::any('activate', 'Auth\ActivationController@activate')->name('user.activate');
     Route::any('resend', 'Auth\ActivationController@resend')->name('activate.resend');

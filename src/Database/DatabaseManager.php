@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Database;
+namespace Diviky\Bright\Database;
 
 use Illuminate\Database\DatabaseManager as LaravelDatabaseManager;
 
@@ -8,7 +8,7 @@ class DatabaseManager extends LaravelDatabaseManager
 {
     public function table($name)
     {
-        $config      = $this->app['config']['karla'];
+        $config      = $this->app['config']['bright'];
         $connections = $config['connections'];
 
         if (\is_array($connections) && \is_string($name) && isset($connections[$name])) {
@@ -31,7 +31,7 @@ class DatabaseManager extends LaravelDatabaseManager
     {
         $config = parent::configuration($name);
 
-        $config['karla'] = $this->app['config']['karla'];
+        $config['bright'] = $this->app['config']['bright'];
 
         return $config;
     }

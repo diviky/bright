@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Database\Traits;
+namespace Diviky\Bright\Database\Traits;
 
 use Illuminate\Support\Str;
 
@@ -75,19 +75,19 @@ trait Eventable
 
     protected function getEventTables($type): array
     {
-        $karla = $this->connection->getConfig('karla');
-        $karla = $karla['tables'];
+        $bright = $this->connection->getConfig('bright');
+        $bright = $bright['tables'];
 
         $from = \preg_split('/ as /i', $this->from)[0];
 
-        if ($karla['ignore'] && isset($karla['ignore'][$from])) {
+        if ($bright['ignore'] && isset($bright['ignore'][$from])) {
             return [];
         }
 
-        if (\is_array($karla['default'])) {
-            $tables = \array_merge($karla['default'], $karla[$type]);
+        if (\is_array($bright['default'])) {
+            $tables = \array_merge($bright['default'], $bright[$type]);
         } else {
-            $tables = $karla[$type];
+            $tables = $bright[$type];
         }
 
         return isset($tables[$from]) ? $tables[$from] : [];
@@ -148,9 +148,9 @@ trait Eventable
             }
         }
 
-        $karla = $this->connection->getConfig('karla');
+        $bright = $this->connection->getConfig('bright');
 
-        if (false !== $karla['timestamps']) {
+        if (false !== $bright['timestamps']) {
             foreach ($values as &$value) {
                 $value = $this->setTimeStamps($value);
             }
@@ -163,9 +163,9 @@ trait Eventable
     {
         $this->atomicEvent('update');
 
-        $karla = $this->connection->getConfig('karla');
+        $bright = $this->connection->getConfig('bright');
 
-        if (false !== $karla['timestamps']) {
+        if (false !== $bright['timestamps']) {
             $values = $this->setTimeStamp($values);
         }
 

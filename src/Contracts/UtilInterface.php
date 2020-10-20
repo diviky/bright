@@ -1,8 +1,7 @@
 <?php
 
-namespace Karla\Contracts;
+namespace Diviky\Bright\Contracts;
 
 interface UtilInterface
 {
-
 }

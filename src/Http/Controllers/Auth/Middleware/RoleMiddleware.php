@@ -1,10 +1,10 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Middleware;
+namespace Diviky\Bright\Http\Controllers\Auth\Middleware;
 
 use Closure;
+use Diviky\Bright\Traits\Themable;
 use Illuminate\Support\Facades\Auth;
-use Karla\Traits\Themable;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class RoleMiddleware

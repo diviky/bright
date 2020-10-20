@@ -1,23 +1,23 @@
 <?php
 
-namespace Karla\Database\Query;
+namespace Diviky\Bright\Database\Query;
 
+use Diviky\Bright\Bright\Database\Traits\Outfile;
+use Diviky\Bright\Database\Karla;
+use Diviky\Bright\Database\Traits\Async;
+use Diviky\Bright\Database\Traits\Build;
+use Diviky\Bright\Database\Traits\Cachable;
+use Diviky\Bright\Database\Traits\Eventable;
+use Diviky\Bright\Database\Traits\Filter;
+use Diviky\Bright\Database\Traits\Ordering;
+use Diviky\Bright\Database\Traits\Paging;
+use Diviky\Bright\Database\Traits\Raw;
+use Diviky\Bright\Database\Traits\Remove;
+use Diviky\Bright\Database\Traits\SoftDeletes;
+use Diviky\Bright\Database\Traits\Tables;
+use Diviky\Bright\Database\Traits\Timestamps;
+use Diviky\Bright\Helpers\Iterator\SelectIterator;
 use Illuminate\Database\Query\Builder as LaravelBuilder;
-use Karla\Database\Karla;
-use Karla\Database\Traits\Async;
-use Karla\Database\Traits\Build;
-use Karla\Database\Traits\Cachable;
-use Karla\Database\Traits\Eventable;
-use Karla\Database\Traits\Filter;
-use Karla\Database\Traits\Ordering;
-use Karla\Database\Traits\Outfile;
-use Karla\Database\Traits\Paging;
-use Karla\Database\Traits\Raw;
-use Karla\Database\Traits\Remove;
-use Karla\Database\Traits\SoftDeletes;
-use Karla\Database\Traits\Tables;
-use Karla\Database\Traits\Timestamps;
-use Karla\Helpers\Iterator\SelectIterator;
 
 class Builder extends LaravelBuilder
 {

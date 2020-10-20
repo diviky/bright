@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\View;
+namespace Diviky\Bright\View;
 
-use Karla\Traits\Themable;
+use Diviky\Bright\Traits\Themable;
 
 class View
 {

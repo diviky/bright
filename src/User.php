@@ -2,13 +2,13 @@
 
 namespace Karla;
 
+use Diviky\Bright\Http\Controllers\Auth\Traits\AccessToken;
+use Diviky\Bright\Http\Controllers\Auth\Traits\Authorizable;
+use Diviky\Bright\Http\Controllers\Auth\Traits\HasRoles;
+use Diviky\Bright\Http\Controllers\Auth\Traits\UserParent;
+use Diviky\Bright\Http\Controllers\Auth\Traits\UserRole;
+use Diviky\Bright\Http\Controllers\Auth\Traits\UsersParent;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Karla\Http\Controllers\Auth\Traits\AccessToken;
-use Karla\Http\Controllers\Auth\Traits\Authorizable;
-use Karla\Http\Controllers\Auth\Traits\HasRoles;
-use Karla\Http\Controllers\Auth\Traits\UserParent;
-use Karla\Http\Controllers\Auth\Traits\UserRole;
-use Karla\Http\Controllers\Auth\Traits\UsersParent;
 
 class User extends Authenticatable
 {
@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public function getTable()
     {
-        return config('karla.table.users', 'users');
+        return config('bright.table.users', 'users');
     }
 
     public function hasPermissionTo($permission, $guardName = null): bool

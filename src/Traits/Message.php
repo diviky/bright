@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
 trait Message
 {

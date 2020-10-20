@@ -1,12 +1,12 @@
 <?php
 
-namespace Karla\Listeners;
+namespace Diviky\Bright\Listeners;
 
+use Diviky\Bright\Mail\Mailable;
+use Diviky\Bright\Models\Models;
+use Diviky\Bright\Traits\CapsuleManager;
 use Illuminate\Auth\Events\PasswordReset as LaravelPasswordReset;
 use Illuminate\Http\Request;
-use Karla\Mail\Mailable;
-use Karla\Models\Models;
-use Karla\Traits\CapsuleManager;
 
 class PasswordReset
 {
@@ -14,8 +14,6 @@ class PasswordReset
 
     /**
      * Create the event listener.
-     *
-     * @param Request $request
      */
     public function __construct(Request $request)
     {
@@ -24,8 +22,6 @@ class PasswordReset
 
     /**
      * Handle the event.
-     *
-     * @param LaravelPasswordReset $event
      */
     public function handle(LaravelPasswordReset $event)
     {
@@ -42,7 +38,7 @@ class PasswordReset
                 'row'  => $values,
                 'user' => $user,
             ])
-            ->prefix('karla::emails.')
+            ->prefix('bright::emails.')
             ->markdown('auth.password_changed')
             ->deliver($user);
 

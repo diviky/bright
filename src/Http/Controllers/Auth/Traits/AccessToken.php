@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Traits;
+namespace Diviky\Bright\Http\Controllers\Auth\Traits;
 
 use Illuminate\Support\Str;
 
@@ -9,7 +9,7 @@ trait AccessToken
     /**
      * Get the token value for the "remember me" session.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getAccessToken()
     {
@@ -21,8 +21,7 @@ trait AccessToken
     /**
      * Set the token value for the "remember me" session.
      *
-     * @param  string  $value
-     * @return void
+     * @param string $value
      */
     public function setAccessToken($value = null)
     {

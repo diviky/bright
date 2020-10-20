@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Charts;
+namespace Diviky\Bright\Charts;
 
 use ConsoleTVs\Charts\Classes\Chartjs\Dataset as BaseDataset;
 

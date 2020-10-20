@@ -19,12 +19,12 @@ var theme = 'resources/themes/tabler/';
 mix.options({ processCssUrls: false });
 
 mix.babel(
-    glob.sync('vendor/sankar/laravel-karla/resources/assets/js/bootstrap/*.js')
+    glob.sync('vendor/diviky/bright/resources/assets/js/bootstrap/*.js')
         .concat(glob.sync(
-            'vendor/sankar/laravel-karla/resources/assets/js/karla/*.js'))
+            'vendor/diviky/bright/resources/assets/js/bright/*.js'))
         .concat(glob.sync(
-            'vendor/sankar/laravel-karla/resources/assets/js/plugins/*.js')),
-    public + 'js/karla.js');
+            'vendor/diviky/bright/resources/assets/js/plugins/*.js')),
+    public + 'js/bright.js');
 
 mix.babel(
     glob.sync(resources + 'js/*.js').concat(glob.sync(resources + 'js/*/*.js')),

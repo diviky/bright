@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Support;
+namespace Diviky\Bright\Support;
 
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
@@ -11,8 +11,7 @@ class ServiceProvider extends LaravelServiceProvider
      *
      * @param string $path
      * @param string $key
-     * @param bool $force
-     * @return void
+     * @param bool   $force
      */
     protected function mergeConfigRecursive($path, $key, $force = false): void
     {
@@ -32,8 +31,7 @@ class ServiceProvider extends LaravelServiceProvider
      *
      * @param string $path
      * @param string $key
-     * @param bool $force
-     * @return void
+     * @param bool   $force
      */
     protected function replaceConfigRecursive($path, $key, $force = false): void
     {
@@ -51,10 +49,9 @@ class ServiceProvider extends LaravelServiceProvider
     /**
      * Merge the given configuration with the existing configuration.
      *
-     * @param  string  $path
-     * @param  string  $key
-     * @param bool $force
-     * @return void
+     * @param string $path
+     * @param string $key
+     * @param bool   $force
      */
     protected function mergeConfigFrom($path, $key, $force = false): void
     {

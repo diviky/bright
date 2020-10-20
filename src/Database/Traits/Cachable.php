@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Database\Traits;
+namespace Diviky\Bright\Database\Traits;
 
 trait Cachable
 {
@@ -281,6 +281,6 @@ trait Cachable
 
     protected function cacheEnabled()
     {
-        return $this->connection->getConfig('karla.db_cache') ?: $this->connection->getConfig('cache');
+        return $this->connection->getConfig('bright.db_cache') ?: $this->connection->getConfig('cache');
     }
 }

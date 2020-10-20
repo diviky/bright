@@ -1,20 +1,19 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Models;
+namespace Diviky\Bright\Http\Controllers\Auth\Models;
 
-use Karla\Database\Eloquent\Model;
-use Karla\Models\Models;
+use Diviky\Bright\Database\Eloquent\Model;
+use Diviky\Bright\Models\Models;
 
 class Activation extends Model
 {
     public function getTable()
     {
-        return config('karla.table.activations', 'activations');
+        return config('bright.table.activations', 'activations');
     }
 
     public function user()
     {
         return $this->belongsTo(Models::user());
     }
-
 }

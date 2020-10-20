@@ -1,10 +1,10 @@
 <?php
 
-namespace Karla\Database;
+namespace Diviky\Bright\Database;
 
 use Carbon\Carbon;
 
-class Karla
+class Bright
 {
     /**
      * Start quote.

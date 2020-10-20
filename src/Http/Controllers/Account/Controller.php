@@ -1,13 +1,13 @@
 <?php
 
-namespace Karla\Http\Controllers\Account;
+namespace Diviky\Bright\Http\Controllers\Account;
 
 use App\Http\Controllers\Controller as BaseController;
+use Diviky\Bright\Models\Models;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Karla\Models\Models;
 
 class Controller extends BaseController
 {

@@ -10,7 +10,7 @@ class CreateAuthUserDomainsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('karla.table.user_domains'), function (Blueprint $table) {
+        Schema::create(config('bright.table.user_domains'), function (Blueprint $table) {
             $table->id('id');
             $table->foreignId('user_id');
             $table->foreignId('domain_id');
@@ -23,6 +23,6 @@ class CreateAuthUserDomainsTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('karla.table.user_domains'));
+        Schema::drop(config('bright.table.user_domains'));
     }
 }

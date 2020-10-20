@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Services\Auth;
+namespace Diviky\Bright\Services\Auth;
 
 class AuthTokenGuard extends AccessTokenGuard
 {

@@ -10,8 +10,8 @@ class AddForeignKeysToAuthActivationsTable extends Migration
      */
     public function up()
     {
-        Schema::table(config('karla.table.activations'), function (Blueprint $table) {
-            $table->foreign('user_id', 'activations_user_id_foreign')->references('id')->on(config('karla.table.users'))->onUpdate('RESTRICT')->onDelete('CASCADE');
+        Schema::table(config('bright.table.activations'), function (Blueprint $table) {
+            $table->foreign('user_id', 'activations_user_id_foreign')->references('id')->on(config('bright.table.users'))->onUpdate('RESTRICT')->onDelete('CASCADE');
         });
     }
 
@@ -20,7 +20,7 @@ class AddForeignKeysToAuthActivationsTable extends Migration
      */
     public function down()
     {
-        Schema::table(config('karla.table.activations'), function (Blueprint $table) {
+        Schema::table(config('bright.table.activations'), function (Blueprint $table) {
             $table->dropForeign('activations_user_id_foreign');
         });
     }

@@ -1,13 +1,12 @@
 <?php
 
-namespace Karla\Database;
+namespace Diviky\Bright\Database;
 
 use Closure;
+use Diviky\Bright\Database\Query\Builder as QueryBuilder;
+use Diviky\Bright\Database\Query\Grammars\MySqlGrammar;
 use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 use Illuminate\Database\QueryException;
-use Karla\Database\DetectsConcurrencyErrors;
-use Karla\Database\Query\Builder as QueryBuilder;
-use Karla\Database\Query\Grammars\MySqlGrammar;
 
 class MySqlConnection extends LaravelMySqlConnection
 {
@@ -65,9 +64,8 @@ class MySqlConnection extends LaravelMySqlConnection
     /**
      * Run a SQL statement.
      *
-     * @param string   $query
-     * @param array    $bindings
-     * @param \Closure $callback
+     * @param string $query
+     * @param array  $bindings
      *
      * @throws \Illuminate\Database\QueryException
      *
@@ -100,7 +98,7 @@ class MySqlConnection extends LaravelMySqlConnection
     protected function getDefaultQueryGrammar()
     {
         $grammar = new MySqlGrammar();
-        $grammar->setConfig($this->config['karla']);
+        $grammar->setConfig($this->config['bright']);
 
         return $this->withTablePrefix($grammar);
     }

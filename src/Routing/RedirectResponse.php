@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Routing;
+namespace Diviky\Bright\Routing;
 
 use Illuminate\Http\RedirectResponse as BaseRedirectResponse;
 
@@ -57,8 +57,6 @@ class RedirectResponse extends BaseRedirectResponse
      * Is the response a redirect of some form?
      *
      * @param string $location
-     *
-     * @return bool
      */
     public function isRedirect(?string $location = null): bool
     {

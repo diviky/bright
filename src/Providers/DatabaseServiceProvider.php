@@ -1,10 +1,10 @@
 <?php
 
-namespace Karla\Providers;
+namespace Diviky\Bright\Providers;
 
+use Diviky\Bright\Database\ConnectionFactory;
+use Diviky\Bright\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
-use Karla\Database\ConnectionFactory;
-use Karla\Database\DatabaseManager;
 
 class DatabaseServiceProvider extends ServiceProvider
 {

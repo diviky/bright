@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Util;
+namespace Diviky\Bright\Util;
 
-use Karla\Database\Meta as BaseMeta;
+use Diviky\Bright\Database\Meta as BaseMeta;
 
 class Meta extends BaseMeta
 {

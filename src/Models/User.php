@@ -1,10 +1,9 @@
 <?php
 
-namespace Karla\Models;
+namespace Diviky\Bright\Models;
 
-use Karla\User as KarlaUser;
+use Diviky\Bright\User as KarlaUser;
 
 class User extends KarlaUser
 {
-
 }

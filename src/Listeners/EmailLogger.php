@@ -1,17 +1,15 @@
 <?php
 
-namespace Karla\Listeners;
+namespace Diviky\Bright\Listeners;
 
+use Diviky\Bright\Models\Models;
 use Illuminate\Mail\Events\MessageSending;
 use Illuminate\Support\Str;
-use Karla\Models\Models;
 
 class EmailLogger
 {
     /**
      * Handle the event.
-     *
-     * @param MessageSending $event
      */
     public function handle(MessageSending $event)
     {

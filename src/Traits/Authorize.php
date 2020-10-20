@@ -1,47 +1,15 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 trait Authorize
 {
-    protected function getRouteFromAction($route): array
-    {
-        $action = $route->getActionName();
-        if (strpos($action, '@') === false) {
-            return [];
-        }
-
-        $action     = \explode('@', $action);
-        $method     = $route->getActionMethod();
-        $controller = \explode('\\', $action[0]);
-
-        $component = \strtolower($controller[\count($controller) - 2]);
-        $method    = \strtolower($method);
-        $namespace = \strtolower($controller[\count($controller) - 5]);
-
-        $mappings = config('permission.grouping');
-
-        if ($mappings && isset($mappings[$namespace]) && \is_array($mappings[$namespace]) && isset($mappings[$namespace][$component])) {
-            $mapping = $mappings[$namespace][$component];
-
-            return \is_array($mapping) ? \array_unique($mapping) : [$mapping];
-        }
-
-        if ($mappings && isset($mappings[$component]) && !\is_array($mappings[$component])) {
-            $mapping = $mappings[$component];
-
-            return \is_array($mapping) ? \array_unique($mapping) : [$mapping];
-        }
-
-        return [$component . '.' . $method];
-    }
-
     public function isAuthorized($names): bool
     {
-        if (is_null($names)) {
+        if (\is_null($names)) {
             return false;
         }
 
@@ -52,7 +20,7 @@ trait Authorize
         $public = config('permission.public');
 
         // is public permission
-        if (is_array($public)) {
+        if (\is_array($public)) {
             foreach ($names as $route) {
                 foreach ($public as $permission) {
                     if (Str::is($permission, $route)) {
@@ -87,7 +55,7 @@ trait Authorize
     public function isRouteAuthorized($route): bool
     {
         $name = $route->getName();
-        if (is_null($name)) {
+        if (\is_null($name)) {
             return false;
         }
 
@@ -98,7 +66,7 @@ trait Authorize
     {
         $prefix = $route->getPrefix();
 
-        if (is_null($prefix)) {
+        if (\is_null($prefix)) {
             return false;
         }
 
@@ -109,7 +77,7 @@ trait Authorize
     {
         $uri = $route->uri();
 
-        if (is_null($uri)) {
+        if (\is_null($uri)) {
             return false;
         }
 
@@ -142,5 +110,37 @@ trait Authorize
         }
 
         return false;
+    }
+
+    protected function getRouteFromAction($route): array
+    {
+        $action = $route->getActionName();
+        if (false === \strpos($action, '@')) {
+            return [];
+        }
+
+        $action     = \explode('@', $action);
+        $method     = $route->getActionMethod();
+        $controller = \explode('\\', $action[0]);
+
+        $component = \strtolower($controller[\count($controller) - 2]);
+        $method    = \strtolower($method);
+        $namespace = \strtolower($controller[\count($controller) - 5]);
+
+        $mappings = config('permission.grouping');
+
+        if ($mappings && isset($mappings[$namespace]) && \is_array($mappings[$namespace]) && isset($mappings[$namespace][$component])) {
+            $mapping = $mappings[$namespace][$component];
+
+            return \is_array($mapping) ? \array_unique($mapping) : [$mapping];
+        }
+
+        if ($mappings && isset($mappings[$component]) && !\is_array($mappings[$component])) {
+            $mapping = $mappings[$component];
+
+            return \is_array($mapping) ? \array_unique($mapping) : [$mapping];
+        }
+
+        return [$component . '.' . $method];
     }
 }

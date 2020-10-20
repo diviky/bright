@@ -1,11 +1,11 @@
 <?php
 
-namespace Karla\Helpers;
+namespace Diviky\Bright\Helpers;
 
-use Geocoder\ProviderAggregator;
 use Geocoder\Provider\Chain\Chain;
 use Geocoder\Provider\GeoIP2\GeoIP2;
 use Geocoder\Provider\GeoIP2\GeoIP2Adapter;
+use Geocoder\ProviderAggregator;
 use GeoIp2\Database\Reader;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 

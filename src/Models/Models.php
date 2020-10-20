@@ -1,15 +1,8 @@
 <?php
 
-namespace Karla\Models;
+namespace Diviky\Bright\Models;
 
 use App\Models\User;
-use Karla\Models\Branding;
-use Karla\Models\EmailLogs;
-use Karla\Models\Meta;
-use Karla\Models\MetaValues;
-use Karla\Models\Options;
-use Karla\Models\PasswordHistory;
-use Karla\Models\UserUsers;
 
 class Models
 {
@@ -20,37 +13,37 @@ class Models
 
     public static function passwordHistory()
     {
-        return config('karla.models.passwod_history', PasswordHistory::class);
+        return config('bright.models.passwod_history', PasswordHistory::class);
     }
 
     public static function branding()
     {
-        return config('karla.models.branding', Branding::class);
+        return config('bright.models.branding', Branding::class);
     }
 
     public static function options()
     {
-        return config('karla.models.options', Options::class);
+        return config('bright.models.options', Options::class);
     }
 
     public static function meta()
     {
-        return config('karla.models.meta', Meta::class);
+        return config('bright.models.meta', Meta::class);
     }
 
     public static function metaValues()
     {
-        return config('karla.models.meta_values', MetaValues::class);
+        return config('bright.models.meta_values', MetaValues::class);
     }
 
     public static function emailLogs()
     {
-        return config('karla.models.email_logs', EmailLogs::class);
+        return config('bright.models.email_logs', EmailLogs::class);
     }
 
     public static function users()
     {
-        return config('karla.models.user_users', UserUsers::class);
+        return config('bright.models.user_users', UserUsers::class);
     }
 
     public static function table($name)

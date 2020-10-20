@@ -1,11 +1,11 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth;
+namespace Diviky\Bright\Http\Controllers\Auth;
 
+use Diviky\Bright\Routing\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Karla\Routing\Controller;
 
 class LoginController extends Controller
 {
@@ -39,7 +39,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('karla::auth.login');
+        return view('bright::auth.login');
     }
 
     protected function username()
@@ -49,8 +49,6 @@ class LoginController extends Controller
 
     /**
      * Get the throttle key for the given request.
-     *
-     * @param \Illuminate\Http\Request $request
      *
      * @return string
      */

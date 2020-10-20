@@ -1,9 +1,9 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth;
+namespace Diviky\Bright\Http\Controllers\Auth;
 
+use Diviky\Bright\Routing\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
-use Karla\Routing\Controller;
 
 class ResetPasswordController extends Controller
 {

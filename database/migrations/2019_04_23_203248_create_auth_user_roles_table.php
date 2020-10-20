@@ -10,7 +10,7 @@ class CreateAuthUserRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('karla.table.user_roles'), function (Blueprint $table) {
+        Schema::create(config('bright.table.user_roles'), function (Blueprint $table) {
             $table->integer('role_id')->unsigned();
             $table->string('model_type', 191);
             $table->foreignId('model_id')->index('model_id');
@@ -24,6 +24,6 @@ class CreateAuthUserRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('karla.table.user_roles'));
+        Schema::drop(config('bright.table.user_roles'));
     }
 }

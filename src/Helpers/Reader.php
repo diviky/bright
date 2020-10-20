@@ -1,14 +1,14 @@
 <?php
 
-namespace Karla\Helpers;
+namespace Diviky\Bright\Helpers;
 
 use Closure;
+use Diviky\Bright\Helpers\Iterator\ChunkedIterator;
+use Diviky\Bright\Helpers\Iterator\MapGeneratorIterator;
+use Diviky\Bright\Helpers\Iterator\MapIterator;
 use EmptyIterator;
 use finfo;
 use Generator;
-use Karla\Helpers\Iterator\ChunkedIterator;
-use Karla\Helpers\Iterator\MapGeneratorIterator;
-use Karla\Helpers\Iterator\MapIterator;
 use LimitIterator;
 use Port\Csv\CsvReader;
 use Port\Excel\ExcelReader;
@@ -140,7 +140,7 @@ class Reader
             }
 
             $options['offset'] = $offset;
-            
+
             $count             = isset($options['total']) ? $options['total'] : null;
 
             if (null !== $count && $offset >= $count) {
@@ -230,7 +230,7 @@ class Reader
 
         foreach ($lines as $row) {
             $row      = \preg_replace('/\r\n/', '', \trim($row)); // clean up .. strip new line and line return chars
-            $row      = \preg_replace("/[^${delimsRegex}]/", '', $row); // clean up .. strip evthg which is not a dilim'r
+            $row      = \preg_replace("/[^{$delimsRegex}]/", '', $row); // clean up .. strip evthg which is not a dilim'r
             $rowChars = \str_split($row); // break it apart char by char
 
             foreach ($rowChars as $char) {

@@ -1,17 +1,20 @@
 <?php
 
-namespace Karla\Database\Jobs;
+namespace Diviky\Bright\Database\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class Query implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * The number of times the job may be attempted.
@@ -27,6 +30,8 @@ class Query implements ShouldQueue
      * Create a new job instance.
      *
      * @param mixed $options
+     * @param mixed $sql
+     * @param mixed $bindings
      */
     public function __construct($sql, $bindings = [])
     {

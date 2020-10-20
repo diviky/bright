@@ -1,9 +1,9 @@
 <?php
 
-namespace Karla\Database;
+namespace Diviky\Bright\Database;
 
+use Diviky\Bright\Traits\CapsuleManager;
 use Illuminate\Support\Carbon;
-use Karla\Traits\CapsuleManager;
 
 class Meta
 {

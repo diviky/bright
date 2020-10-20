@@ -1,9 +1,9 @@
 <?php
 
 use Carbon\Carbon;
+use Diviky\Bright\Contracts\UtilInterface as Util;
+use Diviky\Bright\View\View;
 use Illuminate\Support\Str;
-use Karla\Contracts\UtilInterface as Util;
-use Karla\View\View;
 use League\CommonMark\CommonMarkConverter;
 
 if (!function_exists('printr')) {

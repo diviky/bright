@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Services\Auth;
+namespace Diviky\Bright\Services\Auth;
 
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Guard;

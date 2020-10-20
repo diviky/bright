@@ -1,15 +1,15 @@
 
 jQuery(document).ready(function ($) {
-    karlaJs();
-    karlaBootJs();
-    karlaSystemJs();
+    brightJs();
+    brightBootJs();
+    brightSystemJs();
 
     $(document).on('ajax:modal:loaded', function (e, $this) {
-        //karlaSystemJs();
+        //brightSystemJs();
     });
 
     $(document).on('ajax:loaded', function (e, $this) {
-        karlaJs();
+        brightJs();
     });
 
     $(document).on('form:submit', function (e, $this) {

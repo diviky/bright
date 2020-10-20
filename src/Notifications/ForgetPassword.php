@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Notifications;
+namespace Diviky\Bright\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -40,7 +40,7 @@ class ForgetPassword extends Notification implements ShouldQueue
             return \array_merge(['database'], $this->channels);
         }
 
-        $channels = config('karla.notifications');
+        $channels = config('bright.notifications');
 
         if (\count($channels) > 0) {
             return \array_merge(['database'], $channels);
@@ -60,7 +60,7 @@ class ForgetPassword extends Notification implements ShouldQueue
     {
         return (new MailMessage())
             ->subject('Password change request from ' . config('app.name'))
-            ->markdown('karla::emails.auth.password', [
+            ->markdown('bright::emails.auth.password', [
                 'token'      => $this->token,
                 'notifiable' => $notifiable,
             ]);

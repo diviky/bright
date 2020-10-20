@@ -10,7 +10,7 @@ class CreateAuthPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('karla.table.permissions'), function (Blueprint $table) {
+        Schema::create(config('bright.table.permissions'), function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 191);
             $table->string('display_name', 50)->nullable();
@@ -25,6 +25,6 @@ class CreateAuthPermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('karla.table.permissions'));
+        Schema::drop(config('bright.table.permissions'));
     }
 }

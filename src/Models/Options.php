@@ -1,11 +1,11 @@
 <?php
 
-namespace Karla\Models;
+namespace Diviky\Bright\Models;
 
-use Karla\Database\Eloquent\Model;
+use Diviky\Bright\Database\Eloquent\Model;
 
 class Options extends Model
 {
-    protected $table = 'app_options';
     public $guarded  = [];
+    protected $table = 'app_options';
 }

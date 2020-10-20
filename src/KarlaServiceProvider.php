@@ -2,7 +2,7 @@
 
 namespace Karla;
 
-use Karla\Providers\KarlaServiceProvider as BaseKarlaServiceProvider;
+use Diviky\Bright\Providers\KarlaServiceProvider as BaseKarlaServiceProvider;
 
 class KarlaServiceProvider extends BaseKarlaServiceProvider
 {

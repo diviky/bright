@@ -10,7 +10,7 @@ class CreateAuthActivationsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('karla.table.activations'), function (Blueprint $table) {
+        Schema::create(config('bright.table.activations'), function (Blueprint $table) {
             $table->increments('id');
             $table->foreignId('user_id')->index('activations_user_id_index');
             $table->string('token', 100)->nullable();
@@ -23,6 +23,6 @@ class CreateAuthActivationsTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('karla.table.activations'));
+        Schema::drop(config('bright.table.activations'));
     }
 }

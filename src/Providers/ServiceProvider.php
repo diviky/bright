@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Providers;
+namespace Diviky\Bright\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Middleware;
+namespace Diviky\Bright\Http\Controllers\Auth\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +11,6 @@ class IsUserActivated
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
      * @param null|mixed               $guard
      *
      * @return mixed

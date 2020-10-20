@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
 use Closure;
 use Illuminate\Support\Arr;
@@ -27,8 +27,6 @@ trait Responsable
      * Get the method name of the route action.
      *
      * @param mixed $action
-     *
-     * @return string
      */
     protected function getMethod($action): string
     {
@@ -37,7 +35,7 @@ trait Responsable
 
     protected function getNamespace($action): ?string
     {
-        if (strpos($action, '@') === false) {
+        if (false === \strpos($action, '@')) {
             return null;
         }
 
@@ -50,7 +48,7 @@ trait Responsable
 
     protected function getViewPath($action): ?string
     {
-        if (strpos($action, '@') === false) {
+        if (false === \strpos($action, '@')) {
             return null;
         }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Helpers;
+namespace Diviky\Bright\Helpers;
 
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Parser\Client\Browser;

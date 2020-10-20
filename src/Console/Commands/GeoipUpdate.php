@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Console\Commands;
+namespace Diviky\Bright\Console\Commands;
 
-use Karla\Console\Command;
+use Diviky\Bright\Console\Command;
 use PragmaRX\Support\GeoIp\Updater as GeoIpUpdater;
 
 class GeoipUpdate extends Command

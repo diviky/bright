@@ -1,12 +1,12 @@
 <?php
 
-namespace Karla\Services\Auth\Providers;
+namespace Diviky\Bright\Services\Auth\Providers;
 
 use App\Models\User;
+use Diviky\Bright\Http\Controllers\Auth\Models\Token;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
-use Karla\Http\Controllers\Auth\Models\Token;
 
 class AccessTokenProvider implements UserProvider
 {
@@ -56,7 +56,7 @@ class AccessTokenProvider implements UserProvider
         foreach ($credentials as $credentialKey => $credentialValue) {
             if (!Str::contains($credentialKey, 'password')) {
                 $user = $user->where($credentialKey, $credentialValue);
-                $key .= $credentialKey.':'.$credentialValue;
+                $key .= $credentialKey . ':' . $credentialValue;
             }
         }
 

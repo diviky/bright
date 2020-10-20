@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Console\Commands;
+namespace Diviky\Bright\Console\Commands;
 
-use Karla\Console\Command;
+use Diviky\Bright\Console\Command;
 
 class Migrate extends Command
 {
@@ -11,7 +11,7 @@ class Migrate extends Command
      *
      * @var string
      */
-    protected $signature = 'karla:setup:migrate';
+    protected $signature = 'bright:setup:migrate';
 
     /**
      * The console command description.

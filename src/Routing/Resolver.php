@@ -1,10 +1,10 @@
 <?php
 
-namespace Karla\Routing;
+namespace Diviky\Bright\Routing;
 
+use Diviky\Bright\Traits\CapsuleManager;
 use Exception;
 use Illuminate\Contracts\Container\Container;
-use Karla\Traits\CapsuleManager;
 
 class Resolver
 {

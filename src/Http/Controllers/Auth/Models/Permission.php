@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Models;
+namespace Diviky\Bright\Http\Controllers\Auth\Models;
 
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission as BasePermission;

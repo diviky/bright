@@ -1,9 +1,9 @@
 <?php
 
-namespace Karla\Providers;
+namespace Diviky\Bright\Providers;
 
+use Diviky\Bright\View\Factory;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Karla\View\Factory;
 
 class ViewServiceProvider extends BaseServiceProvider
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Karla\Console;
+namespace Diviky\Bright\Console;
 
+use Diviky\Bright\Traits\CapsuleManager;
 use Illuminate\Console\Command as BaseCommand;
-use Karla\Traits\CapsuleManager;
 
 class Command extends BaseCommand
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Models;
+namespace Diviky\Bright\Models;
 
-use Karla\Database\Eloquent\Model;
+use Diviky\Bright\Database\Eloquent\Model;
 
 class PasswordHistory extends Model
 {
@@ -10,6 +10,6 @@ class PasswordHistory extends Model
 
     public function getTable()
     {
-        return config('karla.table.password_history', 'password_history');
+        return config('bright.table.password_history', 'password_history');
     }
 }

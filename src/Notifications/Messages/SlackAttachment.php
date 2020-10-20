@@ -1,8 +1,7 @@
 <?php
 
-namespace Karla\Notifications\Messages;
+namespace Diviky\Bright\Notifications\Messages;
 
-use Karla\Notifications\Messages\SlackAttachmentAction;
 use Illuminate\Notifications\Messages\SlackAttachment as BaseSlackAttachment;
 
 class SlackAttachment extends BaseSlackAttachment
@@ -20,16 +19,17 @@ class SlackAttachment extends BaseSlackAttachment
     /**
      * Add a field to the attachment.
      *
-     * @param  \Closure|string $title
-     * @param  string $content
+     * @param \Closure|string $title
+     * @param string          $content
+     *
      * @return $this
      */
     public function actions($title, $content = '')
     {
-        if (is_callable($title)) {
+        if (\is_callable($title)) {
             $callback = $title;
 
-            $callback($attachmentAction = new SlackAttachmentAction);
+            $callback($attachmentAction = new SlackAttachmentAction());
 
             $this->actions[] = $attachmentAction;
 

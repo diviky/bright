@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
 trait Analytics
 {
@@ -28,7 +28,7 @@ trait Analytics
 
                 break;
             default:
-                list($start, $end, $day) = array_pad(\explode(' - ', $time), 3, null);
+                list($start, $end, $day) = \array_pad(\explode(' - ', $time), 3, null);
 
                 if ($day) {
                     return $this->getFormats($column, $day);

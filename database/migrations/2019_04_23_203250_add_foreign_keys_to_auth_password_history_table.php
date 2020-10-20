@@ -10,8 +10,8 @@ class AddForeignKeysToAuthPasswordHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::table(config('karla.table.password_history'), function (Blueprint $table) {
-            $table->foreign('user_id', 'password_history')->references('id')->on(config('karla.table.users'))->onUpdate('CASCADE')->onDelete('CASCADE');
+        Schema::table(config('bright.table.password_history'), function (Blueprint $table) {
+            $table->foreign('user_id', 'password_history')->references('id')->on(config('bright.table.users'))->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 
@@ -20,7 +20,7 @@ class AddForeignKeysToAuthPasswordHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::table(config('karla.table.password_history'), function (Blueprint $table) {
+        Schema::table(config('bright.table.password_history'), function (Blueprint $table) {
             $table->dropForeign('password_history');
         });
     }

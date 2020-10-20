@@ -1,24 +1,24 @@
 <?php
 
-namespace Karla\Providers;
+namespace Diviky\Bright\Providers;
 
+use Diviky\Bright\Console\Commands\Migrate;
+use Diviky\Bright\Console\Commands\Setup;
+use Diviky\Bright\Contracts\UtilInterface;
+use Diviky\Bright\Routing\Redirector;
+use Diviky\Bright\Routing\Resolver;
+use Diviky\Bright\Services\Auth\AccessTokenGuard;
+use Diviky\Bright\Services\Auth\AuthTokenGuard;
+use Diviky\Bright\Services\Auth\CredentialsGuard;
+use Diviky\Bright\Services\Auth\Providers\AccessTokenProvider;
+use Diviky\Bright\Services\Auth\Providers\AuthTokenProvider;
+use Diviky\Bright\Services\Auth\Providers\CredentialsProvider;
+use Diviky\Bright\Support\ServiceProvider;
+use Diviky\Bright\Traits\Provider;
+use Diviky\Bright\Util\Util;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
-use Karla\Console\Commands\Migrate;
-use Karla\Console\Commands\Setup;
-use Karla\Contracts\UtilInterface;
-use Karla\Routing\Redirector;
-use Karla\Routing\Resolver;
-use Karla\Services\Auth\AccessTokenGuard;
-use Karla\Services\Auth\AuthTokenGuard;
-use Karla\Services\Auth\CredentialsGuard;
-use Karla\Services\Auth\Providers\AccessTokenProvider;
-use Karla\Services\Auth\Providers\AuthTokenProvider;
-use Karla\Services\Auth\Providers\CredentialsProvider;
-use Karla\Support\ServiceProvider;
-use Karla\Traits\Provider;
-use Karla\Util\Util;
 
 class KarlaServiceProvider extends ServiceProvider
 {
@@ -38,7 +38,7 @@ class KarlaServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
         $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
 
-        $this->loadViewsFrom($this->path() . '/resources/views/', 'karla');
+        $this->loadViewsFrom($this->path() . '/resources/views/', 'bright');
 
         $this->registerMiddlewares();
         $this->registerEvents();
@@ -52,7 +52,7 @@ class KarlaServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        $this->mergeConfigFrom($this->path() . '/config/karla.php', 'karla');
+        $this->mergeConfigFrom($this->path() . '/config/bright.php', 'bright');
         $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
 
         $this->redirect();
@@ -95,35 +95,35 @@ class KarlaServiceProvider extends ServiceProvider
     protected function console()
     {
         $this->publishes([
-            $this->path() . '/config/charts.php'     => config_path('charts.php'),
-            $this->path() . '/config/permission.php' => config_path('permission.php'),
-            $this->path() . '/config/karla.php'      => config_path('karla.php'),
-            $this->path() . '/config/theme.php'      => config_path('theme.php'),
-        ], 'karla-config');
+            $this->path() . '/config/charts.php'      => config_path('charts.php'),
+            $this->path() . '/config/permission.php'  => config_path('permission.php'),
+            $this->path() . '/config/bright.php'      => config_path('bright.php'),
+            $this->path() . '/config/theme.php'       => config_path('theme.php'),
+        ], 'bright-config');
 
         $this->publishes([
             $this->path() . '/resources/assets/js' => resource_path('js'),
-        ], 'karla-assets');
+        ], 'bright-assets');
 
         $this->publishes([
             $this->path() . '/resources/app' => base_path(),
-        ], 'karla-setup');
+        ], 'bright-setup');
 
         $this->publishes([
-            $this->path() . '/resources/views'  => resource_path('views/vendor/karla'),
-        ], 'karla-views-auth');
+            $this->path() . '/resources/views'  => resource_path('views/vendor/bright'),
+        ], 'bright-views-auth');
 
         $this->publishes([
             $this->path() . '/resources/vendor' => resource_path('views'),
-        ], 'karla-views-vendor');
+        ], 'bright-views-vendor');
 
         $this->publishes([
             $this->path() . '/database/migrations' => database_path('migrations'),
-        ], 'karla-migrations');
+        ], 'bright-migrations');
 
         $this->publishes([
             $this->path() . '/database/seeders' => database_path('seeders'),
-        ], 'karla-seeders');
+        ], 'bright-seeders');
 
         $this->commands([
             Setup::class,
@@ -164,7 +164,7 @@ class KarlaServiceProvider extends ServiceProvider
      */
     protected function registerEvents()
     {
-        $events = $this->app['config']->get('karla.events');
+        $events = $this->app['config']->get('bright.events');
 
         if (\is_array($events)) {
             foreach ($events as $event => $listeners) {
@@ -179,7 +179,7 @@ class KarlaServiceProvider extends ServiceProvider
     {
         $router = $this->app['router'];
 
-        $middlewares = $this->app['config']->get('karla.middlewares');
+        $middlewares = $this->app['config']->get('bright.middlewares');
 
         if (\is_array($middlewares)) {
             foreach ($middlewares as $name => $value) {

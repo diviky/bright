@@ -1,16 +1,16 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth;
+namespace Diviky\Bright\Http\Controllers\Auth;
 
+use Diviky\Bright\Bright\Http\Controllers\Auth\Traits\Token;
+use Diviky\Bright\Http\Controllers\Auth\Models\Activation;
+use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
+use Diviky\Bright\Notifications\SendActivationToken;
+use Diviky\Bright\Routing\Controller;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
-use Karla\Http\Controllers\Auth\Models\Activation;
-use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
-use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Notifications\SendActivationToken;
-use Karla\Routing\Controller;
 
 class ActivationController extends Controller
 {
@@ -21,7 +21,7 @@ class ActivationController extends Controller
     public function activate(Request $request)
     {
         if ($request->isMethod('get')) {
-            return view('karla::auth.activate');
+            return view('bright::auth.activate');
         }
 
         $token = $request->input('token');

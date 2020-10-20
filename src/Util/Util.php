@@ -1,17 +1,17 @@
 <?php
 
-namespace Karla\Util;
+namespace Diviky\Bright\Util;
 
+use Diviky\Bright\Contracts\UtilInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Karla\Contracts\UtilInterface;
 
 class Util implements UtilInterface
 {
     public function carbon($time = null, $format = null, $timezone = null)
     {
-        if (is_null($timezone)) {
+        if (\is_null($timezone)) {
             $timezone = user('timezone') ?: config('app.timezone');
         }
 
@@ -19,11 +19,11 @@ class Util implements UtilInterface
             return (new Carbon())->setTimezone($timezone);
         }
 
-        if (!is_numeric($time)) {
-            $parts = explode('/', $time);
+        if (!\is_numeric($time)) {
+            $parts = \explode('/', $time);
 
-            if ($parts[0] && 4 != strlen($parts[0])) {
-                $time = str_replace('/', '-', trim($time));
+            if ($parts[0] && 4 != \strlen($parts[0])) {
+                $time = \str_replace('/', '-', \trim($time));
             }
             $carbon = new Carbon($time);
         } else {
@@ -54,7 +54,7 @@ class Util implements UtilInterface
             return;
         }
 
-        if ('data:' == substr($path, 0, 5)) {
+        if ('data:' == \substr($path, 0, 5)) {
             return $path;
         }
 
@@ -105,7 +105,7 @@ class Util implements UtilInterface
 
     public function utcTime($date = null, $timezone = null)
     {
-        if (is_null($timezone)) {
+        if (\is_null($timezone)) {
             $timezone = user('timezone') ?: config('app.timezone');
         }
 
@@ -114,6 +114,6 @@ class Util implements UtilInterface
 
     public function currency($value, $decimals = 4)
     {
-        return number_format($value, $decimals, '.', '');
+        return \number_format($value, $decimals, '.', '');
     }
 }

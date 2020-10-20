@@ -13,7 +13,7 @@ class AlterUserTable extends Migration
      */
     public function up()
     {
-        Schema::table(config('karla.table.users'), function (Blueprint $table) {
+        Schema::table(config('bright.table.users'), function (Blueprint $table) {
             $table->string('api_token', 80)->after('password')
                         ->unique()
                         ->nullable()
@@ -28,7 +28,7 @@ class AlterUserTable extends Migration
      */
     public function down()
     {
-        Schema::table(config('karla.table.users'), function (Blueprint $table) {
+        Schema::table(config('bright.table.users'), function (Blueprint $table) {
             $table->dropColumn('api_token');
         });
     }

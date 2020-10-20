@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Notifications\Messages;
+namespace Diviky\Bright\Notifications\Messages;
 
 class SlackAttachmentAction
 {
@@ -27,7 +27,9 @@ class SlackAttachmentAction
     /**
      * Set the title of the field.
      *
-     * @param  string $title
+     * @param string $title
+     * @param mixed  $text
+     *
      * @return $this
      */
     public function text($text)
@@ -99,12 +101,12 @@ class SlackAttachmentAction
             'name'    => $this->name,
             'value'   => $this->value,
             'url'     => $this->url,
-            "style"   => $this->style,
+            'style'   => $this->style,
             'confirm' => $this->confirm,
         ];
 
-        $values = array_merge($values, $this->action);
+        $values = \array_merge($values, $this->action);
 
-        return array_filter($values);
+        return \array_filter($values);
     }
 }

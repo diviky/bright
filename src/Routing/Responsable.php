@@ -1,10 +1,10 @@
 <?php
 
-namespace Karla\Routing;
+namespace Diviky\Bright\Routing;
 
+use Diviky\Bright\Traits\Themable;
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
 use Illuminate\Contracts\View\View;
-use Karla\Traits\Themable;
 
 class Responsable implements BaseResponsable
 {

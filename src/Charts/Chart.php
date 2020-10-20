@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Charts;
+namespace Diviky\Bright\Charts;
 
 use Balping\JsonRaw\Encoder;
 use ConsoleTVs\Charts\Classes\Chartjs\Chart as BaseChart;

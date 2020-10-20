@@ -13,7 +13,7 @@ class AlterUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table(config('karla.table.users'), function (Blueprint $table) {
+        Schema::table(config('bright.table.users'), function (Blueprint $table) {
             $table->bigInteger('parent_id')->unsigned()->nullable()->index('parent_id')->after('id');
             $table->string('role', 50)->nullable()->index('role')->after('parent_id');
             $table->string('mobile', 15)->nullable()->after('password');
@@ -35,7 +35,7 @@ class AlterUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table(config('karla.table.users'), function (Blueprint $table) {
+        Schema::table(config('bright.table.users'), function (Blueprint $table) {
             $table->dropColumn('parent_id');
             $table->dropColumn('role');
             $table->dropColumn('mobile');

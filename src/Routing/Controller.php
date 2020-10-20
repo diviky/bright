@@ -1,13 +1,13 @@
 <?php
 
-namespace Karla\Routing;
+namespace Diviky\Bright\Routing;
 
+use Diviky\Bright\Traits\Builder;
+use Diviky\Bright\Traits\CapsuleManager;
+use Diviky\Bright\Traits\HttpTrait;
+use Diviky\Bright\Traits\Message;
+use Diviky\Bright\Traits\ViewTrait;
 use Illuminate\Routing\Controller as BaseController;
-use Karla\Traits\Builder;
-use Karla\Traits\CapsuleManager;
-use Karla\Traits\HttpTrait;
-use Karla\Traits\Message;
-use Karla\Traits\ViewTrait;
 
 class Controller extends BaseController
 {

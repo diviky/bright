@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Helpers\Iterator;
+namespace Diviky\Bright\Helpers\Iterator;
 
 use InvalidArgumentException;
 use IteratorIterator;

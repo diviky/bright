@@ -1,8 +1,8 @@
 {
-    "name": "sankar/laravel-karla",
+    "name": "diviky/bright",
     "description": "Framework extension",
     "keywords": ["laravel", "permission", "acl", "security"],
-    "homepage": "https://github.com/sankarsuda/laravel-karla",
+    "homepage": "https://github.com/diviky/bright",
     "license": "MIT",
     "authors": [
         {
@@ -37,13 +37,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Karla\\": "src"
+            "Diviky\\Bright\\": "src"
         },
         "files": ["src/helpers.php"]
     },
     "autoload-dev": {
         "psr-4": {
-            "Karla\\Test\\": "tests"
+            "Diviky\\Bright\\Test\\": "tests"
         }
     },
     "scripts": {
@@ -55,10 +55,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Karla\\Providers\\KarlaServiceProvider",
-                "Karla\\Providers\\DatabaseServiceProvider",
-                "Karla\\Providers\\ServiceProvider",
-                "Karla\\Providers\\ViewServiceProvider"
+                "Diviky\\Bright\\Providers\\KarlaServiceProvider",
+                "Diviky\\Bright\\Providers\\DatabaseServiceProvider",
+                "Diviky\\Bright\\Providers\\ServiceProvider",
+                "Diviky\\Bright\\Providers\\ViewServiceProvider"
             ]
         }
     }

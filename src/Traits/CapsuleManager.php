@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
 use Illuminate\Container\Container;
 
@@ -65,8 +65,6 @@ trait CapsuleManager
 
     /**
      * Set the IoC container instance.
-     *
-     * @param \Illuminate\Container\Container $app
      */
     public function setContainer(Container $app)
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Traits;
+namespace Diviky\Bright\Http\Controllers\Auth\Traits;
 
-use Karla\Http\Controllers\Auth\Models\Activation;
+use Diviky\Bright\Http\Controllers\Auth\Models\Activation;
 
 trait Token
 {

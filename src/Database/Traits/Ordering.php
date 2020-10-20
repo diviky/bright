@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Database\Traits;
+namespace Diviky\Bright\Database\Traits;
 
 trait Ordering
 {
@@ -9,8 +9,6 @@ trait Ordering
      *
      * @param array &$data
      * @param mixed $ordering
-     *
-     * @return self
      */
     public function ordering($data = [], $ordering = []): self
     {

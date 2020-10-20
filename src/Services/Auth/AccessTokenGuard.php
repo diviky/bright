@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Services\Auth;
+namespace Diviky\Bright\Services\Auth;
 
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Guard;
@@ -46,7 +46,7 @@ class AccessTokenGuard implements Guard
             return;
         }
 
-        if (!is_null($user->deleted_at)) {
+        if (!\is_null($user->deleted_at)) {
             return;
         }
 

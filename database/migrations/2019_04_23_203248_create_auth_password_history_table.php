@@ -10,7 +10,7 @@ class CreateAuthPasswordHistoryTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('karla.table.password_history'), function (Blueprint $table) {
+        Schema::create(config('bright.table.password_history'), function (Blueprint $table) {
             $table->increments('id');
             $table->foreignId('user_id')->index('user_id');
             $table->string('password', 191);
@@ -23,6 +23,6 @@ class CreateAuthPasswordHistoryTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('karla.table.password_history'));
+        Schema::drop(config('bright.table.password_history'));
     }
 }

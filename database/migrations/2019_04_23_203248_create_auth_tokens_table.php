@@ -10,7 +10,7 @@ class CreateAuthTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('karla.table.tokens'), function (Blueprint $table) {
+        Schema::create(config('bright.table.tokens'), function (Blueprint $table) {
             $table->increments('id');
             $table->foreignId('user_id')->index('tokens_user_id_foreign');
             $table->string('access_token', 100)->unique('access_token');
@@ -27,6 +27,6 @@ class CreateAuthTokensTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('karla.table.tokens'));
+        Schema::drop(config('bright.table.tokens'));
     }
 }

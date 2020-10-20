@@ -14,7 +14,7 @@ function setTask($this, form, task) {
     }
 }
 
-function karlaSystemJs() {
+function brightSystemJs() {
     $(document).on('click', '[data-href]', function (e) {
         e.preventDefault();
 
@@ -224,11 +224,11 @@ function karlaSystemJs() {
             $('.ac-sort-name').val(name);
         } else {
             $('<input/>', {
-                    class: 'ac-sort-name',
-                    name: 'sort',
-                    value: name,
-                    type: 'hidden'
-                })
+                class: 'ac-sort-name',
+                name: 'sort',
+                value: name,
+                type: 'hidden'
+            })
                 .appendTo(form);
         }
 
@@ -236,11 +236,11 @@ function karlaSystemJs() {
             $('.ac-sort-order').val(order);
         } else {
             $('<input/>', {
-                    class: 'ac-sort-order',
-                    name: 'order',
-                    value: order,
-                    type: 'hidden'
-                })
+                class: 'ac-sort-order',
+                name: 'order',
+                value: order,
+                type: 'hidden'
+            })
                 .appendTo(form);
         }
 
@@ -393,10 +393,10 @@ function karlaSystemJs() {
         }, function (d) {
             $this.popover('dispose')
             $this.popover({
-                    content: d,
-                    html: true,
-                    placement: 'bottom'
-                })
+                content: d,
+                html: true,
+                placement: 'bottom'
+            })
                 .popover('show');
 
             $this.on('shown.bs.popover', function (e) {
@@ -423,10 +423,10 @@ function karlaSystemJs() {
         var d = $($this.data('popover')).html();
 
         $this.popover({
-                content: d,
-                html: true,
-                placement: 'bottom'
-            })
+            content: d,
+            html: true,
+            placement: 'bottom'
+        })
             .popover('show');
 
         $this.on('show.bs.popover', function (e) {

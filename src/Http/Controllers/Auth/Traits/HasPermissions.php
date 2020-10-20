@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Traits;
+namespace Diviky\Bright\Http\Controllers\Auth\Traits;
 
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Spatie\Permission\Traits\HasPermissions as SpatieHasPermissions;

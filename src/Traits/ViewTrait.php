@@ -1,6 +1,6 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -16,7 +16,7 @@ trait ViewTrait
 
         if (!$form['ajax']) {
             $inputs = '';
-            if (!is_array($params)) {
+            if (!\is_array($params)) {
                 $params = [];
             }
 
@@ -27,7 +27,7 @@ trait ViewTrait
             $class           = 'render-' . Str::slug($url);
             $params['class'] = '.' . $class;
 
-            if (!is_array($attributes)) {
+            if (!\is_array($attributes)) {
                 $attributes = [];
             }
 
@@ -66,7 +66,7 @@ trait ViewTrait
 
     protected function toAttribs($attributes)
     {
-        $output = "";
+        $output = '';
         foreach ($attributes as $key => $value) {
             $output .= $key . '="' . $value . '" ';
         }

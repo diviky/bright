@@ -1,10 +1,10 @@
 <?php
 
-namespace Karla\Traits;
+namespace Diviky\Bright\Traits;
 
+use Diviky\Bright\Util\Device;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
-use Karla\Util\Device;
 
 trait Themable
 {
@@ -52,7 +52,7 @@ trait Themable
         $themes = config('theme');
         $device = $themes['device'];
 
-        if (empty($device) || $device == 'auto') {
+        if (empty($device) || 'auto' == $device) {
             $device = (new Device())->detect();
             config(['theme.device' => $device]);
         }

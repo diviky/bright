@@ -1,8 +1,8 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Traits;
+namespace Diviky\Bright\Http\Controllers\Auth\Traits;
 
-use Karla\Models\Models;
+use Diviky\Bright\Models\Models;
 
 trait UsersParent
 {

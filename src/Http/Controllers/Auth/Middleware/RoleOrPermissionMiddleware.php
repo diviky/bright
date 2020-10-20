@@ -1,10 +1,10 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth\Middleware;
+namespace Diviky\Bright\Http\Controllers\Auth\Middleware;
 
 use Closure;
+use Diviky\Bright\Traits\Themable;
 use Illuminate\Support\Facades\Auth;
-use Karla\Traits\Themable;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class RoleOrPermissionMiddleware
@@ -15,12 +15,13 @@ class RoleOrPermissionMiddleware
     {
         if (Auth::guest()) {
             $this->setUpThemeFromRequest($request);
+
             throw UnauthorizedException::notLoggedIn();
         }
 
-        $rolesOrPermissions = is_array($roleOrPermission)
+        $rolesOrPermissions = \is_array($roleOrPermission)
         ? $roleOrPermission
-        : explode('|', $roleOrPermission);
+        : \explode('|', $roleOrPermission);
 
         if (!Auth::user()->hasAnyRole($rolesOrPermissions) && !Auth::user()->hasAnyPermission($rolesOrPermissions)) {
             $this->setUpThemeFromRequest($request);

@@ -1,19 +1,19 @@
 <?php
 
-namespace Karla\Http\Controllers\Auth;
+namespace Diviky\Bright\Http\Controllers\Auth;
 
+use Diviky\Bright\Http\Controllers\Auth\Models\Activation;
+use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
+use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
+use Diviky\Bright\Models\Models;
+use Diviky\Bright\Notifications\ForgetPassword;
+use Diviky\Bright\Routing\Controller;
+use Diviky\Bright\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Karla\Http\Controllers\Auth\Models\Activation;
-use Karla\Http\Controllers\Auth\Traits\ColumnsTrait;
-use Karla\Http\Controllers\Auth\Traits\Token;
-use Karla\Models\Models;
-use Karla\Notifications\ForgetPassword;
-use Karla\Routing\Controller;
-use Karla\User;
 
 class ForgotPasswordController extends Controller
 {
@@ -24,7 +24,7 @@ class ForgotPasswordController extends Controller
     {
         if ($request->isMethod('post')) {
             $this->validate($request, [
-                $this->username() => 'required|exists:' . config('karla.table.users'),
+                $this->username() => 'required|exists:' . config('bright.table.users'),
             ]);
 
             $user = Models::user()::where($this->username(), $request->input($this->username()))->first();
@@ -42,7 +42,7 @@ class ForgotPasswordController extends Controller
             ];
         }
 
-        return view('karla::auth.passwords.token');
+        return view('bright::auth.passwords.token');
     }
 
     public function resend(Request $request)
@@ -90,7 +90,7 @@ class ForgotPasswordController extends Controller
         }
 
         if ($request->isMethod('get')) {
-            return view('karla::auth.verify');
+            return view('bright::auth.verify');
         }
 
         $this->validate($request, [
@@ -132,7 +132,7 @@ class ForgotPasswordController extends Controller
         }
 
         if ($request->isMethod('get')) {
-            return view('karla::auth.passwords.change');
+            return view('bright::auth.passwords.change');
         }
 
         $this->validate($request, [
