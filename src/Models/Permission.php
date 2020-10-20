@@ -1,6 +1,6 @@
 <?php
 
-namespace Diviky\Bright\Http\Controllers\Auth\Models;
+namespace Diviky\Bright\Models;
 
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission as BasePermission;

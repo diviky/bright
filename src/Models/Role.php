@@ -1,6 +1,6 @@
 <?php
 
-namespace Diviky\Bright\Http\Controllers\Auth\Models;
+namespace Diviky\Bright\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Models\Role as BaseRole;

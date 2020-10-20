@@ -1,6 +1,6 @@
 <?php
 
-namespace Diviky\Bright\Http\Controllers\Auth\Models;
+namespace Diviky\Bright\Models;
 
 use Spatie\Permission\Contracts\Permission;
 use Spatie\Permission\PermissionRegistrar as BasePermissionRegistrar;
