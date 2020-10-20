@@ -13,6 +13,6 @@ composer.phar
 *.bak
 desktop.ini
 .DS_Store
-vendor
-build
+/vendor
+/build
 

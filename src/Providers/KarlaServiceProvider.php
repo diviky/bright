@@ -111,8 +111,11 @@ class KarlaServiceProvider extends ServiceProvider
 
         $this->publishes([
             $this->path() . '/resources/views'  => resource_path('views/vendor/karla'),
+        ], 'karla-views-auth');
+
+        $this->publishes([
             $this->path() . '/resources/vendor' => resource_path('views'),
-        ], 'karla-views');
+        ], 'karla-views-vendor');
 
         $this->publishes([
             $this->path() . '/database/migrations' => database_path('migrations'),
