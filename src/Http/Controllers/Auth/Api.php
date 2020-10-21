@@ -3,9 +3,9 @@
 namespace Diviky\Bright\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Diviky\Bright\Models\Activation;
 use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
+use Diviky\Bright\Models\Activation;
 use Diviky\Bright\Models\Models;
 use Diviky\Bright\Notifications\ForgetPassword;
 use Illuminate\Auth\Events\PasswordReset;
@@ -144,7 +144,7 @@ class Api extends Controller
         $user->password = Hash::make($password);
 
         $user->setRememberToken(Str::random(60));
-        $user->setAccessToken(Str::random(60));
+        $user->setAccessToken(Str::random(30));
 
         if (!$user->save()) {
             return false;

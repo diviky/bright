@@ -5,6 +5,7 @@
 <div class="card card-small">
     <div class="card-body p-6 form-float">
         <div class="card-title">Login to your account</div>
+         @include('bright::auth.partials.social-signin')
 
         <form method="POST" action="{{ route('login') }}" role="ksubmit">
             @csrf

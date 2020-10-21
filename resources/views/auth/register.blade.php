@@ -4,6 +4,7 @@
 <div class="card card-small">
     <div class="card-body p-6 form-float">
         <div class="card-title">{{ __('Create an Account') }}</div>
+            @include('bright::auth.partials.social-signup')
 
         <form method="POST" action="{{ route('register') }}" role="ksubmit">
             @csrf

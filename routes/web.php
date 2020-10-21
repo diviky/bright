@@ -15,7 +15,6 @@ Route::group([
     'middleware' => ['web', 'guest'],
     'namespace'  => '\Diviky\Bright\Http\Controllers',
 ], function () {
-
     Route::get('account/sniff/{id}', 'Account\Controller@sniff');
     // Authentication Routes...
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -30,6 +29,9 @@ Route::group([
     Route::any('password/verify', 'Auth\ForgotPasswordController@verify')->name('password.verify');
     Route::any('password/resend', 'Auth\ForgotPasswordController@resend')->name('password.resend');
     Route::any('password/change', 'Auth\ForgotPasswordController@change')->name('password.change');
+
+    Route::get('connect/{provider}', 'Socialite\Controller@connect');
+    Route::get('connect/{provider}/callback', 'Socialite\Controller@callback');
 });
 
 Route::group([
@@ -43,4 +45,5 @@ Route::group([
     Route::any('account', 'Account\Controller@index');
     Route::any('account/password', 'Account\Controller@password');
     Route::get('account/search', 'Account\Controller@search');
+    Route::post('account/token/refresh', 'Account\Controller@token');
 });

@@ -2,11 +2,11 @@
 
 namespace Diviky\Bright\Traits;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -340,7 +340,7 @@ trait HttpTrait
         }
 
         if (isset($data) && $data instanceof Request) {
-            return Validator::make($data, $rules)->validate();
+            return Validator::make($data->all(), $rules)->validate();
         }
 
         return Validator::make($this->request()->all(), $rules)->validate();

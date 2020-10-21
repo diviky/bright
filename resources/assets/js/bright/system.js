@@ -554,4 +554,26 @@ function brightSystemJs() {
             return form.submit();
         }, delay);
     });
+
+    $(document).on('click', '[data-ajax-replace]', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        var target = $this.data('target');
+        var url = $this.data('ajax-replace');
+
+        var message = $this.attr('data-confirm');
+        box.confirm(message, (result) => {
+            if (result) {
+                var data = $this.data('post-data');
+                $.ajax({
+                    url: url,
+                    data: data,
+                    method: 'POST',
+                    complete: function (xhr) {
+                        $(target).html(xhr.responseText);
+                    }
+                });
+            }
+        });
+    });
 };

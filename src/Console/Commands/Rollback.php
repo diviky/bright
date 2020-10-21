@@ -4,14 +4,14 @@ namespace Diviky\Bright\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class Migrate extends Command
+class Rollback extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'bright:setup:migrate {--f|force : Force the operation to run when in production.}';
+    protected $signature = 'bright:setup:migrate:rollback {--f|force : Force the operation to run when in production.}';
 
     /**
      * The console command description.
@@ -27,11 +27,10 @@ class Migrate extends Command
      */
     public function handle()
     {
-        $this->call('migrate', [
+        $this->call('migrate:reset', [
             '--path'     => \realpath(__DIR__ . '/../../../database/migrations'),
             '--realpath' => true,
             '--force'    => $this->option('force'),
-            '--step'     => true,
         ]);
     }
 }

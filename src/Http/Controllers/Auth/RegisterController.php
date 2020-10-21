@@ -80,7 +80,7 @@ class RegisterController extends Controller
             'email'        => $values['email'],
             'password'     => Hash::make($values['password']),
             'status'       => $status,
-            'access_token' => Str::random(36),
+            'access_token' => Str::random(60),
         ]);
     }
 

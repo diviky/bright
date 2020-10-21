@@ -36,4 +36,5 @@ Route::group([
     'prefix'     => 'api/v1',
 ], function () {
     Route::post('password/change', 'Auth\Api@change');
+    Route::post('account/token/refresh', 'Account\Controller@token');
 });

@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class Controller extends BaseController
 {
@@ -188,5 +189,18 @@ class Controller extends BaseController
         return [
             'rows' => $rows,
         ];
+    }
+
+    public function token()
+    {
+        $token = Str::random(30);
+
+        $user_id = user('id');
+        $user    = Models::user()::find($user_id);
+
+        $user->setAccessToken($token);
+        $user->save();
+
+        return response($token);
     }
 }

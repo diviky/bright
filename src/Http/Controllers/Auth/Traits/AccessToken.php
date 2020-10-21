@@ -26,7 +26,7 @@ trait AccessToken
     public function setAccessToken($value = null)
     {
         if (!empty($this->getAccessTokenName())) {
-            $value = $value ?: Str::random(60);
+            $value = $value ?: Str::random(30);
 
             $this->{$this->getAccessTokenName()} = $value;
         }

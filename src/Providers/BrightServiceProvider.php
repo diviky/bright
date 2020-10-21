@@ -3,6 +3,7 @@
 namespace Diviky\Bright\Providers;
 
 use Diviky\Bright\Console\Commands\Migrate;
+use Diviky\Bright\Console\Commands\Rollback;
 use Diviky\Bright\Console\Commands\Setup;
 use Diviky\Bright\Contracts\UtilInterface;
 use Diviky\Bright\Routing\Redirector;
@@ -10,9 +11,7 @@ use Diviky\Bright\Routing\Resolver;
 use Diviky\Bright\Services\Auth\AccessTokenGuard;
 use Diviky\Bright\Services\Auth\AuthTokenGuard;
 use Diviky\Bright\Services\Auth\CredentialsGuard;
-use Diviky\Bright\Services\Auth\Providers\AccessTokenProvider;
-use Diviky\Bright\Services\Auth\Providers\AuthTokenProvider;
-use Diviky\Bright\Services\Auth\Providers\CredentialsProvider;
+use Diviky\Bright\Services\Auth\Providers\AccessProvider;
 use Diviky\Bright\Support\ServiceProvider;
 use Diviky\Bright\Traits\Provider;
 use Diviky\Bright\Util\Util;
@@ -128,16 +127,15 @@ class BrightServiceProvider extends ServiceProvider
         $this->commands([
             Setup::class,
             Migrate::class,
+            Rollback::class,
         ]);
-
-        //$this->loadMigrationsFrom($this->path() . '/database/migrations');
     }
 
     protected function auth()
     {
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
-            $userProvider = app(AccessTokenProvider::class);
+            $userProvider = app(AccessProvider::class);
             $request      = app('request');
 
             return new AccessTokenGuard($userProvider, $request, $config);
@@ -145,14 +143,14 @@ class BrightServiceProvider extends ServiceProvider
 
         Auth::extend('auth_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
-            $userProvider = app(AuthTokenProvider::class);
+            $userProvider = app(AccessProvider::class);
             $request      = app('request');
 
             return new AuthTokenGuard($userProvider, $request, $config);
         });
 
         Auth::extend('credentials', function ($app, $name, array $config) {
-            $userProvider = app(CredentialsProvider::class);
+            $userProvider = app(AccessProvider::class);
             $request      = app('request');
 
             return new CredentialsGuard($userProvider, $request, $config);

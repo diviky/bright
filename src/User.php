@@ -27,7 +27,8 @@ class User extends Authenticatable
      *
      * @var string
      */
-    protected $apiTokenName = 'access_token';
+    protected $apiTokenName    = 'access_token';
+    protected $accessTokenName = 'access_token';
     /**
      * The attributes that are mass assignable.
      *

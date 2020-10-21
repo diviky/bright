@@ -163,7 +163,7 @@ class ForgotPasswordController extends Controller
         $user->password = Hash::make($password);
 
         $user->setRememberToken(Str::random(60));
-        $user->setAccessToken(Str::random(60));
+        $user->setAccessToken(Str::random(30));
 
         if (!$user->save()) {
             return false;
