@@ -2,10 +2,11 @@
 
 namespace Diviky\Bright\Traits;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -31,7 +32,7 @@ trait HttpTrait
      */
     public function input($key = null, $default = null)
     {
-        return $this->get('request')->input($key, $default);
+        return $this->request()->input($key, $default);
     }
 
     /**
@@ -41,7 +42,7 @@ trait HttpTrait
      */
     public function all()
     {
-        return $this->get('request')->all();
+        return $this->request()->all();
     }
 
     /**
@@ -54,7 +55,7 @@ trait HttpTrait
      */
     public function query($key = null, $default = null)
     {
-        return $this->get('request')->query($key, $default);
+        return $this->request()->query($key, $default);
     }
 
     /**
@@ -67,7 +68,7 @@ trait HttpTrait
      */
     public function cookie($key = null, $default = null)
     {
-        return $this->get('request')->cookie($key, $default);
+        return $this->request()->cookie($key, $default);
     }
 
     /**
@@ -80,7 +81,7 @@ trait HttpTrait
      */
     public function files($key = null, $default = null)
     {
-        return $this->get('request')->file($key, $default);
+        return $this->request()->file($key, $default);
     }
 
     /**
@@ -93,7 +94,7 @@ trait HttpTrait
      */
     public function post($key = null, $default = null)
     {
-        return $this->get('request')->post($key, $default);
+        return $this->request()->post($key, $default);
     }
 
     /**
@@ -106,7 +107,7 @@ trait HttpTrait
      */
     public function header($key = null, $default = null)
     {
-        return $this->get('request')->header($key, $default);
+        return $this->request()->header($key, $default);
     }
 
     /**
@@ -119,7 +120,7 @@ trait HttpTrait
      */
     public function server($key = null, $default = null)
     {
-        return $this->get('request')->server($key, $default);
+        return $this->request()->server($key, $default);
     }
 
     /**
@@ -131,7 +132,7 @@ trait HttpTrait
      */
     public function method($type = null)
     {
-        $method = $this->get('request')->getMethod();
+        $method = $this->request()->getMethod();
 
         if ($type) {
             return \strtoupper($type) == $method ? true : false;
@@ -164,10 +165,10 @@ trait HttpTrait
     {
         if (\is_array($key)) {
             foreach ($key as $baseKey => $baseValue) {
-                $this->get('request')->setHeader($baseKey, $baseValue, $replace);
+                $this->request()->setHeader($baseKey, $baseValue, $replace);
             }
         } else {
-            $this->get('request')->setHeader($key, $values, $replace);
+            $this->request()->setHeader($key, $values, $replace);
         }
 
         return $this;
@@ -334,11 +335,15 @@ trait HttpTrait
 
     protected function rules(array $rules = [], $data = null)
     {
-        if (\is_array($data)) {
+        if (isset($data) && \is_array($data)) {
             return Validator::make($data, $rules)->validate();
         }
 
-        return $this->validate($this->request(), $rules);
+        if (isset($data) && $data instanceof Request) {
+            return Validator::make($data, $rules)->validate();
+        }
+
+        return Validator::make($this->request()->all(), $rules)->validate();
     }
 
     /**

@@ -71,14 +71,14 @@ class RegisterController extends Controller
      *
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function create(array $values)
     {
-        $status = config('auth.user.status', 0);
+        $status = $values['status'] ?? config('auth.user.status', 0);
 
         return Models::user()::create([
-            'name'         => $data['name'],
-            'email'        => $data['email'],
-            'password'     => Hash::make($data['password']),
+            'name'         => $values['name'],
+            'email'        => $values['email'],
+            'password'     => Hash::make($values['password']),
             'status'       => $status,
             'access_token' => Str::random(36),
         ]);

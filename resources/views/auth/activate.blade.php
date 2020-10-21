@@ -5,12 +5,7 @@
 <div class="card card-small">
     <div class="card-body p-6 form-float">
         <div class="card-title">{{ __('Activate Your Account') }}</div>
-
-        @if (session('status'))
-        <div class="alert alert-{{ session('status') }}">
-            {{ session('message') }}
-        </div>
-        @endif
+        <x-bright::flash />
         <p class="text-muted">Enter the code sent to your email address.</p>
 
         <form method="POST" action="{{ route('user.activate') }}" role="ksubmit">
@@ -30,6 +25,6 @@
     </div>
 </div>
 <div class="text-center text-muted">
-    Did not receive the code?, <a data-ajax href="{{ route('activate.resend') }}">resent it</a>.
+    Did not receive the code? <a href="#" data-href="{{ route('activate.resend') }}">resent it</a>.
 </div>
 @endsection

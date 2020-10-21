@@ -38,7 +38,7 @@ trait RegistersUsers
      */
     protected function create(array $values)
     {
-        $status = config('auth.user.status', $values['status']);
+        $status = $values['status'] ?? config('auth.user.status', 0);
 
         return Models::user()::create([
             'name'         => $values['name'],

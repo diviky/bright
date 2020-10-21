@@ -2,11 +2,22 @@
 
 namespace Diviky\Bright\Providers;
 
+use Diviky\Bright\View\Components\Flash;
 use Diviky\Bright\View\Factory;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ViewServiceProvider extends BaseServiceProvider
 {
+    /**
+     * Bootstrap your package's services.
+     */
+    public function boot()
+    {
+        Blade::component('flash', Flash::class);
+        Blade::componentNamespace('Diviky\\Bright\\View\\Components', 'bright');
+    }
+
     /**
      * Register the application services.
      */

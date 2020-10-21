@@ -6,11 +6,7 @@
     <div class="card-body p-6 form-float">
     <div class="card-title">{{ __('Reset Password') }}</div>
 
-        @if (session('status'))
-            <div class="alert alert-success">
-                {{ session('status') }}
-            </div>
-        @endif
+        <x-bright::flash />
         <p class="text-muted">Enter your email address and your password reset token will be emailed to you.</p>
 
         <form method="POST" action="{{ url('password/reset') }}" role="ksubmit">

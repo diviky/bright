@@ -5,12 +5,7 @@
 <div class="card card-small">
     <div class="card-body p-6 form-float">
     <div class="card-title">{{ __('Verify Your Account') }}</div>
-
-        @if (session('status'))
-            <div class="alert alert-{{ session('status') }}">
-                {{ session('message') }}
-            </div>
-        @endif
+        <x-bright::flash />
         <p class="text-muted">Enter the code sent to your email address.</p>
 
         <form method="POST" action="{{ route('password.verify') }}" role="ksubmit">

@@ -2,9 +2,9 @@
 
 namespace Diviky\Bright\Http\Controllers\Auth;
 
-use Diviky\Bright\Models\Activation;
 use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
+use Diviky\Bright\Models\Activation;
 use Diviky\Bright\Models\Models;
 use Diviky\Bright\Notifications\ForgetPassword;
 use Diviky\Bright\Routing\Controller;
@@ -23,7 +23,7 @@ class ForgotPasswordController extends Controller
     public function reset(Request $request)
     {
         if ($request->isMethod('post')) {
-            $this->validate($request, [
+            $request->validate([
                 $this->username() => 'required|exists:' . config('bright.table.users'),
             ]);
 
@@ -93,7 +93,7 @@ class ForgotPasswordController extends Controller
             return view('bright::auth.verify');
         }
 
-        $this->validate($request, [
+        $request->validate([
             'token' => 'required',
         ]);
 
@@ -135,7 +135,7 @@ class ForgotPasswordController extends Controller
             return view('bright::auth.passwords.change');
         }
 
-        $this->validate($request, [
+        $request->validate([
             'password' => 'required|confirmed|min:8',
         ]);
 
