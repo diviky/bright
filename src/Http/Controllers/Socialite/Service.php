@@ -2,8 +2,8 @@
 
 namespace Diviky\Bright\Http\Controllers\Socialite;
 
-use App\Models\SocialiteUser;
 use App\Models\User;
+use Diviky\Bright\Models\SocialiteUser;
 use Illuminate\Support\Facades\Auth;
 
 class Service
