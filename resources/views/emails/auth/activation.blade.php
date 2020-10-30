@@ -7,6 +7,5 @@
 
 <p><strong>{{ $token }}</strong></p>
 
-<p>Happy visting!</p>
 <p>Please do not reply to this mail as this is an auto-generated email.</p>
 @endcomponent

@@ -15,7 +15,8 @@
         "php": ">=7.1",
         "laravel/framework": "^7|^8",
         "spatie/laravel-permission": "^3.12",
-        "schuppo/password-strength": "^2"
+        "schuppo/password-strength": "^2",
+        "laravel/ui": "^3.0"
     },
     "require-dev": {
         "xethron/migrations-generator": "^2.0",
@@ -52,6 +53,9 @@
         "sort-packages": true
     },
     "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        },
         "laravel": {
             "providers": [
                 "Diviky\\Bright\\Providers\\BrightServiceProvider",

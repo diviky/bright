@@ -102,7 +102,11 @@ class BrightServiceProvider extends ServiceProvider
 
         $this->publishes([
             $this->path() . '/resources/assets/js' => resource_path('js'),
-        ], 'bright-assets');
+        ], 'bright-assets-js');
+
+        $this->publishes([
+            $this->path() . '/resources/assets/app.js' => resource_path('js/app.js'),
+        ], 'bright-assets-app');
 
         $this->publishes([
             $this->path() . '/resources/app' => base_path(),
@@ -113,7 +117,7 @@ class BrightServiceProvider extends ServiceProvider
         ], 'bright-views-auth');
 
         $this->publishes([
-            $this->path() . '/resources/vendor' => resource_path('views'),
+            $this->path() . '/resources/vendor' => resource_path('views/vendor'),
         ], 'bright-views-vendor');
 
         $this->publishes([
