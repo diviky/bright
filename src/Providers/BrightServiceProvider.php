@@ -34,9 +34,6 @@ class BrightServiceProvider extends ServiceProvider
 
         $this->replaceConfigRecursive($this->path() . '/config/auth.php', 'auth');
 
-        $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
-        $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
-
         $this->loadViewsFrom($this->path() . '/resources/views/', 'bright');
 
         $this->registerMiddlewares();
@@ -53,6 +50,8 @@ class BrightServiceProvider extends ServiceProvider
 
         $this->mergeConfigFrom($this->path() . '/config/bright.php', 'bright');
         $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
+        $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
+        $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
 
         $this->redirect();
         $this->auth();

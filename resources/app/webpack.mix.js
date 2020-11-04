@@ -31,7 +31,7 @@ mix.babel(
     public + 'js/app.js');
 
 mix.styles(
-    glob.sync('resources/css/*.css').concat(glob.sync('resources/css/*/*.css')),
+    glob.sync(resources +'css/*.css').concat(glob.sync(resources +'css/*/*.css')),
     public + 'css/assets.css');
 
 // node Scripts

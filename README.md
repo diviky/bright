@@ -22,7 +22,7 @@ sed -i '' 's/use Illuminate\\Database\\Query\\Builder/use Diviky\\Bright\\Databa
     php artisan vendor:publish --tag="bright-views"
     php artisan vendor:publish --tag="bright-migrations"
 
-    //Copy bower, webpack and some other files
+    //Copy webpack and some other files
     php artisan vendor:publish --tag="bright-setup"
 ```
 

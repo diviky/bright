@@ -30,8 +30,8 @@ Route::group([
     Route::any('password/resend', 'Auth\ForgotPasswordController@resend')->name('password.resend');
     Route::any('password/change', 'Auth\ForgotPasswordController@change')->name('password.change');
 
-    Route::get('connect/{provider}', 'Socialite\Controller@connect');
-    Route::get('connect/{provider}/callback', 'Socialite\Controller@callback');
+    Route::get('social/connect/{provider}', 'Socialite\Controller@connect');
+    Route::get('social/connect/{provider}/callback', 'Socialite\Controller@callback');
 });
 
 Route::group([
