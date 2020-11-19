@@ -20,6 +20,8 @@ trait UserTrait
 
     public function getUserById($id)
     {
+        $id = is_array($id) ? array_map('intval', $id) : intval($id);
+
         return $this->db->table('users_role_view')
             ->where('id', $id)
             ->first(['id', 'username', 'parent_id', 'role_name as role', 'status']);

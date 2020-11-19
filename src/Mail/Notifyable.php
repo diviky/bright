@@ -29,15 +29,23 @@ trait Notifyable
             ->with($data['with']);
 
         if ($data['cc']) {
-            $mail->cc($data['cc']);
+            $cc = is_string($data['cc']) ? explode(',', $data['cc']) : $data['cc'];
+
+            $mail->cc($cc);
+        }
+
+        if ($data['bcc']) {
+            $bcc = is_string($data['bcc']) ? explode(',', $data['bcc']) : $data['bcc'];
+
+            $mail->bcc($bcc);
         }
 
         if ($data['prefix']) {
             $mail->prefix($data['prefix']);
         }
 
-        if ($data['bcc']) {
-            $mail->bcc($data['bcc']);
+        if ($data['file']) {
+            $mail->attach($data['file']);
         }
 
         $mail->markdown($template);

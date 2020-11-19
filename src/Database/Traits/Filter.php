@@ -74,8 +74,8 @@ trait Filter
                 if (!\is_array($date)) {
                     $date = \explode(' - ', $date);
                     $date = [
-                        'from' => $date[0],
-                        'to'   => $date[1],
+                        'from' => $date[0] ?? null,
+                        'to'   => $date[1] ?? null,
                     ];
                 }
 
@@ -102,8 +102,8 @@ trait Filter
                 if (!\is_array($date)) {
                     $date = \explode(' - ', $date);
                     $date = [
-                        'from' => $date[0],
-                        'to'   => $date[1],
+                        'from' => $date[0] ?? null,
+                        'to'   => $date[1] ?? null,
                     ];
                 }
 
@@ -132,8 +132,8 @@ trait Filter
                 if (!\is_array($date)) {
                     $date = \explode(' - ', $date);
                     $date = [
-                        'from' => $date[0],
-                        'to'   => $date[1],
+                        'from' => $date[0] ?? null,
+                        'to'   => $date[1] ?? null,
                     ];
                 }
 

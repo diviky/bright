@@ -395,9 +395,9 @@ function brightSystemJs() {
             $this.popover({
                 content: d,
                 html: true,
+                sanitize: false,
                 placement: 'bottom'
-            })
-                .popover('show');
+            }).popover('show');
 
             $this.on('shown.bs.popover', function (e) {
                 $('[data-poload]').not(e.target).popover('dispose');
@@ -425,6 +425,7 @@ function brightSystemJs() {
         $this.popover({
             content: d,
             html: true,
+            sanitize: false,
             placement: 'bottom'
         })
             .popover('show');

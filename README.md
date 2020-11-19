@@ -1,17 +1,20 @@
 # An extension to laravel for quick develpment
 
-`\App\Models\User` model should extends with `\Diviky\Bright\Models\User`
-`\App\Exceptions\Handler` should extends with `\Diviky\Bright\Exceptions\Handler`
-`\App\Http\Controllers\Controller` should extends with `\Diviky\Bright\Routing\Controller`
+## Install
+
+```
+    composer require diviky/bright
+```
+
+## Setup
+
+```
+    php artisan bright:setup
+```
 
 Query builder needs to overwrite with bright
 
 ```php
-
-sed -i '' 's/Illuminate\\Foundation\\Auth\\/Diviky\\Bright\\Models\\/g' app/Models/User.php
-sed -i '' 's/Illuminate\\Foundation\\/Diviky\\Bright\\/g' app/Exceptions/Handler.php
-sed -i '' 's/Illuminate\\Routing\\/Diviky\\Bright\\Routing\\/g' app/Http/Controllers/Controller.php
-
 sed -i '' 's/use Illuminate\\Database\\Query\\Builder/use Diviky\\Bright\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
 
 ```

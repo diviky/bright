@@ -11,9 +11,9 @@
             @csrf
 
             <div class="form-group">
-                <label for="username" class="form-label">{{ __('Email Address') }}</label>
-                <input id="username" name="email" type="email" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}"
-                    tabindex="1" value="{{ old('username') }}" placeholder="Email Address" required>
+                <label for="email" class="form-label">{{ __('Email Address') }}</label>
+                <input id="email" name="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
+                    tabindex="1" value="{{ old('email') }}" placeholder="Email Address" required>
             </div>
 
             <div class="form-group">
