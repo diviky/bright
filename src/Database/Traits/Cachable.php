@@ -12,11 +12,11 @@ trait Cachable
     protected $cacheKey;
 
     /**
-     * The number of minutes to cache the query.
+     * The number of seconds to cache the query.
      *
      * @var int
      */
-    protected $cacheMinutes;
+    protected $cacheseconds;
 
     /**
      * The tags for the query cache.
@@ -48,7 +48,7 @@ trait Cachable
      */
     public function get($columns = ['*'])
     {
-        if (!\is_null($this->cacheMinutes) && $this->cacheEnabled()) {
+        if (!\is_null($this->cacheseconds) && $this->cacheEnabled()) {
             return $this->getCached($columns);
         }
 
@@ -72,20 +72,20 @@ trait Cachable
         // If the query is requested to be cached, we will cache it using a unique key
         // for this database connection and query statement, including the bindings
         // that are used on this query, providing great convenience when caching.
-        list($key, $minutes) = $this->getCacheInfo();
+        list($key, $seconds) = $this->getCacheInfo();
 
         $cache    = $this->getCache();
         $callback = $this->getCacheCallback($columns);
-        // If we've been given a DateTime instance or a "minutes" value that is
+        // If we've been given a DateTime instance or a "seconds" value that is
         // greater than zero then we'll pass it on to the remember method.
         // Otherwise we'll cache it indefinitely.
-        if ($minutes instanceof DateTime) {
-            return $cache->remember($key, $minutes, $callback);
+        if ($seconds instanceof DateTime) {
+            return $cache->remember($key, $seconds, $callback);
         }
 
-        // Convert minutes to seconds for laravel 5.8+
-        if ($minutes > 0) {
-            return $cache->remember($key, ($minutes * 60), $callback);
+        // Convert seconds to seconds for laravel 5.8+
+        if ($seconds > 0) {
+            return $cache->remember($key, ($seconds * 60), $callback);
         }
 
         return $cache->rememberForever($key, $callback);
@@ -94,18 +94,18 @@ trait Cachable
     /**
      * Indicate that the query results should be cached.
      *
-     * @param \DateTime|int $minutes
+     * @param \DateTime|int $seconds
      * @param string        $key
      *
      * @return $this
      */
-    public function remember($minutes = 0, $key = null)
+    public function remember($seconds = null, $key = null)
     {
-        if (\is_null($minutes)) {
-            $minutes = 10;
+        if (\is_null($seconds)) {
+            $seconds = 10 * 60;
         }
 
-        list($this->cacheMinutes, $this->cacheKey) = [$minutes, $key];
+        list($this->cacheseconds, $this->cacheKey) = [$seconds, $key];
 
         return $this;
     }
@@ -129,7 +129,7 @@ trait Cachable
      */
     public function dontRemember()
     {
-        $this->cacheMinutes = $this->cacheKey = $this->cacheTags = null;
+        $this->cacheseconds = $this->cacheKey = $this->cacheTags = null;
 
         return $this;
     }
@@ -254,13 +254,13 @@ trait Cachable
     }
 
     /**
-     * Get the cache key and cache minutes as an array.
+     * Get the cache key and cache seconds as an array.
      *
      * @return array
      */
     protected function getCacheInfo()
     {
-        return [$this->getCacheKey(), $this->cacheMinutes];
+        return [$this->getCacheKey(), $this->cacheseconds];
     }
 
     /**
@@ -273,7 +273,7 @@ trait Cachable
     protected function getCacheCallback($columns)
     {
         return function () use ($columns) {
-            $this->cacheMinutes = null;
+            $this->cacheseconds = null;
 
             return $this->get($columns);
         };

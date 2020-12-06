@@ -28,7 +28,7 @@ class Branding
             $row = new stdClass();
         }
 
-        if (isset(optional($row)->is_ssl) && !$request->secure()) {
+        if (isset(optional($row)->is_ssl) && $row->is_ssl && !$request->secure()) {
             return redirect()->secure($request->getRequestUri());
         }
 
