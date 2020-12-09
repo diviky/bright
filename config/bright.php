@@ -3,7 +3,11 @@
 return [
     'timestamps'       => false,
     'db_cache'         => env('DB_CACHE', false),
-
+    'async'      => [
+        'enable' => env('DB_ASYNC_QUERY', false),
+        'connection' => env('DB_ASYNC_CONNECTION', 'sync'),
+        'queue' => env('DB_ASYNC_QUEUE', 'sql')
+    ],
     /*
     |--------------------------------------------------------------------------
     | Tables configuration
@@ -48,6 +52,9 @@ return [
         'Illuminate\Auth\Events\Login'          => [
             \Diviky\Bright\Listeners\SuccessLogin::class,
         ],
+        'Diviky\Bright\Database\Events\QueryQueued' => [
+            Diviky\Bright\Database\Listeners\QueryQueuedListener::class
+        ]
     ],
 
     'middlewares'   => [

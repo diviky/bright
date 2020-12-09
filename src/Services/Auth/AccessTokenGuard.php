@@ -32,19 +32,28 @@ class AccessTokenGuard implements Guard
             return $this->user;
         }
 
-        $user = null;
+        $token = null;
 
         // retrieve via token
-        $token = $this->getTokenForRequest();
+        $access_key = $this->getTokenForRequest();
 
-        if (!empty($token)) {
+        if (!empty($access_key)) {
             // the token was found, how you want to pass?
-            $user = $this->provider->retrieveByToken($this->storageKey, $token);
+            $token = $this->provider->retrieveByToken($this->storageKey, $access_key);
         }
 
-        if (\is_null($user)) {
+        if (\is_null($token) || is_null($token->user_id)) {
             return;
         }
+
+        if (1 != $token->status || !\is_null($token->deleted_at)) {
+            return;
+        }
+
+        $allowed_ips = $token->allowed_ip;
+        $this->validateIp($allowed_ips);
+
+        $user = $this->provider->retrieveById($token->user_id);
 
         if (!\is_null($user->deleted_at)) {
             return;
@@ -54,14 +63,7 @@ class AccessTokenGuard implements Guard
             return;
         }
 
-        $allowed_ips = $user->allowed_ip;
-        $this->validateIp($allowed_ips);
-
-        if (1 != $user->user->status) {
-            return;
-        }
-
-        $this->user = $user->user;
+        $this->user = $user;
 
         return $this->user;
     }

@@ -22,7 +22,7 @@ class AccessProvider implements UserProvider
     public function retrieveById($identifier)
     {
         return $this->user
-            ->remeber(null, 'uid:' . $identifier)
+            ->remember(null, 'uid:' . $identifier)
             ->find($identifier);
     }
 
@@ -37,12 +37,12 @@ class AccessProvider implements UserProvider
 
     public function retrieveByToken($identifier, $token)
     {
-        $token = $this->token->with('user')
+        $token = $this->token
             ->remember(null, 'token:' . $token)
             ->where($identifier, $token)
             ->first();
 
-        return $token && $token->user ? $token : null;
+        return $token ? $token : null;
     }
 
     public function updateRememberToken(Authenticatable $user, $token)

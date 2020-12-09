@@ -2,9 +2,9 @@
 
 namespace Diviky\Bright\Providers;
 
-use Diviky\Bright\Database\ConnectionFactory;
-use Diviky\Bright\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
+use Diviky\Bright\Database\DatabaseManager;
+use Diviky\Bright\Database\ConnectionFactory;
 
 class DatabaseServiceProvider extends ServiceProvider
 {

@@ -21,21 +21,21 @@ use Illuminate\Database\Query\Builder as LaravelBuilder;
 
 class Builder extends LaravelBuilder
 {
+    use Async;
+    use Build;
     use Cachable {
         Cachable::get as cacheGet;
     }
-    use Async;
-    use Outfile;
-    use Timestamps;
-    use Raw;
-    use Build;
     use Eventable;
-    use Ordering;
     use Filter;
-    use Remove;
-    use Tables;
-    use SoftDeletes;
+    use Ordering;
+    use Outfile;
     use Paging;
+    use Raw;
+    use Remove;
+    use SoftDeletes;
+    use Tables;
+    use Timestamps;
 
     /**
      * {@inheritdoc}
@@ -115,7 +115,7 @@ class Builder extends LaravelBuilder
         $type = \trim(\strtolower(\explode(' ', $sql)[0]));
 
         if ($useReadPdo) {
-            return $this->connection->statement($sql, $bindings, $useReadPdo);
+            return $this->connection->statement($sql, $bindings);
         }
 
         switch ($type) {
@@ -123,14 +123,17 @@ class Builder extends LaravelBuilder
                 return $this->connection->delete($sql, $bindings);
 
                 break;
+
             case 'update':
                 return $this->connection->update($sql, $bindings);
 
                 break;
+
             case 'insert':
                 return $this->connection->insert($sql, $bindings);
 
                 break;
+
             case 'select':
                 if (\preg_match('/outfile\s/i', $sql)) {
                     return $this->connection->statement($sql, $bindings, true);
@@ -139,6 +142,7 @@ class Builder extends LaravelBuilder
                 return $this->connection->select($sql, $bindings);
 
                 break;
+
             case 'load':
                 return $this->connection->affectingStatement($sql, $bindings);
 
