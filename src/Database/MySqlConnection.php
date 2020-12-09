@@ -3,10 +3,11 @@
 namespace Diviky\Bright\Database;
 
 use Closure;
-use Diviky\Bright\Database\Query\Builder as QueryBuilder;
-use Diviky\Bright\Database\Query\Grammars\MySqlGrammar;
-use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 use Illuminate\Database\QueryException;
+use Diviky\Bright\Database\Events\QueryQueued;
+use Diviky\Bright\Database\Query\Grammars\MySqlGrammar;
+use Diviky\Bright\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 
 class MySqlConnection extends LaravelMySqlConnection
 {
@@ -16,6 +17,8 @@ class MySqlConnection extends LaravelMySqlConnection
      * Number of attempts to retry.
      */
     const ATTEMPTS_COUNT = 3;
+
+    protected $async = null;
 
     /**
      * Get a new query builder instance.
@@ -40,25 +43,14 @@ class MySqlConnection extends LaravelMySqlConnection
      *
      * @return bool
      */
-    public function statement($query, $bindings = [], $useReadPdo = false)
+    public function statement($query, $bindings = [])
     {
-        return $this->run($query, $bindings, function ($query, $bindings) use ($useReadPdo) {
-            if ($this->pretending()) {
-                return true;
-            }
+        if ($this->shouldQueue()) {
+            $this->toQueue($query, $bindings);
+            return true;
+        }
 
-            if ($useReadPdo) {
-                $statement = $this->getPdoForSelect($useReadPdo)->prepare($query);
-            } else {
-                $statement = $this->getPdo()->prepare($query);
-            }
-
-            $this->bindValues($statement, $this->prepareBindings($bindings));
-
-            $this->recordsHaveBeenModified();
-
-            return $statement->execute();
-        });
+        return parent::statement($query, $bindings);
     }
 
     /**
@@ -101,5 +93,45 @@ class MySqlConnection extends LaravelMySqlConnection
         $grammar->setConfig($this->config['bright']);
 
         return $this->withTablePrefix($grammar);
+    }
+
+    /**
+     * Run an SQL statement and get the number of rows affected.
+     *
+     * @param  string  $query
+     * @param  array   $bindings
+     * @return int
+     */
+    public function affectingStatement($query, $bindings = [])
+    {
+        if ($this->shouldQueue()) {
+            $this->toQueue($query, $bindings);
+            return 1;
+        }
+
+        return parent::affectingStatement($query, $bindings);
+    }
+
+    public function async($connection = null, $queue = null)
+    {
+        $this->async = [$connection, $queue];
+
+        return $this;
+    }
+
+    public function toQueue($query, $bindings)
+    {
+        $async = $this->async;
+        $this->async = null;
+        $this->event(new QueryQueued($query, $bindings, $async));
+    }
+
+    protected function shouldQueue()
+    {
+        if (is_array($this->async)) {
+            return true;
+        }
+
+        return false;
     }
 }
