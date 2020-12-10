@@ -17,7 +17,7 @@ use RewindableGenerator;
 use SplFileObject;
 use Traversable;
 use wapmorgan\UnifiedArchive\UnifiedArchive;
-
+use Port\Spreadsheet\SpreadsheetReader;
 /**
  * Reader class to get details from iterator.
  *
@@ -76,7 +76,11 @@ class Reader
                 if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
                     $reader = new CsvReader($file, $options['delimiter']);
                 } else {
-                    $reader     = new ExcelReader($file, null, 0);
+                    if (class_exists('Port\Excel\ExcelReader')) {
+                        $reader     = new ExcelReader($file, null, 0);
+                    } else {
+                        $reader     = new SpreadsheetReader($file, null, 0);
+                    }
                     $duplicates = null;
                 }
 
