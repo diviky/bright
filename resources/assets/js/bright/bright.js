@@ -14,15 +14,16 @@ function brightJs() {
 
     $(document).popover({
         html: true,
+        sanitize: false,
         selector: '[data-toggle="popover"]'
     });
 
-    $('[data-toggle="tooltip"]').on('remove hide', function (e) {
-        $(this).tooltip('hide');
+    $('[data-toggle="tooltip"]').on("remove hide", function(e) {
+        $(this).tooltip("hide");
     });
 
-    $('[data-toggle="popover"]').on('remove hide', function (e) {
-        $(this).popover('hide');
+    $('[data-toggle="popover"]').on("remove hide", function(e) {
+        $(this).popover("hide");
     });
 
     if ($.fn.lazyload) {
@@ -33,41 +34,41 @@ function brightJs() {
 
     if ($.fn.slimscroll) {
         $("[role=scroll]").slimscroll({
-            height: 'auto',
+            height: "auto",
             railVisible: true,
-            size: '5px',
+            size: "5px",
             wheelStep: 10
         });
     }
 
-    if (typeof ClipboardJS === 'function') {
-        var clipboard = new ClipboardJS('[data-clipboard]');
-        clipboard.on('success', function (e) {
+    if (typeof ClipboardJS === "function") {
+        var clipboard = new ClipboardJS("[data-clipboard]");
+        clipboard.on("success", function(e) {
             e.clearSelection();
-            $('.tooltip-inner').html('Copied!');
-            $(e.trigger).tooltip('update')
+            $(".tooltip-inner").html("Copied!");
+            $(e.trigger).tooltip("update");
         });
-        clipboard.on('error', function (e) {
+        clipboard.on("error", function(e) {
             noty({
-                text: 'Error!',
+                text: "Error!",
                 type: "info"
             });
         });
     }
 
     if ($.fn.select2) {
-        $('[data-select]').select2({
+        $("[data-select]").select2({
             minimumResultsForSearch: 10
         });
 
         $("[tokenizer]").select2({
             tags: true,
-            tokenSeparators: [',', ' ']
+            tokenSeparators: [",", " "]
         });
 
-        $('[data-select-ajax]').each(function () {
+        $("[data-select-ajax]").each(function() {
             var $this = $(this);
-            var url = $this.data('select-ajax');
+            var url = $this.data("select-ajax");
 
             $this.select2({
                 minimumInputLength: 3,
@@ -75,7 +76,7 @@ function brightJs() {
                 ajax: {
                     url: url,
                     delay: 250,
-                    processResults: function (data) {
+                    processResults: function(data) {
                         // Tranforms the top-level key of the response object from 'items' to 'results'
                         return {
                             results: data.rows
@@ -88,60 +89,64 @@ function brightJs() {
 
     // Drag and drop sortable
     if ($.fn.sortable) {
-        var _gridSortHelper = function (e, ui) {
-            ui.children().each(function () {
+        var _gridSortHelper = function(e, ui) {
+            ui.children().each(function() {
                 $(this).width($(this).width());
             });
             return ui;
         };
 
-        var _gridSortUpdateHandler = function (e, ui) {
+        var _gridSortUpdateHandler = function(e, ui) {
             var form = getForm($(this));
             var page = 1;
 
-            if (form.find('.ac-task-input').length > 0) {
-                $('.ac-task-input').val('sorting');
+            if (form.find(".ac-task-input").length > 0) {
+                $(".ac-task-input").val("sorting");
             } else {
-                $('<input/>', {
-                    class: 'ac-task-input',
-                    name: 'task',
-                    value: 'sorting',
-                    type: 'hidden'
+                $("<input/>", {
+                    class: "ac-task-input",
+                    name: "task",
+                    value: "sorting",
+                    type: "hidden"
                 }).appendTo(form);
             }
 
             form.find("input[name='page']").val(page);
-            $('#page').val(page);
+            $("#page").val(page);
 
             form.submit();
             return ui;
         };
 
-        $('.table_sortable_body').sortable({
-            //containment: '.ac-ui-sortable',
-            connectWith: ['.table_sortable_body'],
-            handle: '[sortable]',
-            opacity: 0.6,
-            helper: _gridSortHelper,
-            update: _gridSortUpdateHandler
-        }).disableSelection();
+        $(".table_sortable_body")
+            .sortable({
+                //containment: '.ac-ui-sortable',
+                connectWith: [".table_sortable_body"],
+                handle: "[sortable]",
+                opacity: 0.6,
+                helper: _gridSortHelper,
+                update: _gridSortUpdateHandler
+            })
+            .disableSelection();
 
-        $('[sortables]').sortable({
-            connectWith: ['.table_sortable_body'],
-            handle: '[sortable]',
-            opacity: 0.6
-        }).disableSelection();
+        $("[sortables]")
+            .sortable({
+                connectWith: [".table_sortable_body"],
+                handle: "[sortable]",
+                opacity: 0.6
+            })
+            .disableSelection();
     }
 
     if ($.fn.waypoint) {
-        $('[data-waypoint]').each(function () {
+        $("[data-waypoint]").each(function() {
             var $this = $(this);
             $this.waypoint({
-                handler: function (direction) {
-                    $this.toggleClass('navbar-inverse', direction == 'down');
-                    $this.toggleClass('navbar-default', direction == 'up');
-                    $this.toggleClass('sticky', direction == 'down');
-                    $('body').toggleClass('sticky', direction == 'down');
+                handler: function(direction) {
+                    $this.toggleClass("navbar-inverse", direction == "down");
+                    $this.toggleClass("navbar-default", direction == "up");
+                    $this.toggleClass("sticky", direction == "down");
+                    $("body").toggleClass("sticky", direction == "down");
                 },
                 offset: -50
             });
@@ -150,44 +155,54 @@ function brightJs() {
 }
 
 function brightBootJs() {
-    $(document).on('click', '[data-bootstrap-select] li', function (e) {
+    $(document).on("click", "[data-bootstrap-select] li", function(e) {
         e.preventDefault();
         var param = $(this).data("param");
         var concept = $(this).text();
-        $(this).parents('div:first').find('[data-concept]').text(concept);
-        $(this).parents('div:first').find('[data-param]').val(param).trigger('change');
+        $(this)
+            .parents("div:first")
+            .find("[data-concept]")
+            .text(concept);
+        $(this)
+            .parents("div:first")
+            .find("[data-param]")
+            .val(param)
+            .trigger("change");
     });
 
-    $(document).on('click', '.dropdown-select .dropdown-item', function (e) {
+    $(document).on("click", ".dropdown-select .dropdown-item", function(e) {
         let $this = $(this);
-        var dropdown = $this.parents('.dropdown:first');
-        var target = dropdown.find('.dropdown-toggle');
-        target.prev('input').val($this.data('value')).trigger('change');
+        var dropdown = $this.parents(".dropdown:first");
+        var target = dropdown.find(".dropdown-toggle");
+        target
+            .prev("input")
+            .val($this.data("value"))
+            .trigger("change");
         target.html($this.html());
     });
 
-    $(window).on('scroll', function () {
+    $(window).on("scroll", function() {
         var scroll = $(window).scrollTop();
-        $('[data-sticky]').each(function (index, el) {
-            var height = parseInt($(this).data('sticky')) || 200;
+        $("[data-sticky]").each(function(index, el) {
+            var height = parseInt($(this).data("sticky")) || 200;
             if (scroll < height) {
                 $(this).removeClass("sticky");
-                $('body').removeClass("sticky");
+                $("body").removeClass("sticky");
             } else {
                 $(this).addClass("sticky");
-                $('body').addClass("sticky");
+                $("body").addClass("sticky");
             }
         });
         return false;
     });
 
-    $('[data-interval]').each(function () {
+    $("[data-interval]").each(function() {
         var $this = $(this);
-        var val = parseInt($this.data('interval'));
+        var val = parseInt($this.data("interval"));
 
         if (val > 0) {
             val = val * 1000;
-            setInterval(function () {
+            setInterval(function() {
                 var form = getForm($this);
                 form.submit();
             }, val);

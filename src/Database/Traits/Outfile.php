@@ -8,8 +8,7 @@ trait Outfile
 
     public function out($path = null, $local = true, $count = 10000, $options = [])
     {
-        $path          = $path ?: \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
-        $this->outpath = $path;
+        $path = $this->generateFilePath($path);
 
         $options = \array_merge([
             'separated' => ',',
@@ -24,19 +23,25 @@ trait Outfile
         return $this->outLoop($path, $count, $options);
     }
 
-    public function into($table, $path = null)
+    public function into($table, $path = null, $options = [], $ignore = false)
     {
+        $options = \array_merge([
+            'separated' => ',',
+            'enclosed'  => '"',
+            'ends'      => '\n',
+        ], $options);
+
         $table = $this->grammar->wrapTable($table);
         if ($path) {
-            $path = $this->outFile($path);
+            $path = $this->outFile($path, $options);
 
             $sql = "LOAD DATA LOCAL INFILE '" . $path . "'";
-            $sql .= ' IGNORE INTO TABLE ' . $table;
-            $sql .= " FIELDS TERMINATED BY ','";
-            $sql .= " OPTIONALLY ENCLOSED BY '\"'";
-            $sql .= " LINES TERMINATED BY '\n'";
+            $sql .= (($ignore) ?' IGNORE' : '').' INTO TABLE ' . $table;
+            $sql .= " FIELDS TERMINATED BY '".$options['separated']."'";
+            $sql .= " OPTIONALLY ENCLOSED BY '".$options['enclosed']."'";
+            $sql .= " LINES TERMINATED BY '".$options['ends']."'";
         } else {
-            $sql = 'INSERT INTO ' . $table . ' ' . $this->toQuery();
+            $sql = 'INSERT '.(($ignore) ? ' IGNORE ': '').' INTO ' . $table . ' ' . $this->toQuery();
         }
 
         return $this->statement($sql);
@@ -44,15 +49,20 @@ trait Outfile
 
     protected function outLoop($file = null, $count = 10000, $options = []): string
     {
-        $file          = $file ?: \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
-        $this->outpath = $file;
+        $options = \array_merge([
+            'separated' => ',',
+            'enclosed'  => '"',
+            'ends'      => '\n',
+        ], $options);
+
+        $file = $this->generateFilePath($file);
 
         $fp = \fopen($file, 'w+');
 
         $rows = $this->flatChunk($count);
 
         foreach ($rows as $row) {
-            \fwrite($fp, '"' . \implode('","', (array) $row) . '"' . "\n");
+            \fwrite($fp, $options['enclosed'] . \implode('","', (array) $row) . $options['enclosed'] . $options['ends']);
         }
 
         \fclose($fp);
@@ -62,16 +72,21 @@ trait Outfile
 
     protected function outFile($file = null, $options = []): string
     {
-        $file          = $file ?: \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
-        $this->outpath = $file;
+        $options = \array_merge([
+            'separated' => ',',
+            'enclosed'  => '"',
+            'ends'      => '\n',
+        ], $options);
+
+        $file = $this->generateFilePath($file);
 
         $sql = $this->toQuery();
 
         $out = 'SELECT * FROM (' . $sql . ') AS export';
         $out .= " INTO OUTFILE '" . $file . "'";
-        $out .= " FIELDS TERMINATED BY ','";
-        $out .= " OPTIONALLY ENCLOSED BY '\"'";
-        $out .= " LINES TERMINATED BY '\n'";
+        $out .= " FIELDS TERMINATED BY '".$options['separated']."'";
+        $out .= " OPTIONALLY ENCLOSED BY '".$options['enclosed']."'";
+        $out .= " LINES TERMINATED BY '".$options['ends']."'";
 
         $this->statement($out);
 
@@ -81,5 +96,13 @@ trait Outfile
     protected function getOutPath()
     {
         return $this->outpath;
+    }
+
+    protected function generateFilePath($file)
+    {
+        $file          = $file && is_string($file) ? $file : \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
+        $this->outpath = $file;
+
+        return $file;
     }
 }
