@@ -33,8 +33,6 @@ trait Builder
     protected function table($table = null, $timestamps = true)
     {
         $table = $table ?: $this->table;
-        //$prefix = DB::getTablePrefix();
-        //$table = str_replace("#__", $prefix, $table);
 
         $database = $this->db->table($table);
         $database->timestamps($timestamps);

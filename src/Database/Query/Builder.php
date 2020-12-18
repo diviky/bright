@@ -110,8 +110,11 @@ class Builder extends LaravelBuilder
         return parent::update($values);
     }
 
-    public function statement($sql, $bindings = [])
+    public function statement($sql, array $bindings = [])
     {
+        $prefix = $this->connection->getTablePrefix();
+        $sql    = \str_replace('#__', $prefix, $sql);
+
         $type = \trim(\strtolower(\explode(' ', $sql)[0]));
 
         switch ($type) {

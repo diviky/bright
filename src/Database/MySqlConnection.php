@@ -3,11 +3,11 @@
 namespace Diviky\Bright\Database;
 
 use Closure;
-use Illuminate\Database\QueryException;
 use Diviky\Bright\Database\Events\QueryQueued;
-use Diviky\Bright\Database\Query\Grammars\MySqlGrammar;
 use Diviky\Bright\Database\Query\Builder as QueryBuilder;
+use Diviky\Bright\Database\Query\Grammars\MySqlGrammar;
 use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
+use Illuminate\Database\QueryException;
 
 class MySqlConnection extends LaravelMySqlConnection
 {
@@ -18,7 +18,7 @@ class MySqlConnection extends LaravelMySqlConnection
      */
     const ATTEMPTS_COUNT = 3;
 
-    protected $async = null;
+    protected $async;
 
     /**
      * Get a new query builder instance.
@@ -47,10 +47,79 @@ class MySqlConnection extends LaravelMySqlConnection
     {
         if ($this->shouldQueue()) {
             $this->toQueue($query, $bindings);
+
             return true;
         }
 
+        $prefix   = $this->getTablePrefix();
+        $query    = \str_replace('#__', $prefix, $query);
+        $type     = \trim(\strtolower(\explode(' ', $query)[0]));
+
+        switch ($type) {
+            case 'delete':
+                return parent::affectingStatement($query, $bindings);
+
+                break;
+
+            case 'update':
+                return parent::affectingStatement($query, $bindings);
+
+                break;
+
+            case 'insert':
+                return parent::statement($query, $bindings);
+
+                break;
+
+            case 'select':
+                if (\preg_match('/outfile\s/i', $query)) {
+                    return parent::statement($query, $bindings);
+                }
+
+                return $this->select($query, $bindings);
+
+                break;
+
+            case 'load':
+                return $this->unprepared($query);
+
+                break;
+        }
+
         return parent::statement($query, $bindings);
+    }
+
+    /**
+     * Run an SQL statement and get the number of rows affected.
+     *
+     * @param string $query
+     * @param array  $bindings
+     *
+     * @return int
+     */
+    public function affectingStatement($query, $bindings = [])
+    {
+        if ($this->shouldQueue()) {
+            $this->toQueue($query, $bindings);
+
+            return 1;
+        }
+
+        return parent::affectingStatement($query, $bindings);
+    }
+
+    public function async($connection = null, $queue = null)
+    {
+        $this->async = [$connection, $queue];
+
+        return $this;
+    }
+
+    public function toQueue($query, $bindings)
+    {
+        $async       = $this->async;
+        $this->async = null;
+        $this->event(new QueryQueued($query, $bindings, $async));
     }
 
     /**
@@ -95,40 +164,9 @@ class MySqlConnection extends LaravelMySqlConnection
         return $this->withTablePrefix($grammar);
     }
 
-    /**
-     * Run an SQL statement and get the number of rows affected.
-     *
-     * @param  string  $query
-     * @param  array   $bindings
-     * @return int
-     */
-    public function affectingStatement($query, $bindings = [])
-    {
-        if ($this->shouldQueue()) {
-            $this->toQueue($query, $bindings);
-            return 1;
-        }
-
-        return parent::affectingStatement($query, $bindings);
-    }
-
-    public function async($connection = null, $queue = null)
-    {
-        $this->async = [$connection, $queue];
-
-        return $this;
-    }
-
-    public function toQueue($query, $bindings)
-    {
-        $async = $this->async;
-        $this->async = null;
-        $this->event(new QueryQueued($query, $bindings, $async));
-    }
-
     protected function shouldQueue()
     {
-        if (is_array($this->async)) {
+        if (\is_array($this->async)) {
             return true;
         }
 
