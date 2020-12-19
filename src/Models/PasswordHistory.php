@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PasswordHistory extends Model
 {
-    public $guarded = [];
+    public $guarded      = [];
+    public $timestamps   = false;
 
     public function getTable()
     {
