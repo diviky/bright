@@ -60,6 +60,7 @@
         "laravel": {
             "providers": [
                 "Diviky\\Bright\\Providers\\BrightServiceProvider",
+                "Diviky\\Bright\\Providers\\ShardingServiceProvider",
                 "Diviky\\Bright\\Providers\\DatabaseServiceProvider",
                 "Diviky\\Bright\\Providers\\ServiceProvider",
                 "Diviky\\Bright\\Providers\\ViewServiceProvider"
