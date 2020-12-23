@@ -31,7 +31,7 @@ class Responsable implements BaseResponsable
     public function toResponse($request)
     {
         $response = $this->getResponse();
-        $format   = $request->input('format');
+        $format   = $request->input('_request') ?: $request->input('format');
 
         if (!$format && $request->expectsJson()) {
             return $response;
@@ -73,6 +73,12 @@ class Responsable implements BaseResponsable
         }
 
         if ('json' == $format) {
+            return $response;
+        }
+
+        if ('json' == $response['_format']) {
+            unset($response['_format']);
+            
             return $response;
         }
 
