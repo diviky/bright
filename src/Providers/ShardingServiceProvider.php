@@ -8,14 +8,19 @@ use Illuminate\Support\ServiceProvider;
 
 class ShardingServiceProvider extends ServiceProvider
 {
+    protected function path()
+    {
+        return __DIR__ . '/../..';
+    }
+
     /**
      * Bootstrap the application services.
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/config/sharding.php' => config_path('sharding.php'),
-        ], 'bright:config');
+        if ($this->app->runningInConsole()) {
+            $this->console();
+        }
     }
 
     /**
@@ -23,6 +28,8 @@ class ShardingServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom($this->path() . '/config/sharding.php', 'sharding');
+
         $this->registerConnectionManager();
         $this->app->bind('bright.shardmanager', function () {
             return new ShardManager(
@@ -41,5 +48,12 @@ class ShardingServiceProvider extends ServiceProvider
 
             return new MapManager($map);
         });
+    }
+
+    protected function console()
+    {
+        $this->publishes([
+            __DIR__ . '/config/sharding.php' => config_path('sharding.php'),
+        ], 'bright:config');
     }
 }

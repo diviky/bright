@@ -5,7 +5,7 @@ namespace Diviky\Bright\Database;
 use Closure;
 use Diviky\Bright\Database\Events\QueryQueued;
 use Diviky\Bright\Database\Query\Builder as QueryBuilder;
-use Diviky\Bright\Database\Query\Grammars\MySqlGrammar;
+use Diviky\Bright\Database\Query\Grammars\MySqlGrammar as SchemaGrammar;
 use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 use Illuminate\Database\QueryException;
 
@@ -158,7 +158,20 @@ class MySqlConnection extends LaravelMySqlConnection
      */
     protected function getDefaultQueryGrammar()
     {
-        $grammar = new MySqlGrammar();
+        $grammar = new SchemaGrammar();
+        $grammar->setConfig($this->config['bright']);
+
+        return $this->withTablePrefix($grammar);
+    }
+
+    /**
+     * Get the default schema grammar instance.
+     *
+     * @return \Illuminate\Database\Schema\Grammars\MySqlGrammar
+     */
+    protected function getDefaultSchemaGrammar()
+    {
+        $grammar = new SchemaGrammar();
         $grammar->setConfig($this->config['bright']);
 
         return $this->withTablePrefix($grammar);

@@ -15,17 +15,36 @@ class DatabaseManager extends LaravelDatabaseManager
             return $this->connection($connections[$name])->table($name);
         }
 
-        if ($config['sharding']) {
-            $manager = app('bright.shardmanager');
-            $manager->setService($config['sharding']);
-            $connection = $manager->getShardById(user('id'));
+        return $this->shard()->table($name);
+    }
 
+    public function shard($shard_key = null)
+    {
+        $manager = $this->getShardManager();
+
+        if ($manager) {
+            $shard_key  = $shard_key ?? user('id');
+            $connection = $shard_key ? $manager->getShardById($shard_key) : null;
             if ($connection) {
-                return $this->connection($connection)->table($name);
+                return $this->connection($connection);
             }
         }
 
-        return $this->connection()->table($name);
+        return $this->connection();
+    }
+
+    public function getShardManager()
+    {
+        $config  = $this->app['config']['bright'];
+
+        if ($config['sharding']) {
+            $manager = $this->app['bright.shardmanager'];
+            $manager->setService($config['sharding']);
+
+            return $manager;
+        }
+
+        return null;
     }
 
     /**
