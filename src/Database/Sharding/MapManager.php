@@ -68,7 +68,7 @@ class MapManager
         $chooserClass = $this->map[$name]['shard_chooser'];
         $relationKey  = (isset($this->map[$name]['relation_key']) ? $this->map[$name]['relation_key'] : null);
         $chooser      = new $chooserClass($this->currentConnections, $relationKey);
-        
+
         if (!$chooser instanceof ShardChooserInterface) {
             throw new ShardingException('Shard chooser must be instanceof ShardChooserInterface');
         }
@@ -92,6 +92,11 @@ class MapManager
         if (!isset($this->container[$name]['id_generator'])) {
             $this->container[$name]['id_generator'] = $generator;
         }
+    }
+
+    public function getServiceConfig()
+    {
+        return $this->map[$this->name];
     }
 
     public function getShardChooser()

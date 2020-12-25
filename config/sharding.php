@@ -72,6 +72,14 @@ return [
             */
             'sequence_key' => 'sharding:last-id',
             'relation_key' => 'sharding:user',
+            /*
+                Add the database prefix for matched tables
+            */
+            'connection' => [
+                'databases' => [
+                    'table' => 'shard',
+                ],
+            ],
         ],
     ],
 ];

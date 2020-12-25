@@ -25,6 +25,11 @@ class ShardManager
         return $this;
     }
 
+    public function getShardConfig()
+    {
+        return $this->mapManager->getServiceConfig();
+    }
+
     public function getShardById($id)
     {
         return $this->shardChooser->getShardById($id);
