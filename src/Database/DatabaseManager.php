@@ -11,11 +11,51 @@ class DatabaseManager extends LaravelDatabaseManager
         $config      = $this->app['config']['bright'];
         $connections = $config['connections'];
 
-        if (\is_array($connections) && \is_string($name) && isset($connections[$name])) {
-            return $this->connection($connections[$name])->table($name);
+        $alias = '';
+        if (false !== \stripos($name, ' as ')) {
+            $segments = \preg_split('/\s+as\s+/i', $name);
+            $alias    = ' as ' . $segments[1];
+            $name     = $segments[0];
         }
 
-        return $this->connection()->table($name);
+        if (\is_array($connections) && \is_string($name) && isset($connections[$name])) {
+            return $this->connection($connections[$name])->table($name . $alias);
+        }
+
+        return $this->shard()->table($name . $alias);
+    }
+
+    public function shard($shard_key = null)
+    {
+        $manager = $this->getShardManager();
+
+        if ($manager) {
+            $shard_key  = $shard_key ?? user('id');
+            $connection = $shard_key ? $manager->getShardById($shard_key) : null;
+            if ($connection) {
+                $config     = $manager->getShardConfig();
+                $connection = $this->connection($connection);
+                $connection->getQueryGrammar()->setConfig($config['connection']);
+
+                return $connection;
+            }
+        }
+
+        return $this->connection();
+    }
+
+    public function getShardManager()
+    {
+        $config  = $this->app['config']['bright'];
+
+        if ($config['sharding']) {
+            $manager = $this->app['bright.shardmanager'];
+            $manager->setService($config['sharding']);
+
+            return $manager;
+        }
+
+        return null;
     }
 
     /**

@@ -132,6 +132,10 @@ class BrightServiceProvider extends ServiceProvider
             Migrate::class,
             Rollback::class,
         ]);
+
+          $this->publishes([
+            __DIR__ . '/config/sharding.php' => config_path('sharding.php'),
+        ], 'bright:config');
     }
 
     protected function auth()

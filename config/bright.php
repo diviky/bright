@@ -1,8 +1,12 @@
 <?php
 
 return [
-    'timestamps'       => false,
+    'sharding'       => env('BRIGHT_SHARDING', null),
+
+    'timestamps'       => env('BRIGHT_TIMESTAMPS',false),
+
     'db_cache'         => env('DB_CACHE', false),
+
     'async'      => [
         'enable' => env('DB_ASYNC_QUERY', false),
         'connection' => env('DB_ASYNC_CONNECTION', 'sync'),

@@ -31,11 +31,18 @@ trait WrapTrait
 
             $databases = $this->config['databases'];
 
-            if (\is_array($databases) && isset($databases[$table])) {
-                return $this->wrap($databases[$table]) . '.' . $this->wrap($this->tablePrefix . $table, true);
+            $alias = '';
+            if (false !== \stripos($table, ' as ')) {
+                $segments = \preg_split('/\s+as\s+/i', $table);
+                $alias    = ' as ' . $segments[1];
+                $table    = $segments[0];
             }
 
-            return $this->wrap($this->tablePrefix . $table, true);
+            if (\is_array($databases) && isset($databases[$table])) {
+                return $this->wrap($databases[$table]) . '.' . $this->wrap($this->tablePrefix . $table . $alias, true);
+            }
+
+            return $this->wrap($this->tablePrefix . $table . $alias, true);
         }
 
         return $this->getValue($table);
