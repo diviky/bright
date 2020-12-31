@@ -76,9 +76,9 @@ class Responsable implements BaseResponsable
             return $response;
         }
 
-        if ('json' == $response['_format']) {
+        if (isset($response['_format']) && 'json' == $response['_format']) {
             unset($response['_format']);
-            
+
             return $response;
         }
 

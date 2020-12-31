@@ -333,17 +333,20 @@ trait HttpTrait
         throw new HttpException($statusCode, $message, null, $headers);
     }
 
-    protected function rules(array $rules = [], $data = null)
+    protected function rules(array $rules = [], $data = null, $messages = [], $attributes = [])
     {
+        $messages = !is_array($messages) ? [] : $messages;
+        $attributes = !is_array($attributes) ? [] : $attributes;
+
         if (isset($data) && \is_array($data)) {
-            return Validator::make($data, $rules)->validate();
+            return Validator::make($data, $rules, $messages, $attributes)->validate();
         }
 
         if (isset($data) && $data instanceof Request) {
-            return Validator::make($data->all(), $rules)->validate();
+            return Validator::make($data->all(), $rules, $messages, $attributes)->validate();
         }
 
-        return Validator::make($this->request()->all(), $rules)->validate();
+        return Validator::make($this->request()->all(), $rules, $messages, $attributes)->validate();
     }
 
     /**
@@ -351,8 +354,8 @@ trait HttpTrait
      *
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $rules)
+    protected function validator(array $rules, $messages = [], $attributes = [])
     {
-        return Validator::make($this->request(), $rules);
+        return Validator::make($this->request(), $rules, $messages, $attributes);
     }
 }
