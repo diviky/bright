@@ -16,6 +16,10 @@ class ViewServiceProvider extends BaseServiceProvider
     {
         Blade::component('flash', Flash::class);
         Blade::componentNamespace('Diviky\\Bright\\View\\Components', 'bright');
+
+        Blade::directive('datetime', function ($expression) {
+            return "<?php echo ({$expression})->format('d/m/Y H:i'); ?>";
+        });
     }
 
     /**

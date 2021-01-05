@@ -97,14 +97,16 @@ function brightJs() {
     var _gridSortUpdateHandler = function(e, ui) {
       var form = getForm($(this));
       var page = 1;
+      var target = $(e.originalEvent.target);
+      var task = target.attr('data-task') || 'sorting';
 
       if (form.find('.ac-task-input').length > 0) {
-        $('.ac-task-input').val('sorting');
+        $('.ac-task-input').val(task);
       } else {
         $('<input/>', {
           class: 'ac-task-input',
           name: 'task',
-          value: 'sorting',
+          value: task,
           type: 'hidden'
         }).appendTo(form);
       }
@@ -118,9 +120,20 @@ function brightJs() {
 
     $('.table_sortable_body')
       .sortable({
-        //containment: '.ac-ui-sortable',
         connectWith: ['.table_sortable_body'],
         handle: '[sortable]',
+        placeholder: 'state-highlight',
+        opacity: 0.6,
+        helper: _gridSortHelper,
+        update: _gridSortUpdateHandler
+      })
+      .disableSelection();
+
+    $('[grid-sortable]')
+      .sortable({
+        connectWith: '[grid-sortable]',
+        handle: '[sortable]',
+        placeholder: 'state-highlight',
         opacity: 0.6,
         helper: _gridSortHelper,
         update: _gridSortUpdateHandler
@@ -129,8 +142,9 @@ function brightJs() {
 
     $('[sortables]')
       .sortable({
-        connectWith: ['.table_sortable_body'],
+        connectWith: ['[sortables]'],
         handle: '[sortable]',
+        placeholder: 'state-highlight',
         opacity: 0.6
       })
       .disableSelection();

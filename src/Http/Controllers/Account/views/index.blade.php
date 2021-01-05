@@ -8,6 +8,17 @@
         <form method="POST" action="{{ url('account') }}" role="ksubmit">
             @csrf
 
+            <div class="avatar-upload">
+                <div class="avatar-edit">
+                    <input type='file' name="avatar" id="imageUpload" accept=".png, .jpg, .jpeg" />
+                    <label for="imageUpload"></label>
+                </div>
+                <div class="avatar-preview">
+                    <div id="imagePreview" style="background-image: url({{ asset($user->avatar) }});">
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="form-label">Full Name</label>
                 <input type="text" class="form-control" name="name" value="{{ $user->name }}" required />

@@ -27,6 +27,7 @@ class Controller extends BaseController
                 'name'   => 'required',
                 'email'  => 'required|email',
                 'mobile' => 'required',
+                'avatar' => 'nullable|image|max:2000',
             ]);
 
             $password = user('password');
@@ -56,9 +57,18 @@ class Controller extends BaseController
             $user->email  = $this->input('email');
             $user->mobile = $this->input('mobile');
 
-            $result = $user->save();
+            $file = $this->request->file('avatar');
 
-            return $this->updated($result, 'account');
+            $user->setAvatar($file);
+            $user->save();
+
+            return $this->updated(true, 'account');
+        }
+
+        if (empty($user->avatar)) {
+            $user->avatar = storage('avatar/avatar.png');
+        } else {
+            $user->avatar = storage($user->avatar);
         }
 
         return [

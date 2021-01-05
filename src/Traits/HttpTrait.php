@@ -335,8 +335,8 @@ trait HttpTrait
 
     protected function rules(array $rules = [], $data = null, $messages = [], $attributes = [])
     {
-        $messages = !is_array($messages) ? [] : $messages;
-        $attributes = !is_array($attributes) ? [] : $attributes;
+        $messages   = !\is_array($messages) ? [] : $messages;
+        $attributes = !\is_array($attributes) ? [] : $attributes;
 
         if (isset($data) && \is_array($data)) {
             return Validator::make($data, $rules, $messages, $attributes)->validate();
@@ -354,8 +354,8 @@ trait HttpTrait
      *
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $rules, $messages = [], $attributes = [])
+    protected function validator(array $rules)
     {
-        return Validator::make($this->request(), $rules, $messages, $attributes);
+        return Validator::make($this->request(), $rules);
     }
 }

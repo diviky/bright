@@ -2,13 +2,14 @@
 
 namespace Diviky\Bright;
 
-use Diviky\Bright\Http\Controllers\Auth\Traits\AccessToken;
-use Diviky\Bright\Http\Controllers\Auth\Traits\Authorizable;
-use Diviky\Bright\Http\Controllers\Auth\Traits\HasRoles;
-use Diviky\Bright\Http\Controllers\Auth\Traits\UserParent;
-use Diviky\Bright\Http\Controllers\Auth\Traits\UserRole;
-use Diviky\Bright\Http\Controllers\Auth\Traits\UsersParent;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Diviky\Bright\Http\Controllers\Auth\Traits\HasRoles;
+use Diviky\Bright\Http\Controllers\Auth\Traits\UserRole;
+use Diviky\Bright\Http\Controllers\Auth\Traits\UserParent;
+use Diviky\Bright\Http\Controllers\Auth\Traits\AccessToken;
+use Diviky\Bright\Http\Controllers\Auth\Traits\UsersParent;
+use Diviky\Bright\Http\Controllers\Auth\Traits\Authorizable;
+use Diviky\Bright\Http\Controllers\Account\Traits\UserAvatarTrait;
 
 class User extends Authenticatable
 {
@@ -18,6 +19,7 @@ class User extends Authenticatable
     use UserParent;
     use UserRole;
     use UsersParent;
+    use UserAvatarTrait;
 
     public $guard_name = 'web';
     protected $admin   = 'super-admin';
