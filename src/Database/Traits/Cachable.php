@@ -85,7 +85,7 @@ trait Cachable
 
         // Convert seconds to seconds for laravel 5.8+
         if ($seconds > 0) {
-            return $cache->remember($key, ($seconds * 60), $callback);
+            return $cache->remember($key, $seconds, $callback);
         }
 
         return $cache->rememberForever($key, $callback);
