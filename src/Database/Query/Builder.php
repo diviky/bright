@@ -37,6 +37,13 @@ class Builder extends LaravelBuilder
     use Tables;
     use Timestamps;
 
+    public function alias($as)
+    {
+        $this->from = "{$this->from} as {$as}";
+
+        return $this;
+    }
+
     /**
      * {@inheritdoc}
      */
