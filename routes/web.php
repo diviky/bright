@@ -47,3 +47,5 @@ Route::group([
     Route::get('account/search', 'Account\Controller@search');
     Route::post('account/token/refresh', 'Account\Controller@token');
 });
+
+Route::get('health/ping', '\Diviky\Bright\Http\Controllers\Health\Controller@ping');
