@@ -4,9 +4,7 @@ namespace Diviky\Bright\Listeners;
 
 use Diviky\Bright\Mail\Mailable;
 use Diviky\Bright\Models\Models;
-use Diviky\Bright\Traits\CapsuleManager;
 use Illuminate\Auth\Events\PasswordReset as LaravelPasswordReset;
-use Illuminate\Http\Request;
 
 class PasswordReset
 {
@@ -18,7 +16,7 @@ class PasswordReset
         $user = $event->user;
 
         $values = [
-            'password' => $event->password,
+            'password' => $event->password ?? null,
         ];
 
         $save               = [];
