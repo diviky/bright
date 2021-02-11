@@ -62,7 +62,7 @@ class Controller extends BaseController
             'status'       => 1,
         ];
 
-        $user = $this->register($values);
+        $user = $this->registers($values);
 
         if ($user) {
             $service->linkAccount($provider, $user, $socialite);
