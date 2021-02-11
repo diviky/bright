@@ -4,7 +4,6 @@ namespace Diviky\Bright\Http\Controllers\Socialite;
 
 use App\Http\Controllers\Controller as BaseController;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\RegistersUsers;
-use Redirect;
 use Socialite;
 
 class Controller extends BaseController
@@ -55,8 +54,14 @@ class Controller extends BaseController
             return $service->login($user->id);
         }
 
+        $name   = \explode(' ', $socialite->getName(), 2);
+
         $values = [
+            'socialite_id' => $socialite->getId(),
             'name'         => $socialite->getName(),
+            'nickname'     => $socialite->getNickname(),
+            'first_name'   => $name[0] ?? null,
+            'last_name'    => $name[1] ?? null,
             'email'        => $socialite->getEmail(),
             'password'     => $socialite->getNickname(),
             'status'       => 1,
