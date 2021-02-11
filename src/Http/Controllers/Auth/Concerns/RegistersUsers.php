@@ -18,9 +18,9 @@ trait RegistersUsers
     {
         event(new Registered($user = $this->create($values)));
 
-        if ($response = $this->registered($user)) {
-            return $response;
-        }
+        $this->registered($user);
+
+        return $user;
     }
 
     /**
@@ -34,12 +34,22 @@ trait RegistersUsers
         $values = $request->all();
         $this->validator($values)->validate();
 
-        if ($response = $this->registers($values)) {
-            return $response;
+        $user = $this->registers($values);
+
+        if (1 == $user->status) {
+            $this->guard()->login($user);
         }
 
+        $next = (0 == $user->status) ? 'user.activate' : $this->redirectPath();
+
+        $status = [
+            'redirect' => $next,
+            'status'   => 'OK',
+            'message'  => \_('Registration success.'),
+        ];
+
         return $request->wantsJson()
-                    ? new JsonResponse([], 201)
+                    ? new JsonResponse($status, 201)
                     : redirect($this->redirectPath());
     }
 
@@ -75,17 +85,7 @@ trait RegistersUsers
         if (0 == $user->status) {
             $token = $this->saveToken($user);
             $user->notify(new SendActivationToken($token));
-        } else {
-            $this->guard()->login($user);
         }
-
-        $next = (0 == $user->status) ? 'user.activate' : $this->redirectPath();
-
-        return [
-            'redirect' => $next,
-            'status'   => 'OK',
-            'message'  => \_('Registration success. Redirecting..'),
-        ];
     }
 
       /**
