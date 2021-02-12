@@ -2,15 +2,14 @@
 
 namespace Diviky\Bright\Http\Controllers\Auth\Concerns;
 
-use Illuminate\Support\Str;
 use Diviky\Bright\Models\Models;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Validator;
 use Diviky\Bright\Notifications\SendActivationToken;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 trait RegistersUsers
 {
@@ -26,8 +25,7 @@ trait RegistersUsers
     /**
      * Handle a registration request for the application.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function register(Request $request)
     {
@@ -36,21 +34,29 @@ trait RegistersUsers
 
         $user = $this->registers($values);
 
-        if (1 == $user->status) {
-            $this->guard()->login($user);
-        }
+        $this->guard()->login($user);
 
         $next = (0 == $user->status) ? 'user.activate' : $this->redirectPath();
 
-        $status = [
+        return [
             'redirect' => $next,
             'status'   => 'OK',
             'message'  => \_('Registration success.'),
         ];
+    }
 
-        return $request->wantsJson()
-                    ? new JsonResponse($status, 201)
-                    : redirect($this->redirectPath());
+    /**
+     * Get the post register / login redirect path.
+     *
+     * @return string
+     */
+    public function redirectPath()
+    {
+        if (\method_exists($this, 'redirectTo')) {
+            return $this->redirectTo();
+        }
+
+        return \property_exists($this, 'redirectTo') ? $this->redirectTo : '/';
     }
 
     /**
@@ -88,7 +94,7 @@ trait RegistersUsers
         }
     }
 
-      /**
+    /**
      * Get a validator for an incoming registration request.
      *
      * @return \Illuminate\Contracts\Validation\Validator
@@ -118,19 +124,5 @@ trait RegistersUsers
             'status'       => $status,
             'access_token' => Str::random(60),
         ]);
-    }
-
-    /**
-     * Get the post register / login redirect path.
-     *
-     * @return string
-     */
-    public function redirectPath()
-    {
-        if (method_exists($this, 'redirectTo')) {
-            return $this->redirectTo();
-        }
-
-        return property_exists($this, 'redirectTo') ? $this->redirectTo : '/';
     }
 }
