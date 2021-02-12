@@ -12,7 +12,7 @@
     keyboard: false,
     id: 'bmodel',
     styles: '',
-    remove: false,
+    clean: false,
     animation: 'bounceInRight',
     content: null,
     url: null,
@@ -149,7 +149,7 @@
       $('.modal-backdrop').remove();
       $('.is-invalid-feedback').remove();
 
-      if (self.settings.remove) {
+      if (self.settings.clean) {
         $(self.settings.el).remove();
       }
     });
