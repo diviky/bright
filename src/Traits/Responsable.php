@@ -75,6 +75,8 @@ trait Responsable
                 $redirect = redirect($next);
             } elseif ('back' == $next) {
                 $redirect = redirect()->back();
+            } elseif ('intended' == $next) {
+                $redirect = redirect()->intended('/');
             } else {
                 $redirect = redirect()->route($next);
             }
@@ -85,6 +87,8 @@ trait Responsable
                 $redirect = redirect($next['path']);
             } elseif ($next['next']) {
                 $redirect = redirect()->route($next['route']);
+            } elseif ($next['intended']) {
+                $redirect = redirect()->intended($next['intended']);
             }
         } elseif ($next instanceof Closure) {
             $redirect = $next();

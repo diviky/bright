@@ -65,11 +65,18 @@ class Responsable implements BaseResponsable
         }
 
         if ($ajax && isset($response['redirect'])) {
-            if ('/' !== \substr($response['redirect'], 0, 1)) {
+            if ('/' !== \substr($response['redirect'], 0, 1)
+            && 'http' !== \substr($response['redirect'], 0, 4)
+            ) {
                 $redirect = $this->getNextRedirect($response, 'redirect');
 
                 $response['redirect'] = $redirect->getTargetUrl();
             }
+        }
+
+        if ($ajax && isset($response['route'])) {
+            $redirect = $this->getNextRedirect($response, 'route');
+            $response['redirect'] = $redirect->getTargetUrl();
         }
 
         if ('json' == $format) {

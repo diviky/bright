@@ -52,6 +52,14 @@ trait RegistersUsers
      */
     public function redirectPath()
     {
+        if (isset($this->session)) {
+            $path = $this->session->pull('url.intended');
+
+            if ($path) {
+                return $path;
+            }
+        }
+
         if (\method_exists($this, 'redirectTo')) {
             return $this->redirectTo();
         }
