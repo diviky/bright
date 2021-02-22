@@ -52,12 +52,14 @@ trait RegistersUsers
      */
     public function redirectPath()
     {
-        if (isset($this->session)) {
+        try {
             $path = $this->session->pull('url.intended');
 
             if ($path) {
                 return $path;
             }
+        } catch(\Exception $e) {
+
         }
 
         if (\method_exists($this, 'redirectTo')) {

@@ -44,14 +44,14 @@ class Controller extends BaseController
         $linked  = $service->linked($provider, $socialite->getId());
 
         if ($linked) {
-            return $service->login($linked->user_id);
+            return $service->login($linked->user_id, $this->redirectPath());
         }
 
         $user = $service->userFound($socialite);
         if ($user) {
             $service->linkAccount($provider, $user, $socialite);
 
-            return $service->login($user->id);
+            return $service->login($user->id, $this->redirectPath());
         }
 
         $name   = \explode(' ', $socialite->getName(), 2);
@@ -72,7 +72,7 @@ class Controller extends BaseController
         if ($user) {
             $service->linkAccount($provider, $user, $socialite);
 
-            return $service->login($user->id);
+            return $service->login($user->id, $this->redirectPath());
         }
 
         return redirect()->route('home');

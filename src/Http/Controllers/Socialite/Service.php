@@ -48,7 +48,7 @@ class Service
         return User::where('email', $social->email)->first();
     }
 
-    public function login($user_id)
+    public function login($user_id, $redirect = '/')
     {
         $result = Auth::guard()->loginUsingId($user_id);
 
@@ -56,10 +56,6 @@ class Service
             abort(401, 'Unable to login');
         }
 
-        return redirect()->route('home');
-    }
-
-    public function register($social)
-    {
+        return redirect($redirect);
     }
 }
