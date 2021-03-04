@@ -32,17 +32,19 @@ class AccessTokenGuard implements Guard
             return $this->user;
         }
 
-        $token = null;
-
-        // retrieve via token
+        $token      = null;
         $access_key = $this->getTokenForRequest();
 
         if (!empty($access_key)) {
+            if (false !== \strpos($access_key, ':')) {
+                list($access_key, $signature) = \explode(':', $access_key, 2);
+            }
+
             // the token was found, how you want to pass?
             $token = $this->provider->retrieveByToken($this->storageKey, $access_key);
         }
 
-        if (\is_null($token) || is_null($token->user_id)) {
+        if (\is_null($token) || \is_null($token->user_id)) {
             return;
         }
 
@@ -51,7 +53,15 @@ class AccessTokenGuard implements Guard
         }
 
         $allowed_ips = $token->allowed_ip;
-        $this->validateIp($allowed_ips);
+        $allowed     = $this->validateIp($allowed_ips);
+
+        if (!$allowed) {
+            return;
+        }
+
+        if (!empty($token->refresh_token) && !$this->validateSignature($token, $signature)) {
+            return;
+        }
 
         $user = $this->provider->retrieveById($token->user_id);
 
@@ -142,11 +152,41 @@ class AccessTokenGuard implements Guard
         }
 
         if (!$allowed) {
-            abort(403, 'Ip Not allowed');
-
             return false;
         }
 
         return true;
+    }
+
+    protected function validateSignature($token, $signature = null)
+    {
+        //check is expired
+        if (isset($token->expires_in) && now()->gt($token->expires_in)) {
+            return false;
+        }
+
+        $algo   = $this->request->header('X-Auth-Method', 'SHA256');
+        $nonce  = $this->request->header('X-Auth-Nonce');
+        $date   = $this->request->header('X-Auth-Date');
+        $date   = $date ?? $this->request->header('Date');
+        $method = $this->request->method();
+        $fields = $this->request->all();
+        $fields = \http_build_query($fields, '', '&', PHP_QUERY_RFC3986);
+
+        $sign = [
+            $method,
+            $algo,
+            $date,
+            $nonce,
+            $fields,
+            $token->access_token,
+        ];
+
+        $data = \implode("\n", $sign);
+
+        $hmac = \hash_hmac($algo, $data, $token->refresh_token, true);
+        $hmac = \base64_encode($hmac);
+
+        return $signature === $hmac;
     }
 }

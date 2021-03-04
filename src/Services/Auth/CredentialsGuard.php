@@ -43,7 +43,7 @@ class CredentialsGuard implements Guard
             return;
         }
 
-        $valid = $this->provider->validateCredentials($row, $credentials);
+        $valid = $this->provider->validateCredentials($user, $credentials);
 
         if (!$valid) {
             return;
