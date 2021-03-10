@@ -2,22 +2,24 @@
 
 namespace Diviky\Bright\Providers;
 
-use Diviky\Bright\Console\Commands\Migrate;
-use Diviky\Bright\Console\Commands\Rollback;
-use Diviky\Bright\Console\Commands\Setup;
-use Diviky\Bright\Contracts\UtilInterface;
-use Diviky\Bright\Routing\Redirector;
-use Diviky\Bright\Routing\Resolver;
-use Diviky\Bright\Services\Auth\AccessTokenGuard;
-use Diviky\Bright\Services\Auth\AuthTokenGuard;
-use Diviky\Bright\Services\Auth\CredentialsGuard;
-use Diviky\Bright\Services\Auth\Providers\AccessProvider;
-use Diviky\Bright\Support\ServiceProvider;
-use Diviky\Bright\Traits\Provider;
 use Diviky\Bright\Util\Util;
+use Diviky\Bright\Traits\Provider;
+use Diviky\Bright\Routing\Resolver;
 use Illuminate\Support\Facades\Auth;
+use Diviky\Bright\Routing\Redirector;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
+use Diviky\Bright\Console\Commands\Setup;
+use Diviky\Bright\Contracts\UtilInterface;
+use Diviky\Bright\Support\ServiceProvider;
+use Diviky\Bright\Console\Commands\Migrate;
+use Diviky\Bright\Console\Commands\Rollback;
+use Diviky\Bright\Console\Commands\GeoipUpdate;
+use Diviky\Bright\Routing\ControllerDispatcher;
+use Diviky\Bright\Services\Auth\AuthTokenGuard;
+use Diviky\Bright\Services\Auth\AccessTokenGuard;
+use Diviky\Bright\Services\Auth\CredentialsGuard;
+use Diviky\Bright\Services\Auth\Providers\AccessProvider;
 
 class BrightServiceProvider extends ServiceProvider
 {
@@ -49,29 +51,26 @@ class BrightServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         $this->mergeConfigFrom($this->path() . '/config/bright.php', 'bright');
-        $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
         $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
         $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
+        $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
 
-        $this->redirect();
-        $this->auth();
-        $this->binds();
-        $this->app->bind('Illuminate\Routing\Contracts\ControllerDispatcher', 'Diviky\Bright\Routing\ControllerDispatcher');
+        $this->authGuards();
+        $this->registerModelBindings();
 
         $this->app->singleton('resolver', function ($app) {
             return new Resolver($app);
         });
     }
 
-    public function binds()
+    public function registerModelBindings()
     {
         $this->app->singleton(UtilInterface::class, function ($app) {
             return new Util();
         });
-    }
 
-    public function redirect()
-    {
+        $this->app->bind('Illuminate\Routing\Contracts\ControllerDispatcher', ControllerDispatcher::class);
+
         $this->app->singleton('redirect', function ($app) {
             $redirector = new Redirector($app['url']);
             // If the session is set on the application instance, we'll inject it into
@@ -94,9 +93,10 @@ class BrightServiceProvider extends ServiceProvider
     {
         $this->publishes([
             $this->path() . '/config/charts.php'      => config_path('charts.php'),
-            $this->path() . '/config/permission.php'  => config_path('permission.php'),
+            //$this->path() . '/config/permission.php'  => config_path('permission.php'),
             $this->path() . '/config/bright.php'      => config_path('bright.php'),
             $this->path() . '/config/theme.php'       => config_path('theme.php'),
+            $this->path() . '/config/sharding.php' => config_path('sharding.php'),
         ], 'bright-config');
 
         $this->publishes([
@@ -131,14 +131,11 @@ class BrightServiceProvider extends ServiceProvider
             Setup::class,
             Migrate::class,
             Rollback::class,
+            GeoipUpdate::class
         ]);
-
-          $this->publishes([
-            __DIR__ . '/config/sharding.php' => config_path('sharding.php'),
-        ], 'bright:config');
     }
 
-    protected function auth()
+    protected function authGuards()
     {
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference

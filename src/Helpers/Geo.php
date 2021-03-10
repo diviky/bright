@@ -7,33 +7,31 @@ use Geocoder\Provider\GeoIP2\GeoIP2;
 use Geocoder\Provider\GeoIP2\GeoIP2Adapter;
 use Geocoder\ProviderAggregator;
 use GeoIp2\Database\Reader;
-use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
  */
 class Geo
 {
-    public function geocode($address = null, $db = 'GeoLite2-City.mmdb')
+    public function geocode($address = null, $db = null)
     {
         if (null === $address) {
             $address = ip();
         }
 
         //$address = '203.109.101.177';
-
         //http://ipinfo.io/119.63.142.37/json
 
-        $geocoder = new ProviderAggregator();
-        $adapter  = new GuzzleAdapter();
+        $path = $db ?? config('bright.geoip.database_path') . '/GeoLite2-City.mmdb';
 
-        $reader        = new Reader(storage_path('geoip') . '/' . $db);
+        $reader        = new Reader($path);
         $geoIP2Adapter = new GeoIP2Adapter($reader);
 
         $chain = new Chain([
             new GeoIP2($geoIP2Adapter),
         ]);
 
+        $geocoder = new ProviderAggregator();
         $geocoder->registerProvider($chain);
 
         $results = false;

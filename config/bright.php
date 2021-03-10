@@ -93,4 +93,9 @@ return [
         'user_domains'        => 'auth_user_domains',
         'socialite_users'     => 'auth_socialite_users',
     ],
+
+    'geoip' => [
+        'database_path' => storage_path('geoip'),
+        'update_url' => sprintf('https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=%s&suffix=tar.gz', env('MAXMIND_LICENSE_KEY', 'J8y0pS9JmwliTB1f'))
+    ]
 ];

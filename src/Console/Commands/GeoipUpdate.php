@@ -3,7 +3,7 @@
 namespace Diviky\Bright\Console\Commands;
 
 use Illuminate\Console\Command;
-use PragmaRX\Support\GeoIp\Updater as GeoIpUpdater;
+use Diviky\Bright\Services\GeoIpUpdater;
 
 class GeoipUpdate extends Command
 {
@@ -12,7 +12,7 @@ class GeoipUpdate extends Command
      *
      * @var string
      */
-    protected $signature = 'firewall:updategeoip';
+    protected $signature = 'geoip:update';
 
     /**
      * The console command description.
@@ -30,7 +30,13 @@ class GeoipUpdate extends Command
     {
         $updater = new GeoIpUpdater();
 
-        $success  = $updater->updateGeoIpFiles(config('firewall.geoip_database_path'));
+        $config = config('bright.geoip');
+
+        if (is_null($config) || is_null($config['update_url'])) {
+            return $this->error('Missing configuration');
+        }
+
+        $success  = $updater->updateGeoIpFiles($config['database_path'], $config['update_url']);
         $messages = $updater->getMessages();
 
         foreach ($messages as $message) {
