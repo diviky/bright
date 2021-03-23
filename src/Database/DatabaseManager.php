@@ -19,10 +19,14 @@ class DatabaseManager extends LaravelDatabaseManager
         }
 
         if (\is_array($connections) && \is_string($name) && isset($connections[$name])) {
-            return $this->connection($connections[$name])->table($name . $alias);
+            $connection = $this->connection($connections[$name]);
+        } else {
+            $connection = $this->shard();
         }
 
-        return $this->shard()->table($name . $alias);
+        $connection->getQueryGrammar()->setConfig($config);
+
+        return $connection->table($name . $alias);
     }
 
     public function shard($shard_key = null)

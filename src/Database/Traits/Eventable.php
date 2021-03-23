@@ -75,7 +75,7 @@ trait Eventable
 
     protected function getEventTables($type): array
     {
-        $bright = $this->connection->getConfig('bright');
+        $bright = $this->getBrightConfig();
         $bright = $bright['tables'];
 
         $from = \preg_split('/ as /i', $this->from)[0];
@@ -123,19 +123,23 @@ trait Eventable
                         $value = $this->setPrimaryKey($value, Str::uuid());
 
                         break;
+
                     case 'uid':
                     case 'uuid':
                         $value = $this->setPrimaryKey($value, Str::orderedUuid());
 
                         break;
+
                     case 'user_id':
                         $value = $this->setUserId($value);
 
                         break;
+
                     case 'time':
                         $value = $this->setTimeStamps($value, true);
 
                         break;
+
                     default:
                         if (app()->has($field)) {
                             $value[$column] = app($field);
@@ -148,7 +152,7 @@ trait Eventable
             }
         }
 
-        $bright = $this->connection->getConfig('bright');
+        $bright = $this->getBrightConfig();
 
         if (false !== $bright['timestamps']) {
             foreach ($values as &$value) {
@@ -163,7 +167,7 @@ trait Eventable
     {
         $this->atomicEvent('update');
 
-        $bright = $this->connection->getConfig('bright');
+        $bright = $this->getBrightConfig();
 
         if (false !== $bright['timestamps']) {
             $values = $this->setTimeStamp($values);
@@ -206,6 +210,7 @@ trait Eventable
                     }
 
                     break;
+
                 case 'parent_id':
                     $parent_id = user('id');
                     if ($parent_id) {
@@ -213,6 +218,7 @@ trait Eventable
                     }
 
                     break;
+
                 default:
                     if ($field && app()->has($field)) {
                         $this->where($alias . $column, app()->get($field));
@@ -223,5 +229,10 @@ trait Eventable
         }
 
         return $this;
+    }
+
+    protected function getBrightConfig()
+    {
+        return config('bright');
     }
 }

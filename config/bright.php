@@ -1,6 +1,9 @@
 <?php
 
 return [
+    /*
+     | Sharding service config name
+    */
     'sharding'       => env('BRIGHT_SHARDING', null),
 
     'timestamps'       => env('BRIGHT_TIMESTAMPS',false),

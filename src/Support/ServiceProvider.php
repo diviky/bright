@@ -2,6 +2,7 @@
 
 namespace Diviky\Bright\Support;
 
+use Illuminate\Contracts\Foundation\CachesConfiguration;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
 class ServiceProvider extends LaravelServiceProvider
@@ -15,15 +16,17 @@ class ServiceProvider extends LaravelServiceProvider
      */
     protected function mergeConfigRecursive($path, $key, $force = false): void
     {
-        $config = $this->app['config']->get($key, []);
+        if (!($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
+            $config = $this->app['config']->get($key, []);
 
-        if ($force) {
-            $config = \array_merge_recursive($config, require $path);
-        } else {
-            $config = \array_merge_recursive(require $path, $config);
+            if ($force) {
+                $config = \array_merge_recursive($config, require $path);
+            } else {
+                $config = \array_merge_recursive(require $path, $config);
+            }
+
+            $this->app['config']->set($key, $config);
         }
-
-        $this->app['config']->set($key, $config);
     }
 
     /**
@@ -35,15 +38,17 @@ class ServiceProvider extends LaravelServiceProvider
      */
     protected function replaceConfigRecursive($path, $key, $force = false): void
     {
-        $config = $this->app['config']->get($key, []);
+        if (!($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
+            $config = $this->app['config']->get($key, []);
 
-        if ($force) {
-            $config = \array_replace_recursive($config, require $path);
-        } else {
-            $config = \array_replace_recursive(require $path, $config);
+            if ($force) {
+                $config = \array_replace_recursive($config, require $path);
+            } else {
+                $config = \array_replace_recursive(require $path, $config);
+            }
+
+            $this->app['config']->set($key, $config);
         }
-
-        $this->app['config']->set($key, $config);
     }
 
     /**
@@ -55,14 +60,20 @@ class ServiceProvider extends LaravelServiceProvider
      */
     protected function mergeConfigFrom($path, $key, $force = false): void
     {
-        $config = $this->app['config']->get($key, []);
+        if (!($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
+            $config = $this->app->make('config');
 
-        if ($force) {
-            $config = \array_merge($config, require $path);
-        } else {
-            $config = \array_merge(require $path, $config);
+            if ($force) {
+                $config->set($key, \array_merge(
+                    $config->get($key, []),
+                    require $path
+                ));
+            } else {
+                $config->set($key, \array_merge(
+                    require $path,
+                    $config->get($key, [])
+                ));
+            }
         }
-
-        $this->app['config']->set($key, $config);
     }
 }
