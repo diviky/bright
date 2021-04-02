@@ -65,7 +65,7 @@ class BrightServiceProvider extends ServiceProvider
 
     public function registerModelBindings()
     {
-        $this->app->singleton(UtilInterface::class, function ($app) {
+        $this->app->bind(UtilInterface::class, function ($app) {
             return new Util();
         });
 
