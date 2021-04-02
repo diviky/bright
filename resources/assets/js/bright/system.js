@@ -153,6 +153,34 @@ function brightSystemJs() {
         e.preventDefault();
     });
 
+    $(document).on("change", "[data-change-href]", function (e) {
+        var $this = $(this);
+        var url = $this.attr("data-change-href");
+        var val = $this.val();
+        var link = $this.find(":selected").data("link");
+
+        if (!val) {
+            return false;
+        }
+
+        var message = $this.attr("data-confirm");
+        box.confirm(message, (result) => {
+            if (result) {
+                $.ajax({
+                    url: link ? link : url + "/" + val,
+                    data: {
+                        format: "json",
+                    },
+                    complete: function (xhr) {
+                        displayNoti(xhr, $this);
+                    },
+                });
+            }
+        });
+
+        e.preventDefault();
+    });
+
     // common delete script
     $(document).on('click', '[ajax-confirm]', function (e) {
         var $this = $(this);
