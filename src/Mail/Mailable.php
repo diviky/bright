@@ -176,8 +176,8 @@ class Mailable extends BaseMailable implements ShouldQueue
             $address = \explode(';', $address);
             foreach ($address as $v) {
                 $v     = \explode('<', $v);
-                $email = ($v[1]) ? \rtrim(\trim($v[1]), '>') : $v[0];
-                $name  = ($v[1]) ? $v[0] : $from;
+                $email = isset($v[1]) ? \rtrim(\trim($v[1]), '>') : $v[0];
+                $name  = isset($v[1]) ? $v[0] : $from;
 
                 $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
             }
@@ -186,8 +186,8 @@ class Mailable extends BaseMailable implements ShouldQueue
             $address = \explode('|', $address);
             foreach ($address as $v) {
                 $v     = \explode($delim, $v);
-                $email = $v[1] ?: $v[0];
-                $name  = $v[1] ?: $from;
+                $email = isset($v[1]) ? $v[1] : $v[0];
+                $name  = isset($v[1]) ? $v[1] : $from;
 
                 $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
             }
@@ -195,8 +195,8 @@ class Mailable extends BaseMailable implements ShouldQueue
             $address = \preg_split("/[,|\n]/", $address);
             foreach ($address as $v) {
                 $v     = \explode(';', $v);
-                $email = $v[1] ?: $v[0];
-                $name  = $v[1] ?: $from;
+                $email = isset($v[1]) ? $v[1] : $v[0];
+                $name  = isset($v[1]) ? $v[1] : $from;
 
                 $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
             }
