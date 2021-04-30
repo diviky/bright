@@ -2,24 +2,24 @@
 
 namespace Diviky\Bright\Providers;
 
-use Diviky\Bright\Util\Util;
-use Diviky\Bright\Traits\Provider;
-use Diviky\Bright\Routing\Resolver;
-use Illuminate\Support\Facades\Auth;
-use Diviky\Bright\Routing\Redirector;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Schema;
-use Diviky\Bright\Console\Commands\Setup;
-use Diviky\Bright\Contracts\UtilInterface;
-use Diviky\Bright\Support\ServiceProvider;
+use Diviky\Bright\Console\Commands\GeoipUpdate;
 use Diviky\Bright\Console\Commands\Migrate;
 use Diviky\Bright\Console\Commands\Rollback;
-use Diviky\Bright\Console\Commands\GeoipUpdate;
+use Diviky\Bright\Console\Commands\Setup;
+use Diviky\Bright\Contracts\UtilInterface;
 use Diviky\Bright\Routing\ControllerDispatcher;
-use Diviky\Bright\Services\Auth\AuthTokenGuard;
+use Diviky\Bright\Routing\Redirector;
+use Diviky\Bright\Routing\Resolver;
 use Diviky\Bright\Services\Auth\AccessTokenGuard;
+use Diviky\Bright\Services\Auth\AuthTokenGuard;
 use Diviky\Bright\Services\Auth\CredentialsGuard;
 use Diviky\Bright\Services\Auth\Providers\AccessProvider;
+use Diviky\Bright\Support\ServiceProvider;
+use Diviky\Bright\Traits\Provider;
+use Diviky\Bright\Util\Util;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Schema;
 
 class BrightServiceProvider extends ServiceProvider
 {
@@ -96,7 +96,7 @@ class BrightServiceProvider extends ServiceProvider
             //$this->path() . '/config/permission.php'  => config_path('permission.php'),
             $this->path() . '/config/bright.php'      => config_path('bright.php'),
             $this->path() . '/config/theme.php'       => config_path('theme.php'),
-            $this->path() . '/config/sharding.php' => config_path('sharding.php'),
+            $this->path() . '/config/sharding.php'    => config_path('sharding.php'),
         ], 'bright-config');
 
         $this->publishes([
@@ -131,7 +131,7 @@ class BrightServiceProvider extends ServiceProvider
             Setup::class,
             Migrate::class,
             Rollback::class,
-            GeoipUpdate::class
+            GeoipUpdate::class,
         ]);
     }
 

@@ -1,19 +1,17 @@
 <?php
 
 return [
-    /*
-     | Sharding service config name
-    */
+    // | Sharding service config name
     'sharding'       => env('BRIGHT_SHARDING', null),
 
-    'timestamps'       => env('BRIGHT_TIMESTAMPS',false),
+    'timestamps'       => env('BRIGHT_TIMESTAMPS', false),
 
     'db_cache'         => env('DB_CACHE', false),
 
     'async'      => [
-        'enable' => env('DB_ASYNC_QUERY', false),
+        'enable'     => env('DB_ASYNC_QUERY', false),
         'connection' => env('DB_ASYNC_CONNECTION', 'sync'),
-        'queue' => env('DB_ASYNC_QUEUE', 'sql')
+        'queue'      => env('DB_ASYNC_QUEUE', 'sql'),
     ],
     /*
     |--------------------------------------------------------------------------
@@ -60,21 +58,22 @@ return [
             \Diviky\Bright\Listeners\SuccessLogin::class,
         ],
         'Diviky\Bright\Database\Events\QueryQueued' => [
-            Diviky\Bright\Database\Listeners\QueryQueuedListener::class
-        ]
+            Diviky\Bright\Database\Listeners\QueryQueuedListener::class,
+        ],
     ],
 
     'middlewares'   => [
-        'permission'       => \Diviky\Bright\Http\Middleware\PermissionMiddleware::class,
-        'role'             => \Diviky\Bright\Http\Middleware\RoleMiddleware::class,
-        'roleorpermission' => \Diviky\Bright\Http\Middleware\RoleOrPermissionMiddleware::class,
-        'authorize'        => \Diviky\Bright\Http\Middleware\AuthorizeMiddleware::class,
-        'auth.verified'    => \Diviky\Bright\Http\Middleware\IsUserActivated::class,
-        'accept'           => \Diviky\Bright\Http\Middleware\Accept::class,
-        'api.response'     => \Diviky\Bright\Http\Middleware\Api::class,
-        'ajax'             => \Diviky\Bright\Http\Middleware\Ajax::class,
-        'theme'            => \Diviky\Bright\Http\Middleware\ThemeMiddleware::class,
-        'branding'         => \Diviky\Bright\Http\Middleware\Branding::class,
+        'permission'        => \Diviky\Bright\Http\Middleware\PermissionMiddleware::class,
+        'role'              => \Diviky\Bright\Http\Middleware\RoleMiddleware::class,
+        'roleorpermission'  => \Diviky\Bright\Http\Middleware\RoleOrPermissionMiddleware::class,
+        'authorize'         => \Diviky\Bright\Http\Middleware\AuthorizeMiddleware::class,
+        'auth.verified'     => \Diviky\Bright\Http\Middleware\IsUserActivated::class,
+        'accept'            => \Diviky\Bright\Http\Middleware\Accept::class,
+        'api.response'      => \Diviky\Bright\Http\Middleware\Api::class,
+        'ajax'              => \Diviky\Bright\Http\Middleware\Ajax::class,
+        'theme'             => \Diviky\Bright\Http\Middleware\ThemeMiddleware::class,
+        'branding'          => \Diviky\Bright\Http\Middleware\Branding::class,
+        'preflight'         => \Diviky\Bright\Http\Middleware\PreflightResponse::class,
     ],
 
     'models'        => [
@@ -99,6 +98,6 @@ return [
 
     'geoip' => [
         'database_path' => storage_path('geoip'),
-        'update_url' => sprintf('https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=%s&suffix=tar.gz', env('MAXMIND_LICENSE_KEY', 'J8y0pS9JmwliTB1f'))
-    ]
+        'update_url'    => sprintf('https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=%s&suffix=tar.gz', env('MAXMIND_LICENSE_KEY', 'J8y0pS9JmwliTB1f')),
+    ],
 ];
