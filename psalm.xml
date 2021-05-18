@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<psalm
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+    <projectFiles>
+        <directory name="src"/>
+         <ignoreFiles>
+            <directory name="vendor"/>
+        </ignoreFiles>
+    </projectFiles>
+    <plugins>
+    <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
+    </plugins>
+
+    <issueHandlers>
+        <UndefinedClass>
+            <errorLevel type="suppress">
+                <referencedClass name="App\Http\Controllers\Controller"/>
+                <referencedClass name="App\Models\User"/>
+            </errorLevel>
+        </UndefinedClass>
+
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+                <directory name="tests"/>
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+
+        <UndefinedInterfaceMethod>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+                <directory name="tests"/>
+            </errorLevel>
+        </UndefinedInterfaceMethod>
+
+         <MissingClosureParamType>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </MissingClosureParamType>
+
+        <InvalidStringClass>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </InvalidStringClass>
+
+        <PossiblyNullArgument>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </PossiblyNullArgument>
+
+        <InvalidMethodCall>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </InvalidMethodCall>
+
+        <InvalidScalarArgument>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </InvalidScalarArgument>
+
+        <!-- @todo: Can't get this to work within a package? Ide helper or migrations somehow? -->
+        <UndefinedMagicPropertyFetch>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </UndefinedMagicPropertyFetch>
+        <UndefinedThisPropertyFetch>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </UndefinedThisPropertyFetch>
+        <UndefinedThisPropertyAssignment>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </UndefinedThisPropertyAssignment>
+        <UndefinedMagicPropertyAssignment>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </UndefinedMagicPropertyAssignment>
+    </issueHandlers>
+</psalm>

@@ -27,6 +27,7 @@ class FreeEmailValidation implements Rule
      *
      * @param string $attribute
      * @param mixed  $value
+     * @SuppressWarnings(PHPMD)
      *
      * @return bool
      */

@@ -13,11 +13,12 @@ use LimitIterator;
 use Port\Csv\CsvReader;
 use Port\Excel\ExcelReader;
 use Port\Reader\ArrayReader;
+use Port\Spreadsheet\SpreadsheetReader;
 use RewindableGenerator;
 use SplFileObject;
 use Traversable;
 use wapmorgan\UnifiedArchive\UnifiedArchive;
-use Port\Spreadsheet\SpreadsheetReader;
+
 /**
  * Reader class to get details from iterator.
  *

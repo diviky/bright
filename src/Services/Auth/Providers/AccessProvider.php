@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 class AccessProvider implements UserProvider
 {
     protected $token;
+
     protected $user;
 
     public function __construct(User $user, Token $token)

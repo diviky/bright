@@ -3,11 +3,21 @@
 namespace Diviky\Bright\Traits;
 
 use Closure;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
 
 trait Responsable
 {
-    protected function getView($route, $data, $layout = null)
+    /**
+     * Get the view.
+     *
+     * @param string $route
+     * @param mixed  $data
+     * @param string $layout
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    protected function getView($route, $data = [], $layout = null)
     {
         $layout            = $layout ?: 'index';
         $data['component'] = $route;
@@ -15,6 +25,11 @@ trait Responsable
         return view('layouts.' . $layout, $data);
     }
 
+    /**
+     * Get the route name from action.
+     *
+     * @param string $action
+     */
     protected function getRoute($action): string
     {
         $method    = $this->getMethod($action);
@@ -33,6 +48,11 @@ trait Responsable
         return Arr::last(\explode('@', $action));
     }
 
+    /**
+     * Get the namespace of the action.
+     *
+     * @param string $action
+     */
     protected function getNamespace($action): ?string
     {
         if (false === \strpos($action, '@')) {
@@ -46,6 +66,11 @@ trait Responsable
         return \strtolower($controller);
     }
 
+    /**
+     * Get the view path.
+     *
+     * @param string $action
+     */
     protected function getViewPath($action): ?string
     {
         if (false === \strpos($action, '@')) {
@@ -61,6 +86,14 @@ trait Responsable
         return app_path($path . '/views');
     }
 
+    /**
+     * Get redirect route from response.
+     *
+     * @param array  $response
+     * @param string $keyword
+     *
+     * @return null|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     protected function getNextRedirect($response = [], $keyword = 'next')
     {
         $next = $response[$keyword];
@@ -70,6 +103,7 @@ trait Responsable
 
         unset($response[$keyword]);
 
+        $redirect = null;
         if (\is_string($next)) {
             if ('/' == \substr($next, 0, 1)) {
                 $redirect = redirect($next);
@@ -94,13 +128,23 @@ trait Responsable
             $redirect = $next();
         }
 
-        foreach ($response as $key => $value) {
-            $redirect = $redirect->with($key, $value);
+        if (isset($redirect)) {
+            foreach ($response as $key => $value) {
+                $redirect = $redirect->with($key, $value);
+            }
         }
 
         return $redirect;
     }
 
+    /**
+     * Get the view locations from controller.
+     *
+     * @param Controller  $controller
+     * @param null|string $action
+     *
+     * @return array
+     */
     protected function getViewsFrom($controller, $action = null)
     {
         if (\method_exists($controller, 'getViewsFrom')) {
@@ -124,9 +168,9 @@ trait Responsable
         }
 
         if ($action) {
-            return $this->getViewPath($action);
+            return [$this->getViewPath($action)];
         }
 
-        return null;
+        return [];
     }
 }

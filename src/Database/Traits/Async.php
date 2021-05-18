@@ -8,7 +8,7 @@ trait Async
     {
         $config = $this->asyncConfig();
         if ($config['enable']) {
-            $queue = $queue ?? $config['queue'];
+            $queue      = $queue ?? $config['queue'];
             $connection = $connection ?? $config['connection'];
 
             $this->connection->async($connection, $queue);

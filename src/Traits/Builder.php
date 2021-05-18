@@ -17,7 +17,7 @@ trait Builder
         return DB::connection()->getPdo();
     }
 
-    public function statement($sql, array $bindings = [])
+    public function statement($sql)
     {
         $prefix = DB::getTablePrefix();
         $sql    = \str_replace('#__', $prefix, $sql);
@@ -30,14 +30,11 @@ trait Builder
         return new Bright();
     }
 
-    protected function table($table = null, $timestamps = true)
+    protected function table($table = null)
     {
         $table = $table ?: $this->table;
 
-        $database = $this->db->table($table);
-        $database->timestamps($timestamps);
-
-        return $database;
+        return $this->db->table($table);
     }
 
     protected function softDelete($id)

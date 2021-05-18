@@ -13,7 +13,9 @@ class AccessTokenGuard implements Guard
     use GuardHelpers;
 
     protected $inputKeys  = [];
+
     protected $storageKey = '';
+
     protected $request;
 
     public function __construct(UserProvider $provider, Request $request)
@@ -131,7 +133,12 @@ class AccessTokenGuard implements Guard
         return false;
     }
 
-    protected function validateIp($allowed_ips = null)
+    /**
+     * Validate ip adress with given list.
+     *
+     * @param null|string $allowed_ips
+     */
+    protected function validateIp($allowed_ips = null): bool
     {
         if (empty($allowed_ips)) {
             return true;
@@ -158,7 +165,13 @@ class AccessTokenGuard implements Guard
         return true;
     }
 
-    protected function validateSignature($token, $signature = null)
+    /**
+     * Validate request signature.
+     *
+     * @param object      $token
+     * @param null|string $signature
+     */
+    protected function validateSignature($token, $signature = null): bool
     {
         //check is expired
         if (isset($token->expires_in) && now()->gt($token->expires_in)) {

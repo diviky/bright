@@ -2,7 +2,9 @@
 
 namespace Diviky\Bright\Traits;
 
-use Diviky\Bright\Util\Device;
+use Diviky\Bright\Helpers\Device;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -11,16 +13,30 @@ trait Themable
 {
     use Responsable;
 
-    public function setUpThemeFromAction($action)
+    /**
+     * Setup theeme from action.
+     *
+     * @param string $action
+     *
+     * @return string[]
+     */
+    public function setUpThemeFromAction($action): array
     {
         $route = $this->getRoute($action);
 
         return $this->setUpTheme($route);
     }
 
-    protected function setUpTheme($route, $component = null, $paths = [])
+    /**
+     * Setup the theme from route.
+     *
+     * @param string      $route
+     * @param null|string $component
+     * @param array       $paths
+     */
+    protected function setUpTheme($route, $component = null, $paths = []): array
     {
-        $template             = $this->identify($route);
+        $template             = $this->identifyTheme($route);
         list($theme, $layout) = \explode('.', $template . '.');
 
         $themePath = resource_path('themes/' . $theme);
@@ -36,7 +52,6 @@ trait Themable
 
         View::share('theme', $theme);
 
-        $paths   = !\is_array($paths) ? [$paths] : $paths;
         $paths[] = $views . '/' . $component;
         $paths[] = $themePath;
         $paths[] = $themePath . '/views/' . $component;
@@ -48,7 +63,12 @@ trait Themable
         return $theme;
     }
 
-    protected function identify($route)
+    /**
+     * Identify the theme from route.
+     *
+     * @param string $route
+     */
+    protected function identifyTheme($route): string
     {
         $themes = config('theme');
         $device = $themes['device'];
@@ -106,6 +126,14 @@ trait Themable
         return $template;
     }
 
+    /**
+     * Check user level theme avaliable.
+     *
+     * @param \Illuminate\Contracts\Auth\Authenticatable|Model $user
+     * @param array                                            $themes
+     *
+     * @return array
+     */
     protected function userLevelTheme($user, $themes = [])
     {
         // User level theme support
@@ -121,10 +149,17 @@ trait Themable
         return $themes;
     }
 
-    protected function setUpThemeFromRequest($request)
+    /**
+     * Setup theme from request.
+     */
+    protected function setUpThemeFromRequest(Request $request): void
     {
         $route  = $request->route();
-        $action = $route->getActionName();
-        $this->setUpThemeFromAction($action);
+        if (isset($route)) {
+            $action = $route->getActionName();
+            if (isset($action)) {
+                $this->setUpThemeFromAction($action);
+            }
+        }
     }
 }

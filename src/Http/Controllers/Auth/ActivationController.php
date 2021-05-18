@@ -2,9 +2,9 @@
 
 namespace Diviky\Bright\Http\Controllers\Auth;
 
+use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
 use Diviky\Bright\Models\Activation;
-use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
 use Diviky\Bright\Notifications\SendActivationToken;
 use Diviky\Bright\Routing\Controller;
 use Illuminate\Auth\Events\Verified;

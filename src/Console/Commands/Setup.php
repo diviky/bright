@@ -8,25 +8,19 @@ use Symfony\Component\Process\Process;
 class Setup extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
+     * {@inheritDoc}
      */
     protected $signature = 'bright:setup';
 
     /**
-     * The console command description.
-     *
-     * @var string
+     * {@inheritDoc}
      */
     protected $description = 'Setup the bright package';
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         if ($this->confirm('Do you wish to replace required files?', true)) {
             $this->shell("sed -i '' 's/Illuminate\\Foundation\\Auth\\/Diviky\\Bright\\Models\\/g' app/Models/User.php");
@@ -95,7 +89,12 @@ class Setup extends Command
         }
     }
 
-    protected function shell($command)
+    /**
+     * Execute the command.
+     *
+     * @param string $command
+     */
+    protected function shell($command): void
     {
         $command = \str_replace('\\', '\\\\', $command);
         $this->info('running... ' . $command);

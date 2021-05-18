@@ -3,35 +3,49 @@
 namespace Diviky\Bright\Helpers;
 
 use Geocoder\Provider\Chain\Chain;
+use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
 use Geocoder\Provider\GeoIP2\GeoIP2;
 use Geocoder\Provider\GeoIP2\GeoIP2Adapter;
+use Geocoder\Provider\HostIp\HostIp;
 use Geocoder\ProviderAggregator;
 use GeoIp2\Database\Reader;
+use Http\Adapter\Guzzle7\Client as GuzzleAdapter;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
  */
 class Geo
 {
-    public function geocode($address = null, $db = null)
+    /**
+     * @psalm-return array{provider: string, latitude: string, longitude: string, country: string, country_code: string, city: string, region: string, region_code: string, zipcode: string, locality: string, timezone: string}
+     *
+     * @param null|mixed $address
+     * @param mixed      $db
+     *
+     * @return string[]
+     */
+    public function geocode($address = null, $db = 'GeoLite2-City.mmdb'): array
     {
         if (null === $address) {
             $address = ip();
         }
 
         //$address = '203.109.101.177';
+
         //http://ipinfo.io/119.63.142.37/json
 
-        $path = $db ?? config('bright.geoip.database_path') . '/GeoLite2-City.mmdb';
+        $geocoder = new ProviderAggregator();
+        $adapter  = new GuzzleAdapter();
 
-        $reader        = new Reader($path);
+        $reader        = new Reader(storage_path('geoip') . '/' . $db);
         $geoIP2Adapter = new GeoIP2Adapter($reader);
 
         $chain = new Chain([
             new GeoIP2($geoIP2Adapter),
+            new FreeGeoIp($adapter),
+            new HostIp($adapter),
         ]);
 
-        $geocoder = new ProviderAggregator();
         $geocoder->registerProvider($chain);
 
         $results = false;

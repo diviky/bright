@@ -42,7 +42,7 @@ class SlackChannel extends SlackWebhookChannel
      */
     protected function actions(SlackAttachment $attachment)
     {
-        return collect($attachment->actions)->map(function ($value, $key) {
+        return collect($attachment->actions)->map(function ($value) {
             if ($value instanceof SlackAttachmentAction) {
                 return $value->toArray();
             }

@@ -36,12 +36,12 @@ trait Outfile
             $path = $this->outFile($path, $options);
 
             $sql = "LOAD DATA LOCAL INFILE '" . $path . "'";
-            $sql .= (($ignore) ?' IGNORE' : '').' INTO TABLE ' . $table;
-            $sql .= " FIELDS TERMINATED BY '".$options['separated']."'";
-            $sql .= " OPTIONALLY ENCLOSED BY '".$options['enclosed']."'";
-            $sql .= " LINES TERMINATED BY '".$options['ends']."'";
+            $sql .= (($ignore) ? ' IGNORE' : '') . ' INTO TABLE ' . $table;
+            $sql .= " FIELDS TERMINATED BY '" . $options['separated'] . "'";
+            $sql .= " OPTIONALLY ENCLOSED BY '" . $options['enclosed'] . "'";
+            $sql .= " LINES TERMINATED BY '" . $options['ends'] . "'";
         } else {
-            $sql = 'INSERT '.(($ignore) ? ' IGNORE ': '').' INTO ' . $table . ' ' . $this->toQuery();
+            $sql = 'INSERT ' . (($ignore) ? ' IGNORE ' : '') . ' INTO ' . $table . ' ' . $this->toQuery();
         }
 
         return $this->statement($sql);
@@ -84,9 +84,9 @@ trait Outfile
 
         $out = 'SELECT * FROM (' . $sql . ') AS export';
         $out .= " INTO OUTFILE '" . $file . "'";
-        $out .= " FIELDS TERMINATED BY '".$options['separated']."'";
-        $out .= " OPTIONALLY ENCLOSED BY '".$options['enclosed']."'";
-        $out .= " LINES TERMINATED BY '".$options['ends']."'";
+        $out .= " FIELDS TERMINATED BY '" . $options['separated'] . "'";
+        $out .= " OPTIONALLY ENCLOSED BY '" . $options['enclosed'] . "'";
+        $out .= " LINES TERMINATED BY '" . $options['ends'] . "'";
 
         $this->statement($out);
 

@@ -2,6 +2,8 @@
 
 namespace Diviky\Bright\Database\Traits;
 
+use Illuminate\Support\Carbon;
+
 trait Filter
 {
     /**
@@ -70,133 +72,168 @@ trait Filter
 
         $date_range = isset($data['date']) ? $data['date'] : null;
         if (\is_array($date_range)) {
-            foreach ($date_range as $column => $date) {
-                if (!\is_array($date)) {
-                    $date = \explode(' - ', $date);
-                    $date = [
-                        'from' => $date[0] ?? null,
-                        'to'   => $date[1] ?? null,
-                    ];
-                }
-
-                $from   = $this->toTime($date['from'], 'Y-m-d');
-                $to     = $this->toTime($date['to'], 'Y-m-d');
-                $column = $this->cleanField($column);
-
-                if ($from && $to) {
-                    $this->whereDateBetween($column, [$from, $to]);
-                } elseif ($from) {
-                    $this->whereDate($column, '=', $from);
-                }
-            }
+            $this->filterDateRange($date_range);
         }
 
         $datetime = isset($data['datetime']) ? $data['datetime'] : null;
         $datetime = $datetime ?: (isset($data['timestamp']) ? $data['timestamp'] : null);
 
         if (\is_array($datetime)) {
-            foreach ($datetime as $column => $date) {
-                if (empty($date)) {
-                    continue;
-                }
-                if (!\is_array($date)) {
-                    $date = \explode(' - ', $date);
-                    $date = [
-                        'from' => $date[0] ?? null,
-                        'to'   => $date[1] ?? null,
-                    ];
-                }
-
-                $from = \trim($date['from']);
-                $to   = \trim($date['to']);
-                $to   = $to ?: $from;
-
-                $column = $this->cleanField($column);
-
-                $from = $this->toTime($from, 'Y-m-d H:i:s', '00:00:00');
-                $to   = $this->toTime($to, 'Y-m-d H:i:s', '23:59:59');
-
-                $this->whereBetween($column, [$from, $to]);
-            }
+            $this->filterDatetime($datetime);
         }
 
         $unixtime = isset($data['unix']) ? $data['unix'] : null;
         $unixtime = $unixtime ?: (isset($data['unixtime']) ? $data['unixtime'] : null);
 
         if (\is_array($unixtime)) {
-            foreach ($unixtime as $column => $date) {
-                if (empty($date)) {
-                    continue;
-                }
-
-                if (!\is_array($date)) {
-                    $date = \explode(' - ', $date);
-                    $date = [
-                        'from' => $date[0] ?? null,
-                        'to'   => $date[1] ?? null,
-                    ];
-                }
-
-                $from   = \trim($date['from']);
-                $to     = \trim($date['to']);
-                $to     = $to ?: $from;
-                $column = $this->cleanField($column);
-
-                if (!\is_numeric($from)) {
-                    $from = $this->toTime($from, 'Y-m-d H:i:s', '00:00:00')->timestamp();
-                }
-
-                if (!\is_numeric($to)) {
-                    $to = $this->toTime($to, 'Y-m-d H:i:s', '23:59:59')->timestamp();
-                }
-
-                $this->whereBetween($column, [$from, $to]);
-            }
+            $this->filterUnixTime($unixtime);
         }
 
         $ranges = isset($data['range']) ? $data['range'] : null;
         if (\is_array($ranges)) {
-            foreach ($ranges as $column => $date) {
-                if (!\is_array($date)) {
-                    $date = \explode(' - ', $date);
-                    $date = [
-                        'from' => \trim($date[0]),
-                        'to'   => \trim($date[1]),
-                    ];
-                }
-
-                $from   = $this->toTime($date['from']);
-                $to     = $this->toTime($date['to']);
-                $column = $this->cleanField($column);
-
-                if ($from && $to) {
-                    $this->whereBetween($column, [$from, $to]);
-                } elseif ($from) {
-                    $this->where($column, $from);
-                }
-            }
+            $this->filterRange($ranges);
         }
 
         $between = isset($data['between']) ? $data['between'] : null;
         if (\is_array($between)) {
-            foreach ($between as $column => $date) {
-                if (!\is_array($date)) {
-                    $date = \explode(' - ', $date);
-                    $date = [
-                        'from' => \trim($date[0]),
-                        'to'   => \trim($date[1]),
-                    ];
-                }
+            $this->filterBetween($between);
+        }
 
-                $from   = $date['from'];
-                $to     = $date['to'];
-                $column = $this->cleanField($column);
+        return $this;
+    }
 
-                if ($from && $to) {
-                    $this->whereBetween($column, [$from, $to]);
-                } elseif ($from) {
-                    $this->where($column, $from);
-                }
+    public function filterDateRange(array $date_range)
+    {
+        foreach ($date_range as $column => $date) {
+            if (!\is_array($date)) {
+                $date = \explode(' - ', $date);
+                $date = [
+                    'from' => $date[0] ?? null,
+                    'to'   => $date[1] ?? null,
+                ];
+            }
+
+            $from   = $this->toTime($date['from'], 'Y-m-d');
+            $to     = $this->toTime($date['to'], 'Y-m-d');
+            $column = $this->cleanField($column);
+
+            if ($from && $to) {
+                $this->whereDateBetween($column, [$from, $to]);
+            } elseif ($from) {
+                $this->whereDate($column, '=', $from);
+            }
+        }
+
+        return $this;
+    }
+
+    public function filterDatetime(array $datetime)
+    {
+        foreach ($datetime as $column => $date) {
+            if (empty($date)) {
+                continue;
+            }
+            if (!\is_array($date)) {
+                $date = \explode(' - ', $date);
+                $date = [
+                    'from' => $date[0] ?? null,
+                    'to'   => $date[1] ?? null,
+                ];
+            }
+
+            $from = \trim($date['from']);
+            $to   = \trim($date['to']);
+            $to   = $to ?: $from;
+
+            $column = $this->cleanField($column);
+
+            $from = $this->toTime($from, 'Y-m-d H:i:s', '00:00:00');
+            $to   = $this->toTime($to, 'Y-m-d H:i:s', '23:59:59');
+
+            $this->whereBetween($column, [$from, $to]);
+        }
+
+        return $this;
+    }
+
+    public function filterUnixTime(array $unixtime)
+    {
+        foreach ($unixtime as $column => $date) {
+            if (empty($date)) {
+                continue;
+            }
+
+            if (!\is_array($date)) {
+                $date = \explode(' - ', $date);
+                $date = [
+                    'from' => $date[0] ?? null,
+                    'to'   => $date[1] ?? null,
+                ];
+            }
+
+            $from   = \trim($date['from']);
+            $to     = \trim($date['to']);
+            $to     = $to ?: $from;
+            $column = $this->cleanField($column);
+
+            if (!\is_numeric($from)) {
+                $from = $this->toTime($from, 'Y-m-d H:i:s', '00:00:00')->timestamp();
+            }
+
+            if (!\is_numeric($to)) {
+                $to = $this->toTime($to, 'Y-m-d H:i:s', '23:59:59')->timestamp();
+            }
+
+            $this->whereBetween($column, [$from, $to]);
+        }
+
+        return $this;
+    }
+
+    public function filterRange(array $ranges)
+    {
+        foreach ($ranges as $column => $date) {
+            if (!\is_array($date)) {
+                $date = \explode(' - ', $date);
+                $date = [
+                    'from' => \trim($date[0]),
+                    'to'   => \trim($date[1]),
+                ];
+            }
+
+            $from   = $this->toTime($date['from']);
+            $to     = $this->toTime($date['to']);
+            $column = $this->cleanField($column);
+
+            if ($from && $to) {
+                $this->whereBetween($column, [$from, $to]);
+            } elseif ($from) {
+                $this->where($column, $from);
+            }
+        }
+
+        return $this;
+    }
+
+    public function filterBetween(array $between)
+    {
+        foreach ($between as $column => $date) {
+            if (!\is_array($date)) {
+                $date = \explode(' - ', $date);
+                $date = [
+                    'from' => \trim($date[0]),
+                    'to'   => \trim($date[1]),
+                ];
+            }
+
+            $from   = $date['from'];
+            $to     = $date['to'];
+            $column = $this->cleanField($column);
+
+            if ($from && $to) {
+                $this->whereBetween($column, [$from, $to]);
+            } elseif ($from) {
+                $this->where($column, $from);
             }
         }
 
@@ -242,7 +279,7 @@ trait Filter
      * @param string     $format
      * @param null|mixed $prefix
      *
-     * @return int|string
+     * @return null|Carbon
      */
     protected function toTime($time, $format = null, $prefix = null)
     {

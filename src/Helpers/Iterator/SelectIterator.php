@@ -2,6 +2,7 @@
 
 namespace Diviky\Bright\Helpers\Iterator;
 
+use InvalidArgumentException;
 use Iterator;
 
 /**
@@ -10,11 +11,17 @@ use Iterator;
 class SelectIterator implements Iterator
 {
     protected $position      = 0;
+
     protected $totalPosition = 0;
+
     protected $next;
+
     protected $results;
+
     protected $builder;
+
     protected $page = 1;
+
     protected $callback;
 
     /** @var int Size of each chunk */
@@ -27,7 +34,7 @@ class SelectIterator implements Iterator
     {
         $chunkSize = (int) $chunkSize;
         if ($chunkSize < 0) {
-            throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
+            throw new InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
         }
         $this->chunkSize = $chunkSize;
         $this->builder   = $builder;

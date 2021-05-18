@@ -5,13 +5,11 @@ namespace Diviky\Bright\Traits;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 
 trait Provider
 {
-    public function directive()
+    public function directive(): void
     {
         Blade::directive('form', function ($expression) {
             $expression = \substr(\substr($expression, 0, -1), 1);
@@ -30,15 +28,14 @@ trait Provider
                 $expression = ['url' => $expression, 'method' => 'GET', 'params' => []];
             }
 
-            //$request = Request::create('/people');
-            //$response = app()->handle($request)->getContent();;
-            //$response = Route::dispatchToRoute($request)->getContent();
-
             return '<?php echo "dispatched"; ?>';
         });
     }
 
-    public function validates()
+    /**
+     * @SuppressWarnings(PHPMD)
+     */
+    public function validates(): void
     {
         Validator::extend('extension', function ($attribute, $value, $parameters) {
             $ext = $value->getClientOriginalExtension();
@@ -51,10 +48,8 @@ trait Provider
         });
     }
 
-    public function macros()
+    public function macros(): void
     {
-        $parent = $this;
-
         Builder::macro('log', function () {
             if (1 === \func_num_args()) {
                 $message = \func_get_arg(0);

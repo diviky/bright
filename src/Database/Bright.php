@@ -48,7 +48,7 @@ class Bright
     {
         $table = ($query['table']) ? $query['table'] : $table;
 
-        $query = @\array_merge(['offset' => null, 'joins' => []], $query);
+        $query = \array_merge(['offset' => null, 'joins' => []], $query);
         if (!empty($query['joins'])) {
             $count = \count($query['joins']);
             for ($i = 0; $i < $count; ++$i) {
@@ -60,13 +60,13 @@ class Bright
 
         return $this->renderStatement($type, [
             'conditions' => $this->conditions($query['conditions'], true, true),
-            'fields'     => (\count($query['fields']) > 0) ? @\implode(', ', $query['fields']) : ' * ',
-            'values'     => (\count($query['values']) > 0) ? @\implode(', ', $query['values']) : '',
+            'fields'     => (\count($query['fields']) > 0) ? \implode(', ', $query['fields']) : ' * ',
+            'values'     => (\count($query['values']) > 0) ? \implode(', ', $query['values']) : '',
             'table'      => $table,
             'alias'      => ($query['alias']) ? $this->alias . $this->name($query['alias']) : '',
             'order'      => $this->order($query['order']),
             'limit'      => $this->limit($query['limit'], $query['offset'], $query['page']),
-            'joins'      => @\implode(' ', $query['joins']),
+            'joins'      => \implode(' ', $query['joins']),
             'group'      => $this->group($query['group']),
         ]);
     }
@@ -82,7 +82,7 @@ class Bright
     {
         \extract($data);
 
-        return \trim("{$type} JOIN {$table} {$alias} ON ({$conditions})");
+        return \trim('' . $data['type'] . ' JOIN ' . $data['table'] . ' ' . $data['alias'] . ' ON (' . $data['conditions'] . ')');
     }
 
     /**
@@ -133,36 +133,36 @@ class Bright
      */
     public function renderStatement($type, $data)
     {
-        \extract($data);
         $aliases = null;
 
         switch (\strtolower($type)) {
             case 'select':
-                return "SELECT {$fields} FROM {$table} {$alias} {$joins} {$conditions} {$group} {$order} {$limit}";
+                return 'SELECT ' . $data['fields'] . ' FROM ' . $data['table'] . ' ' . $data['alias'] . ' ' . $data['joins'] . ' ' . $data['conditions'] . ' ' . $data['group'] . ' ' . $data['order'] . ' ' . $data['limit'] . '';
 
                 break;
             case 'create':
             case 'insert':
+                $values = $data['values'];
                 $values = \rtrim($values, ')');
                 $values = \ltrim($values, '(');
 
-                return "INSERT INTO {$table} ({$fields}) VALUES ({$values})";
+                return 'INSERT INTO ' . $data['table'] . ' (' . $data['fields'] . ") VALUES ({$values})";
 
                 break;
             case 'update':
-                if (!empty($alias)) {
-                    $aliases = "{$this->alias}{$alias} {$joins} ";
+                if (!empty($data['alias'])) {
+                    $aliases = $this->alias . $data['alias'] . ' ' . $data['joins'] . ' ';
                 }
 
-                return "UPDATE {$table} {$aliases}SET {$fields} {$conditions}";
+                return 'UPDATE ' . $data['table'] . " {$aliases}SET " . $data['fields'] . ' ' . $data['conditions'] . '';
 
                 break;
             case 'delete':
-                if (!empty($alias)) {
-                    $aliases = "{$this->alias}{$alias} {$joins} ";
+                if (!empty($data['alias'])) {
+                    $aliases = "{$this->alias}" . $data['alias'] . ' ' . $data['joins'] . ' ';
                 }
 
-                return "DELETE {$alias} FROM {$table} {$aliases} {$conditions} {$limit}";
+                return 'DELETE ' . $data['alias'] . ' FROM ' . $data['table'] . " {$aliases} " . $data['conditions'] . ' ' . $data['limit'] . '';
 
                 break;
         }
@@ -240,8 +240,8 @@ class Bright
 
             if (\is_array($value)) {
                 $valueInsert = (
-                    !empty($value) &&
-                    (\substr_count($key, '?') == \count($value) || \substr_count($key, ':') == \count($value))
+                    !empty($value)
+                    && (\substr_count($key, '?') == \count($value) || \substr_count($key, ':') == \count($value))
                 );
             }
 
@@ -276,15 +276,9 @@ class Bright
                 }
             } else {
                 if (\is_array($value) && !empty($value) && !$valueInsert) {
-                    $keys = \array_keys($value);
                     if (\array_keys($value) === \array_values(\array_keys($value))) {
-                        $count = \count($value);
-
                         $data = $this->quoteFields($key) . ' IN (';
                         if ($quoteValues || 0 !== \strpos($value[0], '-!')) {
-                            if (\is_object($model)) {
-                                $columnType = $model->getColumnType($key);
-                            }
                             $data .= \implode(', ', $this->value($value, $columnType));
                         }
                         $data .= ')';

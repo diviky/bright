@@ -10,11 +10,17 @@ class SlackAttachmentAction
      * @var string
      */
     protected $text;
+
     protected $url;
+
     protected $style;
+
     protected $name;
+
     protected $value;
+
     protected $confirm;
+
     protected $action = [];
 
     /**

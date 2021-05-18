@@ -11,7 +11,7 @@ class Factory extends BaseFactory
      *
      * @param string $location
      */
-    public function prependLocation($location)
+    public function prependLocation($location): void
     {
         $this->finder->prependLocation($location);
     }

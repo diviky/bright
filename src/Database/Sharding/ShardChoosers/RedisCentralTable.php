@@ -7,6 +7,7 @@ use Diviky\Bright\Database\Sharding\Exceptions\ShardingException;
 class RedisCentralTable implements ShardChooserInterface
 {
     private $connections = [];
+
     private $relationKey = '';
 
     public function __construct($connections, $relationKey)

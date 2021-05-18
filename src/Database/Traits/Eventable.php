@@ -7,7 +7,9 @@ use Illuminate\Support\Str;
 trait Eventable
 {
     protected $eventState   = true;
+
     protected $eventColumns = [];
+
     protected $lastId;
 
     public function eventState($event = false)
@@ -123,23 +125,19 @@ trait Eventable
                         $value = $this->setPrimaryKey($value, Str::uuid());
 
                         break;
-
                     case 'uid':
                     case 'uuid':
                         $value = $this->setPrimaryKey($value, Str::orderedUuid());
 
                         break;
-
                     case 'user_id':
                         $value = $this->setUserId($value);
 
                         break;
-
                     case 'time':
                         $value = $this->setTimeStamps($value, true);
 
                         break;
-
                     default:
                         if (app()->has($field)) {
                             $value[$column] = app($field);
@@ -210,7 +208,6 @@ trait Eventable
                     }
 
                     break;
-
                 case 'parent_id':
                     $parent_id = user('id');
                     if ($parent_id) {
@@ -218,7 +215,6 @@ trait Eventable
                     }
 
                     break;
-
                 default:
                     if ($field && app()->has($field)) {
                         $this->where($alias . $column, app()->get($field));

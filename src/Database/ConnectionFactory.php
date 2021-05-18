@@ -25,7 +25,9 @@ class ConnectionFactory extends LaravelConnectionFactory
             return parent::createConnection($driver, $connection, $database, $prefix, $config);
         }
 
-        if ($resolver = Connection::getResolver($driver)) {
+        $resolver = Connection::getResolver($driver);
+
+        if ($resolver) {
             return $resolver($connection, $database, $prefix, $config);
         }
 

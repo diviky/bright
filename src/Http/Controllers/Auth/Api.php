@@ -118,8 +118,9 @@ class Api extends Controller
         ]);
 
         $user = user();
+        $user = $this->resetPassword($user, $this->input('password'));
 
-        if ($user = $this->resetPassword($user, $this->input('password'))) {
+        if ($user) {
             return [
                 'status'  => 'OK',
                 'message' => 'Password changed successfully.',

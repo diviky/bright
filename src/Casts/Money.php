@@ -4,12 +4,29 @@ namespace Diviky\Bright\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class Money implements CastsAttributes
 {
+    /**
+     * Currency Code.
+     *
+     * @var string
+     */
     protected $currency;
 
+    /**
+     * Currenncy Decimal Places.
+     *
+     * @var int
+     */
     protected $decimals = 2;
 
+    /**
+     * @param int    $decimals
+     * @param string $currency
+     */
     public function __construct($decimals = 2, $currency = 'INR')
     {
         $this->currency = $currency;
@@ -46,6 +63,14 @@ class Money implements CastsAttributes
         return $value * \pow(10, $this->decimals);
     }
 
+    /**
+     * Convert to decimal number.
+     *
+     * @param float|int $value
+     * @param int       $decimals
+     *
+     * @return string
+     */
     protected function asDecimal($value, $decimals)
     {
         return \number_format($value, $decimals, '.', '');

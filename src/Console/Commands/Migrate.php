@@ -7,25 +7,19 @@ use Illuminate\Console\Command;
 class Migrate extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
+     * {@inheritDoc}
      */
     protected $signature = 'bright:setup:migrate {--f|force : Force the operation to run when in production.}';
 
     /**
-     * The console command description.
-     *
-     * @var string
+     * {@inheritDoc}
      */
     protected $description = 'Run the database migration files';
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
         $this->call('migrate', [
             '--path'     => \realpath(__DIR__ . '/../../../database/migrations'),

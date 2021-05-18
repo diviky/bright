@@ -60,7 +60,6 @@ trait UserSubscriptionTrait
             ->leftJoin('user_subscriptions as s', function ($join) use ($user_id) {
                 $join->on('s.channel', 'c.name')
                     ->where('s.user_id', $user_id);
-
             })
             ->where('c.status', 1)
             ->select(['s.id', 'c.name as channel', 's.status', 'c.title'])

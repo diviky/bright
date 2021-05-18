@@ -30,7 +30,6 @@ trait Remove
 
         // Checking all the where items
         foreach ((array) $this->wheres as $key => $value) {
-            $type  = \strtolower($value['type']);
             $count = 1;
             if ($value['values']) {
                 $count = \count($value['values']);

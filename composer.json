@@ -1,7 +1,12 @@
 {
     "name": "diviky/bright",
     "description": "Framework extension",
-    "keywords": ["laravel", "permission", "acl", "security"],
+    "keywords": [
+        "laravel",
+        "permission",
+        "acl",
+        "security"
+    ],
     "homepage": "https://github.com/diviky/bright",
     "license": "MIT",
     "authors": [
@@ -19,8 +24,10 @@
         "laravel/ui": "^3.0"
     },
     "require-dev": {
-        "xethron/migrations-generator": "^2.0",
-        "bpocallaghan/generators": "^5.0"
+        "kitloong/laravel-migrations-generator": "^4.4",
+        "bpocallaghan/generators": "^5.0",
+        "diviky/code-analysis": "dev-master",
+        "mnabialek/laravel-sql-logger": "^2.2"
     },
     "suggest": {
         "portphp/csv": "^1.1",
@@ -40,19 +47,38 @@
         "psr-4": {
             "Diviky\\Bright\\": "src"
         },
-        "files": ["src/helpers.php"]
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Diviky\\Bright\\Test\\": "tests"
+            "Diviky\\Bright\\Test\\": "tests",
+            "Tests\\": "tests/"
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
+        "test": "vendor/bin/testbench package:test --parallel",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "psalm": "vendor/bin/psalm --no-cache",
+        "grum": "vendor/bin/grumphp run",
+        "stan": "vendor/bin/phpstan src",
+        "phpmd": "vendor/bin/phpmd src ansi ruleset",
+        "phpcs": "vendor/bin/phpcs --standard=PSR2 --ignore='*.blade.php' src",
+        "fix": [
+            "vendor/bin/php-cs-fixer fix --allow-risky=yes",
+            "vendor/bin/psalm --no-cache --alter --issues=InvalidReturnType,MissingReturnType,MissingParamType"
+        ]
     },
     "config": {
-        "sort-packages": true
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "platform-check": false
     },
+    "prefer-stable": true,
+    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "1.x-dev"

@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class EmailLogs extends Model
 {
     public $guarded      = [];
+
     public $incrementing = false;
+
     public $timestamps   = false;
 
     protected $keyType = 'string';

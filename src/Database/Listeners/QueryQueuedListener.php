@@ -2,8 +2,8 @@
 
 namespace Diviky\Bright\Database\Listeners;
 
-use Diviky\Bright\Database\Jobs\Statement;
 use Diviky\Bright\Database\Events\QueryQueued as QueryQueuedEvent;
+use Diviky\Bright\Database\Jobs\Statement;
 
 class QueryQueuedListener
 {

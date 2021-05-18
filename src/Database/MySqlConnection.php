@@ -60,17 +60,14 @@ class MySqlConnection extends LaravelMySqlConnection
                 return parent::affectingStatement($query, $bindings);
 
                 break;
-
             case 'update':
                 return parent::affectingStatement($query, $bindings);
 
                 break;
-
             case 'insert':
                 return parent::statement($query, $bindings);
 
                 break;
-
             case 'select':
                 if (\preg_match('/outfile\s/i', $query)) {
                     return parent::statement($query, $bindings);
@@ -79,7 +76,6 @@ class MySqlConnection extends LaravelMySqlConnection
                 return $this->select($query, $bindings);
 
                 break;
-
             case 'load':
                 return $this->unprepared($query);
 

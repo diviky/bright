@@ -24,7 +24,9 @@ class Stream
     ];
 
     protected $separator = ',';
+
     protected $lineEnd   = "\r\n";
+
     protected $handle;
 
     public function start($filename, $write = false)

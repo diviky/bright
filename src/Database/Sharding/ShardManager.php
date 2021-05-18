@@ -8,7 +8,9 @@ namespace Diviky\Bright\Database\Sharding;
 class ShardManager
 {
     private $shardChooser;
+
     private $idGenerator;
+
     private $mapManager;
 
     public function __construct(MapManager $mapManager)

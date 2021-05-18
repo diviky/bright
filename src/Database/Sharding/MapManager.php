@@ -17,12 +17,14 @@ class MapManager
      * @var array
      */
     private $map = [];
+
     /**
      * Connections list for current service.
      *
      * @var array
      */
     private $currentConnections = [];
+
     /**
      * Array of object per services
      * Example
@@ -36,6 +38,7 @@ class MapManager
      * @var array
      */
     private $container = [];
+
     /**
      * Current service name.
      *

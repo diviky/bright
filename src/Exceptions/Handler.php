@@ -9,7 +9,7 @@ use Throwable;
 class Handler extends ExceptionHandler
 {
     /**
-     * Report or log an exception.
+     * {@inheritDoc}
      */
     public function report(Throwable $e)
     {
@@ -20,33 +20,20 @@ class Handler extends ExceptionHandler
         parent::report($e);
     }
 
-    protected function convertExceptionToArray(Throwable $e)
-    {
-        $response = parent::convertExceptionToArray($e);
-
-        if ($e instanceof Throwable && !isset($response['status'])) {
-            $response['status'] = $this->getStatusCode($e) ?: 500;
-        }
-
-        return $response;
-    }
-
-    protected function unauthenticated($request, AuthenticationException $e)
+    /**
+     * {@inheritDoc}
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
     {
         $format = $request->input('format');
 
         if ('json' == $format || $request->expectsJson()) {
             return response()->json([
                 'status'  => 401,
-                'message' => $e->getMessage(),
+                'message' => $exception->getMessage(),
             ], 401);
         }
 
         return redirect()->guest(route('login'));
-    }
-
-    protected function getStatusCode($e)
-    {
-        return $this->isHttpException($e) ? $e->getStatusCode() : $e->getCode();
     }
 }

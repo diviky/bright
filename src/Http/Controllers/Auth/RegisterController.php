@@ -2,11 +2,11 @@
 
 namespace Diviky\Bright\Http\Controllers\Auth;
 
+use Diviky\Bright\Http\Controllers\Auth\Concerns\RegistersUsers;
+use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
+use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
 use Diviky\Bright\Routing\Controller;
 use Illuminate\Notifications\Notifiable;
-use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
-use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
-use Diviky\Bright\Http\Controllers\Auth\Concerns\RegistersUsers;
 
 class RegisterController extends Controller
 {

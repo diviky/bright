@@ -11,7 +11,9 @@ class Responsable implements BaseResponsable
     use Themable;
 
     protected $response;
+
     protected $action;
+
     protected $controller;
 
     public function __construct($response, $action, $controller)
@@ -75,7 +77,7 @@ class Responsable implements BaseResponsable
         }
 
         if ($ajax && isset($response['route'])) {
-            $redirect = $this->getNextRedirect($response, 'route');
+            $redirect             = $this->getNextRedirect($response, 'route');
             $response['redirect'] = $redirect->getTargetUrl();
         }
 

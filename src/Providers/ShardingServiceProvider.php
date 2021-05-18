@@ -8,11 +8,6 @@ use Illuminate\Support\ServiceProvider;
 
 class ShardingServiceProvider extends ServiceProvider
 {
-    protected function path()
-    {
-        return __DIR__ . '/../..';
-    }
-
     /**
      * Bootstrap the application services.
      */
@@ -36,6 +31,11 @@ class ShardingServiceProvider extends ServiceProvider
                 $this->app['bright.shard.mapmanager']
             );
         });
+    }
+
+    protected function path()
+    {
+        return __DIR__ . '/../..';
     }
 
     /**

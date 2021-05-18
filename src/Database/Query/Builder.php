@@ -129,17 +129,14 @@ class Builder extends LaravelBuilder
                 return $this->connection->delete($sql, $bindings);
 
                 break;
-
             case 'update':
                 return $this->connection->update($sql, $bindings);
 
                 break;
-
             case 'insert':
                 return $this->connection->insert($sql, $bindings);
 
                 break;
-
             case 'select':
                 if (\preg_match('/outfile\s/i', $sql)) {
                     return $this->connection->statement($sql, $bindings);
@@ -148,7 +145,6 @@ class Builder extends LaravelBuilder
                 return $this->connection->select($sql, $bindings);
 
                 break;
-
             case 'load':
                 return $this->connection->unprepared($sql);
 

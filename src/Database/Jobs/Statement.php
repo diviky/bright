@@ -13,6 +13,7 @@ class Statement implements ShouldQueue
     use Queueable;
 
     protected $sql      = [];
+
     protected $bindings = [];
 
     /**

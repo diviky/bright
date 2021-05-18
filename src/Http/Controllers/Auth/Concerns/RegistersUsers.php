@@ -8,6 +8,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -58,8 +59,8 @@ trait RegistersUsers
             if ($path) {
                 return $path;
             }
-        } catch(\Exception $e) {
-
+        } catch (\Exception $e) {
+            Log::error($e);
         }
 
         if (\method_exists($this, 'redirectTo')) {

@@ -4,5 +4,10 @@ namespace Diviky\Bright\Contracts;
 
 interface ViewLoader
 {
-    public function loadViewsFrom();
+    /**
+     * Set the view locations.
+     *
+     * @return string[]
+     */
+    public function loadViewsFrom(): array;
 }

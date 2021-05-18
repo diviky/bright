@@ -7,6 +7,7 @@ use Illuminate\Pagination\Paginator;
 trait Tables
 {
     protected $tables      = [];
+
     protected $tableTotals = [];
 
     public function tables($tables): self

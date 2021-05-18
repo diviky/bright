@@ -39,7 +39,7 @@ class Api
     {
         $original = $response->getOriginalContent();
 
-        if (\is_array($original)) {
+        if (\is_array($original) && isset($original['code'])) {
             $code = $original['code'];
 
             if ($code && \is_numeric($code)) {

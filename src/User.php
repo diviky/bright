@@ -2,14 +2,14 @@
 
 namespace Diviky\Bright;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Diviky\Bright\Http\Controllers\Auth\Traits\HasRoles;
-use Diviky\Bright\Http\Controllers\Auth\Traits\UserRole;
-use Diviky\Bright\Http\Controllers\Auth\Traits\UserParent;
-use Diviky\Bright\Http\Controllers\Auth\Traits\AccessToken;
-use Diviky\Bright\Http\Controllers\Auth\Traits\UsersParent;
-use Diviky\Bright\Http\Controllers\Auth\Traits\Authorizable;
 use Diviky\Bright\Http\Controllers\Account\Traits\UserAvatarTrait;
+use Diviky\Bright\Http\Controllers\Auth\Traits\AccessToken;
+use Diviky\Bright\Http\Controllers\Auth\Traits\Authorizable;
+use Diviky\Bright\Http\Controllers\Auth\Traits\HasRoles;
+use Diviky\Bright\Http\Controllers\Auth\Traits\UserParent;
+use Diviky\Bright\Http\Controllers\Auth\Traits\UserRole;
+use Diviky\Bright\Http\Controllers\Auth\Traits\UsersParent;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -21,7 +21,18 @@ class User extends Authenticatable
     use UsersParent;
     use UserAvatarTrait;
 
+    /**
+     * Guard name.
+     *
+     * @var string
+     */
     public $guard_name = 'web';
+
+    /**
+     * Admin role.
+     *
+     * @var string
+     */
     protected $admin   = 'super-admin';
 
     /**
@@ -30,11 +41,18 @@ class User extends Authenticatable
      * @var string
      */
     protected $apiTokenName    = 'access_token';
+
+    /**
+     * Access token column name.
+     *
+     * @var string
+     */
     protected $accessTokenName = 'access_token';
+
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
         'name',
@@ -56,11 +74,18 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function getTable()
+    public function getTable(): string
     {
         return config('bright.table.users', 'users');
     }
 
+    /**
+     * Check the user has permission.
+     *
+     * @param string      $permission
+     * @param null|string $guardName
+     * @SuppressWarnings(PHPMD)
+     */
     public function hasPermissionTo($permission, $guardName = null): bool
     {
         $granted = $this->isMatched($permission);

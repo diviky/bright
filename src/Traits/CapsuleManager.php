@@ -10,6 +10,13 @@ use Illuminate\Container\Container;
 trait CapsuleManager
 {
     /**
+     * The current globally available container (if any).
+     *
+     * @var static
+     */
+    protected static $instance;
+
+    /**
      * The container instance.
      *
      * @var \Illuminate\Container\Container
@@ -34,17 +41,19 @@ trait CapsuleManager
      * @param string $key   value to get
      * @param mixed  $value
      *
-     * @return bool
+     * @return self
      */
     public function __set($key, $value)
     {
-        return $this->set($key, $value);
+        $this->set($key, $value);
+
+        return $this;
     }
 
     /**
      * Make this capsule instance available globally.
      */
-    public function setAsGlobal()
+    public function setAsGlobal(): void
     {
         static::$instance = $this;
     }
@@ -56,19 +65,17 @@ trait CapsuleManager
      */
     public function getContainer()
     {
-        if ($this->app) {
-            return $this->app;
-        }
-
         return Container::getInstance();
     }
 
     /**
      * Set the IoC container instance.
      */
-    public function setContainer(Container $app)
+    public function setContainer(Container $app): self
     {
         $this->app = $app;
+
+        return $this;
     }
 
     /**
@@ -84,11 +91,16 @@ trait CapsuleManager
     }
 
     /**
-     * get the key from stored data value.
+     * Returns true if the container can return an entry for the given identifier.
+     * Returns false otherwise.
      *
-     * @param string $key The name of the variable to access
+     * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
+     * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
      *
-     * @return mixed returns your stored value
+     * @param string $id  identifier of the entry to look for
+     * @param mixed  $key
+     *
+     * @return bool
      */
     public function has($key)
     {
@@ -101,13 +113,21 @@ trait CapsuleManager
      * @param string $key   name of the variable
      * @param mixed  $value value to store in registry
      */
-    public function set($key, $value)
+    public function set($key, $value): self
     {
         $this->getContainer()->instance($key, $value);
 
         return $this;
     }
 
+    /**
+     * Get the value from stored data set, return default on null.
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
     public function take($key, $default = null)
     {
         if ($this->has($key)) {

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserUsers extends Model
 {
     public $guarded       = [];
+
     protected $timestamps = false;
 
     public function getTable()

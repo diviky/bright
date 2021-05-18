@@ -9,6 +9,8 @@ trait Uuids
     /**
      * Get the value indicating whether the IDs are incrementing.
      *
+     * @SuppressWarnings(PHPMD)
+     *
      * @return bool
      */
     public function getIncrementing()

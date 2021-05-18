@@ -2,38 +2,34 @@
 
 namespace Diviky\Bright\Console\Commands;
 
-use Illuminate\Console\Command;
 use Diviky\Bright\Services\GeoIpUpdater;
+use Illuminate\Console\Command;
 
 class GeoipUpdate extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
+     * {@inheritDoc}
      */
     protected $signature = 'geoip:update';
 
     /**
-     * The console command description.
-     *
-     * @var string
+     * {@inheritDoc}
      */
     protected $description = 'Update geo ip database';
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
-    public function handle()
+    public function handle(): int
     {
         $updater = new GeoIpUpdater();
 
         $config = config('bright.geoip');
 
         if (is_null($config) || is_null($config['update_url'])) {
-            return $this->error('Missing configuration');
+            $this->error('Missing configuration');
+
+            return 1;
         }
 
         $success  = $updater->updateGeoIpFiles($config['database_path'], $config['update_url']);
@@ -46,5 +42,7 @@ class GeoipUpdate extends Command
                 $this->error($message);
             }
         }
+
+        return 0;
     }
 }

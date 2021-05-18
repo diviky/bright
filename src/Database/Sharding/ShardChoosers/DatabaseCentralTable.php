@@ -7,6 +7,7 @@ use Diviky\Bright\Models\Sharding;
 class DatabaseCentralTable implements ShardChooserInterface
 {
     private $connections = [];
+
     private $relationKey = '';
 
     public function __construct($connections, $relationKey = null)

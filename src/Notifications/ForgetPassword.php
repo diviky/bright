@@ -7,12 +7,25 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class ForgetPassword extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    /**
+     * Token.
+     *
+     * @var int
+     */
     protected $token;
 
+    /**
+     * Channels to send notifcation.
+     *
+     * @var array
+     */
     protected $channels = [];
 
     /**

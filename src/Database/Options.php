@@ -9,10 +9,19 @@ class Options
 {
     use CapsuleManager;
 
+    /**
+     * Table name.
+     *
+     * @var string
+     */
     protected $table   = 'app_options';
+
     protected $values  = [];
+
     protected $updates = [];
+
     protected $extra   = [];
+
     protected $where   = [];
 
     public function __construct($table = null, $group = null)
@@ -122,7 +131,7 @@ class Options
         return collect($this->first());
     }
 
-    public function where($key, $value = null, $operator = '=')
+    public function where($key, $value = null)
     {
         if (!\is_array($key)) {
             $key = [$key => $value];

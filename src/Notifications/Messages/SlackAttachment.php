@@ -7,6 +7,7 @@ use Illuminate\Notifications\Messages\SlackAttachment as BaseSlackAttachment;
 class SlackAttachment extends BaseSlackAttachment
 {
     public $actions = [];
+
     public $callback_id;
 
     public function callbackId($callback_id)

@@ -9,6 +9,8 @@ class ModuleDivision implements ShardChooserInterface
     public function __construct($connections, $relationKey = null)
     {
         $this->connections = $connections;
+
+        unset($relationKey);
     }
 
     public function getShardById($id)

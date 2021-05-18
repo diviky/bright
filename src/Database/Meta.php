@@ -9,8 +9,25 @@ class Meta
 {
     use CapsuleManager;
 
+    /**
+     * Fields to select.
+     *
+     * @var array
+     */
     protected $fields   = [];
+
+    /**
+     * Table name.
+     *
+     * @var string
+     */
     protected $table    = 'meta';
+
+    /**
+     * Relation table.
+     *
+     * @var string
+     */
     protected $relation = 'meta_values';
 
     public function updateOrInsert($key, $value = null)
