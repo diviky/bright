@@ -4,12 +4,11 @@ namespace Diviky\Bright\Services\Auth;
 
 class AuthTokenGuard extends AccessTokenGuard
 {
+    /**
+     * {@inheritDoc}
+     */
     public function user()
     {
-        if (!\is_null($this->user)) {
-            return $this->user;
-        }
-
         $user = null;
         // retrieve via token
         $token = $this->getTokenForRequest();

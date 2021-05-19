@@ -4,7 +4,7 @@ namespace Diviky\Bright\Database\Traits;
 
 trait Build
 {
-    public function whereDateBetween($column, $values, $boolean = 'and', $not = false)
+    public function whereDateBetween($column, $values, $boolean = 'and', $not = false): static
     {
         if (!\is_array($values)) {
             return parent::whereDate($column, $values);

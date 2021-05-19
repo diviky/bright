@@ -29,7 +29,7 @@ class DatabaseManager extends LaravelDatabaseManager
         return $connection->table($name . $alias);
     }
 
-    public function shard($shard_key = null)
+    public function shard($shard_key = null): \Illuminate\Database\Connection
     {
         $manager = $this->getShardManager();
 

@@ -16,6 +16,11 @@ trait UsersParent
         return Models::users()::create($values);
     }
 
+    /**
+     * Remove the user parent.
+     *
+     * @return bool
+     */
     public function removeUserParent()
     {
         return Models::users()::where('user_id', $this->id)

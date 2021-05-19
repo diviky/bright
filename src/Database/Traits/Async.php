@@ -4,7 +4,7 @@ namespace Diviky\Bright\Database\Traits;
 
 trait Async
 {
-    public function async($queue = null, $connection = null)
+    public function async($queue = null, $connection = null): static
     {
         $config = $this->asyncConfig();
         if ($config['enable']) {

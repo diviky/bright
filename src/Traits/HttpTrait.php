@@ -17,6 +17,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 trait HttpTrait
 {
+    /**
+     * Request object.
+     *
+     * @return \Illuminate\Http\Request
+     */
     public function request()
     {
         return $this->get('request');
@@ -28,7 +33,7 @@ trait HttpTrait
      * @param string                     $key
      * @param null|array|bool|int|string $default
      *
-     * @return array|string
+     * @return mixed
      */
     public function input($key = null, $default = null)
     {
@@ -38,7 +43,7 @@ trait HttpTrait
     /**
      * Retrieve an input item from the request.
      *
-     * @return array|string
+     * @return array
      */
     public function all()
     {
@@ -51,7 +56,7 @@ trait HttpTrait
      * @param string                     $key
      * @param null|array|bool|int|string $default
      *
-     * @return array|string
+     * @return null|array|string
      */
     public function query($key = null, $default = null)
     {
@@ -64,7 +69,7 @@ trait HttpTrait
      * @param string                     $key
      * @param null|array|bool|int|string $default
      *
-     * @return array|string
+     * @return null|array|string
      */
     public function cookie($key = null, $default = null)
     {
@@ -72,12 +77,12 @@ trait HttpTrait
     }
 
     /**
-     * Retrieve a files from the request.
+     * Retrieve a file from the request.
      *
-     * @param string                     $key
-     * @param null|array|bool|int|string $default
+     * @param null|string $key
+     * @param mixed       $default
      *
-     * @return array|string
+     * @return null|array|\Illuminate\Http\UploadedFile|\Illuminate\Http\UploadedFile[]
      */
     public function files($key = null, $default = null)
     {
@@ -85,12 +90,12 @@ trait HttpTrait
     }
 
     /**
-     * Retrieve a post items from the request.
+     * Retrieve a request payload item from the request.
      *
-     * @param string                     $key
-     * @param null|array|bool|int|string $default
+     * @param null|string       $key
+     * @param null|array|string $default
      *
-     * @return array|string
+     * @return null|array|string
      */
     public function post($key = null, $default = null)
     {
@@ -100,10 +105,10 @@ trait HttpTrait
     /**
      * Retrieve a header from the request.
      *
-     * @param string                     $key
-     * @param null|array|bool|int|string $default
+     * @param null|string       $key
+     * @param null|array|string $default
      *
-     * @return array|string
+     * @return null|array|string
      */
     public function header($key = null, $default = null)
     {
@@ -113,10 +118,10 @@ trait HttpTrait
     /**
      * Retrieve a server variable from the request.
      *
-     * @param string                     $key
-     * @param null|array|bool|int|string $default
+     * @param null|string       $key
+     * @param null|array|string $default
      *
-     * @return array|string
+     * @return null|array|string
      */
     public function server($key = null, $default = null)
     {
@@ -142,16 +147,15 @@ trait HttpTrait
     }
 
     /**
-     * Get the input method.
+     * Checks if the request method is of specified type.
      *
-     * @param string     $type
-     * @param null|mixed $name
+     * @param string $method Uppercase request method (GET, POST etc)
      *
-     * @return bool|string
+     * @return bool
      */
-    public function isMethod($name = null)
+    public function isMethod($method)
     {
-        return $this->method($name);
+        return $this->request()->isMethod($method);
     }
 
     /**
@@ -161,7 +165,7 @@ trait HttpTrait
      * @param array|string $values  The value or an array of values
      * @param bool         $replace Whether to replace the actual value or not (true by default)
      */
-    public function setHeader($key, $values = null, $replace = true)
+    public function setHeader($key, $values = null, $replace = true): static
     {
         if (\is_array($key)) {
             foreach ($key as $baseKey => $baseValue) {
@@ -200,9 +204,9 @@ trait HttpTrait
      * @param string $name  Name of the Session
      * @param string $value Value of the Session
      */
-    public function setSession($name, $value = null)
+    public function setSession($name, $value = null): void
     {
-        return $this->get('session')->put($name, $value);
+        $this->get('session')->put($name, $value);
     }
 
     /**
@@ -210,6 +214,8 @@ trait HttpTrait
      *
      * @param string $name    Name of the Session
      * @param mixed  $default The default value if not found
+     *
+     * @return mixed
      */
     public function getSession($name, $default = null)
     {
@@ -220,6 +226,8 @@ trait HttpTrait
      * Delete Session.
      *
      * @param string $name Name of the Session
+     *
+     * @return mixed
      */
     public function removeSession($name)
     {
@@ -324,7 +332,7 @@ trait HttpTrait
      * @param string $message    The status message
      * @param array  $headers    An array of HTTP headers
      */
-    public function abort($statusCode, $message = '', array $headers = [])
+    public function abort($statusCode, $message = '', array $headers = []): void
     {
         if (404 == $statusCode) {
             throw new NotFoundHttpException($message);
@@ -333,11 +341,15 @@ trait HttpTrait
         throw new HttpException($statusCode, $message, null, $headers);
     }
 
-    protected function rules(array $rules = [], $data = null, $messages = [], $attributes = [])
+    /**
+     * Run the validator's rules against its data.
+     *
+     * @param null|array|Request $data
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function rules(array $rules = [], $data = null, array $messages = [], array $attributes = []): array
     {
-        $messages   = !\is_array($messages) ? [] : $messages;
-        $attributes = !\is_array($attributes) ? [] : $attributes;
-
         if (isset($data) && \is_array($data)) {
             return Validator::make($data, $rules, $messages, $attributes)->validate();
         }
@@ -356,6 +368,6 @@ trait HttpTrait
      */
     protected function validator(array $rules)
     {
-        return Validator::make($this->request(), $rules);
+        return Validator::make($this->request()->all(), $rules);
     }
 }

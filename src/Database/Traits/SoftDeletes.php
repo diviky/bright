@@ -4,7 +4,7 @@ namespace Diviky\Bright\Database\Traits;
 
 trait SoftDeletes
 {
-    public function softDelete($id = null, $column = 'id', $updated_at = true)
+    public function softDelete($id = null, $column = 'id', $updated_at = true): int
     {
         if ($id) {
             $this->where($column, $id);

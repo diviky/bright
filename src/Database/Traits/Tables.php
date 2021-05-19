@@ -23,7 +23,7 @@ trait Tables
         return $this->paginateComplex($perPage, $columns, $pageName, $page);
     }
 
-    public function paginateComplex($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
+    public function paginateComplex($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null): \Illuminate\Pagination\LengthAwarePaginator
     {
         $total = $this->getCountForPagination($columns);
         $page  = $page ?: Paginator::resolveCurrentPage($pageName);

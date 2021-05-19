@@ -76,7 +76,7 @@ class SelectIterator implements Iterator
         return isset($this->results[$this->position]) && $this->next;
     }
 
-    protected function reset()
+    protected function reset(): void
     {
         $this->position      = 0;
         $this->totalPosition = 0;
@@ -84,7 +84,7 @@ class SelectIterator implements Iterator
         $this->page          = 1;
     }
 
-    protected function query()
+    protected function query(): void
     {
         $rows = $this->builder
             ->forPage($this->page, $this->chunkSize)

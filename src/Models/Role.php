@@ -7,13 +7,16 @@ use Spatie\Permission\Models\Role as BaseRole;
 
 class Role extends BaseRole
 {
+    /**
+     * {@inheritDoc}
+     */
     public function getTable()
     {
         return config('bright.table.roles', parent::getTable());
     }
 
     /**
-     * A role may be given various permissions.
+     * {@inheritDoc}
      */
     public function permissions(): BelongsToMany
     {

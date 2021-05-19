@@ -67,7 +67,7 @@ class Stream
         return $this;
     }
 
-    public function setHeader($fields = [])
+    public function setHeader($fields = []): static
     {
         if ($fields instanceof Collection) {
             $fields = (array) $fields->first();
@@ -97,14 +97,14 @@ class Stream
         return $this;
     }
 
-    public function setSeparator($string)
+    public function setSeparator($string): static
     {
         $this->separator = $string;
 
         return $this;
     }
 
-    public function excel($rows = [], $headers = [])
+    public function excel($rows = [], $headers = []): void
     {
         $this->setHeader($headers);
         $this->flushRows($rows);
@@ -168,7 +168,7 @@ class Stream
         return $this;
     }
 
-    public function clean($string)
+    public function clean($string): string
     {
         $string = '"' . \str_replace('"', '""', $string) . '"';
 
@@ -180,9 +180,9 @@ class Stream
      *
      * @param [type] $filename [description]
      *
-     * @return [type] [description]
+     * @return bool [description]
      */
-    public function readFile($filename)
+    public function readFile($filename): bool
     {
         $chunksize = 2 * (1024 * 1024); // how many bytes per chunk
         $buffer    = '';
@@ -203,7 +203,7 @@ class Stream
         return \fclose($handle);
     }
 
-    public function write($filepath)
+    public function write($filepath): static
     {
         $ext = \strtolower(\strrchr($filepath, '.'));
 
@@ -218,21 +218,24 @@ class Stream
         return $this;
     }
 
-    public function writeFile($content)
+    public function writeFile(string $content): static
     {
         \fwrite($this->handle, $content);
 
         return $this;
     }
 
-    public function stopFile()
+    public function stopFile(): static
     {
         \fclose($this->handle);
 
         return $this;
     }
 
-    protected function implode($row = [], $clean = false)
+    /**
+     * @param string[] $row
+     */
+    protected function implode(array $row = [], bool $clean = false)
     {
         if (\is_object($row)) {
             $row = (array) $row;

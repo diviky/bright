@@ -20,6 +20,7 @@
             <errorLevel type="suppress">
                 <referencedClass name="App\Http\Controllers\Controller"/>
                 <referencedClass name="App\Models\User"/>
+                 <directory name="src/Helpers"/>
             </errorLevel>
         </UndefinedClass>
 
@@ -29,6 +30,18 @@
                 <directory name="tests"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
+
+        <NoInterfaceProperties>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </NoInterfaceProperties>
+
+        <UnresolvableInclude>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </UnresolvableInclude>
 
         <UndefinedInterfaceMethod>
             <errorLevel type="suppress">

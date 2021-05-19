@@ -9,7 +9,12 @@ use Diviky\Bright\Routing\Capsule;
  */
 class Speed extends Capsule
 {
-    public function formatToSave($save, $required = null)
+    /**
+     * @return array[]
+     *
+     * @psalm-return list<array>
+     */
+    public function formatToSave($save, $required = null): array
     {
         $required = ($required) ? \explode(',', $required) : null;
         $fields   = \array_keys($save);
@@ -60,7 +65,12 @@ class Speed extends Capsule
         return $data;
     }
 
-    public function formatFiles($files = [])
+    /**
+     * @return ((array|mixed)[]|mixed)[][]
+     *
+     * @psalm-return array<array-key, array<array-key|numeric, array<array-key, array|mixed>|mixed>>
+     */
+    public function formatFiles($files = []): array
     {
         $data  = [];
         $names = \array_keys($files);
@@ -131,7 +141,7 @@ class Speed extends Capsule
         return $max + 1;
     }
 
-    public function reOrder($table, $where = [], $field = 'id')
+    public function reOrder($table, $where = [], $field = 'id'): static
     {
         $rows = $this->get('db')->table($table)
             ->where($where)
@@ -153,7 +163,7 @@ class Speed extends Capsule
         return $this;
     }
 
-    public function sorting($table, $values = [], $field = 'id')
+    public function sorting($table, array $values = [], $field = 'id'): static
     {
         if (empty($values)) {
             return $this;

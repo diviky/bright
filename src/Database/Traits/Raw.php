@@ -48,14 +48,14 @@ trait Raw
         return parent::selectRaw($expression, $bindings);
     }
 
-    public function whereBetweenRaw($column, array $values, $boolean = 'and', $not = false)
+    public function whereBetweenRaw($column, array $values, $boolean = 'and', $not = false): static
     {
         $column = $this->raw($this->wrap($column));
 
         return parent::whereBetween($column, $values, $boolean, $not);
     }
 
-    public function updateRaw(array $values)
+    public function updateRaw(array $values): int
     {
         foreach ($values as $key => $value) {
             if (':' == \substr($value, 0, 1)) {

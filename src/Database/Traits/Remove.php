@@ -6,14 +6,14 @@ trait Remove
 {
     protected $removeKeys;
 
-    public function removeWhere($keys = null)
+    public function removeWhere($keys = null): static
     {
         $this->removeKeys = $keys;
 
         return $this;
     }
 
-    public function removeWheres()
+    public function removeWheres(): static
     {
         $keys = $this->removeKeys;
 

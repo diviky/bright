@@ -2,6 +2,7 @@
 
 namespace Diviky\Bright\Routing;
 
+use Closure;
 use Diviky\Bright\Traits\CapsuleManager;
 use Exception;
 use Illuminate\Contracts\Container\Container;
@@ -18,9 +19,9 @@ class Resolver
     /**
      * Load helper class.
      *
-     * @param string     $name       Helper name
-     * @param null|mixed $namespace
-     * @param mixed      $singletone
+     * @param Closure|string $name       Helper name
+     * @param null|string    $namespace
+     * @param bool           $singletone
      *
      * @throws Exception
      *
@@ -28,7 +29,7 @@ class Resolver
      */
     public function getHelper($name, $namespace = null, $singletone = true)
     {
-        if (!\is_string($name) && $name instanceof Closure) {
+        if ($name instanceof Closure) {
             return $name($this->getContainer());
         }
 
@@ -145,7 +146,7 @@ class Resolver
     protected function getNameSpace($option, $type = 'controllers')
     {
         $path      = $this->getPath($option, $type);
-        $namespace = (\is_array($path)) ? $path['namespace'] : $path;
+        $namespace = $path['namespace'];
 
         return \rtrim($namespace, '\\') . '\\';
     }

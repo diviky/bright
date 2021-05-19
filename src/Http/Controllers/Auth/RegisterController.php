@@ -26,6 +26,11 @@ class RegisterController extends Controller
     use Token;
     use ColumnsTrait;
 
+    /**
+     * Default user role.
+     *
+     * @var string
+     */
     protected $role;
 
     /**
@@ -37,10 +42,8 @@ class RegisterController extends Controller
 
     /**
      * Show the application registration form.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function showRegistrationForm()
+    public function showRegistrationForm(): \Illuminate\View\View
     {
         return view('bright::auth.register');
     }

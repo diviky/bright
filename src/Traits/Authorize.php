@@ -2,19 +2,21 @@
 
 namespace Diviky\Bright\Traits;
 
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 trait Authorize
 {
+    /**
+     * Check given permission name is allowed.
+     *
+     * @param null|array $names
+     */
     public function isAuthorized($names): bool
     {
         if (\is_null($names)) {
             return false;
-        }
-
-        if (!\is_array($names)) {
-            $names = [$names];
         }
 
         $public = config('permission.public');
@@ -45,23 +47,40 @@ trait Authorize
         return true;
     }
 
-    public function isActionAuthorized($route): bool
+    /**
+     * Check authorization view action class.
+     *
+     * @param Route $action
+     */
+    public function isActionAuthorized($action): bool
     {
-        $names = $this->getRouteFromAction($route);
+        $names = $this->getRouteFromAction($action);
 
         return $this->isAuthorized($names);
     }
 
+    /**
+     * Check authorization via route names
+     * should prefix permission with name:.
+     *
+     * @param Route $route
+     */
     public function isRouteAuthorized($route): bool
     {
-        $name = $route->getName();
-        if (\is_null($name)) {
+        $route = $route->getName();
+
+        if (\is_null($route)) {
             return false;
         }
 
-        return $this->isAuthorized('name:' . $name);
+        return $this->isAuthorized(['name:' . $route]);
     }
 
+    /**
+     * Check authorization via route prefix.
+     *
+     * @param Route $route
+     */
     public function isPrefixAuthorized($route): bool
     {
         $prefix = $route->getPrefix();
@@ -70,16 +89,17 @@ trait Authorize
             return false;
         }
 
-        return $this->isAuthorized('prefix:' . $prefix);
+        return $this->isAuthorized(['prefix:' . $prefix]);
     }
 
+    /**
+     * Check authorization via route uri.
+     *
+     * @param Route $route
+     */
     public function isUriAuthorized($route): bool
     {
         $uri = $route->uri();
-
-        if (\is_null($uri)) {
-            return false;
-        }
 
         $methods = $route->methods();
 
@@ -91,6 +111,11 @@ trait Authorize
         return $this->isAuthorized($names);
     }
 
+    /**
+     * Check authorization via route.
+     *
+     * @param Route $route
+     */
     public function isAuthorizedAny($route): bool
     {
         if ($this->isActionAuthorized($route)) {
@@ -112,6 +137,11 @@ trait Authorize
         return false;
     }
 
+    /**
+     * Get the route from action.
+     *
+     * @param Route $route
+     */
     protected function getRouteFromAction($route): array
     {
         $action = $route->getActionName();

@@ -18,6 +18,11 @@ class ActivationController extends Controller
     use Token;
     use ColumnsTrait;
 
+    /**
+     * @return \Illuminate\View\View|string[]
+     *
+     * @psalm-return \Illuminate\View\View|array{status: string, message: string, redirect?: string}
+     */
     public function activate(Request $request)
     {
         if ($request->isMethod('get')) {
@@ -48,8 +53,8 @@ class ActivationController extends Controller
 
         event(new Verified($user));
 
-        Auth::user()->status = 1;
-        Auth::user()->save();
+        $user->status = 1;
+        $user->save();
 
         $activation->delete();
 
@@ -60,9 +65,21 @@ class ActivationController extends Controller
         ];
     }
 
-    public function resend()
+    /**
+     * @return (array|null|string)[]
+     *
+     * @psalm-return array{status: string, message: array|null|string}
+     */
+    public function resend(): array
     {
         $user = Auth::user();
+
+        if (is_null($user)) {
+            return [
+                'status'  => 'ERROR',
+                'message' => __('Unable to find the user'),
+            ];
+        }
 
         $token = $this->saveToken($user);
 

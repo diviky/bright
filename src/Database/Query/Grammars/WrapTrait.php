@@ -6,7 +6,7 @@ trait WrapTrait
 {
     protected $config = [];
 
-    public function setConfig($config = [])
+    public function setConfig($config = []): void
     {
         if (\is_array($config)) {
             $this->config = \array_merge($this->config, $config);

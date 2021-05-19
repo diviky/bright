@@ -12,7 +12,7 @@ trait Eventable
 
     protected $lastId;
 
-    public function eventState($event = false)
+    public function eventState($event = false): static
     {
         $this->eventState = $event;
 
@@ -28,7 +28,7 @@ trait Eventable
         return $this->eventColumn($event);
     }
 
-    public function eventColumn($name)
+    public function eventColumn($name): static
     {
         if (\is_array($name)) {
             $this->eventColumns = \array_merge($this->eventColumns, $name);
@@ -174,7 +174,7 @@ trait Eventable
         return $values;
     }
 
-    protected function atomicEvent($type = 'update')
+    protected function atomicEvent($type = 'update'): static
     {
         if (!$this->useEvent()) {
             return $this;

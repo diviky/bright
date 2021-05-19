@@ -10,8 +10,10 @@ class PasswordReset
 {
     /**
      * Handle the event.
+     *
+     * @return void
      */
-    public function handle(LaravelPasswordReset $event)
+    public function handle(LaravelPasswordReset $event): void
     {
         $user = $event->user;
 

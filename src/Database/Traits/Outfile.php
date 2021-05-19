@@ -6,7 +6,7 @@ trait Outfile
 {
     protected $outpath;
 
-    public function out($path = null, $local = true, $count = 10000, $options = [])
+    public function out($path = null, $local = true, $count = 10000, $options = []): string
     {
         $path = $this->generateFilePath($path);
 
@@ -98,7 +98,7 @@ trait Outfile
         return $this->outpath;
     }
 
-    protected function generateFilePath($file)
+    protected function generateFilePath($file): string
     {
         $file          = $file && is_string($file) ? $file : \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
         $this->outpath = $file;

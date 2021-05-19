@@ -11,8 +11,10 @@ class ViewServiceProvider extends BaseServiceProvider
 {
     /**
      * Bootstrap your package's services.
+     *
+     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         Blade::component('flash', Flash::class);
         Blade::componentNamespace('Diviky\\Bright\\View\\Components', 'bright');
@@ -30,7 +32,7 @@ class ViewServiceProvider extends BaseServiceProvider
         $this->registerFactory();
     }
 
-    public function registerFactory()
+    public function registerFactory(): void
     {
         $this->app->singleton('view', function ($app) {
             // Next we need to grab the engine resolver instance that will be used by the

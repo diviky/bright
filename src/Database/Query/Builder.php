@@ -24,7 +24,7 @@ class Builder extends LaravelBuilder
     use Async;
     use Build;
     use Cachable {
-        Cachable::get as cacheGet;
+        Cachable::get as cachableGet;
     }
     use Eventable;
     use Filter;
@@ -37,7 +37,7 @@ class Builder extends LaravelBuilder
     use Tables;
     use Timestamps;
 
-    public function alias($as)
+    public function alias($as): static
     {
         $this->from = "{$this->from} as {$as}";
 
@@ -61,7 +61,7 @@ class Builder extends LaravelBuilder
     {
         $this->atomicEvent('select');
 
-        return $this->cacheGet($columns);
+        return $this->cachableGet($columns);
     }
 
     /**
@@ -110,6 +110,9 @@ class Builder extends LaravelBuilder
         return parent::delete($id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function update(array $values)
     {
         $values = $this->updateEvent($values);
@@ -117,7 +120,7 @@ class Builder extends LaravelBuilder
         return parent::update($values);
     }
 
-    public function statement($sql, array $bindings = [])
+    public function statement(string $sql, array $bindings = []): array | bool | int
     {
         $prefix = $this->connection->getTablePrefix();
         $sql    = \str_replace('#__', $prefix, $sql);
@@ -154,7 +157,13 @@ class Builder extends LaravelBuilder
         return $this->connection->statement($sql, $bindings);
     }
 
-    public function flatChunk($count = 1000, $callback = null)
+    /**
+     * @psalm-return \Generator<int, mixed, mixed, void>
+     *
+     * @param mixed      $count
+     * @param null|mixed $callback
+     */
+    public function flatChunk($count = 1000, $callback = null): \Generator
     {
         $results = $this->forPage($page = 1, $count)->get();
 
@@ -181,19 +190,19 @@ class Builder extends LaravelBuilder
         return $this->iterator($count, $callback);
     }
 
-    public function iterator($count = 10000, $callback = null)
+    public function iterator($count = 10000, $callback = null): SelectIterator
     {
         return new SelectIterator($this, $count, $callback);
     }
 
-    public function whereWith($where = [], $bindings = [])
+    public function whereWith($where = [], $bindings = []): static
     {
         $sql = (new Bright())->conditions($where);
 
         return $this->whereRaw($sql, $bindings);
     }
 
-    public function toQuery()
+    public function toQuery(): ?string
     {
         $this->atomicEvent('select');
 

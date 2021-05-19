@@ -10,8 +10,10 @@ class EmailLogger
 {
     /**
      * Handle the event.
+     *
+     * @return void
      */
-    public function handle(MessageSending $event)
+    public function handle(MessageSending $event): void
     {
         $message = $event->message;
         Models::emailLogs()::create([
@@ -37,7 +39,7 @@ class EmailLogger
      *
      * @return null|string
      */
-    public function formatAddressField($message, $field)
+    public function formatAddressField(\Swift_Message $message, string $field)
     {
         $headers = $message->getHeaders();
         if (!$headers->has($field)) {

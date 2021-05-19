@@ -12,9 +12,9 @@ trait Filter
      * @param array  $data
      * @param string $alias
      *
-     * @return array Database conditions
+     * @return \Diviky\Bright\Database\Query\Builder Database conditions
      */
-    public function filter($data = [])
+    public function filter($data = []): static
     {
         $filter = isset($data['dfilter']) ? $data['dfilter'] : null;
         if (\is_array($filter)) {
@@ -102,7 +102,7 @@ trait Filter
         return $this;
     }
 
-    public function filterDateRange(array $date_range)
+    public function filterDateRange(array $date_range): static
     {
         foreach ($date_range as $column => $date) {
             if (!\is_array($date)) {
@@ -127,7 +127,7 @@ trait Filter
         return $this;
     }
 
-    public function filterDatetime(array $datetime)
+    public function filterDatetime(array $datetime): static
     {
         foreach ($datetime as $column => $date) {
             if (empty($date)) {
@@ -156,7 +156,7 @@ trait Filter
         return $this;
     }
 
-    public function filterUnixTime(array $unixtime)
+    public function filterUnixTime(array $unixtime): static
     {
         foreach ($unixtime as $column => $date) {
             if (empty($date)) {
@@ -190,7 +190,7 @@ trait Filter
         return $this;
     }
 
-    public function filterRange(array $ranges)
+    public function filterRange(array $ranges): static
     {
         foreach ($ranges as $column => $date) {
             if (!\is_array($date)) {
@@ -215,7 +215,7 @@ trait Filter
         return $this;
     }
 
-    public function filterBetween(array $between)
+    public function filterBetween(array $between): static
     {
         foreach ($between as $column => $date) {
             if (!\is_array($date)) {
@@ -240,7 +240,7 @@ trait Filter
         return $this;
     }
 
-    protected function addWhere($column, $value, $condition = '=')
+    protected function addWhere($column, $value, $condition = '='): static
     {
         if (false !== \strpos($column, '|')) {
             $columns = \explode('|', $column);
@@ -279,7 +279,7 @@ trait Filter
      * @param string     $format
      * @param null|mixed $prefix
      *
-     * @return null|Carbon
+     * @return \Illuminate\Support\Carbon|null|string
      */
     protected function toTime($time, $format = null, $prefix = null)
     {

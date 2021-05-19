@@ -7,15 +7,13 @@ use InvalidArgumentException;
 
 class RedirectResponse extends BaseRedirectResponse
 {
+    /**
+     * @var array
+     */
     protected $with  = [];
 
     /**
-     * Flash a piece of data to the session.
-     *
-     * @param array|string $key
-     * @param mixed        $value
-     *
-     * @return \Illuminate\Http\RedirectResponse
+     * {@inheritDoc}
      */
     public function with($key, $value = null)
     {
@@ -29,17 +27,11 @@ class RedirectResponse extends BaseRedirectResponse
     }
 
     /**
-     * Sets the redirect target of this response.
-     *
-     * @param string $url The URL to redirect to
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return RedirectResponse the current response
+     * {@inheritDoc}
      */
-    public function setTargetUrl($url)
+    public function setTargetUrl(string $url)
     {
-        if (empty($url)) {
+        if ('' === $url) {
             throw new InvalidArgumentException('Cannot redirect to an empty URL.');
         }
 

@@ -30,6 +30,9 @@ class Meta
      */
     protected $relation = 'meta_values';
 
+    /**
+     * @param (int|string) $key
+     */
     public function updateOrInsert($key, $value = null)
     {
         if (\is_array($key)) {
@@ -47,11 +50,14 @@ class Meta
         return $this->insert($key, $value);
     }
 
-    public static function instance()
+    public static function instance(): self
     {
         return new self();
     }
 
+    /**
+     * @param (int|string) $key
+     */
     public function update($key, $value = null)
     {
         if (\is_array($key)) {
@@ -187,7 +193,12 @@ class Meta
         return $fields[$key];
     }
 
-    protected function getFields()
+    /**
+     * @return (array|mixed)[]
+     *
+     * @psalm-return array<array-key, array|mixed>
+     */
+    protected function getFields(): array
     {
         if (!\is_null($this->fields)) {
             return $this->fields;

@@ -11,6 +11,16 @@ class PermissionMiddleware
 {
     use Themable;
 
+    /**
+     * Check the user for specific permission.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param array|string             $permission
+     *
+     * @throws UnauthorizedException
+     *
+     * @return Closure
+     */
     public function handle($request, Closure $next, $permission)
     {
         if (Auth::guest()) {
@@ -19,13 +29,17 @@ class PermissionMiddleware
             throw UnauthorizedException::notLoggedIn();
         }
 
+        $user = Auth::user();
+
         $permissions = \is_array($permission)
         ? $permission
         : \explode('|', $permission);
 
-        foreach ($permissions as $permission) {
-            if (Auth::user()->can($permission)) {
-                return $next($request);
+        if (isset($user)) {
+            foreach ($permissions as $permission) {
+                if ($user->can($permission)) {
+                    return $next($request);
+                }
             }
         }
 

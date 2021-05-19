@@ -12,14 +12,35 @@ class AccessTokenGuard implements Guard
 {
     use GuardHelpers;
 
+    /**
+     * Request keys to check.
+     *
+     * @var array
+     */
     protected $inputKeys  = [];
 
+    /**
+     * database column.
+     *
+     * @var string
+     */
     protected $storageKey = '';
 
+    /**
+     * Guard configuration.
+     *
+     * @var array
+     */
+    protected $config = [];
+
+    /**
+     * @var Request
+     */
     protected $request;
 
-    public function __construct(UserProvider $provider, Request $request)
+    public function __construct(UserProvider $provider, Request $request, array $config = [])
     {
+        $this->config   = $config;
         $this->provider = $provider;
         $this->request  = $request;
         // key to check in request
@@ -28,13 +49,13 @@ class AccessTokenGuard implements Guard
         $this->storageKey = 'access_token';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function user()
     {
-        if (!\is_null($this->user)) {
-            return $this->user;
-        }
-
         $token      = null;
+        $signature  = null;
         $access_key = $this->getTokenForRequest();
 
         if (!empty($access_key)) {
@@ -58,21 +79,17 @@ class AccessTokenGuard implements Guard
         $allowed     = $this->validateIp($allowed_ips);
 
         if (!$allowed) {
-            return;
+            return null;
         }
 
         if (!empty($token->refresh_token) && !$this->validateSignature($token, $signature)) {
-            return;
+            return null;
         }
 
         $user = $this->provider->retrieveById($token->user_id);
 
-        if (!\is_null($user->deleted_at)) {
-            return;
-        }
-
-        if (1 != $user->status) {
-            return;
+        if (is_null($user) || !\is_null($user->deleted_at) || 1 != $user->status) {
+            return null;
         }
 
         $this->user = $user;
@@ -83,24 +100,11 @@ class AccessTokenGuard implements Guard
     /**
      * Get the token for the current request.
      *
-     * @return string
+     * @return mixed
      */
     public function getTokenForRequest()
     {
-        foreach ($this->inputKeys as $key) {
-            $token = $this->request->query($key);
-            if (empty($token)) {
-                $token = $this->request->input($key);
-            }
-
-            if ($token) {
-                return $token;
-            }
-        }
-
-        if (empty($token)) {
-            $token = $this->request->bearerToken();
-        }
+        $token = $this->request->bearerToken();
 
         if (empty($token)) {
             $token = $this->request->header('Authorization');
@@ -108,6 +112,19 @@ class AccessTokenGuard implements Guard
 
         if (empty($token)) {
             $token = $this->request->getPassword();
+        }
+
+        if (empty($token)) {
+            foreach ($this->inputKeys as $key) {
+                $token = $this->request->query($key);
+                if (empty($token)) {
+                    $token = $this->request->input($key);
+                }
+
+                if ($token) {
+                    return $token;
+                }
+            }
         }
 
         return $token;

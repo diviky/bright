@@ -11,22 +11,25 @@ class RedisSequence implements IdGeneratorInterface
         $this->sequenceKey = $sequenceKey;
     }
 
+    /**
+     * @return int
+     */
     public function getNextId()
     {
         return (int) \Redis::get($this->sequenceKey) + 1;
     }
 
-    public function getLastId()
+    public function getLastId(): int
     {
         return (int) \Redis::get($this->sequenceKey);
     }
 
-    public function setLastId($id)
+    public function setLastId($id): bool
     {
         return \Redis::set($this->sequenceKey, $id);
     }
 
-    public function increment()
+    public function increment(): int
     {
         return \Redis::incr($this->sequenceKey);
     }

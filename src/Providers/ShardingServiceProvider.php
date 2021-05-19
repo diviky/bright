@@ -10,8 +10,10 @@ class ShardingServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
+     *
+     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->console();
@@ -33,15 +35,17 @@ class ShardingServiceProvider extends ServiceProvider
         });
     }
 
-    protected function path()
+    protected function path(): string
     {
         return __DIR__ . '/../..';
     }
 
     /**
      * Register the bindings for the ConnectionManager.
+     *
+     * @return void
      */
-    protected function registerConnectionManager()
+    protected function registerConnectionManager(): void
     {
         $this->app->bind('bright.shard.mapmanager', function ($app) {
             $map = config('sharding.map');
@@ -50,7 +54,7 @@ class ShardingServiceProvider extends ServiceProvider
         });
     }
 
-    protected function console()
+    protected function console(): void
     {
         $this->publishes([
             __DIR__ . '/config/sharding.php' => config_path('sharding.php'),

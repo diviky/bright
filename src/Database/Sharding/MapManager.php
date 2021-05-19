@@ -56,7 +56,7 @@ class MapManager
         $this->map = $map;
     }
 
-    public function setService($name)
+    public function setService($name): void
     {
         $this->name = $name;
         if (!isset($this->map[$name]['connections'])) {

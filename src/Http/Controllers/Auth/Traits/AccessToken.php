@@ -22,8 +22,10 @@ trait AccessToken
      * Set the token value for the "remember me" session.
      *
      * @param string $value
+     *
+     * @return void
      */
-    public function setAccessToken($value = null)
+    public function setAccessToken($value = null): void
     {
         if (!empty($this->getAccessTokenName())) {
             $value = $value ?: Str::random(30);

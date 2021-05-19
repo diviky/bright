@@ -6,15 +6,20 @@ use Closure;
 
 class Api
 {
+    /**
+     * Add error code to response.
+     *
+     * @var bool
+     */
     protected $keep_code = true;
 
     /**
      * Handle an incoming request.
      *
      * @param \Illuminate\Http\Request $request
-     * @param mixed                    $keep_code
+     * @param bool                     $keep_code
      *
-     * @return mixed
+     * @return \Illuminate\Http\Response
      */
     public function handle($request, Closure $next, $keep_code = true)
     {
@@ -25,6 +30,13 @@ class Api
         return $this->respond($response);
     }
 
+    /**
+     * Add cors headers.
+     *
+     * @param mixed $response
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function addCorsHeaders($response)
     {
         $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
@@ -35,6 +47,13 @@ class Api
         return $response;
     }
 
+    /**
+     * Add cors headers.
+     *
+     * @param mixed $response
+     *
+     * @return \Illuminate\Http\Response
+     */
     protected function respond($response)
     {
         $original = $response->getOriginalContent();

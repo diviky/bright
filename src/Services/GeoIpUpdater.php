@@ -6,22 +6,40 @@ class GeoIpUpdater
 {
     const GEOLITE2_URL_BASE = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=%s&suffix=tar.gz';
 
+    /**
+     * @var bool|string
+     */
     protected $databaseFileGzipped;
 
+    /**
+     * @var bool|string
+     */
     protected $databaseFile;
 
+    /**
+     * @var bool|string
+     */
     protected $md5File;
 
+    /**
+     * @var array
+     */
     protected $messages = [];
 
+    /**
+     * @var string
+     */
     protected $geoDbUrl;
 
+    /**
+     * @var string
+     */
     protected $geoDbMd5Url;
 
     /**
      * Get messages.
      *
-     * @return mixed
+     * @return array
      */
     public function getMessages()
     {
@@ -31,9 +49,9 @@ class GeoIpUpdater
     /**
      * Download and update GeoIp database.
      *
-     * @param $destinationPath
-     * @param null $geoDbUrl
-     * @param null $geoDbMd5Url
+     * @param string      $destinationPath
+     * @param null|string $geoDbUrl
+     * @param null|string $geoDbMd5Url
      *
      * @return bool
      */
@@ -55,7 +73,13 @@ class GeoIpUpdater
         return false;
     }
 
-    protected function databaseIsUpdated($geoDbMd5Url, $destinationPath)
+    /**
+     * Check db is up to date or not.
+     *
+     * @param string $geoDbMd5Url
+     * @param string $destinationPath
+     */
+    protected function databaseIsUpdated($geoDbMd5Url, $destinationPath): bool
     {
         $destinationGeoDbFile = $this->getDbFileName($destinationPath . DIRECTORY_SEPARATOR);
 
@@ -74,7 +98,7 @@ class GeoIpUpdater
         return $updated;
     }
 
-    protected function getDbFileName($path = '')
+    protected function getDbFileName(string $path = ''): string
     {
         return $path . 'GeoLite2-City.mmdb';
     }
@@ -82,8 +106,8 @@ class GeoIpUpdater
     /**
      * Download gzipped database, unzip and check md5.
      *
-     * @param $destinationPath
-     * @param $geoDbUrl
+     * @param string $destinationPath
+     * @param string $geoDbUrl
      *
      * @return bool
      */
@@ -103,7 +127,7 @@ class GeoIpUpdater
     /**
      * Make directory.
      *
-     * @param $destinationPath
+     * @param string $destinationPath
      *
      * @return bool
      */
@@ -115,7 +139,7 @@ class GeoIpUpdater
     /**
      * Remove .gzip extension from file.
      *
-     * @param $filePath
+     * @param string $filePath
      *
      * @return mixed
      */
@@ -127,13 +151,12 @@ class GeoIpUpdater
     /**
      * Read url to file.
      *
-     * @param $uri
-     * @param $destinationPath
-     * @param null|mixed $fileName
+     * @param string      $uri
+     * @param null|string $fileName
      *
      * @return bool|string
      */
-    protected function getHTTPFile($uri, $destinationPath, $fileName = null)
+    protected function getHTTPFile($uri, string $destinationPath, $fileName = null)
     {
         set_time_limit(360);
 
@@ -172,11 +195,9 @@ class GeoIpUpdater
     /**
      * Extract gzip file.
      *
-     * @param $filePath
-     *
-     * @return bool|mixed
+     * @return bool|string
      */
-    protected function dezipGzFile($filePath)
+    protected function dezipGzFile(string $filePath)
     {
         $buffer_size = 8192; // read 8kb at a time
 
@@ -215,17 +236,27 @@ class GeoIpUpdater
      *
      * @param $string
      */
-    private function addMessage($string)
+    protected function addMessage(string $string): void
     {
         $this->messages[] = $string;
     }
 
-    private function getDbFileUrl($geoDbUrl)
+    /**
+     * get the db file url.
+     *
+     * @param null|string $geoDbUrl
+     */
+    protected function getDbFileUrl($geoDbUrl): string
     {
         return $geoDbUrl ?: static::GEOLITE2_URL_BASE;
     }
 
-    private function getMd5FileName($geoDbMd5Url)
+    /**
+     * Get the db file name.
+     *
+     * @param null|string $geoDbMd5Url
+     */
+    protected function getMd5FileName($geoDbMd5Url): string
     {
         return $geoDbMd5Url ?: $this->geoDbUrl . '.sha256';
     }

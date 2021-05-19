@@ -14,9 +14,15 @@ use Illuminate\Support\Str;
 
 trait RegistersUsers
 {
+    /**
+     * Register the user.
+     *
+     * @return \Illuminate\Contracts\Auth\Authenticatable
+     */
     public function registers(array $values)
     {
-        event(new Registered($user = $this->create($values)));
+        $user = $this->create($values);
+        event(new Registered($user));
 
         $this->registered($user);
 
@@ -26,9 +32,11 @@ trait RegistersUsers
     /**
      * Handle a registration request for the application.
      *
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     * @return string[]
+     *
+     * @psalm-return array{redirect: string, status: string, message: string}
      */
-    public function register(Request $request)
+    public function register(Request $request): array
     {
         $values = $request->all();
         $this->validator($values)->validate();
@@ -60,7 +68,7 @@ trait RegistersUsers
                 return $path;
             }
         } catch (\Exception $e) {
-            Log::error($e);
+            Log::error((string) $e);
         }
 
         if (\method_exists($this, 'redirectTo')) {
@@ -73,7 +81,7 @@ trait RegistersUsers
     /**
      * Get the guard to be used during registration.
      *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard
      */
     protected function guard()
     {
@@ -84,10 +92,8 @@ trait RegistersUsers
      * The user has been registered.
      *
      * @param mixed $user
-     *
-     * @return mixed
      */
-    protected function registered($user)
+    protected function registered($user): void
     {
         //Assign a role to user
         $role = $this->role ?: config('auth.user.role');
@@ -122,7 +128,7 @@ trait RegistersUsers
     /**
      * Create a new user instance after a valid registration.
      *
-     * @return \App\Models\User
+     * @return \Illuminate\Contracts\Auth\Authenticatable
      */
     protected function create(array $values)
     {

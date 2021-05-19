@@ -19,6 +19,9 @@ class RedisCentralTable implements ShardChooserInterface
         $this->relationKey = $relationKey;
     }
 
+    /**
+     * @return false|string
+     */
     public function getShardById($id)
     {
         return \Redis::get("{$this->relationKey}:{$id}");
@@ -29,7 +32,7 @@ class RedisCentralTable implements ShardChooserInterface
         return $this->connections[$id % \count($this->connections)];
     }
 
-    public function setRelation($id, $shard)
+    public function setRelation($id, $shard): bool
     {
         return \Redis::set("{$this->relationKey}:{$id}", $shard);
     }

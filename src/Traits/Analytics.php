@@ -4,6 +4,14 @@ namespace Diviky\Bright\Traits;
 
 trait Analytics
 {
+    /**
+     * Get the sql group and date formats.
+     *
+     * @param string $column
+     * @param string $time
+     *
+     * @return array
+     */
     public function getFormats($column, $time = 'daily')
     {
         switch ($time) {

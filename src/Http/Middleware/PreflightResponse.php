@@ -11,7 +11,7 @@ class PreflightResponse
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return mixed
+     * @return Closure|\Illuminate\Http\Response
      */
     public function handle($request, Closure $next)
     {
@@ -24,7 +24,12 @@ class PreflightResponse
         return $next($request);
     }
 
-    public function addCorsHeaders($response)
+    /**
+     * Add cors headers.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addCorsHeaders(\Illuminate\Http\Response $response)
     {
         $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type,Authorization,Origin,Accept,Access-Control-Allow-Headers,Access-Control-Allow-Methods,Access-Control-Allow-Origin,*');

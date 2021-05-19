@@ -20,6 +20,11 @@ class Mailable extends BaseMailable implements ShouldQueue
      */
     public $tries = 5;
 
+    /**
+     * View prefix.
+     *
+     * @var string
+     */
     protected $prefix = 'emails.';
 
     /**
@@ -77,14 +82,25 @@ class Mailable extends BaseMailable implements ShouldQueue
         return $this;
     }
 
-    public function theme($name)
+    /**
+     * Set the view theme.
+     *
+     * @param string $name
+     */
+    public function theme($name): static
     {
         $this->theme = $name;
 
         return $this;
     }
 
-    public function deliver($to = null, $exception = false)
+    /**
+     * Send email.
+     *
+     * @param mixed $to
+     * @param bool  $exception
+     */
+    public function deliver($to = null, $exception = false): bool
     {
         //$to = $this->format($to);
 
@@ -118,50 +134,23 @@ class Mailable extends BaseMailable implements ShouldQueue
     }
 
     /**
-     * Set the recipients of the message.
-     *
-     * All recipients are stored internally as [['name' => ?, 'address' => ?]]
-     *
-     * @param array|object|string $address
-     * @param null|string         $name
-     * @param string              $property
-     *
-     * @return $this
+     * {@inheritDoc}
      */
     protected function setAddress($address, $name = null, $property = 'to')
     {
         $address = $this->format($address, $name);
 
-        foreach ($this->addressesToArray($address, $name) as $recipient) {
-            $recipient = $this->normalizeRecipient($recipient);
-
-            $this->{$property}[] = [
-                'name'    => $recipient->name ?? null,
-                'address' => $recipient->email,
-            ];
-        }
-
-        return $this;
+        return parent::setAddress($address, $name, $property);
     }
 
     /**
-     * Convert the given recipient arguments to an array.
+     * Format the given email to proper name and address.
      *
-     * @param array|object|string $address
-     * @param null|string         $name
+     * @param mixed $address
      *
      * @return array
      */
-    protected function addressesToArray($address, $name)
-    {
-        if (!\is_array($address) && !$address instanceof Collection) {
-            $address = \is_string($name) ? [['name' => $name, 'email' => $address]] : [$address];
-        }
-
-        return $address;
-    }
-
-    protected function format($address, $from = null)
+    protected function format($address, ?string $from = null)
     {
         if (\is_array($address)) {
             return \array_map('trim', $address);

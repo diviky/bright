@@ -11,6 +11,16 @@ class RoleOrPermissionMiddleware
 {
     use Themable;
 
+    /**
+     * Handle an incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param array|string             $roleOrPermission
+     *
+     * @throws UnauthorizedException
+     *
+     * @return Closure
+     */
     public function handle($request, Closure $next, $roleOrPermission)
     {
         if (Auth::guest()) {
@@ -19,11 +29,13 @@ class RoleOrPermissionMiddleware
             throw UnauthorizedException::notLoggedIn();
         }
 
+        $user = Auth::user();
+
         $rolesOrPermissions = \is_array($roleOrPermission)
         ? $roleOrPermission
         : \explode('|', $roleOrPermission);
 
-        if (!Auth::user()->hasAnyRole($rolesOrPermissions) && !Auth::user()->hasAnyPermission($rolesOrPermissions)) {
+        if ($user && !$user->hasAnyRole($rolesOrPermissions) && !$user->hasAnyPermission($rolesOrPermissions)) {
             $this->setUpThemeFromRequest($request);
 
             throw UnauthorizedException::forRolesOrPermissions($rolesOrPermissions);

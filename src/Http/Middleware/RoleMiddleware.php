@@ -11,6 +11,16 @@ class RoleMiddleware
 {
     use Themable;
 
+    /**
+     * Check the user for specific roles.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param array|string             $role
+     *
+     * @throws UnauthorizedException
+     *
+     * @return Closure
+     */
     public function handle($request, Closure $next, $role)
     {
         if (Auth::guest()) {
@@ -19,11 +29,12 @@ class RoleMiddleware
             throw UnauthorizedException::notLoggedIn();
         }
 
+        $user  = Auth::user();
         $roles = \is_array($role)
         ? $role
         : \explode('|', $role);
 
-        if (!Auth::user()->hasAnyRole($roles)) {
+        if ($user && !$user->hasAnyRole($roles)) {
             $this->setUpThemeFromRequest($request);
 
             throw UnauthorizedException::forRoles($roles);

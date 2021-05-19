@@ -36,11 +36,14 @@ class Options
         }
     }
 
-    public static function instance($table = null)
+    public static function instance($table = null): self
     {
         return new self($table);
     }
 
+    /**
+     * @param (int|string) $key
+     */
     public function updateOrInsert($key, $value = null, $type = null)
     {
         if (\is_array($key)) {
@@ -58,6 +61,9 @@ class Options
         return $this->insert($key, $value, $type);
     }
 
+    /**
+     * @param (int|string) $key
+     */
     public function update($key, $value = null)
     {
         if (\is_array($key)) {
@@ -114,7 +120,7 @@ class Options
         return $this->table()->insert($values);
     }
 
-    public function first()
+    public function first(): \stdClass
     {
         $rows = $this->table()->get();
 
@@ -126,12 +132,12 @@ class Options
         return (object) $values;
     }
 
-    public function collect()
+    public function collect(): \Illuminate\Support\Collection
     {
         return collect($this->first());
     }
 
-    public function where($key, $value = null)
+    public function where(array $key, $value = null): static
     {
         if (!\is_array($key)) {
             $key = [$key => $value];

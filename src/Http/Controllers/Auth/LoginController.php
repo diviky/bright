@@ -9,22 +9,7 @@ use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-     */
-
     use AuthenticatesUsers;
-
-    protected $maxAttempts  = 5;
-
-    protected $decayMinutes = 10;
 
     /**
      * Where to redirect users after login.
@@ -35,14 +20,17 @@ class LoginController extends Controller
 
     /**
      * Show the application's login form.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function showLoginForm()
+    public function showLoginForm(): \Illuminate\View\View
     {
         return view('bright::auth.login');
     }
 
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
     protected function username()
     {
         return config('auth.columns.username', 'email');
@@ -50,10 +38,8 @@ class LoginController extends Controller
 
     /**
      * Get the throttle key for the given request.
-     *
-     * @return string
      */
-    protected function throttleKey(Request $request)
+    protected function throttleKey(Request $request): ?string
     {
         if ('ip' == config('auth.throttle_key')) {
             return $request->ip();

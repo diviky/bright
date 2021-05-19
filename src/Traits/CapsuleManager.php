@@ -19,7 +19,7 @@ trait CapsuleManager
     /**
      * The container instance.
      *
-     * @var \Illuminate\Container\Container
+     * @var \Illuminate\Contracts\Container\Container
      */
     protected $app;
 
@@ -61,7 +61,7 @@ trait CapsuleManager
     /**
      * Get the IoC container instance.
      *
-     * @return \Illuminate\Container\Container
+     * @return \Illuminate\Contracts\Container\Container
      */
     public function getContainer()
     {

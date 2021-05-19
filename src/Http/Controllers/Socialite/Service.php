@@ -8,18 +8,14 @@ use Illuminate\Support\Facades\Auth;
 
 class Service
 {
-    public function logUserIn($id)
-    {
-        if (!empty($id)) {
-            $row = $this->db->table('auth_user_socialites')
-                ->where('id', $id)
-                ->get(['user_id'])
-                ->first();
-
-            return $this->process($row->user_id);
-        }
-    }
-
+    /**
+     * Check accont is linked and return details.
+     *
+     * @param string $provider
+     * @param int    $socialite_id
+     *
+     * @return null|\Illuminate\Database\Eloquent\Model
+     */
     public function linked($provider, $socialite_id)
     {
         return SocialiteUser::where('provider', $provider)
@@ -27,6 +23,15 @@ class Service
             ->first();
     }
 
+    /**
+     * Link user with social account.
+     *
+     * @param string $provider
+     * @param object $user
+     * @param object $socialite
+     *
+     * @return null|\Illuminate\Database\Eloquent\Model
+     */
     public function linkAccount($provider, $user, $socialite)
     {
         $values                         = [];
@@ -43,11 +48,27 @@ class Service
         return SocialiteUser::create($values);
     }
 
+    /**
+     * Check the user exists with email address.
+     *
+     * @param object $social
+     *
+     * @return null|\Illuminate\Database\Eloquent\Model
+     */
     public function userFound($social)
     {
         return User::where('email', $social->email)->first();
     }
 
+    /**
+     * @param int    $user_id
+     * @param string $redirect
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function login($user_id, $redirect = '/')
     {
         $result = Auth::guard()->loginUsingId($user_id);

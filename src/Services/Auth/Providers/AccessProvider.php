@@ -20,6 +20,9 @@ class AccessProvider implements UserProvider
         $this->token = $token;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function retrieveById($identifier)
     {
         return $this->user
@@ -27,6 +30,13 @@ class AccessProvider implements UserProvider
             ->find($identifier);
     }
 
+    /**
+     * Retrieve a user by their unique identifier.
+     *
+     * @param string $token
+     *
+     * @return null|\Illuminate\Contracts\Auth\Authenticatable
+     */
     public function retrieveByAccessToken($token)
     {
         $user = $this->user->where($this->user->getAccessTokenName(), $token)
@@ -36,6 +46,9 @@ class AccessProvider implements UserProvider
         return $user ? $user : null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function retrieveByToken($identifier, $token)
     {
         $token = $this->token
@@ -46,11 +59,17 @@ class AccessProvider implements UserProvider
         return $token ? $token : null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function updateRememberToken(Authenticatable $user, $token)
     {
         // update via remember token not necessary
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function retrieveByCredentials(array $credentials)
     {
         $key = null;
@@ -70,6 +89,9 @@ class AccessProvider implements UserProvider
         return $user->first();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
         $plain = $credentials['password'];

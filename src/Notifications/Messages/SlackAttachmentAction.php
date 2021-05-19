@@ -45,49 +45,49 @@ class SlackAttachmentAction
         return $this;
     }
 
-    public function name($name)
+    public function name($name): static
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function value($value)
+    public function value($value): static
     {
         $this->value = $value;
 
         return $this;
     }
 
-    public function action($action = [])
+    public function action($action = []): static
     {
         $this->action = $action;
 
         return $this;
     }
 
-    public function url($url)
+    public function url($url): static
     {
         $this->url = $url;
 
         return $this;
     }
 
-    public function confirm($confirm = [])
+    public function confirm($confirm = []): static
     {
         $this->confirm = $confirm;
 
         return $this;
     }
 
-    public function type($type)
+    public function type($type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function style($style)
+    public function style($style): static
     {
         $this->style = $style;
 

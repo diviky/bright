@@ -6,13 +6,28 @@ use Diviky\Bright\Models\Activation;
 
 trait Token
 {
+    /**
+     * Token value.
+     *
+     * @var int
+     */
     protected $tokenId;
 
-    public function generateToken()
+    /**
+     * Generate random token.
+     */
+    public function generateToken(): string
     {
         return \sprintf('%06d', \mt_rand(1, 999999));
     }
 
+    /**
+     * Save token to database.
+     *
+     * @param object $user
+     *
+     * @return string
+     */
     public function saveToken($user)
     {
         $token = $this->generateToken();
@@ -30,7 +45,7 @@ trait Token
     /**
      * Get the value of tokenId.
      */
-    public function getTokenId()
+    public function getTokenId(): int
     {
         return $this->tokenId;
     }

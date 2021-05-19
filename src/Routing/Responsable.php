@@ -10,12 +10,28 @@ class Responsable implements BaseResponsable
 {
     use Themable;
 
+    /**
+     * @var mixed
+     */
     protected $response;
 
+    /**
+     * @var string
+     */
     protected $action;
 
+    /**
+     * Undocumented variable.
+     *
+     * @var mixed
+     */
     protected $controller;
 
+    /**
+     * @param mixed  $response
+     * @param string $action
+     * @param mixed  $controller
+     */
     public function __construct($response, $action, $controller)
     {
         $this->response   = $response;
@@ -28,7 +44,7 @@ class Responsable implements BaseResponsable
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return mixed|\Symfony\Component\HttpFoundation\Response
      */
     public function toResponse($request)
     {
@@ -106,6 +122,8 @@ class Responsable implements BaseResponsable
 
     /**
      * Get the value of data.
+     *
+     * @return mixed
      */
     public function getResponse()
     {

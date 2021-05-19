@@ -26,7 +26,7 @@ use wapmorgan\UnifiedArchive\UnifiedArchive;
  */
 class Reader
 {
-    public function fetchAll($reader, Closure $callable = null, $options = [])
+    public function fetchAll($reader, Closure $callable = null, $options = []): Traversable
     {
         $reader = $this->unzip($reader, $options);
 
@@ -189,7 +189,7 @@ class Reader
         return $this->count($rows);
     }
 
-    public function count(Traversable $iterator)
+    public function count(Traversable $iterator): int
     {
         return \iterator_count($iterator);
     }
@@ -211,17 +211,17 @@ class Reader
         return $fields;
     }
 
-    public function chunk(Traversable $iterator, $size = 100)
+    public function chunk(Traversable $iterator, $size = 100): ChunkedIterator
     {
         return new ChunkedIterator($iterator, $size);
     }
 
-    public function toArray(Traversable $iterator)
+    public function toArray(Traversable $iterator): array
     {
         return \iterator_to_array($iterator);
     }
 
-    public function detectDelimiter($file, $sample = 5)
+    public function detectDelimiter($file, int $sample = 5): ?string
     {
         $delimsRegex = ",|;:\t"; // whichever is first in the list will be the default
         $delims      = \str_split($delimsRegex);
@@ -259,7 +259,12 @@ class Reader
         return $detected[0];
     }
 
-    public function getLines($file, $total = 5)
+    /**
+     * @return (false|string)[]
+     *
+     * @psalm-return list<false|string>
+     */
+    public function getLines($file, $total = 5): array
     {
         $handle = \fopen($file, 'r');
 

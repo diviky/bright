@@ -91,8 +91,10 @@ class Bright
      * @param string $table
      * @param array  $params
      * @param mixed  $conditions
+     *
+     * @return string
      */
-    public function buildConditions($conditions = [])
+    public function buildConditions($conditions = []): string
     {
         return $this->conditions($conditions);
     }
@@ -129,9 +131,9 @@ class Bright
      * @param string $type
      * @param array  $data
      *
-     * @return string
+     * @return null|string
      */
-    public function renderStatement($type, $data)
+    public function renderStatement($type, $data): ?string
     {
         $aliases = null;
 
@@ -225,9 +227,11 @@ class Bright
      * @param bool  $quoteValues If true, values should be quoted
      * @param Model $model       A reference to the Model instance making the query
      *
-     * @return string SQL fragment
+     * @return string[] SQL fragment
+     *
+     * @psalm-return list<string>
      */
-    public function conditionKeysToString($conditions, $quoteValues = true)
+    public function conditionKeysToString($conditions, $quoteValues = true): array
     {
         $c    = 0;
         $out  = [];
@@ -317,9 +321,9 @@ class Bright
      * @param int        $offset Offset from which to start results
      * @param null|mixed $page
      *
-     * @return string SQL limit/offset statement
+     * @return null|string SQL limit/offset statement
      */
-    public function limit($limit, $offset = null, $page = null)
+    public function limit($limit, $offset = null, $page = null): ?string
     {
         if ($limit) {
             $rt = '';
@@ -665,7 +669,7 @@ class Bright
         return "{$key} {$operator} {$value}";
     }
 
-    protected function replace($str, $value = [])
+    protected function replace(string $str, $value = [])
     {
         if (!\is_array($value)) {
             $value = [$value];

@@ -4,7 +4,17 @@ namespace Diviky\Bright\Traits;
 
 trait Message
 {
-    public function message($result = true, $action = 'save', $name = 'row', $id = true)
+    /**
+     * @psalm-return array{status: string, code: 200|500, message: array|null|string, id?: mixed}
+     *
+     * @param mixed $result
+     * @param string $action
+     * @param string $name
+     * @param mixed $id
+     *
+     * @return (array|int|mixed|null|string)[]
+     */
+    public function message($result = true, $action = 'save', $name = 'row', $id = true): array
     {
         if ($result) {
             $response = [
@@ -27,16 +37,40 @@ trait Message
         ];
     }
 
+    /**
+     * Delete message.
+     *
+     * @param bool   $result
+     * @param string $name
+     *
+     * @return (array|int|mixed|null|string)[]
+     */
     public function deleted($result = true, $name = 'row')
     {
         return $this->message($result, 'delete', $name, false);
     }
 
+    /**
+     * Insert message.
+     *
+     * @param bool   $result
+     * @param string $name
+     *
+     * @return (array|int|mixed|null|string)[]
+     */
     public function inserted($result = true, $name = 'row')
     {
         return $this->message($result, 'save', $name);
     }
 
+    /**
+     * Updated message.
+     *
+     * @param bool   $result
+     * @param string $name
+     *
+     * @return (array|int|mixed|null|string)[]
+     */
     public function updated($result = true, $name = 'row')
     {
         return $this->message($result, 'update', $name, false);

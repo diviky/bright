@@ -2,18 +2,15 @@
 
 namespace Diviky\Bright\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Diviky\Bright\Traits\Uuids;
 
 class EmailLogs extends Model
 {
-    public $guarded      = [];
+    use Uuids;
 
-    public $incrementing = false;
-
-    public $timestamps   = false;
-
-    protected $keyType = 'string';
-
+    /**
+     * {@inheritDoc}
+     */
     public function getTable()
     {
         return config('bright.table.email_logs', 'email_logs');

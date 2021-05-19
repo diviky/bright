@@ -6,7 +6,12 @@ use Diviky\Bright\Models\Models;
 
 trait UserParent
 {
-    public function assignParent($parent_id = null)
+    /**
+     * Add parent id.
+     *
+     * @param null|int $parent_id
+     */
+    public function assignParent($parent_id = null): bool
     {
         if (null === $parent_id) {
             if (app()->has('owner')) {
@@ -24,14 +29,20 @@ trait UserParent
         return $this->save();
     }
 
-    public function removeParent()
+    /**
+     * Remove parent id.
+     */
+    public function removeParent(): bool
     {
         $this->parent_id = null;
 
         return $this->save();
     }
 
-    public function parent()
+    /**
+     * @psalm-return \Illuminate\Database\Eloquent\Relations\HasOne<\Illuminate\Database\Eloquent\Model>
+     */
+    public function parent(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Models::user(), 'parent_id');
     }

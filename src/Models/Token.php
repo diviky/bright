@@ -3,25 +3,25 @@
 namespace Diviky\Bright\Models;
 
 use Diviky\Bright\Database\Eloquent\Model;
-use Diviky\Bright\User;
 
 class Token extends Model
 {
+    /**
+     * {@inheritDoc}
+     */
     protected $fillable = [
-        'access_token',
         'user_id',
+        'access_token',
         'refresh_token',
         'allowed_ip',
         'expires_in',
     ];
 
+    /**
+     * {@inheritDoc}
+     */
     public function getTable()
     {
         return config('bright.table.tokens', 'tokens');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(Models::user(), 'user_id', 'id');
     }
 }

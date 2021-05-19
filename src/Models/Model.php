@@ -2,21 +2,40 @@
 
 namespace Diviky\Bright\Models;
 
-use App\Models\User;
+use Diviky\Bright\Database\Eloquent\Traits\Cachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
 class Model extends BaseModel
 {
     use HasFactory;
+    use Cachable;
 
+    /**
+     * {@inheritDoc}
+     */
     public $guarded  = [];
 
+    /**
+     * Scope active column.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
     public function scopeActive($query)
     {
         return $query->where('status', 1);
     }
 
+    /**
+     * Scope active column.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param null|int                           $user_id
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
     public function scopeMe($query, $user_id = null)
     {
         $user_id = $user_id ?? user('id');
@@ -24,8 +43,8 @@ class Model extends BaseModel
         return $query->where('user_id', $user_id);
     }
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Models::user());
     }
 }

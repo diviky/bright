@@ -140,7 +140,7 @@ trait Responsable
     /**
      * Get the view locations from controller.
      *
-     * @param Controller  $controller
+     * @param mixed       $controller
      * @param null|string $action
      *
      * @return array

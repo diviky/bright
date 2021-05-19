@@ -18,7 +18,7 @@ class ShardManager
         $this->mapManager = $mapManager;
     }
 
-    public function setService($name = 'default')
+    public function setService($name = 'default'): static
     {
         $this->mapManager->setService($name);
         $this->shardChooser = $this->mapManager->getShardChooser();

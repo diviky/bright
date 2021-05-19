@@ -25,7 +25,7 @@ class BrightServiceProvider extends ServiceProvider
 {
     use Provider;
 
-    public function boot()
+    public function boot(): void
     {
         $this->directive();
         $this->macros();
@@ -63,7 +63,7 @@ class BrightServiceProvider extends ServiceProvider
         });
     }
 
-    public function registerModelBindings()
+    public function registerModelBindings(): void
     {
         $this->app->bind(UtilInterface::class, function ($app) {
             return new Util();
@@ -84,12 +84,12 @@ class BrightServiceProvider extends ServiceProvider
         });
     }
 
-    protected function path()
+    protected function path(): string
     {
         return __DIR__ . '/../..';
     }
 
-    protected function console()
+    protected function console(): void
     {
         $this->publishes([
             $this->path() . '/config/charts.php'      => config_path('charts.php'),
@@ -135,7 +135,7 @@ class BrightServiceProvider extends ServiceProvider
         ]);
     }
 
-    protected function authGuards()
+    protected function authGuards(): void
     {
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
@@ -163,8 +163,10 @@ class BrightServiceProvider extends ServiceProvider
 
     /**
      * Register the Authentication Log's events.
+     *
+     * @return void
      */
-    protected function registerEvents()
+    protected function registerEvents(): void
     {
         $events = $this->app['config']->get('bright.events');
 
@@ -177,7 +179,7 @@ class BrightServiceProvider extends ServiceProvider
         }
     }
 
-    protected function registerMiddlewares()
+    protected function registerMiddlewares(): void
     {
         $router = $this->app['router'];
 

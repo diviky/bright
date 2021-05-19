@@ -4,14 +4,22 @@ namespace Diviky\Bright\Http\Controllers\Auth\Traits;
 
 trait UserRole
 {
-    public function assignOwnRole($role)
+    /**
+     * Assign a role to user.
+     *
+     * @param string $role
+     */
+    public function assignOwnRole($role): bool
     {
         $this->role = $role;
 
         return $this->save();
     }
 
-    public function removeOwnRole()
+    /**
+     * Remove role from user.
+     */
+    public function removeOwnRole(): bool
     {
         $this->role = null;
 

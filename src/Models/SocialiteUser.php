@@ -2,26 +2,20 @@
 
 namespace Diviky\Bright\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
 class SocialiteUser extends Model
 {
-    use HasFactory;
-
-    public $guarded      = [];
-
+    /**
+     * {@inheritDoc}
+     */
     protected $casts = [
         'payload' => 'array',
     ];
 
+    /**
+     * {@inheritDoc}
+     */
     public function getTable()
     {
         return 'auth_socialite_users';
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 }

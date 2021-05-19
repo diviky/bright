@@ -7,7 +7,15 @@ use Illuminate\Support\Str;
 
 trait ViewTrait
 {
-    public function ajax($url = null, $params = [], $method = 'post', $attributes = [])
+    /**
+     * set the required data for ajax request.
+     *
+     * @param null|string $url
+     * @param null|array  $params
+     * @param null|string $method
+     * @param null|array  $attributes
+     */
+    public function ajax($url = null, $params = [], $method = 'post', $attributes = []): static
     {
         $form         = [];
         $form['pjax'] = $this->get('request')->pjax();
@@ -51,7 +59,13 @@ trait ViewTrait
         return $this;
     }
 
-    public function share($key, $value = null)
+    /**
+     * Share the variables to view.
+     *
+     * @param array|string $key
+     * @param mixed        $value
+     */
+    public function share($key, $value = null): static
     {
         if (\is_array($key)) {
             foreach ($key as $k => $v) {
@@ -64,7 +78,10 @@ trait ViewTrait
         return $this;
     }
 
-    protected function toAttribs($attributes)
+    /**
+     * Convert array to html arrtibiutes.
+     */
+    protected function toAttribs(array $attributes): string
     {
         $output = '';
         foreach ($attributes as $key => $value) {

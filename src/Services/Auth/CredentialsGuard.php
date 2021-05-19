@@ -11,20 +11,30 @@ class CredentialsGuard implements Guard
 {
     use GuardHelpers;
 
+    /**
+     * @var Request
+     */
     protected $request;
 
-    public function __construct(UserProvider $provider, Request $request)
+    /**
+     * Guard configuration.
+     *
+     * @var array
+     */
+    protected $config = [];
+
+    public function __construct(UserProvider $provider, Request $request, array $config = [])
     {
+        $this->config   = $config;
         $this->provider = $provider;
         $this->request  = $request;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function user()
     {
-        if (!\is_null($this->user)) {
-            return $this->user;
-        }
-
         $user = null;
 
         $credentials = $this->getCredentials();
@@ -52,7 +62,10 @@ class CredentialsGuard implements Guard
         return $this->user = $user;
     }
 
-    public function getCredentials()
+    /**
+     * @psalm-return array<array-key|mixed, mixed>
+     */
+    public function getCredentials(): array
     {
         $credentials = [$this->username(), 'password'];
         $return      = [];
@@ -87,6 +100,11 @@ class CredentialsGuard implements Guard
         return false;
     }
 
+    /**
+     * Get the user identifier.
+     *
+     * @return string
+     */
     protected function username()
     {
         return config('auth.columns.username', 'username');

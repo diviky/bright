@@ -8,11 +8,13 @@ use League\CommonMark\CommonMarkConverter;
 
 if (!function_exists('printr')) {
     /**
-     * @SuppressWarnings(PHPMD)
+     * @SuppressWarnings (PHPMD)
      *
      * @param mixed $data
+     *
+     * @return void
      */
-    function printr($data)
+    function printr($data): void
     {
         echo '<pre>';
         print_r($data);
@@ -162,9 +164,9 @@ if (!function_exists('storage_public')) {
  * @param mixed       $data
  * @param mixed       $mergeData
  *
- * @return \Illuminate\Contracts\View\View
+ * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
  */
-function kview($controller, $view, $data = [], $mergeData = [])
+function kview($controller, $view, $data = [], $mergeData = []): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
 {
     $factory = app(View::class);
 

@@ -2,9 +2,7 @@
 
 namespace Diviky\Bright\Traits;
 
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 trait Provider
@@ -50,13 +48,5 @@ trait Provider
 
     public function macros(): void
     {
-        Builder::macro('log', function () {
-            if (1 === \func_num_args()) {
-                $message = \func_get_arg(0);
-            }
-            Log::debug((empty($message) ? '' : $message . ': ') . $this->toQuery());
-
-            return $this;
-        });
     }
 }

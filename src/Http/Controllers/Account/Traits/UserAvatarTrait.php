@@ -7,7 +7,7 @@ use Intervention\Image\Facades\Image;
 
 trait UserAvatarTrait
 {
-    public function setAvatar($file, $size = 400, $disk = 's3')
+    public function setAvatar($file, $size = 400, $disk = 's3'): void
     {
         if ($file) {
             $img = Image::make($file);

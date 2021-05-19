@@ -17,8 +17,10 @@ class SuccessLogin
 
     /**
      * Handle the event.
+     *
+     * @return void
      */
-    public function handle(Login $event)
+    public function handle(Login $event): void
     {
         $user                = $event->user;
         $user->last_login_at = carbon();

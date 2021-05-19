@@ -2,6 +2,8 @@
 
 namespace Diviky\Bright\Database\Traits;
 
+use DateTime;
+
 trait Cachable
 {
     /**
@@ -40,11 +42,7 @@ trait Cachable
     protected $cachePrefix = 'sql';
 
     /**
-     * Execute the query as a "select" statement.
-     *
-     * @param array $columns
-     *
-     * @return array|static[]
+     * {@inheritdoc}
      */
     public function get($columns = ['*'])
     {
@@ -79,12 +77,7 @@ trait Cachable
         // If we've been given a DateTime instance or a "seconds" value that is
         // greater than zero then we'll pass it on to the remember method.
         // Otherwise we'll cache it indefinitely.
-        if ($seconds instanceof DateTime) {
-            return $cache->remember($key, $seconds, $callback);
-        }
-
-        // Convert seconds to seconds for laravel 5.8+
-        if ($seconds > 0) {
+        if ($seconds instanceof DateTime || $seconds > 0) {
             return $cache->remember($key, $seconds, $callback);
         }
 
@@ -92,10 +85,52 @@ trait Cachable
     }
 
     /**
+     * Execute the pluck query statement.
+     *
+     * @param string $column
+     * @param mixed  $key
+     *
+     * @return array|static[]
+     */
+    public function pluck($column, $key = null)
+    {
+        if (!is_null($this->cacheSeconds)) {
+            return $this->pluckCached($column, $key);
+        }
+
+        return parent::pluck($column, $key);
+    }
+
+    /**
+     * Execute the cached pluck query statement.
+     *
+     * @param string $column
+     * @param mixed  $key
+     *
+     * @return array
+     */
+    public function pluckCached($column, $key = null)
+    {
+        $cacheKey = $this->getCacheKey($column . $key);
+
+        $seconds = $this->cacheSeconds;
+
+        $cache = $this->getCache();
+
+        $callback = $this->pluckCacheCallback($column, $key);
+
+        if ($seconds instanceof DateTime || $seconds > 0) {
+            return $cache->remember($cacheKey, $seconds, $callback);
+        }
+
+        return $cache->rememberForever($cacheKey, $callback);
+    }
+
+    /**
      * Indicate that the query results should be cached.
      *
-     * @param \DateTime|int $seconds
-     * @param string        $key
+     * @param null|\DateTime|int $seconds
+     * @param string             $key
      *
      * @return $this
      */
@@ -113,7 +148,7 @@ trait Cachable
     /**
      * Indicate that the query results should be cached forever.
      *
-     * @param string $key
+     * @param null|string $key
      *
      * @return \Illuminate\Database\Query\Builder|static
      */
@@ -245,10 +280,8 @@ trait Cachable
 
     /**
      * Get the cache driver.
-     *
-     * @return \Illuminate\Cache\CacheManager
      */
-    protected function getCacheDriver()
+    protected function getCacheDriver(): \Illuminate\Contracts\Cache\Repository
     {
         return app('cache')->driver($this->cacheDriver);
     }

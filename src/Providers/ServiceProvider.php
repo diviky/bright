@@ -8,12 +8,14 @@ class ServiceProvider extends BaseServiceProvider
 {
     /**
      * Register the application services.
+     *
+     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
     }
 
-    protected function path()
+    protected function path(): string
     {
         return __DIR__ . '/../..';
     }

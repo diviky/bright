@@ -41,9 +41,9 @@ class MySqlConnection extends LaravelMySqlConnection
      * @param array  $bindings
      * @param mixed  $useReadPdo
      *
-     * @return bool
+     * @return array|bool|int
      */
-    public function statement($query, $bindings = [])
+    public function statement($query, $bindings = []): array|bool|int
     {
         if ($this->shouldQueue()) {
             $this->toQueue($query, $bindings);
@@ -104,14 +104,14 @@ class MySqlConnection extends LaravelMySqlConnection
         return parent::affectingStatement($query, $bindings);
     }
 
-    public function async($connection = null, $queue = null)
+    public function async($connection = null, $queue = null): static
     {
         $this->async = [$connection, $queue];
 
         return $this;
     }
 
-    public function toQueue($query, $bindings)
+    public function toQueue(string $query, array $bindings): void
     {
         $async       = $this->async;
         $this->async = null;
@@ -150,9 +150,9 @@ class MySqlConnection extends LaravelMySqlConnection
     /**
      * Get the default query grammar instance.
      *
-     * @return \Diviky\bright\Database\Grammar
+     * @return \Illuminate\Database\Grammar
      */
-    protected function getDefaultQueryGrammar()
+    protected function getDefaultQueryGrammar(): \Illuminate\Database\Grammar
     {
         $grammar = new QueryGrammar();
         $grammar->setConfig($this->config['bright']);
@@ -160,7 +160,7 @@ class MySqlConnection extends LaravelMySqlConnection
         return $this->withTablePrefix($grammar);
     }
 
-    protected function shouldQueue()
+    protected function shouldQueue(): bool
     {
         if (\is_array($this->async)) {
             return true;

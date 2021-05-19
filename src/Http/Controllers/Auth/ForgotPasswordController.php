@@ -8,7 +8,6 @@ use Diviky\Bright\Models\Activation;
 use Diviky\Bright\Models\Models;
 use Diviky\Bright\Notifications\ForgetPassword;
 use Diviky\Bright\Routing\Controller;
-use Diviky\Bright\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +19,11 @@ class ForgotPasswordController extends Controller
     use Token;
     use ColumnsTrait;
 
+    /**
+     * @return (array|null|string)[]|\Illuminate\View\View
+     *
+     * @psalm-return \Illuminate\View\View|array{status: string, message: array|null|string, redirect: string}
+     */
     public function reset(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -33,7 +37,7 @@ class ForgotPasswordController extends Controller
 
             session(['reset-token' => $this->getTokenId()]);
 
-            $user->notify(new ForgetPassword($token));
+            $this->notifyForgotPassword($user, $token);
 
             return [
                 'status'   => 'OK',
@@ -45,7 +49,12 @@ class ForgotPasswordController extends Controller
         return view('bright::auth.passwords.token');
     }
 
-    public function resend(Request $request)
+    /**
+     * @return (array|null|string)[]
+     *
+     * @psalm-return array{status: string, message: array|null|string, redirect?: string}
+     */
+    public function resend(Request $request): array
     {
         $id = session('reset-token');
 
@@ -67,9 +76,9 @@ class ForgotPasswordController extends Controller
             ];
         }
 
-        $user = Models::user()::where('id', $activation->user_id)->first();
+        $user = $activation->user;
 
-        $user->notify(new ForgetPassword($activation->token));
+        $this->notifyForgotPassword($user, $activation->token);
 
         return [
             'status'  => 'OK',
@@ -77,6 +86,11 @@ class ForgotPasswordController extends Controller
         ];
     }
 
+    /**
+     * @return \Illuminate\View\View|string[]
+     *
+     * @psalm-return \Illuminate\View\View|array{status: string, message: string, redirect?: string}
+     */
     public function verify(Request $request)
     {
         $id = session('reset-token');
@@ -122,6 +136,11 @@ class ForgotPasswordController extends Controller
         ];
     }
 
+    /**
+     * Change the user password.
+     *
+     * @return mixed
+     */
     public function change(Request $request)
     {
         $id = session('forget-userid');
@@ -155,10 +174,10 @@ class ForgotPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
-     * @param \Illuminate\Contracts\Auth\CanResetPassword $user
-     * @param string                                      $password
+     * @param \Illuminate\Contracts\Auth\Authenticatable $user
+     * @param string                                     $password
      */
-    protected function resetPassword($user, $password)
+    protected function resetPassword($user, $password): bool
     {
         $user->password = Hash::make($password);
 
@@ -174,5 +193,16 @@ class ForgotPasswordController extends Controller
         Auth::guard()->login($user);
 
         return true;
+    }
+
+    /**
+     * Notify the user about forgot password.
+     *
+     * @param \Illuminate\Database\Eloquent\Model $user
+     * @param string                              $token
+     */
+    protected function notifyForgotPassword($user, $token): void
+    {
+        $user->notify(new ForgetPassword($token));
     }
 }
