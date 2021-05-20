@@ -7,13 +7,23 @@ use Diviky\Bright\Models\Models;
 
 class Api extends BaseController
 {
-    public function me()
+    /**
+     * @SuppressWarnings(PHPMD)
+     */
+    public function me(): array
     {
         return [
             'user' => user(),
         ];
     }
 
+    /**
+     * Get the user details.
+     *
+     * @param int $user_id
+     *
+     * @return array
+     */
     public function person($user_id)
     {
         if (empty($user_id)) {

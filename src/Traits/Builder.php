@@ -129,17 +129,14 @@ trait Builder
     /**
      * Get the records from table.
      *
-     * @param null|array $values
-     * @param array      $order
+     * @param array $order
      *
      * @deprecated deprecated since version 2.0
      *
      * @return Collection
      */
-    protected function getRows($values = null, $order = ['created_at' => 'desc'])
+    protected function getRows(array $values = [], $order = ['created_at' => 'desc'])
     {
-        $values = $values ?: $this->request()->all();
-
         return $this->table()
             ->filter($values)
             ->ordering($values, $order)

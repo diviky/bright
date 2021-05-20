@@ -42,6 +42,44 @@
             </errorLevel>
         </NoInterfaceProperties>
 
+        <PossiblyUndefinedMethod>
+            <errorLevel type="suppress">
+                <directory name="src/Http/Controllers"/>
+            </errorLevel>
+        </PossiblyUndefinedMethod>
+
+        <PossiblyInvalidArgument>
+            <errorLevel type="suppress">
+                <file name="src/Helpers/Reader.php"/>
+                <file name="src/Database/Traits/Build.php"/>
+                <file name="src/Services/Auth/AccessTokenGuard.php"/>
+            </errorLevel>
+        </PossiblyInvalidArgument>
+
+        <ArgumentTypeCoercion>
+            <errorLevel type="suppress">
+                <file name="src/Helpers/Reader.php"/>
+            </errorLevel>
+        </ArgumentTypeCoercion>
+
+        <MoreSpecificReturnType>
+            <errorLevel type="suppress">
+                <file name="src/Database/MySqlConnection.php"/>
+            </errorLevel>
+        </MoreSpecificReturnType>
+
+        <ImplementedReturnTypeMismatch>
+            <errorLevel type="suppress">
+                <file name="src/Database/MySqlConnection.php"/>
+            </errorLevel>
+        </ImplementedReturnTypeMismatch>
+
+        <LessSpecificReturnStatement>
+            <errorLevel type="suppress">
+                <file name="src/Database/MySqlConnection.php"/>
+            </errorLevel>
+        </LessSpecificReturnStatement>
+
         <UnresolvableInclude>
             <errorLevel type="suppress">
                 <directory name="src"/>
@@ -84,6 +122,12 @@
                 <directory name="src"/>
             </errorLevel>
         </InvalidScalarArgument>
+
+        <LessSpecificImplementedReturnType>
+            <errorLevel type="suppress">
+                <file name="src/Routing/Responsable.php"/>
+            </errorLevel>
+        </LessSpecificImplementedReturnType>
 
         <!-- @todo: Can't get this to work within a package? Ide helper or migrations somehow? -->
         <UndefinedMagicPropertyFetch>

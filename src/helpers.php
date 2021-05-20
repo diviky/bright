@@ -1,23 +1,9 @@
 <?php
 
-use Carbon\Carbon;
 use Diviky\Bright\Contracts\UtilInterface as Util;
 use Diviky\Bright\View\View;
 use Illuminate\Support\Str;
 use League\CommonMark\CommonMarkConverter;
-
-if (!function_exists('printr')) {
-    /**
-     * @SuppressWarnings (PHPMD)
-     *
-     * @param mixed $data
-     */
-    function printr($data): void
-    {
-        echo '<pre>';
-        print_r($data);
-    }
-}
 
 if (!function_exists('user')) {
     /**
@@ -159,10 +145,10 @@ if (!function_exists('storage_public')) {
 /**
  * Create view from controller location.
  *
- * @param self|string $controller
- * @param string      $view
- * @param mixed       $data
- * @param mixed       $mergeData
+ * @param Illuminate\Routing\Controller|string $controller
+ * @param string                               $view
+ * @param mixed                                $data
+ * @param mixed                                $mergeData
  *
  * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
  */
@@ -191,7 +177,9 @@ function utcTime($date = null, $timezone = null)
  *
  * @param mixed $data
  *
- *  @return \Illuminate\Http\JsonResponse
+ * @deprecated 2.0
+ *
+ * @return \Illuminate\Http\JsonResponse
  */
 function json($data)
 {

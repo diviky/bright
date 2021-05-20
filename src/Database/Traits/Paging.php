@@ -27,7 +27,7 @@ trait Paging
         $rows->serial = $rows->firstItem();
 
         $i = $rows->perPage() * ($rows->currentPage() - 1);
-        $rows->transform(function ($row) use (&$i) {
+        $rows->transform(function (object $row) use (&$i) {
             $row->serial = ++$i;
 
             return $row;

@@ -64,7 +64,7 @@ trait Cachable
      */
     public function getCached($columns = ['*'])
     {
-        if (\is_null($this->columns)) {
+        if (empty($this->columns)) {
             $this->columns = $columns;
         }
         // If the query is requested to be cached, we will cache it using a unique key

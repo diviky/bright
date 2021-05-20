@@ -25,6 +25,7 @@ use wapmorgan\UnifiedArchive\UnifiedArchive;
  * Reader class to get details from iterator.
  *
  * @author sankar <sankar.suda@gmail.com>
+ * @SuppressWarnings(PHPMD)
  */
 class Reader
 {
@@ -33,8 +34,10 @@ class Reader
      *
      * @param array|ArrayAccess|Iterator|string|Traversable $reader
      * @param array                                         $options
+     *
+     * @return ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
      */
-    public function fetchAll($reader, Closure $callable = null, $options = []): Traversable
+    public function fetchAll($reader, Closure $callable = null, $options = [])
     {
         \set_time_limit(0);
 
@@ -64,6 +67,7 @@ class Reader
                 $options['delimiter'] = $this->detectDelimiter($reader, $lines);
             }
 
+            $duplicates = null;
             switch ($ext) {
                 case '.txt':
                 case '.csv':
@@ -73,6 +77,7 @@ class Reader
                     } else {
                         $reader = new CsvReader($file);
                     }
+                    $reader->setHeaderRowNumber($options['header'] - 1, $duplicates);
 
                     break;
                 case '.xls':
@@ -91,10 +96,10 @@ class Reader
                         $duplicates = null;
                     }
 
+                    $reader->setHeaderRowNumber($options['header'] - 1, $duplicates);
+
                     break;
             }
-
-            $reader->setHeaderRowNumber($options['header'] - 1, $duplicates);
         } else {
             switch ($ext) {
                 case '.array':
@@ -121,11 +126,11 @@ class Reader
     /**
      * Modify the iterator using callback closure.
      *
-     * @param ArrayAccess|Iterator|Port\Csv\CsvReader|Port\Reader\ArrayReader|Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $reader   Travarsable object
-     * @param Closure                                                                                                                            $callable
-     * @param array                                                                                                                              $options
+     * @param ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $reader   Travarsable object
+     * @param Closure                                                                                                                               $callable
+     * @param array                                                                                                                                 $options
      *
-     * @return Traversable
+     * @return ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
      */
     public function modify($reader, Closure $callable = null, $options = [])
     {

@@ -6,12 +6,13 @@ use Diviky\Bright\Database\Sharding\MapManager;
 use Diviky\Bright\Database\Sharding\ShardManager;
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class ShardingServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -42,8 +43,6 @@ class ShardingServiceProvider extends ServiceProvider
 
     /**
      * Register the bindings for the ConnectionManager.
-     *
-     * @return void
      */
     protected function registerConnectionManager(): void
     {

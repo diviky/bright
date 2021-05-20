@@ -142,7 +142,7 @@ trait Tables
         // Once we have run the pagination count query, we will get the resulting count and
         // take into account what type of query it was. When there is a group by we will
         // just return the count of the entire results set since that will be correct.
-        if (isset($this->groups)) {
+        if (!empty($this->groups)) {
             return \count($results);
         }
 

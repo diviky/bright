@@ -21,6 +21,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class BrightServiceProvider extends ServiceProvider
 {
     use Provider;
@@ -163,8 +166,6 @@ class BrightServiceProvider extends ServiceProvider
 
     /**
      * Register the Authentication Log's events.
-     *
-     * @return void
      */
     protected function registerEvents(): void
     {

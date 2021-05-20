@@ -48,7 +48,7 @@ class MySqlConnection extends LaravelMySqlConnection
      *
      * @return array|bool|int
      */
-    public function statement($query, $bindings = []): array | bool | int
+    public function statement($query, $bindings = [])
     {
         if ($this->shouldQueue()) {
             $this->toQueue($query, $bindings);

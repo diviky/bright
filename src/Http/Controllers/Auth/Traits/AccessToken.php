@@ -22,8 +22,6 @@ trait AccessToken
      * Set the token value for the "remember me" session.
      *
      * @param string $value
-     *
-     * @return void
      */
     public function setAccessToken($value = null): void
     {

@@ -58,6 +58,8 @@ class ForgotPasswordController extends Controller
     {
         $id = session('reset-token');
 
+        unset($request);
+
         if (\is_null($id)) {
             return [
                 'status'   => 'ERROR',

@@ -12,7 +12,7 @@ class Meta
     /**
      * Fields to select.
      *
-     * @var array
+     * @var null|array
      */
     protected $fields;
 

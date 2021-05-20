@@ -4,6 +4,9 @@ namespace Diviky\Bright\Database;
 
 use Carbon\Carbon;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class Bright
 {
     /**
@@ -206,7 +209,7 @@ class Bright
         }
         $clauses = '/^WHERE\\x20|^GROUP\\x20BY\\x20|^HAVING\\x20|^ORDER\\x20BY\\x20/i';
 
-        if (\preg_match($clauses, $conditions, $match)) {
+        if (\preg_match($clauses, $conditions)) {
             $clause = '';
         }
         if ('' == \trim($conditions)) {
@@ -231,7 +234,7 @@ class Bright
      */
     public function conditionKeysToString($conditions, $quoteValues = true): array
     {
-        $c    = 0;
+        $i    = 0;
         $out  = [];
         $data = $columnType = null;
         $bool = ['and', 'or', 'not', 'and not', 'or not', 'xor', '||', '&&'];
@@ -306,7 +309,7 @@ class Bright
                     $data  = null;
                 }
             }
-            ++$c;
+            ++$i;
         }
 
         return $out;
@@ -619,7 +622,11 @@ class Bright
         $null = (null === $value || (\is_array($value) && empty($value)));
 
         if ('not' === \strtolower($operator)) {
-            $data = $this->conditionKeysToString([$operator => [$key => $value]], true);
+            $values                  = [];
+            $values[$operator]       = [];
+            $values[$operator][$key] = $value;
+
+            $data = $this->conditionKeysToString($values, true);
 
             return $data[0];
         }

@@ -9,8 +9,6 @@ class QueryQueuedListener
 {
     /**
      * Handle the event.
-     *
-     * @return void
      */
     public function handle(QueryQueuedEvent $event): void
     {

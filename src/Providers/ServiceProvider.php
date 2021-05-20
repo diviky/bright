@@ -8,8 +8,6 @@ class ServiceProvider extends BaseServiceProvider
 {
     /**
      * Register the application services.
-     *
-     * @return void
      */
     public function boot(): void
     {

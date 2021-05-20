@@ -220,7 +220,7 @@ class Options
     {
         $rows = $this->table()->get();
 
-        $rows->transform(function ($row) {
+        $rows->transform(function (object $row) {
             $row->value = $this->formatValue($row->option_value, $row->option_type);
 
             return $row;

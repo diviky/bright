@@ -11,8 +11,6 @@ class ViewServiceProvider extends BaseServiceProvider
 {
     /**
      * Bootstrap your package's services.
-     *
-     * @return void
      */
     public function boot(): void
     {

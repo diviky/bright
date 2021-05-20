@@ -15,7 +15,7 @@ trait Raw
             $groups = \implode(', ', $groups);
         }
 
-        $this->groupBy($this->raw($groups));
+        $this->groupBy((string) $this->raw($groups));
 
         if ($bindings) {
             $this->setBindings($bindings, 'group');

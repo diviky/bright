@@ -10,8 +10,6 @@ class EmailLogger
 {
     /**
      * Handle the event.
-     *
-     * @return void
      */
     public function handle(MessageSending $event): void
     {
@@ -45,7 +43,13 @@ class EmailLogger
         if (!$headers->has($field)) {
             return;
         }
-        $mailboxes = $headers->get($field)->getFieldBodyModel();
+
+        $header = $headers->get($field);
+        if (!isset($header)) {
+            return null;
+        }
+
+        $mailboxes = $header->getFieldBodyModel();
         $strings   = [];
         foreach ($mailboxes as $email => $name) {
             $mailboxStr = $email;

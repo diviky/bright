@@ -129,8 +129,10 @@ class Builder extends LaravelBuilder
 
     /**
      * Excecute the RAW sql statement.
+     *
+     * @return array|bool|int
      */
-    public function statement(string $sql, array $bindings = []): array | bool | int
+    public function statement(string $sql, array $bindings = [])
     {
         $prefix = $this->connection->getTablePrefix();
         $sql    = \str_replace('#__', $prefix, $sql);

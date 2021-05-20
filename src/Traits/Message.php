@@ -7,10 +7,10 @@ trait Message
     /**
      * @psalm-return array{status: string, code: 200|500, message: array|null|string, id?: mixed}
      *
-     * @param mixed $result
+     * @param mixed  $result
      * @param string $action
      * @param string $name
-     * @param mixed $id
+     * @param mixed  $id
      *
      * @return (array|int|mixed|null|string)[]
      */

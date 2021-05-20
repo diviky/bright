@@ -43,7 +43,7 @@ class Stream
     /**
      * File streamr.
      *
-     * @var false|resource
+     * @var mixed
      */
     protected $stream;
 
@@ -170,6 +170,8 @@ class Stream
      *
      * @param array $row
      * @param array $fields
+     *
+     * @SuppressWarnings(PHPMD)
      */
     public function flush($row = [], $fields = []): self
     {
