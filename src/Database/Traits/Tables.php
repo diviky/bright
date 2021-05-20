@@ -6,11 +6,21 @@ use Illuminate\Pagination\Paginator;
 
 trait Tables
 {
+    /**
+     * Database table names.
+     *
+     * @var array
+     */
     protected $tables      = [];
 
+    /**
+     * Total records of multiple tables.
+     *
+     * @var array
+     */
     protected $tableTotals = [];
 
-    public function tables($tables): self
+    public function tables(array $tables): self
     {
         \array_shift($tables);
         $this->tables = $tables;
@@ -18,15 +28,33 @@ trait Tables
         return $this;
     }
 
+    /**
+     * Set the pagination.
+     *
+     * @param int         $perPage
+     * @param array       $columns
+     * @param string      $pageName
+     * @param null|string $page
+     *
+     *  @return \Illuminate\Pagination\LengthAwarePaginator
+     */
     public function complexPaginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
     {
         return $this->paginateComplex($perPage, $columns, $pageName, $page);
     }
 
+    /**
+     * Create a new length-aware paginator instance.
+     *
+     * @param int      $perPage
+     * @param array    $columns
+     * @param string   $pageName
+     * @param null|int $page
+     */
     public function paginateComplex($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null): \Illuminate\Pagination\LengthAwarePaginator
     {
         $total = $this->getCountForPagination($columns);
-        $page  = $page ?: Paginator::resolveCurrentPage($pageName);
+        $page  = $page ?? Paginator::resolveCurrentPage($pageName);
 
         if (\count($this->tables) > 0) {
             $this->tableTotals[$this->from] = $total;
@@ -74,6 +102,7 @@ trait Tables
 
         if ($total && \count($tables) > 0) {
             $count = 0;
+            $skip  = 0;
             $limit = $perPage;
             foreach ($tables as $table) {
                 $results = $results->merge(
@@ -101,8 +130,8 @@ trait Tables
     /**
      * Get the count of the total records for the paginator.
      *
-     * @param array $columns
-     * @param mixed $table
+     * @param array  $columns
+     * @param string $table
      *
      * @return int
      */
@@ -116,9 +145,11 @@ trait Tables
         if (isset($this->groups)) {
             return \count($results);
         }
+
         if (!isset($results[0])) {
             return 0;
         }
+
         if (\is_object($results[0])) {
             return (int) $results[0]->aggregate;
         }

@@ -4,6 +4,12 @@ namespace Diviky\Bright\Database\Traits;
 
 trait Async
 {
+    /**
+     * Run the query in async mode.
+     *
+     * @param null|string $queue
+     * @param null|string $connection
+     */
     public function async($queue = null, $connection = null): static
     {
         $config = $this->asyncConfig();
@@ -17,6 +23,11 @@ trait Async
         return $this;
     }
 
+    /**
+     * Get the async config.
+     *
+     * @return array
+     */
     protected function asyncConfig()
     {
         $bright = $this->getBrightConfig();

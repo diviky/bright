@@ -70,8 +70,10 @@ trait CapsuleManager
 
     /**
      * Set the IoC container instance.
+     *
+     * @param \Illuminate\Contracts\Container\Container $app
      */
-    public function setContainer(Container $app): self
+    public function setContainer($app): self
     {
         $this->app = $app;
 

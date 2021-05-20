@@ -68,7 +68,7 @@ trait RegistersUsers
                 return $path;
             }
         } catch (\Exception $e) {
-            Log::error((string) $e);
+            report($e);
         }
 
         if (\method_exists($this, 'redirectTo')) {

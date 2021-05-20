@@ -14,7 +14,7 @@ class Meta
      *
      * @var array
      */
-    protected $fields   = [];
+    protected $fields;
 
     /**
      * Table name.
@@ -31,7 +31,12 @@ class Meta
     protected $relation = 'meta_values';
 
     /**
-     * @param (int|string) $key
+     * Update the record exists else insert.
+     *
+     * @param mixed $key
+     * @param mixed $value
+     *
+     * @return bool|int
      */
     public function updateOrInsert($key, $value = null)
     {
@@ -56,7 +61,12 @@ class Meta
     }
 
     /**
-     * @param (int|string) $key
+     * Update the records.
+     *
+     * @param mixed $key
+     * @param mixed $value
+     *
+     * @return bool|int
      */
     public function update($key, $value = null)
     {
@@ -69,7 +79,7 @@ class Meta
         }
 
         $field = $this->getField($key);
-        $id    = $field['id'];
+        $id    = $field['id'] ?? null;
 
         if (empty($id)) {
             return false;
@@ -87,11 +97,19 @@ class Meta
             ->update($values);
     }
 
+    /**
+     * Insert data into table.
+     *
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return bool
+     */
     public function insert($key, $value)
     {
         $field = $this->getField($key);
 
-        $id = $field['id'];
+        $id = $field['id'] ?? null;
 
         if (empty($id)) {
             return false;
@@ -109,26 +127,14 @@ class Meta
         return $this->db->table($this->relation)->insert($values);
     }
 
-    public function find()
-    {
-        $field = $this->getField($key);
-
-        $row = $this->db->table($this->relation)
-            ->where('option_id', $field['id'])
-            ->first();
-
-        // Is value exists
-        if (!\is_null($row) && isset($row->meta_value)) {
-            return $row->meta_value;
-        }
-
-        if ($default) {
-            return $default;
-        }
-
-        return $field['default_value'];
-    }
-
+    /**
+     * Get the value from store.
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
     public function value($key, $default = null)
     {
         $field = $this->getField($key);
@@ -146,9 +152,16 @@ class Meta
             return $default;
         }
 
-        return $field['default_value'];
+        return $field['default_value'] ?? null;
     }
 
+    /**
+     * Check the values exists.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
     public function exists($key)
     {
         $field = $this->getField($key);
@@ -186,11 +199,18 @@ class Meta
         return $this;
     }
 
+    /**
+     * Get value from field.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
     protected function getField($key)
     {
         $fields = $this->getFields();
 
-        return $fields[$key];
+        return $fields[$key] ?? [];
     }
 
     /**

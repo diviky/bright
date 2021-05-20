@@ -11,16 +11,44 @@ class SlackAttachmentAction
      */
     protected $text;
 
+    /**
+     * Action url.
+     *
+     * @var string
+     */
     protected $url;
 
+    /**
+     * Action style.
+     *
+     * @var string
+     */
     protected $style;
 
+    /**
+     * Action nae.
+     *
+     * @var string
+     */
     protected $name;
 
+    /**
+     * Action value.
+     *
+     * @var string
+     */
     protected $value;
 
+    /**
+     * @var array
+     */
     protected $confirm;
 
+    /**
+     * Action.
+     *
+     * @var array
+     */
     protected $action = [];
 
     /**
@@ -45,6 +73,11 @@ class SlackAttachmentAction
         return $this;
     }
 
+    /**
+     * Action name.
+     *
+     * @param string $name
+     */
     public function name($name): static
     {
         $this->name = $name;
@@ -52,6 +85,11 @@ class SlackAttachmentAction
         return $this;
     }
 
+    /**
+     * Action value.
+     *
+     * @param string $value
+     */
     public function value($value): static
     {
         $this->value = $value;
@@ -59,6 +97,11 @@ class SlackAttachmentAction
         return $this;
     }
 
+    /**
+     * Action.
+     *
+     * @param array $action
+     */
     public function action($action = []): static
     {
         $this->action = $action;
@@ -66,6 +109,11 @@ class SlackAttachmentAction
         return $this;
     }
 
+    /**
+     * Action url.
+     *
+     * @param string $url
+     */
     public function url($url): static
     {
         $this->url = $url;
@@ -73,6 +121,11 @@ class SlackAttachmentAction
         return $this;
     }
 
+    /**
+     * Action confirm button.
+     *
+     * @param array $confirm
+     */
     public function confirm($confirm = []): static
     {
         $this->confirm = $confirm;
@@ -80,6 +133,11 @@ class SlackAttachmentAction
         return $this;
     }
 
+    /**
+     * Action type.
+     *
+     * @param string $type
+     */
     public function type($type): static
     {
         $this->type = $type;
@@ -87,6 +145,11 @@ class SlackAttachmentAction
         return $this;
     }
 
+    /**
+     * Action style.
+     *
+     * @param string $style
+     */
     public function style($style): static
     {
         $this->style = $style;

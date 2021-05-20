@@ -6,6 +6,13 @@ use Illuminate\Support\Str;
 
 trait Authorizable
 {
+    /**
+     * Check user as right permission.
+     *
+     * @param string $ability
+     *
+     * @return null|mixed
+     */
     protected function isMatched($ability)
     {
         list($option, $view) = \array_pad(\explode('.', $ability), 2, null);

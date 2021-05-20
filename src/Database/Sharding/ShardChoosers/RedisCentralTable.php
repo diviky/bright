@@ -3,13 +3,28 @@
 namespace Diviky\Bright\Database\Sharding\ShardChoosers;
 
 use Diviky\Bright\Database\Sharding\Exceptions\ShardingException;
+use Illuminate\Support\Facades\Redis;
 
 class RedisCentralTable implements ShardChooserInterface
 {
-    private $connections = [];
+    /**
+     * Set the connections.
+     *
+     * @var array
+     */
+    protected $connections = [];
 
-    private $relationKey = '';
+    /**
+     * Cache key.
+     *
+     * @var string
+     */
+    protected $relationKey = '';
 
+    /**
+     * @param array  $connections
+     * @param string $relationKey
+     */
     public function __construct($connections, $relationKey)
     {
         $this->connections = $connections;
@@ -20,20 +35,26 @@ class RedisCentralTable implements ShardChooserInterface
     }
 
     /**
-     * @return false|string
+     * {@inheritDoc}
      */
     public function getShardById($id)
     {
-        return \Redis::get("{$this->relationKey}:{$id}");
+        return Redis::get("{$this->relationKey}:{$id}");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function chooseShard($id)
     {
-        return $this->connections[$id % \count($this->connections)];
+        return $this->connections[intval($id) % \count($this->connections)];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setRelation($id, $shard): bool
     {
-        return \Redis::set("{$this->relationKey}:{$id}", $shard);
+        return Redis::set("{$this->relationKey}:{$id}", $shard);
     }
 }

@@ -6,12 +6,30 @@ use Illuminate\Support\Str;
 
 trait Eventable
 {
+    /**
+     * Event State.
+     *
+     * @var bool
+     */
     protected $eventState   = true;
 
+    /**
+     * Event column names.
+     *
+     * @var array
+     */
     protected $eventColumns = [];
 
+    /**
+     * @var int|string
+     */
     protected $lastId;
 
+    /**
+     * Set event state.
+     *
+     * @param bool $event
+     */
     public function eventState($event = false): static
     {
         $this->eventState = $event;
@@ -19,7 +37,14 @@ trait Eventable
         return $this;
     }
 
-    public function setEvent($event)
+    /**
+     * Set the event.
+     *
+     * @deprecated 2.0
+     *
+     * @param bool|string $event
+     */
+    public function setEvent($event): static
     {
         if (\is_bool($event)) {
             return $this->eventState($event);
@@ -28,6 +53,11 @@ trait Eventable
         return $this->eventColumn($event);
     }
 
+    /**
+     * Set the event column.
+     *
+     * @param array|string $name
+     */
     public function eventColumn($name): static
     {
         if (\is_array($name)) {
@@ -41,6 +71,8 @@ trait Eventable
 
     /**
      * Get the value of lastId.
+     *
+     * @return int|string
      */
     public function getLastId()
     {
@@ -55,10 +87,10 @@ trait Eventable
         return $this->eventState;
     }
 
-    protected function setPrimaryKey(array $values, $id = null): array
+    protected function setPrimaryKey(array $values, string $id): array
     {
         if (!isset($values['id'])) {
-            $values['id'] = (string) $id;
+            $values['id'] = $id;
         }
 
         $this->lastId = $values['id'];
@@ -75,6 +107,11 @@ trait Eventable
         return $values;
     }
 
+    /**
+     * Get the event tables.
+     *
+     * @param string $type
+     */
     protected function getEventTables($type): array
     {
         $bright = $this->getBrightConfig();
@@ -122,12 +159,12 @@ trait Eventable
 
                 switch ($column) {
                     case 'id':
-                        $value = $this->setPrimaryKey($value, Str::uuid());
+                        $value = $this->setPrimaryKey($value, (string) Str::uuid());
 
                         break;
                     case 'uid':
                     case 'uuid':
-                        $value = $this->setPrimaryKey($value, Str::orderedUuid());
+                        $value = $this->setPrimaryKey($value, (string) Str::orderedUuid());
 
                         break;
                     case 'user_id':
@@ -161,7 +198,12 @@ trait Eventable
         return $values;
     }
 
-    protected function updateEvent($values)
+    /**
+     * Update the values.
+     *
+     * @return array
+     */
+    protected function updateEvent(array $values)
     {
         $this->atomicEvent('update');
 
@@ -174,6 +216,11 @@ trait Eventable
         return $values;
     }
 
+    /**
+     * Event.
+     *
+     * @param string $type
+     */
     protected function atomicEvent($type = 'update'): static
     {
         if (!$this->useEvent()) {
@@ -227,6 +274,11 @@ trait Eventable
         return $this;
     }
 
+    /**
+     * Get the configuration.
+     *
+     * @return \Illuminate\Config\Repository|mixed
+     */
     protected function getBrightConfig()
     {
         return config('bright');

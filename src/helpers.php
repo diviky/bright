@@ -11,8 +11,6 @@ if (!function_exists('printr')) {
      * @SuppressWarnings (PHPMD)
      *
      * @param mixed $data
-     *
-     * @return void
      */
     function printr($data): void
     {
@@ -75,7 +73,9 @@ if (!function_exists('ip')) {
      */
     function ip()
     {
-        return \request()->ip();
+        $request = \request();
+
+        return $request ? $request->ip() : null;
     }
 }
 
@@ -83,7 +83,7 @@ if (!function_exists('markdown')) {
     /**
      * Converts CommonMark to HTML.
      *
-     * @param string $text
+     * @param null|string $text
      *
      * @throws \RuntimeException
      *
@@ -166,7 +166,7 @@ if (!function_exists('storage_public')) {
  *
  * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
  */
-function kview($controller, $view, $data = [], $mergeData = []): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+function kview($controller, $view, $data = [], $mergeData = []): Illuminate\Contracts\View\Factory | \Illuminate\Contracts\View\View
 {
     $factory = app(View::class);
 

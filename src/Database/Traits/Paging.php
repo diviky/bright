@@ -4,10 +4,18 @@ namespace Diviky\Bright\Database\Traits;
 
 trait Paging
 {
+    /**
+     * Paginate the given query into a simple paginator.
+     *
+     * @param int      $perPage
+     * @param array    $columns
+     * @param string   $pageName
+     * @param null|int $page
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public function paging($perPage = 25, $columns = ['*'], $pageName = 'page', $page = null)
     {
-        $perPage = \is_null($perPage) ? 25 : $perPage;
-
         if (\count($this->tables) > 0) {
             $rows = $this->paginateComplex($perPage, $columns, $pageName, $page);
         } else {

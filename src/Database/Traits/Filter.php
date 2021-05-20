@@ -2,6 +2,7 @@
 
 namespace Diviky\Bright\Database\Traits;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 
 trait Filter
@@ -9,10 +10,9 @@ trait Filter
     /**
      * Add Filters to database query builder.
      *
-     * @param array  $data
-     * @param string $alias
+     * @param array $data
      *
-     * @return \Diviky\Bright\Database\Query\Builder Database conditions
+     * @return $this
      */
     public function filter($data = []): static
     {
@@ -177,11 +177,13 @@ trait Filter
             $column = $this->cleanField($column);
 
             if (!\is_numeric($from)) {
-                $from = $this->toTime($from, 'Y-m-d H:i:s', '00:00:00')->timestamp();
+                $from = $this->toTime($from, null, '00:00:00');
+                $from = $from && !is_string($from) ? $from->timestamp : null;
             }
 
             if (!\is_numeric($to)) {
-                $to = $this->toTime($to, 'Y-m-d H:i:s', '23:59:59')->timestamp();
+                $to = $this->toTime($to, null, '23:59:59');
+                $to = $to && !is_string($to) ? $to->timestamp : null;
             }
 
             $this->whereBetween($column, [$from, $to]);
@@ -240,6 +242,13 @@ trait Filter
         return $this;
     }
 
+    /**
+     * Add where condition for filters.
+     *
+     * @param string $column
+     * @param string $value
+     * @param string $condition
+     */
     protected function addWhere($column, $value, $condition = '='): static
     {
         if (false !== \strpos($column, '|')) {
@@ -261,15 +270,11 @@ trait Filter
      *
      * @param string $string Database column
      *
-     * @return string Cleaned string
+     * @return string Cleaned String
      */
     protected function cleanField($string)
     {
-        if (\is_string($string)) {
-            return $this->raw($this->wrap($string));
-        }
-
-        return $string;
+        return (string) $this->raw($this->wrap($string));
     }
 
     /**
@@ -279,13 +284,14 @@ trait Filter
      * @param string     $format
      * @param null|mixed $prefix
      *
-     * @return \Illuminate\Support\Carbon|null|string
+     * @return null|\Illuminate\Support\Carbon|string
      */
     protected function toTime($time, $format = null, $prefix = null)
     {
         if (empty($time)) {
-            return;
+            return null;
         }
+
         if (false !== \strpos($format, ':')) {
             $time = false !== \strpos($time, ':') ? $time : $time . ' ' . $prefix;
         }

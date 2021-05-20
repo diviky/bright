@@ -18,6 +18,7 @@ use Diviky\Bright\Database\Traits\Tables;
 use Diviky\Bright\Database\Traits\Timestamps;
 use Diviky\Bright\Helpers\Iterator\SelectIterator;
 use Illuminate\Database\Query\Builder as LaravelBuilder;
+use Traversable;
 
 class Builder extends LaravelBuilder
 {
@@ -25,6 +26,7 @@ class Builder extends LaravelBuilder
     use Build;
     use Cachable {
         Cachable::get as cachableGet;
+        Cachable::pluck as cachablePluck;
     }
     use Eventable;
     use Filter;
@@ -37,6 +39,11 @@ class Builder extends LaravelBuilder
     use Tables;
     use Timestamps;
 
+    /**
+     * Set the alias for table.
+     *
+     * @param string $as
+     */
     public function alias($as): static
     {
         $this->from = "{$this->from} as {$as}";
@@ -49,9 +56,7 @@ class Builder extends LaravelBuilder
      */
     public function pluck($column, $key = null)
     {
-        $this->atomicEvent('select');
-
-        return parent::pluck($column, $key);
+        return $this->cachablePluck($column, $key);
     }
 
     /**
@@ -59,8 +64,6 @@ class Builder extends LaravelBuilder
      */
     public function get($columns = ['*'])
     {
-        $this->atomicEvent('select');
-
         return $this->cachableGet($columns);
     }
 
@@ -85,7 +88,11 @@ class Builder extends LaravelBuilder
     }
 
     /**
-     * {@inheritdoc}
+     * Insert a new record and get the value of the primary key.
+     *
+     * @param null|string $sequence
+     *
+     * @return int|string
      */
     public function insertGetId(array $values, $sequence = null)
     {
@@ -120,6 +127,9 @@ class Builder extends LaravelBuilder
         return parent::update($values);
     }
 
+    /**
+     * Excecute the RAW sql statement.
+     */
     public function statement(string $sql, array $bindings = []): array | bool | int
     {
         $prefix = $this->connection->getTablePrefix();
@@ -185,16 +195,36 @@ class Builder extends LaravelBuilder
         }
     }
 
-    public function iterate($count = 10000, $callback = null)
+    /**
+     * Iterate the rows and get results.
+     *
+     * @param int   $count
+     * @param mixed $callback
+     *
+     * @deprecated 2.0
+     */
+    public function iterate($count = 10000, $callback = null): Traversable
     {
         return $this->iterator($count, $callback);
     }
 
-    public function iterator($count = 10000, $callback = null): SelectIterator
+    /**
+     * Iterate the rows and get results.
+     *
+     * @param int   $count
+     * @param mixed $callback
+     */
+    public function iterator($count = 10000, $callback = null): Traversable
     {
         return new SelectIterator($this, $count, $callback);
     }
 
+    /**
+     * Old cakephp style conditions.
+     *
+     * @param array $where
+     * @param array $bindings
+     */
     public function whereWith($where = [], $bindings = []): static
     {
         $sql = (new Bright())->conditions($where);

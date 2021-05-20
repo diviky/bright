@@ -12,15 +12,25 @@ class Statement implements ShouldQueue
     use Dispatchable;
     use Queueable;
 
-    protected $sql      = [];
+    /**
+     * Sql statement.
+     *
+     * @var string
+     */
+    protected $sql;
 
+    /**
+     * Statment bindings.
+     *
+     * @var array
+     */
     protected $bindings = [];
 
     /**
      * Create a new job instance.
      *
-     * @param mixed $sql
-     * @param mixed $bindings
+     * @param string $sql
+     * @param array  $bindings
      */
     public function __construct($sql, $bindings = [])
     {
@@ -30,8 +40,6 @@ class Statement implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle(): void
     {

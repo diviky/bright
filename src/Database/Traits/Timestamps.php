@@ -5,13 +5,11 @@ namespace Diviky\Bright\Database\Traits;
 trait Timestamps
 {
     /**
-     * Indicates if the model should be timestamped.
-     *
      * @var bool
      */
-    protected $timestamps = true;
+    public $timestamps = true;
 
-    public function timestamps($allow = true): self
+    public function timestamps(bool $allow = true): self
     {
         $this->timestamps = $allow;
 
@@ -31,7 +29,7 @@ trait Timestamps
     /**
      * {@inheritdoc}
      */
-    protected function setTimeStamps(array $values, $force = false): array
+    protected function setTimeStamps(array $values, bool $force = false): array
     {
         if ($this->usesTimestamps() || $force) {
             $time = $this->freshTimestamp();
@@ -43,7 +41,7 @@ trait Timestamps
         return $values;
     }
 
-    protected function setTimeStamp(array $values, $force = false): array
+    protected function setTimeStamp(array $values, bool $force = false): array
     {
         if ($this->usesTimestamps() || $force) {
             $values['updated_at'] = $this->freshTimestamp();

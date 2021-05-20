@@ -4,8 +4,18 @@ namespace Diviky\Bright\Database\Traits;
 
 trait Remove
 {
+    /**
+     * Removable keys from where condition.
+     *
+     * @var mixed
+     */
     protected $removeKeys;
 
+    /**
+     * Remove keys from where.
+     *
+     * @param mixed $keys
+     */
     public function removeWhere($keys = null): static
     {
         $this->removeKeys = $keys;
@@ -29,7 +39,7 @@ trait Remove
         $bindkey  = 0;
 
         // Checking all the where items
-        foreach ((array) $this->wheres as $key => $value) {
+        foreach ($this->wheres as $key => $value) {
             $count = 1;
             if ($value['values']) {
                 $count = \count($value['values']);

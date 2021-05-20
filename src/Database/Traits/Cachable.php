@@ -9,21 +9,21 @@ trait Cachable
     /**
      * The key that should be used when caching the query.
      *
-     * @var string
+     * @var null|string
      */
     protected $cacheKey;
 
     /**
      * The number of seconds to cache the query.
      *
-     * @var int
+     * @var null|DateTime|int
      */
     protected $cacheseconds;
 
     /**
      * The tags for the query cache.
      *
-     * @var array
+     * @var null|array
      */
     protected $cacheTags;
 
@@ -46,11 +46,11 @@ trait Cachable
      */
     public function get($columns = ['*'])
     {
-        if (!\is_null($this->cacheseconds) && $this->cacheEnabled()) {
-            return $this->getCached($columns);
+        if ($this->cacheEnabled()) {
+            return collect($this->getCached($columns));
         }
 
-        $this->removeWheres();
+        $this->atomicEvent('select');
 
         return parent::get($columns);
     }
@@ -85,18 +85,15 @@ trait Cachable
     }
 
     /**
-     * Execute the pluck query statement.
-     *
-     * @param string $column
-     * @param mixed  $key
-     *
-     * @return array|static[]
+     * {@inheritdoc}
      */
     public function pluck($column, $key = null)
     {
-        if (!is_null($this->cacheSeconds)) {
-            return $this->pluckCached($column, $key);
+        if ($this->cacheEnabled()) {
+            return collect($this->pluckCached($column, $key));
         }
+
+        $this->atomicEvent('select');
 
         return parent::pluck($column, $key);
     }
@@ -210,11 +207,13 @@ trait Cachable
     /**
      * Get a unique cache key for the complete query.
      *
+     * @param mixed $appends
+     *
      * @return string
      */
-    public function getCacheKey()
+    public function getCacheKey($appends = null)
     {
-        $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey());
+        $cache =  $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey($appends));
 
         return \str_replace(':uid:', user('id'), $cache);
     }
@@ -222,14 +221,15 @@ trait Cachable
     /**
      * Generate the unique cache key for the query.
      *
+     * @param mixed $appends
+     *
      * @return string
      */
-    public function generateCacheKey()
+    public function generateCacheKey($appends = null)
     {
         $name = $this->connection->getName();
-        $key  = $name . $this->toSql() . \serialize($this->getBindings());
 
-        return \hash('sha256', $key);
+        return hash('sha256', $name . $this->toSql() . serialize($this->getBindings()) . $appends);
     }
 
     /**
@@ -312,8 +312,34 @@ trait Cachable
         };
     }
 
+    /**
+     * Get the callback for pluck queries.
+     *
+     * @param string $column
+     * @param mixed  $key
+     *
+     * @return \Closure
+     */
+    protected function pluckCacheCallback($column, $key = null)
+    {
+        return function () use ($column, $key) {
+            $this->cacheSeconds = null;
+
+            return $this->pluck($column, $key);
+        };
+    }
+
+    /**
+     * Check global cache enable or not.
+     *
+     * @return bool
+     */
     protected function cacheEnabled()
     {
+        if (\is_null($this->cacheseconds)) {
+            return false;
+        }
+
         return $this->connection->getConfig('bright.db_cache') ?: $this->connection->getConfig('cache');
     }
 }

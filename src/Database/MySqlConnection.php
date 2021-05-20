@@ -18,6 +18,11 @@ class MySqlConnection extends LaravelMySqlConnection
      */
     const ATTEMPTS_COUNT = 3;
 
+    /**
+     * Async config.
+     *
+     * @var null|array
+     */
     protected $async;
 
     /**
@@ -43,7 +48,7 @@ class MySqlConnection extends LaravelMySqlConnection
      *
      * @return array|bool|int
      */
-    public function statement($query, $bindings = []): array|bool|int
+    public function statement($query, $bindings = []): array | bool | int
     {
         if ($this->shouldQueue()) {
             $this->toQueue($query, $bindings);
@@ -104,6 +109,12 @@ class MySqlConnection extends LaravelMySqlConnection
         return parent::affectingStatement($query, $bindings);
     }
 
+    /**
+     * Run the query in async mode.
+     *
+     * @param null|string $connection
+     * @param string      $queue
+     */
     public function async($connection = null, $queue = null): static
     {
         $this->async = [$connection, $queue];
@@ -150,9 +161,9 @@ class MySqlConnection extends LaravelMySqlConnection
     /**
      * Get the default query grammar instance.
      *
-     * @return \Illuminate\Database\Grammar
+     * @return \Illuminate\Database\Query\Grammars\MySqlGrammar
      */
-    protected function getDefaultQueryGrammar(): \Illuminate\Database\Grammar
+    protected function getDefaultQueryGrammar()
     {
         $grammar = new QueryGrammar();
         $grammar->setConfig($this->config['bright']);

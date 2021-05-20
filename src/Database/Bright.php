@@ -42,7 +42,7 @@ class Bright
      * @param mixed  $table
      * @param mixed  $type
      *
-     * @return string An executable SQL statement
+     * @return null|string An executable SQL statement
      */
     public function buildStatement(&$query, $table = '', $type = 'select')
     {
@@ -91,8 +91,6 @@ class Bright
      * @param string $table
      * @param array  $params
      * @param mixed  $conditions
-     *
-     * @return string
      */
     public function buildConditions($conditions = []): string
     {
@@ -130,8 +128,6 @@ class Bright
      *
      * @param string $type
      * @param array  $data
-     *
-     * @return null|string
      */
     public function renderStatement($type, $data): ?string
     {
@@ -139,7 +135,7 @@ class Bright
 
         switch (\strtolower($type)) {
             case 'select':
-                return 'SELECT ' . $data['fields'] . ' FROM ' . $data['table'] . ' ' . $data['alias'] . ' ' . $data['joins'] . ' ' . $data['conditions'] . ' ' . $data['group'] . ' ' . $data['order'] . ' ' . $data['limit'] . '';
+                return 'SELECT ' . $data['fields'] . ' FROM ' . $data['table'] . ' ' . $data['alias'] . ' ' . $data['joins'] . ' ' . $data['conditions'] . ' ' . $data['group'] . ' ' . $data['order'] . ' ' . $data['limit'];
 
                 break;
             case 'create':
@@ -168,6 +164,8 @@ class Bright
 
                 break;
         }
+
+        return null;
     }
 
     /**
@@ -239,9 +237,9 @@ class Bright
         $bool = ['and', 'or', 'not', 'and not', 'or not', 'xor', '||', '&&'];
 
         foreach ($conditions as $key => $value) {
-            $join = ' AND ';
-            $not  = null;
-
+            $join        = ' AND ';
+            $not         = '';
+            $valueInsert = false;
             if (\is_array($value)) {
                 $valueInsert = (
                     !empty($value)
@@ -343,6 +341,8 @@ class Bright
 
             return $rt;
         }
+
+        return null;
     }
 
     /**
@@ -369,8 +369,8 @@ class Bright
         }
 
         if (\is_array($keys)) {
-            $keys = ($this->countDim($keys) > 1) ? \array_map([&$this, 'order'], $keys) : $keys;
-
+            $keys  = ($this->countDim($keys) > 1) ? \array_map([&$this, 'order'], $keys) : $keys;
+            $order = [];
             foreach ($keys as $key => $value) {
                 if (\is_numeric($key)) {
                     $key   = $value   = \ltrim(\str_replace('ORDER BY ', '', $this->order($value)));
@@ -424,9 +424,9 @@ class Bright
     /**
      * Create a GROUP BY SQL clause.
      *
-     * @param string $group Group By Condition
+     * @param array|string $group Group By Condition
      *
-     * @return mixed string condition or null
+     * @return null|string string condition or null
      */
     public function group($group)
     {
@@ -437,6 +437,8 @@ class Bright
 
             return ' GROUP BY ' . $this->quoteFields($group);
         }
+
+        return null;
     }
 
     /**
@@ -478,9 +480,9 @@ class Bright
      * Returns a quoted name of $data for use in an SQL statement.
      * Strips fields out of SQL functions before quoting.
      *
-     * @param string $data
+     * @param mixed $data
      *
-     * @return string SQL field
+     * @return mixed SQL field
      */
     public function name($data)
     {
@@ -605,8 +607,10 @@ class Bright
             if (!\preg_match($operatorMatch, \trim($operator)) && false !== \strpos($operator, ' ')) {
                 $key      = $key . ' ' . $operator;
                 $split    = \strrpos($key, ' ');
-                $operator = \substr($key, $split);
-                $key      = \substr($key, 0, $split);
+                if (false !== $split) {
+                    $operator = \substr($key, $split);
+                    $key      = \substr($key, 0, $split);
+                }
             }
         }
 
@@ -669,6 +673,13 @@ class Bright
         return "{$key} {$operator} {$value}";
     }
 
+    /**
+     * Replace the string.
+     *
+     * @param mixed $value
+     *
+     * @return string
+     */
     protected function replace(string $str, $value = [])
     {
         if (!\is_array($value)) {
@@ -702,7 +713,7 @@ class Bright
      */
     protected function quoteFields($conditions)
     {
-        $start    = $end    = null;
+        $start    = $end    = '';
         $original = $conditions;
 
         if (!empty($this->startQuote)) {

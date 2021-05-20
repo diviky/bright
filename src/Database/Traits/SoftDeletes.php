@@ -4,6 +4,13 @@ namespace Diviky\Bright\Database\Traits;
 
 trait SoftDeletes
 {
+    /**
+     * Soft delete the row.
+     *
+     * @param int|string $id
+     * @param string     $column
+     * @param bool       $updated_at
+     */
     public function softDelete($id = null, $column = 'id', $updated_at = true): int
     {
         if ($id) {

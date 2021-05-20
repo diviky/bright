@@ -4,8 +4,19 @@ namespace Diviky\Bright\Database\Traits;
 
 trait Outfile
 {
+    /**
+     * @var string
+     */
     protected $outpath;
 
+    /**
+     * Write the data to outfile.
+     *
+     * @param null|string $path
+     * @param bool        $local
+     * @param int         $count
+     * @param array       $options
+     */
     public function out($path = null, $local = true, $count = 10000, $options = []): string
     {
         $path = $this->generateFilePath($path);
@@ -23,6 +34,16 @@ trait Outfile
         return $this->outLoop($path, $count, $options);
     }
 
+    /**
+     * Load data into sql using the file.
+     *
+     * @param string      $table
+     * @param null|string $path
+     * @param array       $options
+     * @param bool        $ignore
+     *
+     * @return array|bool|int
+     */
     public function into($table, $path = null, $options = [], $ignore = false)
     {
         $options = \array_merge([
@@ -47,6 +68,13 @@ trait Outfile
         return $this->statement($sql);
     }
 
+    /**
+     * write the sql rows to file.
+     *
+     * @param null|string $file
+     * @param int         $count
+     * @param array       $options
+     */
     protected function outLoop($file = null, $count = 10000, $options = []): string
     {
         $options = \array_merge([
@@ -70,6 +98,12 @@ trait Outfile
         return $file;
     }
 
+    /**
+     * Write outfile.
+     *
+     * @param null|string $file
+     * @param array       $options
+     */
     protected function outFile($file = null, $options = []): string
     {
         $options = \array_merge([
@@ -93,14 +127,24 @@ trait Outfile
         return $file;
     }
 
+    /**
+     * Get the output file path.
+     *
+     * @return string
+     */
     protected function getOutPath()
     {
         return $this->outpath;
     }
 
-    protected function generateFilePath($file): string
+    /**
+     * Generate the filename.
+     *
+     * @param null|string $file
+     */
+    protected function generateFilePath($file = null): string
     {
-        $file          = $file && is_string($file) ? $file : \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
+        $file          = $file ?? \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
         $this->outpath = $file;
 
         return $file;

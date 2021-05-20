@@ -16,14 +16,14 @@ class MapManager
      *
      * @var array
      */
-    private $map = [];
+    protected $map = [];
 
     /**
      * Connections list for current service.
      *
      * @var array
      */
-    private $currentConnections = [];
+    protected $currentConnections = [];
 
     /**
      * Array of object per services
@@ -37,25 +37,32 @@ class MapManager
      *
      * @var array
      */
-    private $container = [];
+    protected $container = [];
 
     /**
      * Current service name.
      *
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * MapManager constructor.
      *
-     * @param $map - config
+     * @param array $map config
      */
     public function __construct($map)
     {
         $this->map = $map;
     }
 
+    /**
+     * Set the sharding service name.
+     *
+     * @param string $name
+     *
+     * @throws ShardingException
+     */
     public function setService($name): void
     {
         $this->name = $name;
@@ -97,16 +104,31 @@ class MapManager
         }
     }
 
+    /**
+     * Get sharding config.
+     *
+     * @return array
+     */
     public function getServiceConfig()
     {
         return $this->map[$this->name];
     }
 
+    /**
+     * Get the shard chooser.
+     *
+     * @return ShardChooserInterface
+     */
     public function getShardChooser()
     {
         return $this->container[$this->name]['shard_chooser'];
     }
 
+    /**
+     * Get the shard id generator.
+     *
+     * @return IdGeneratorInterface
+     */
     public function getIdGenerator()
     {
         return $this->container[$this->name]['id_generator'];

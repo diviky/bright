@@ -24,7 +24,6 @@ class ChunkedIterator extends \IteratorIterator
      */
     public function __construct(Traversable $iterator, $chunkSize)
     {
-        $chunkSize = (int) $chunkSize;
         if ($chunkSize < 0) {
             throw new InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
         }

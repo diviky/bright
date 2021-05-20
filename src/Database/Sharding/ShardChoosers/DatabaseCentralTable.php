@@ -6,16 +6,33 @@ use Diviky\Bright\Models\Sharding;
 
 class DatabaseCentralTable implements ShardChooserInterface
 {
-    private $connections = [];
+    /**
+     * Set the connections.
+     *
+     * @var array
+     */
+    protected $connections = [];
 
-    private $relationKey = '';
+    /**
+     * Cache key.
+     *
+     * @var null|string
+     */
+    protected $relationKey = '';
 
+    /**
+     * @param array  $connections
+     * @param string $relationKey
+     */
     public function __construct($connections, $relationKey = null)
     {
         $this->connections = $connections;
         $this->relationKey = $relationKey;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getShardById($id)
     {
         return Sharding::where('user_id', $id)
@@ -24,8 +41,19 @@ class DatabaseCentralTable implements ShardChooserInterface
             ->value('connection');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function chooseShard($id)
     {
         return $this->getShardById($id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRelation($id, $shard): bool
+    {
+        return true;
     }
 }

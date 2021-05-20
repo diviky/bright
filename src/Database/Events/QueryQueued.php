@@ -18,15 +18,19 @@ class QueryQueued
      */
     public $bindings;
 
+    /**
+     * async configuration.
+     *
+     * @var array
+     */
     public $async;
 
     /**
      * Create a new event instance.
      *
-     * @param string                          $sql
-     * @param array                           $bindings
-     * @param array                           $async
-     * @param \Illuminate\Database\Connection $connection
+     * @param string $sql
+     * @param array  $bindings
+     * @param array  $async
      */
     public function __construct($sql, $bindings, $async)
     {

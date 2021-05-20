@@ -2,35 +2,45 @@
 
 namespace Diviky\Bright\Database\Sharding\IdGenerators;
 
+use Illuminate\Support\Facades\Redis;
+
 class RedisSequence implements IdGeneratorInterface
 {
-    private $sequenceKey;
+    /**
+     * @var int
+     */
+    protected $sequenceKey;
 
+    /**
+     * @param int $sequenceKey
+     */
     public function __construct($sequenceKey)
     {
         $this->sequenceKey = $sequenceKey;
     }
 
-    /**
-     * @return int
-     */
-    public function getNextId()
+    public function getNextId(): int
     {
-        return (int) \Redis::get($this->sequenceKey) + 1;
+        return (int) Redis::get($this->sequenceKey) + 1;
     }
 
     public function getLastId(): int
     {
-        return (int) \Redis::get($this->sequenceKey);
+        return (int) Redis::get($this->sequenceKey);
     }
 
+    /**
+     * Set the last id.
+     *
+     * @param int $id
+     */
     public function setLastId($id): bool
     {
-        return \Redis::set($this->sequenceKey, $id);
+        return Redis::set($this->sequenceKey, $id);
     }
 
     public function increment(): int
     {
-        return \Redis::incr($this->sequenceKey);
+        return Redis::incr($this->sequenceKey);
     }
 }

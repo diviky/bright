@@ -2,6 +2,7 @@
 
 namespace Diviky\Bright\Helpers;
 
+use ArrayAccess;
 use Closure;
 use Diviky\Bright\Helpers\Iterator\ChunkedIterator;
 use Diviky\Bright\Helpers\Iterator\MapGeneratorIterator;
@@ -9,6 +10,7 @@ use Diviky\Bright\Helpers\Iterator\MapIterator;
 use EmptyIterator;
 use finfo;
 use Generator;
+use Iterator;
 use LimitIterator;
 use Port\Csv\CsvReader;
 use Port\Excel\ExcelReader;
@@ -26,89 +28,92 @@ use wapmorgan\UnifiedArchive\UnifiedArchive;
  */
 class Reader
 {
+    /**
+     * Fetch all the values form file.
+     *
+     * @param array|ArrayAccess|Iterator|string|Traversable $reader
+     * @param array                                         $options
+     */
     public function fetchAll($reader, Closure $callable = null, $options = []): Traversable
     {
-        $reader = $this->unzip($reader, $options);
-
         \set_time_limit(0);
 
         if (!\is_string($reader)) {
             $ext = isset($options['ext']) ? $options['ext'] : '.array';
         } else {
-            $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
-            $ext = '.' == $ext ? '.xls' : $ext;
+            $reader = $this->unzip($reader, $options);
+            $ext    = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
+            $ext    = '.' == $ext ? '.xls' : $ext;
         }
 
         $ext     = \strtolower($ext);
         $special = \in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
 
-        if (!$special && (!\is_file($reader) || !\file_exists($reader))) {
-            return new EmptyIterator();
-        }
-
-        $lines = ('.txt' == $ext) ? 1 : 5;
-        $file  = null;
-
         if (!$special) {
+            if (!\is_file($reader) || !\file_exists($reader)) {
+                return new EmptyIterator();
+            }
+
+            $lines = ('.txt' == $ext) ? 1 : 5;
+            $file  = '';
+
             \ini_set('auto_detect_line_endings', true);
             $file = new SplFileObject($reader);
             //Auto detect delimiter
             if (empty($options['delimiter'])) {
                 $options['delimiter'] = $this->detectDelimiter($reader, $lines);
             }
-        }
 
-        switch ($ext) {
-            case '.txt':
-            case '.csv':
-                $duplicates = CsvReader::DUPLICATE_HEADERS_INCREMENT;
-                if ($options['delimiter']) {
-                    $reader = new CsvReader($file, $options['delimiter']);
-                } else {
-                    $reader = new CsvReader($file);
-                }
-
-                break;
-            case '.xls':
-            case '.xlsx':
-                $finfo = new finfo(FILEINFO_MIME_TYPE);
-                $mime  = $finfo->file($file->getRealPath());
-
-                if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
-                    $reader = new CsvReader($file, $options['delimiter']);
-                } else {
-                    if (class_exists('Port\Excel\ExcelReader')) {
-                        $reader     = new ExcelReader($file, null, 0);
+            switch ($ext) {
+                case '.txt':
+                case '.csv':
+                    $duplicates = CsvReader::DUPLICATE_HEADERS_INCREMENT;
+                    if ($options['delimiter']) {
+                        $reader = new CsvReader($file, $options['delimiter']);
                     } else {
-                        $reader     = new SpreadsheetReader($file, null, 0);
+                        $reader = new CsvReader($file);
                     }
-                    $duplicates = null;
-                }
 
-                break;
-            case '.array':
-                if (!\is_array($reader)) {
-                    $reader = \explode("\n", $reader);
-                }
+                    break;
+                case '.xls':
+                case '.xlsx':
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $mime  = $finfo->file($file->getRealPath());
 
-                $reader = new ArrayReader($reader);
+                    if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
+                        $reader = new CsvReader($file, $options['delimiter']);
+                    } else {
+                        if (class_exists('Port\Excel\ExcelReader')) {
+                            $reader = new ExcelReader($file, null, 0);
+                        } else {
+                            $reader = new SpreadsheetReader($file, null, 0);
+                        }
+                        $duplicates = null;
+                    }
 
-                break;
-            case '.generator':
-                $reader = new RewindableGenerator($reader);
+                    break;
+            }
 
-                break;
-            case '.iterator':
-            default:
-                break;
-        }
-
-        if (!$special && !empty($options['header'])) {
             $reader->setHeaderRowNumber($options['header'] - 1, $duplicates);
-        }
+        } else {
+            switch ($ext) {
+                case '.array':
+                    if (!\is_array($reader)) {
+                        $reader = \explode("\n", $reader);
+                    }
 
-        // Closing the file object
-        $file = null;
+                    $reader = new ArrayReader($reader);
+
+                    break;
+                case '.generator':
+                    $reader = new RewindableGenerator($reader);
+
+                    break;
+                case '.iterator':
+                default:
+                    break;
+            }
+        }
 
         return $this->modify($reader, $callable, $options);
     }
@@ -116,11 +121,11 @@ class Reader
     /**
      * Modify the iterator using callback closure.
      *
-     * @param Traversable $reader   Travarsable object
-     * @param Closure     $callable [description]
-     * @param array       $options  [description]
+     * @param ArrayAccess|Iterator|Port\Csv\CsvReader|Port\Reader\ArrayReader|Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $reader   Travarsable object
+     * @param Closure                                                                                                                            $callable
+     * @param array                                                                                                                              $options
      *
-     * @return Traversable [description]
+     * @return Traversable
      */
     public function modify($reader, Closure $callable = null, $options = [])
     {
@@ -166,6 +171,15 @@ class Reader
         return $reader;
     }
 
+    /**
+     * Ftech the first row from file.
+     *
+     * @param string  $file
+     * @param Closure $callable
+     * @param array   $options
+     *
+     * @return array
+     */
     public function fetchHeader($file, Closure $callable = null, $options = [])
     {
         $options['limit'] = 1;
@@ -175,6 +189,15 @@ class Reader
         return $columns[0];
     }
 
+    /**
+     * Get the file rows as array.
+     *
+     * @param string  $file
+     * @param Closure $callable
+     * @param array   $options
+     *
+     * @return array
+     */
     public function fetchArray($file, Closure $callable = null, $options = [])
     {
         $rows = $this->fetchAll($file, $callable, $options);
@@ -182,6 +205,15 @@ class Reader
         return $this->toArray($rows);
     }
 
+    /**
+     * Get the number of rows in file.
+     *
+     * @param string  $file
+     * @param Closure $callable
+     * @param array   $options
+     *
+     * @return int
+     */
     public function fetchCount($file, Closure $callable = null, $options = [])
     {
         $rows = $this->fetchAll($file, $callable, $options);
@@ -189,16 +221,29 @@ class Reader
         return $this->count($rows);
     }
 
+    /**
+     * Count the interator values.
+     */
     public function count(Traversable $iterator): int
     {
         return \iterator_count($iterator);
     }
 
+    /**
+     * check the next row from iterator.
+     *
+     * @return bool
+     */
     public function hasNext(Traversable $iterator)
     {
-        return $this->count($iterator);
+        return $this->count($iterator) ? true : false;
     }
 
+    /**
+     * Get first row from integrator.
+     *
+     * @return array
+     */
     public function first(Traversable $iterator)
     {
         $fields = [];
@@ -211,21 +256,30 @@ class Reader
         return $fields;
     }
 
-    public function chunk(Traversable $iterator, $size = 100): ChunkedIterator
+    public function chunk(Traversable $iterator, int $size = 100): ChunkedIterator
     {
         return new ChunkedIterator($iterator, $size);
     }
 
+    /**
+     * Convert interator to array.
+     */
     public function toArray(Traversable $iterator): array
     {
         return \iterator_to_array($iterator);
     }
 
+    /**
+     * Indentify the delimiter from row string.
+     *
+     * @param string $file
+     */
     public function detectDelimiter($file, int $sample = 5): ?string
     {
         $delimsRegex = ",|;:\t"; // whichever is first in the list will be the default
         $delims      = \str_split($delimsRegex);
-        $delimCount  = $delimiters  = [];
+        $delimCount  = [];
+        $delimiters  = [];
         foreach ($delims as $delim) {
             $delimCount[$delim] = 0;
             $delimiters[]       = $delim;
@@ -260,9 +314,8 @@ class Reader
     }
 
     /**
-     * @return (false|string)[]
-     *
-     * @psalm-return list<false|string>
+     * @param string $file
+     * @param int    $total
      */
     public function getLines($file, $total = 5): array
     {
@@ -283,13 +336,22 @@ class Reader
         return $lines;
     }
 
+    /**
+     * Unzip the zip file.
+     *
+     * @param null|string $zip
+     * @param array       $options
+     *
+     * @return null|string
+     */
     public function unzip($zip, $options = [])
     {
-        $ext = null;
-        if (\is_string($zip)) {
-            $ext = isset($options['ext']) ? $options['ext'] : \strrchr($zip, '.');
-            $ext = \strtolower($ext);
+        if (!isset($zip)) {
+            return null;
         }
+
+        $ext = isset($options['ext']) ? $options['ext'] : \strrchr($zip, '.');
+        $ext = \strtolower($ext);
 
         if ($ext && \in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
             $extensions = ['.csv', '.xls', '.xlsx', '.txt'];
@@ -322,9 +384,9 @@ class Reader
                     return $reader;
                 }
 
-                return;
+                return null;
             } catch (\Exception $e) {
-                return;
+                return null;
             }
         }
 

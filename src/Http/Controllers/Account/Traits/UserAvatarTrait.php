@@ -7,6 +7,13 @@ use Intervention\Image\Facades\Image;
 
 trait UserAvatarTrait
 {
+    /**
+     * Set the avatar image for user.
+     *
+     * @param mixed  $file
+     * @param int    $size
+     * @param string $disk
+     */
     public function setAvatar($file, $size = 400, $disk = 's3'): void
     {
         if ($file) {

@@ -2,10 +2,18 @@
 
 namespace Diviky\Bright\Database;
 
+use Diviky\Bright\Database\Sharding\ShardManager;
 use Illuminate\Database\DatabaseManager as LaravelDatabaseManager;
 
 class DatabaseManager extends LaravelDatabaseManager
 {
+    /**
+     * Database table.
+     *
+     * @param string $name
+     *
+     * @return \Illuminate\Database\Query\Builder
+     */
     public function table($name)
     {
         $config      = $this->app['config']['bright'];
@@ -18,7 +26,7 @@ class DatabaseManager extends LaravelDatabaseManager
             $name     = $segments[0];
         }
 
-        if (\is_array($connections) && \is_string($name) && isset($connections[$name])) {
+        if (\is_array($connections) && isset($connections[$name])) {
             $connection = $this->connection($connections[$name]);
         } else {
             $connection = $this->shard();
@@ -29,6 +37,11 @@ class DatabaseManager extends LaravelDatabaseManager
         return $connection->table($name . $alias);
     }
 
+    /**
+     * Get a database connection instance from shard.
+     *
+     * @param null|string $shard_key
+     */
     public function shard($shard_key = null): \Illuminate\Database\Connection
     {
         $manager = $this->getShardManager();
@@ -48,7 +61,7 @@ class DatabaseManager extends LaravelDatabaseManager
         return $this->connection();
     }
 
-    public function getShardManager()
+    public function getShardManager(): ?ShardManager
     {
         $config  = $this->app['config']['bright'];
 

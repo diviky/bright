@@ -20,7 +20,12 @@
             <errorLevel type="suppress">
                 <referencedClass name="App\Http\Controllers\Controller"/>
                 <referencedClass name="App\Models\User"/>
-                 <directory name="src/Helpers"/>
+                <referencedClass name="ConsoleTVs\Charts\Classes\Chartjs\Chart"/>
+                <referencedClass name="ConsoleTVs\Charts\Classes\Chartjs\Dataset"/>
+                <referencedClass name="wapmorgan\UnifiedArchive\UnifiedArchive"/>
+                <referencedClass name="Intervention\Image\Facades\Image"/>
+                <directory name="src/Notifications"/>
+                <directory name="src/Helpers"/>
             </errorLevel>
         </UndefinedClass>
 

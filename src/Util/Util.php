@@ -5,7 +5,6 @@ namespace Diviky\Bright\Util;
 use Diviky\Bright\Contracts\UtilInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class Util implements UtilInterface
@@ -91,7 +90,7 @@ class Util implements UtilInterface
             try {
                 return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
             } catch (\Exception $e) {
-                Log::error((string) $e);
+                report($e);
             }
         }
 

@@ -3,6 +3,7 @@
 namespace Diviky\Bright\Helpers;
 
 use Diviky\Bright\Routing\Capsule;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @author Sankar <sankar.suda@gmail.com>
@@ -10,6 +11,9 @@ use Diviky\Bright\Routing\Capsule;
 class Speed extends Capsule
 {
     /**
+     * @param array       $save
+     * @param null|string $required
+     *
      * @return array[]
      *
      * @psalm-return list<array>
@@ -66,84 +70,32 @@ class Speed extends Capsule
     }
 
     /**
-     * @return ((array|mixed)[]|mixed)[][]
+     * Get the next ordering value.
      *
-     * @psalm-return array<array-key, array<array-key|numeric, array<array-key, array|mixed>|mixed>>
+     * @param string $tbl
+     * @param array  $where
+     *
+     * @return int
      */
-    public function formatFiles($files = []): array
-    {
-        $data  = [];
-        $names = \array_keys($files);
-
-        foreach ($names as $name) {
-            $file = $files[$name];
-
-            if (\is_array($file['name'])) {
-                $fields = \array_keys($file);
-
-                foreach ($file['name'] as $key => $value) {
-                    if (\is_array($value)) {
-                        foreach ($value as $k => $v) {
-                            $add    = true;
-                            $values = [];
-                            foreach ($fields as $field) {
-                                $val = $file[$field][$key][$k];
-                                if ('name' == $field && empty($val)) {
-                                    $add = false;
-
-                                    continue;
-                                }
-                                $values[$field] = $val;
-                            }
-                            if ($add) {
-                                if (\is_numeric($key)) {
-                                    $data[$name][$key] = $values;
-                                } else {
-                                    $data[$name][$key][] = $values;
-                                }
-                            }
-                        }
-                    } else {
-                        $add    = true;
-                        $values = [];
-                        foreach ($fields as $field) {
-                            $val = $file[$field][$key];
-                            if ('name' == $field && empty($val)) {
-                                $add = false;
-
-                                continue;
-                            }
-                            $values[$field] = $val;
-                        }
-                        if ($add) {
-                            if (\is_numeric($key)) {
-                                $data[$name][$key] = $values;
-                            } else {
-                                $data[$name][$key][] = $values;
-                            }
-                        }
-                    }
-                }
-            } else {
-                $data[$name][] = $file;
-            }
-        }
-
-        return $data;
-    }
-
     public function nextOrder($tbl, $where = [])
     {
-        $max = $this->get('db')->table($tbl)
+        $max = DB::table($tbl)
             ->where($where)
             ->max('ordering');
 
         return $max + 1;
     }
 
+    /**
+     * Re-order the database ordering column.
+     *
+     * @param string $table
+     * @param array  $where
+     * @param string $field
+     */
     public function reOrder($table, $where = [], $field = 'id'): static
     {
-        $rows = $this->get('db')->table($table)
+        $rows = DB::table($table)
             ->where($where)
             ->orderBy('ordering', 'asc')
             ->get([$field, 'ordering']);
@@ -153,7 +105,7 @@ class Speed extends Capsule
         foreach ($rows as $row) {
             ++$i;
             if ($row->ordering != $i) {
-                $this->get('db')->table($table)
+                DB::table($table)
                     ->where($field, $row->{$field})
                     ->timestamps(false)
                     ->update(['ordering' => $i]);
@@ -163,6 +115,12 @@ class Speed extends Capsule
         return $this;
     }
 
+    /**
+     * Sort and re-order the ordering column.
+     *
+     * @param string $table
+     * @param string $field
+     */
     public function sorting($table, array $values = [], $field = 'id'): static
     {
         if (empty($values)) {
@@ -177,7 +135,7 @@ class Speed extends Capsule
                 ++$i;
                 if ($value != $i) {
                     $update = ['ordering' => $i];
-                    $this->get('db')->table($table)
+                    DB::table($table)
                         ->where($field, $id)
                         ->timestamps(false)
                         ->update($update);

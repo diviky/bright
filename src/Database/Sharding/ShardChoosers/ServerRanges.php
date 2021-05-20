@@ -6,14 +6,28 @@ use Diviky\Bright\Database\Sharding\Exceptions\ShardingException;
 
 class ServerRanges implements ShardChooserInterface
 {
-    private $connections = [];
+    /**
+     * Set the connections.
+     *
+     * @var array
+     */
+    protected $connections = [];
 
+    /**
+     * @param array  $connections
+     * @param string $relationKey
+     */
     public function __construct($connections, $relationKey = null)
     {
         $this->connections = $connections;
         unset($relationKey);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @throws ShardingException
+     */
     public function getShardById($id)
     {
         foreach ($this->connections as $shard => $range) {
@@ -25,8 +39,19 @@ class ServerRanges implements ShardChooserInterface
         throw new ShardingException('Your must to set up range for this id!');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function chooseShard($id)
     {
         return $this->getShardById($id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRelation($id, $shard): bool
+    {
+        return true;
     }
 }

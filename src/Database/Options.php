@@ -3,7 +3,9 @@
 namespace Diviky\Bright\Database;
 
 use Diviky\Bright\Traits\CapsuleManager;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 class Options
 {
@@ -16,14 +18,38 @@ class Options
      */
     protected $table   = 'app_options';
 
+    /**
+     * Values to save.
+     *
+     * @var array
+     */
     protected $values  = [];
 
+    /**
+     * Values for update.
+     *
+     * @var array
+     */
     protected $updates = [];
 
+    /**
+     * Extra data to be saved.
+     *
+     * @var array
+     */
     protected $extra   = [];
 
+    /**
+     * Conditions.
+     *
+     * @var array
+     */
     protected $where   = [];
 
+    /**
+     * @param string $table
+     * @param string $group
+     */
     public function __construct($table = null, $group = null)
     {
         if ($table) {
@@ -36,13 +62,24 @@ class Options
         }
     }
 
+    /**
+     * Instance.
+     *
+     * @param string $table
+     */
     public static function instance($table = null): self
     {
         return new self($table);
     }
 
     /**
-     * @param (int|string) $key
+     * Update the record exists else insert.
+     *
+     * @param mixed  $key
+     * @param mixed  $value
+     * @param string $type
+     *
+     * @return bool|int
      */
     public function updateOrInsert($key, $value = null, $type = null)
     {
@@ -62,7 +99,12 @@ class Options
     }
 
     /**
-     * @param (int|string) $key
+     * Update the records.
+     *
+     * @param mixed $key
+     * @param mixed $value
+     *
+     * @return bool|int
      */
     public function update($key, $value = null)
     {
@@ -96,6 +138,15 @@ class Options
             ->update($values);
     }
 
+    /**
+     * Insert data into table.
+     *
+     * @param string      $key
+     * @param mixed       $value
+     * @param null|string $type
+     *
+     * @return bool|int
+     */
     public function insert($key, $value, $type = null)
     {
         $time = new Carbon();
@@ -120,7 +171,10 @@ class Options
         return $this->table()->insert($values);
     }
 
-    public function first(): \stdClass
+    /**
+     * Get the record from table.
+     */
+    public function first(): object
     {
         $rows = $this->table()->get();
 
@@ -132,12 +186,21 @@ class Options
         return (object) $values;
     }
 
-    public function collect(): \Illuminate\Support\Collection
+    /**
+     * Convert to collection.
+     */
+    public function collect(): Collection
     {
         return collect($this->first());
     }
 
-    public function where(array $key, $value = null): static
+    /**
+     * Add where condition.
+     *
+     * @param mixed $key
+     * @param mixed $value
+     */
+    public function where($key, $value = null): static
     {
         if (!\is_array($key)) {
             $key = [$key => $value];
@@ -148,6 +211,11 @@ class Options
         return $this;
     }
 
+    /**
+     * Get the values from table.
+     *
+     * @return Collection
+     */
     public function find()
     {
         $rows = $this->table()->get();
@@ -161,6 +229,13 @@ class Options
         return $rows;
     }
 
+    /**
+     * Get the values and group by name.
+     *
+     * @param string $name
+     *
+     * @return Collection
+     */
     public function keyBy($name = 'option_name')
     {
         $rows = $this->find();
@@ -168,6 +243,14 @@ class Options
         return $rows->keyBy($name);
     }
 
+    /**
+     * Get the value from store.
+     *
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
     public function value($key, $default = null)
     {
         $row = $this->table()
@@ -182,6 +265,13 @@ class Options
         return $default;
     }
 
+    /**
+     * Check the values exists.
+     *
+     * @param string $key
+     *
+     * @return bool
+     */
     public function exists($key)
     {
         return $this->table()
@@ -189,6 +279,13 @@ class Options
             ->exists();
     }
 
+    /**
+     * Get the table.
+     *
+     * @param string $name
+     *
+     * @return Builder
+     */
     public function table($name = null)
     {
         $name = $name ?: $this->table;
@@ -215,7 +312,7 @@ class Options
     /**
      * Set the value of values.
      *
-     * @param mixed $values
+     * @param array $values
      *
      * @return self
      */
@@ -229,7 +326,7 @@ class Options
     /**
      * Set the value of values.
      *
-     * @param mixed $values
+     * @param array $values
      *
      * @return self
      */
@@ -243,7 +340,7 @@ class Options
     /**
      * Set the value of values.
      *
-     * @param mixed $values
+     * @param array $values
      *
      * @return self
      */
@@ -254,6 +351,14 @@ class Options
         return $this;
     }
 
+    /**
+     * Identify the column type.
+     *
+     * @param mixed       $value
+     * @param null|string $type
+     *
+     * @return mixed
+     */
     protected function identifyType($value, $type = null)
     {
         if (!\is_null($type)) {
@@ -276,6 +381,14 @@ class Options
         return $type;
     }
 
+    /**
+     * Format the values.
+     *
+     * @param mixed  $value
+     * @param string $type
+     *
+     * @return mixed
+     */
     protected function formatValue($value, $type = 'string')
     {
         if ('json' == $type) {
