@@ -44,7 +44,7 @@ class Builder extends LaravelBuilder
      *
      * @param string $as
      */
-    public function alias($as): static
+    public function alias($as): self
     {
         $this->from = "{$this->from} as {$as}";
 
@@ -227,7 +227,7 @@ class Builder extends LaravelBuilder
      * @param array $where
      * @param array $bindings
      */
-    public function whereWith($where = [], $bindings = []): static
+    public function whereWith($where = [], $bindings = []): self
     {
         $sql = (new Bright())->conditions($where);
 

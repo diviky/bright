@@ -78,7 +78,7 @@ class SlackAttachmentAction
      *
      * @param string $name
      */
-    public function name($name): static
+    public function name($name): self
     {
         $this->name = $name;
 
@@ -90,7 +90,7 @@ class SlackAttachmentAction
      *
      * @param string $value
      */
-    public function value($value): static
+    public function value($value): self
     {
         $this->value = $value;
 
@@ -102,7 +102,7 @@ class SlackAttachmentAction
      *
      * @param array $action
      */
-    public function action($action = []): static
+    public function action($action = []): self
     {
         $this->action = $action;
 
@@ -114,7 +114,7 @@ class SlackAttachmentAction
      *
      * @param string $url
      */
-    public function url($url): static
+    public function url($url): self
     {
         $this->url = $url;
 
@@ -126,7 +126,7 @@ class SlackAttachmentAction
      *
      * @param array $confirm
      */
-    public function confirm($confirm = []): static
+    public function confirm($confirm = []): self
     {
         $this->confirm = $confirm;
 
@@ -138,7 +138,7 @@ class SlackAttachmentAction
      *
      * @param string $type
      */
-    public function type($type): static
+    public function type($type): self
     {
         $this->type = $type;
 
@@ -150,7 +150,7 @@ class SlackAttachmentAction
      *
      * @param string $style
      */
-    public function style($style): static
+    public function style($style): self
     {
         $this->style = $style;
 

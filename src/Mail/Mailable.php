@@ -87,7 +87,7 @@ class Mailable extends BaseMailable implements ShouldQueue
      *
      * @param string $name
      */
-    public function theme($name): static
+    public function theme($name): self
     {
         $this->theme = $name;
 

@@ -55,7 +55,7 @@ class Stream
      *
      * @return $this
      */
-    public function start($filename, $write = false): static
+    public function start($filename, $write = false): self
     {
         if ($write) {
             return $this->write($filename);
@@ -96,9 +96,9 @@ class Stream
     /**
      * Set the headers file.
      *
-     * @param array $fields
+     * @param array|Collection|Iterator $fields
      */
-    public function setHeader($fields = []): static
+    public function setHeader($fields): self
     {
         $fields = $this->toArray($fields);
         $fields = \array_keys($fields);
@@ -123,7 +123,7 @@ class Stream
      *
      * @param string $string
      */
-    public function setSeparator($string): static
+    public function setSeparator($string): self
     {
         $this->separator = $string;
 
@@ -133,10 +133,10 @@ class Stream
     /**
      * Export as excel.
      *
-     * @param array $rows
-     * @param array $headers
+     * @param array|Collection|Iterator $rows
+     * @param array|Collection|Iterator $headers
      */
-    public function excel($rows = [], $headers = []): void
+    public function excel($rows, $headers): void
     {
         $this->setHeader($headers);
         $this->flushRows($rows);
@@ -148,12 +148,12 @@ class Stream
      * @param array|Collection|Iterator $rows
      * @param array                     $fields
      */
-    public function output($rows = [], $fields = []): static
+    public function output($rows, $fields = []): self
     {
         $rows = $this->toArray($rows);
 
         if (empty($fields)) {
-            $fields = \array_keys($rows[0]);
+            $fields = (array) $rows[0];
         }
 
         $this->setHeader($fields);
@@ -168,13 +168,16 @@ class Stream
     /**
      * Write the details.
      *
-     * @param array $row
-     * @param array $fields
+     * @param array|object $row
      *
      * @SuppressWarnings(PHPMD)
      */
-    public function flush($row = [], $fields = []): self
+    public function flush($row, array $fields): self
     {
+        if (!is_array($row)) {
+            $row = (array) $row;
+        }
+
         $out = [];
         foreach ($fields as $k => $v) {
             $out[] = $this->clean($row[$k]);
@@ -190,7 +193,7 @@ class Stream
      *
      * @param array|Collection|Iterator $rows
      */
-    public function flushRows($rows = []): self
+    public function flushRows($rows): self
     {
         $rows = $this->toArray($rows);
 
@@ -244,7 +247,7 @@ class Stream
      *
      * @param string $filepath
      */
-    public function write($filepath): static
+    public function write($filepath): self
     {
         $ext = \strtolower(\strrchr($filepath, '.'));
 
@@ -262,7 +265,7 @@ class Stream
     /**
      * Write content to file.
      */
-    public function writeFile(string $content): static
+    public function writeFile(string $content): self
     {
         if ($this->stream) {
             \fwrite($this->stream, $content);
@@ -274,7 +277,7 @@ class Stream
     /**
      * Close the file writing stream.
      */
-    public function stopFile(): static
+    public function stopFile(): self
     {
         if (is_resource($this->stream)) {
             \fclose($this->stream);

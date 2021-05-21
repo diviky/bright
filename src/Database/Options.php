@@ -200,7 +200,7 @@ class Options
      * @param mixed $key
      * @param mixed $value
      */
-    public function where($key, $value = null): static
+    public function where($key, $value = null): self
     {
         if (!\is_array($key)) {
             $key = [$key => $value];

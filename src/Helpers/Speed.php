@@ -93,7 +93,7 @@ class Speed extends Capsule
      * @param array  $where
      * @param string $field
      */
-    public function reOrder($table, $where = [], $field = 'id'): static
+    public function reOrder($table, $where = [], $field = 'id'): self
     {
         $rows = DB::table($table)
             ->where($where)
@@ -121,7 +121,7 @@ class Speed extends Capsule
      * @param string $table
      * @param string $field
      */
-    public function sorting($table, array $values = [], $field = 'id'): static
+    public function sorting($table, array $values = [], $field = 'id'): self
     {
         if (empty($values)) {
             return $this;

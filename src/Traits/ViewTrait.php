@@ -15,7 +15,7 @@ trait ViewTrait
      * @param null|string $method
      * @param null|array  $attributes
      */
-    public function ajax($url = null, $params = [], $method = 'post', $attributes = []): static
+    public function ajax($url = null, $params = [], $method = 'post', $attributes = []): self
     {
         $form         = [];
         $form['pjax'] = $this->get('request')->pjax();
@@ -65,7 +65,7 @@ trait ViewTrait
      * @param array|string $key
      * @param mixed        $value
      */
-    public function share($key, $value = null): static
+    public function share($key, $value = null): self
     {
         if (\is_array($key)) {
             foreach ($key as $k => $v) {

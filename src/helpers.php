@@ -152,7 +152,7 @@ if (!function_exists('storage_public')) {
  *
  * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
  */
-function kview($controller, $view, $data = [], $mergeData = []): Illuminate\Contracts\View\Factory | \Illuminate\Contracts\View\View
+function kview($controller, $view, $data = [], $mergeData = [])
 {
     $factory = app(View::class);
 

@@ -30,7 +30,7 @@ trait Eventable
      *
      * @param bool $event
      */
-    public function eventState($event = false): static
+    public function eventState($event = false): self
     {
         $this->eventState = $event;
 
@@ -44,7 +44,7 @@ trait Eventable
      *
      * @param bool|string $event
      */
-    public function setEvent($event): static
+    public function setEvent($event): self
     {
         if (\is_bool($event)) {
             return $this->eventState($event);
@@ -58,7 +58,7 @@ trait Eventable
      *
      * @param array|string $name
      */
-    public function eventColumn($name): static
+    public function eventColumn($name): self
     {
         if (\is_array($name)) {
             $this->eventColumns = \array_merge($this->eventColumns, $name);
@@ -221,7 +221,7 @@ trait Eventable
      *
      * @param string $type
      */
-    protected function atomicEvent($type = 'update'): static
+    protected function atomicEvent($type = 'update'): self
     {
         if (!$this->useEvent()) {
             return $this;

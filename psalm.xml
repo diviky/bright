@@ -77,6 +77,7 @@
         <LessSpecificReturnStatement>
             <errorLevel type="suppress">
                 <file name="src/Database/MySqlConnection.php"/>
+                <file name="src/Helpers/Stream.php"/>
             </errorLevel>
         </LessSpecificReturnStatement>
 

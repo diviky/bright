@@ -78,7 +78,7 @@ trait Raw
      *
      * @return $this
      */
-    public function whereBetweenRaw($column, array $values, $boolean = 'and', $not = false): static
+    public function whereBetweenRaw($column, array $values, $boolean = 'and', $not = false): self
     {
         $column = $this->raw($this->wrap($column));
 

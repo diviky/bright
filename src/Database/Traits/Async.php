@@ -10,7 +10,7 @@ trait Async
      * @param null|string $queue
      * @param null|string $connection
      */
-    public function async($queue = null, $connection = null): static
+    public function async($queue = null, $connection = null): self
     {
         $config = $this->asyncConfig();
         if ($config['enable']) {

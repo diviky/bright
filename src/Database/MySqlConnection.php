@@ -115,7 +115,7 @@ class MySqlConnection extends LaravelMySqlConnection
      * @param null|string $connection
      * @param string      $queue
      */
-    public function async($connection = null, $queue = null): static
+    public function async($connection = null, $queue = null): self
     {
         $this->async = [$connection, $queue];
 

@@ -16,14 +16,14 @@ trait Remove
      *
      * @param mixed $keys
      */
-    public function removeWhere($keys = null): static
+    public function removeWhere($keys = null): self
     {
         $this->removeKeys = $keys;
 
         return $this;
     }
 
-    public function removeWheres(): static
+    public function removeWheres(): self
     {
         $keys = $this->removeKeys;
 

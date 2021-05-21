@@ -14,7 +14,7 @@ trait Filter
      *
      * @return $this
      */
-    public function filter($data = []): static
+    public function filter($data = []): self
     {
         $filter = isset($data['dfilter']) ? $data['dfilter'] : null;
         if (\is_array($filter)) {
@@ -31,7 +31,7 @@ trait Filter
         $filter = isset($data['filter']) ? $data['filter'] : null;
         if (\is_array($filter)) {
             foreach ($filter as $k => $v) {
-                if ('' != $v[0]) {
+                if (isset($v) && '' != $v[0]) {
                     $this->addWhere($k, $v);
                 }
             }
@@ -102,7 +102,7 @@ trait Filter
         return $this;
     }
 
-    public function filterDateRange(array $date_range): static
+    public function filterDateRange(array $date_range): self
     {
         foreach ($date_range as $column => $date) {
             if (!\is_array($date)) {
@@ -127,7 +127,7 @@ trait Filter
         return $this;
     }
 
-    public function filterDatetime(array $datetime): static
+    public function filterDatetime(array $datetime): self
     {
         foreach ($datetime as $column => $date) {
             if (empty($date)) {
@@ -156,7 +156,7 @@ trait Filter
         return $this;
     }
 
-    public function filterUnixTime(array $unixtime): static
+    public function filterUnixTime(array $unixtime): self
     {
         foreach ($unixtime as $column => $date) {
             if (empty($date)) {
@@ -192,7 +192,7 @@ trait Filter
         return $this;
     }
 
-    public function filterRange(array $ranges): static
+    public function filterRange(array $ranges): self
     {
         foreach ($ranges as $column => $date) {
             if (!\is_array($date)) {
@@ -217,7 +217,7 @@ trait Filter
         return $this;
     }
 
-    public function filterBetween(array $between): static
+    public function filterBetween(array $between): self
     {
         foreach ($between as $column => $date) {
             if (!\is_array($date)) {
@@ -249,7 +249,7 @@ trait Filter
      * @param string $value
      * @param string $condition
      */
-    protected function addWhere($column, $value, $condition = '='): static
+    protected function addWhere($column, $value, $condition = '='): self
     {
         if (false !== \strpos($column, '|')) {
             $columns = \explode('|', $column);

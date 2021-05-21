@@ -165,7 +165,7 @@ trait HttpTrait
      * @param array|string $values  The value or an array of values
      * @param bool         $replace Whether to replace the actual value or not (true by default)
      */
-    public function setHeader($key, $values = null, $replace = true): static
+    public function setHeader($key, $values = null, $replace = true): self
     {
         if (\is_array($key)) {
             foreach ($key as $baseKey => $baseValue) {

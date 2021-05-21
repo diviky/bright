@@ -248,7 +248,7 @@ class GeoIpUpdater
      */
     protected function getDbFileUrl($geoDbUrl): string
     {
-        return $geoDbUrl ?: static::GEOLITE2_URL_BASE;
+        return $geoDbUrl ?: self::GEOLITE2_URL_BASE;
     }
 
     /**
