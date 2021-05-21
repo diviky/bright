@@ -2,16 +2,12 @@
 
 namespace Diviky\Bright\Database\Eloquent;
 
-use Diviky\Bright\Database\Query\Builder as QueryBuilder;
+use Diviky\Bright\Database\Traits\BuildsQueries;
+use Diviky\Bright\Database\Traits\Paging;
 use Illuminate\Database\Eloquent\Builder as BaseBuilder;
 
 class Builder extends BaseBuilder
 {
-    /**
-     * Create a new Eloquent query builder instance.
-     */
-    public function __construct(QueryBuilder $query)
-    {
-        $this->query = $query;
-    }
+    use BuildsQueries;
+    use Paging;
 }

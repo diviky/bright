@@ -1,11 +1,24 @@
 <?php
 
-namespace Diviky\Bright\Database\Eloquent\Traits;
+namespace Diviky\Bright\Database\Eloquent\Concerns;
 
-use Diviky\Bright\Database\Query\Builder;
+use Diviky\Bright\Database\Eloquent\Builder as EloquentBuilder;
+use Diviky\Bright\Database\Query\Builder as BaseQueryBuilder;
 
 trait Cachable
 {
+    /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param \Illuminate\Database\Query\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function newEloquentBuilder($query)
+    {
+        return new EloquentBuilder($query);
+    }
+
     /**
      * Get a new query builder instance for the connection.
      *
@@ -17,7 +30,7 @@ trait Cachable
 
         $grammar = $conn->getQueryGrammar();
 
-        $builder = new Builder($conn, $grammar, $conn->getPostProcessor());
+        $builder = new BaseQueryBuilder($conn, $grammar, $conn->getPostProcessor());
 
         if (isset($this->rememberFor)) {
             $builder->remember($this->rememberFor);

@@ -3,6 +3,7 @@
 namespace Diviky\Bright\Helpers;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 use Iterator;
 
 /**
@@ -314,11 +315,16 @@ class Stream
     /**
      * Convert rows to array.
      *
-     * @param array|Collection|Iterator $rows
+     * @param array|Collection|Iterator|LazyCollection $rows
      */
     protected function toArray($rows): array
     {
         if ($rows instanceof Collection) {
+            $rows = $rows->toArray();
+            $rows = \json_decode(\json_encode($rows), true);
+        }
+
+        if ($rows instanceof LazyCollection) {
             $rows = $rows->toArray();
             $rows = \json_decode(\json_encode($rows), true);
         }

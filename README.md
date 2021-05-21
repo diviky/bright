@@ -51,11 +51,7 @@ add in kernal.php route middleware
     ...
     <td sortable>
         <i class="fa fa-arrows-v fa-lg"></i>
-        <input
-            type="hidden"
-            name="sorting[{{ $row->id }}]"
-            value="{{ $row->ordering }}"
-        />
+        <input type="hidden" name="sorting[{{ $row->id }}]" value="{{ $row->ordering }}" />
     </td>
 </tbody>
 ```
@@ -246,14 +242,25 @@ Set the timestamps 'created_at`and`updated_at`for insert and`updated_at` for upd
 ```html
 <div class="form-group">
     <label class="form-label">Sent By Employee</label>
-    <select
-        name="sent_by"
-        class="form-control"
-        data-select-ajax="{{ url('search/employee') }}"
-    >
+    <select name="sent_by" class="form-control" data-select-ajax="{{ url('search/employee') }}">
         <option value="">Search Employee</option>
     </select>
 </div>
+```
+
+## New Builder Methods
+
+```php
+    foreach (Flight::iterator(100) as $flight) {
+        //
+    }
+
+    foreach (Flight::iterator(100, function($row) {
+        return $row;
+    }) as $flight) {
+        //
+    }
+
 ```
 
 ## License

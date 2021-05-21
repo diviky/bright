@@ -16,3 +16,4 @@ desktop.ini
 /vendor
 /build
 
+*.cache

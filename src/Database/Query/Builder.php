@@ -5,6 +5,7 @@ namespace Diviky\Bright\Database\Query;
 use Diviky\Bright\Database\Bright;
 use Diviky\Bright\Database\Traits\Async;
 use Diviky\Bright\Database\Traits\Build;
+use Diviky\Bright\Database\Traits\BuildsQueries;
 use Diviky\Bright\Database\Traits\Cachable;
 use Diviky\Bright\Database\Traits\Eventable;
 use Diviky\Bright\Database\Traits\Filter;
@@ -14,11 +15,8 @@ use Diviky\Bright\Database\Traits\Paging;
 use Diviky\Bright\Database\Traits\Raw;
 use Diviky\Bright\Database\Traits\Remove;
 use Diviky\Bright\Database\Traits\SoftDeletes;
-use Diviky\Bright\Database\Traits\Tables;
 use Diviky\Bright\Database\Traits\Timestamps;
-use Diviky\Bright\Helpers\Iterator\SelectIterator;
 use Illuminate\Database\Query\Builder as LaravelBuilder;
-use Traversable;
 
 class Builder extends LaravelBuilder
 {
@@ -36,8 +34,8 @@ class Builder extends LaravelBuilder
     use Raw;
     use Remove;
     use SoftDeletes;
-    use Tables;
     use Timestamps;
+    use BuildsQueries;
 
     /**
      * Set the alias for table.
@@ -167,58 +165,6 @@ class Builder extends LaravelBuilder
         }
 
         return $this->connection->statement($sql, $bindings);
-    }
-
-    /**
-     * @psalm-return \Generator<int, mixed, mixed, void>
-     *
-     * @param mixed      $count
-     * @param null|mixed $callback
-     */
-    public function flatChunk($count = 1000, $callback = null): \Generator
-    {
-        $results = $this->forPage($page = 1, $count)->get();
-
-        while (\count($results) > 0) {
-            if ($callback) {
-                foreach ($results as $result) {
-                    yield $result = $callback($result);
-                }
-            } else {
-                // Flatten the chunks out
-                foreach ($results as $result) {
-                    yield $result;
-                }
-            }
-
-            ++$page;
-
-            $results = $this->forPage($page, $count)->get();
-        }
-    }
-
-    /**
-     * Iterate the rows and get results.
-     *
-     * @param int   $count
-     * @param mixed $callback
-     *
-     * @deprecated 2.0
-     */
-    public function iterate($count = 10000, $callback = null): Traversable
-    {
-        return $this->iterator($count, $callback);
-    }
-
-    /**
-     * Iterate the rows and get results.
-     *
-     * @param int   $count
-     * @param mixed $callback
-     */
-    public function iterator($count = 10000, $callback = null): Traversable
-    {
-        return new SelectIterator($this, $count, $callback);
     }
 
     /**
