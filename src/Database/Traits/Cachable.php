@@ -259,7 +259,7 @@ trait Cachable
      *
      * @return $this
      */
-    public function prefix($prefix)
+    public function cachePrefix($prefix)
     {
         $this->cachePrefix = $prefix;
 

@@ -32,6 +32,13 @@ trait Cachable
 
         $builder = new BaseQueryBuilder($conn, $grammar, $conn->getPostProcessor());
 
+        // Disable the timestamps addition to eloquent
+        $builder->timestamps(false);
+
+        if (isset($this->eventState)) {
+            $builder->eventState($this->eventState);
+        }
+
         if (isset($this->rememberFor)) {
             $builder->remember($this->rememberFor);
         }
@@ -41,7 +48,7 @@ trait Cachable
         }
 
         if (isset($this->rememberCachePrefix)) {
-            $builder->prefix($this->rememberCachePrefix);
+            $builder->cachePrefix($this->rememberCachePrefix);
         }
 
         if (isset($this->rememberCacheDriver)) {
