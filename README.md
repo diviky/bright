@@ -248,18 +248,20 @@ Set the timestamps 'created_at`and`updated_at`for insert and`updated_at` for upd
 </div>
 ```
 
-## New Builder Methods
+## Flatten Relations
+
+Return single model with merged attributes from relations
 
 ```php
-    foreach (Flight::iterator(100) as $flight) {
-        //
-    }
 
-    foreach (Flight::iterator(100, function($row) {
-        return $row;
-    }) as $flight) {
-        //
-    }
+// except the relations from merge
+$model = $model->flatten($except);
+
+// Take some keys
+$model = $model->some(['id']);
+
+// Take except
+$model = $model->except(['id']);
 
 ```
 

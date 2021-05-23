@@ -2,9 +2,12 @@
 
 namespace Diviky\Bright\Helpers;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Iterator;
+use JsonSerializable;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
@@ -181,7 +184,7 @@ class Stream
 
         $out = [];
         foreach ($fields as $k => $v) {
-            $out[] = $this->clean($row[$k]);
+            $out[] = $this->clean($row[$k] ?? '');
         }
 
         $this->implode($out);
@@ -315,9 +318,11 @@ class Stream
     /**
      * Convert rows to array.
      *
-     * @param array|Collection|Iterator|LazyCollection $rows
+     * @param array|Arrayable|Collection|Iterator|JsonResource|JsonSerializable|LazyCollection|mixed $rows
+     *
+     * @return array
      */
-    protected function toArray($rows): array
+    protected function toArray($rows)
     {
         if ($rows instanceof Collection) {
             $rows = $rows->toArray();
@@ -326,6 +331,16 @@ class Stream
 
         if ($rows instanceof LazyCollection) {
             $rows = $rows->toArray();
+            $rows = \json_decode(\json_encode($rows), true);
+        }
+
+        if ($rows instanceof Arrayable) {
+            $rows = $rows->toArray();
+            $rows = \json_decode(\json_encode($rows), true);
+        }
+
+        if ($rows instanceof JsonSerializable) {
+            $rows = $rows->jsonSerialize();
             $rows = \json_decode(\json_encode($rows), true);
         }
 

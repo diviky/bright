@@ -55,8 +55,6 @@ trait BuildsQueries
      * @throws \InvalidArgumentException
      *
      * @return \Illuminate\Support\LazyCollection
-     *
-     * @deprecated 2.0
      */
     public function iterate($chunkSize = 10000, $callback = null)
     {
@@ -69,6 +67,8 @@ trait BuildsQueries
      * @param int $chunkSize
      *
      * @throws \InvalidArgumentException
+     *
+     * @deprecated 2.0
      *
      * @return \Illuminate\Support\LazyCollection
      */

@@ -3,10 +3,21 @@
 namespace Diviky\Bright\Database\Eloquent\Concerns;
 
 use Diviky\Bright\Database\Eloquent\Builder as EloquentBuilder;
+use Diviky\Bright\Database\Eloquent\Collection as BrightCollection;
 use Diviky\Bright\Database\Query\Builder as BaseQueryBuilder;
 
 trait Cachable
 {
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new BrightCollection($models);
+    }
+
     /**
      * Create a new Eloquent query builder for the model.
      *
