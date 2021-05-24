@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -105,7 +107,7 @@ class Setup extends Command
         }
 
         $process->setTimeout(10 * 60);
-        $process->run(function ($type, $buffer) {
+        $process->run(function ($type, $buffer): void {
             if (Process::ERR === $type) {
                 echo 'ERR > ' . $buffer;
             } else {

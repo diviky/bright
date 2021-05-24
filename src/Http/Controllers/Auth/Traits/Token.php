@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Http\Controllers\Auth\Traits;
 
 use Diviky\Bright\Models\Activation;
@@ -18,7 +20,7 @@ trait Token
      */
     public function generateToken(): string
     {
-        return \sprintf('%06d', \mt_rand(1, 999999));
+        return \sprintf('%06d', \random_int(1, 999999));
     }
 
     /**

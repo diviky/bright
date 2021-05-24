@@ -52,7 +52,7 @@ grumphp:
       metadata: { priority: 100 }
     phpcsfixer:
       allow_risky: true
-      config: .php_cs
+      config: .php-cs-fixer.php
       using_cache: false
       config_contains_finder: true
       verbose: true

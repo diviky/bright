@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -8,9 +10,9 @@ class CreateAuthUserRolesTable extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create(config('bright.table.user_roles'), function (Blueprint $table) {
+        Schema::create(config('bright.table.user_roles'), function (Blueprint $table): void {
             $table->integer('role_id')->unsigned();
             $table->string('model_type', 191);
             $table->foreignId('model_id')->index('model_id');
@@ -22,7 +24,7 @@ class CreateAuthUserRolesTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop(config('bright.table.user_roles'));
     }

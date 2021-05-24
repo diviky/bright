@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Helpers\Iterator;
 
 use InvalidArgumentException;
@@ -32,13 +34,13 @@ class ChunkedIterator extends \IteratorIterator
         $this->chunkSize = $chunkSize;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         parent::rewind();
         $this->next();
     }
 
-    public function next()
+    public function next(): void
     {
         $this->chunk = [];
         for ($i = 0; $i < $this->chunkSize && parent::valid(); ++$i) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Helpers;
 
 use DeviceDetector\DeviceDetector;
@@ -13,20 +15,13 @@ use Illuminate\Support\Arr;
  */
 class Device
 {
-    public function detect(?string $userAgent = null, bool $advanced = false, bool $bot = false): array
+    public function detect(string $userAgent, bool $advanced = false, bool $check_bot = false): array
     {
-        $userAgent = $userAgent ?: env('HTTP_USER_AGENT');
-
-        $dd = app(DeviceDetector::class);
-
-        $dd->setUserAgent($userAgent);
-        $dd->skipBotDetection();
-        $dd->setYamlParser(new Symfony());
-        $dd->parse();
+        $detector = $this->getDetector($userAgent);
 
         $return = [];
-        if ($bot && $dd->isBot()) {
-            $return['bot'] = $dd->getBot();
+        if ($check_bot && $detector->isBot()) {
+            $return['bot'] = $detector->getBot();
 
             return $return;
         }
@@ -46,22 +41,22 @@ class Device
             'portable media player' => 'phone',
         ];
 
-        $device = $dd->getDeviceName();
+        $device = $detector->getDeviceName();
         $type   = (isset($devicelist[$device])) ? $devicelist[$device] : 'computer';
 
-        $os     = $dd->getOs();
-        $os     = !is_array($os) ? [] : $os;
+        $system     = $detector->getOs();
+        $system     = !is_array($system) ? [] : $system;
 
-        $client     = $dd->getClient();
+        $client     = $detector->getClient();
         $client     = !is_array($client) ? [] : $client;
 
         //legacy params
         $return['device']          = $device;
         $return['type']            = $type;
-        $return['brand']           = $dd->getBrandName();
-        $return['os']              = Arr::get($os, 'name');
-        $return['os_version']      = Arr::get($os, 'version');
-        $return['os_code']         = Arr::get($os, 'short_name');
+        $return['brand']           = $detector->getBrandName();
+        $return['os']              = Arr::get($system, 'name');
+        $return['os_version']      = Arr::get($system, 'version');
+        $return['os_code']         = Arr::get($system, 'short_name');
         $return['browser']         = Arr::get($client, 'name');
         $return['browser_version'] = Arr::get($client, 'version');
         $return['browser_code']    = Arr::get($client, 'short_name');
@@ -73,18 +68,34 @@ class Device
         }
 
         //advanced params
-        $osFamily            = OperatingSystem::getOsFamily($os['short_name']);
+        $osFamily            = OperatingSystem::getOsFamily($system['short_name']);
         $return['os_family'] = (false !== $osFamily) ? $osFamily : 'Unknown';
 
-        $return['model'] = $dd->getModel();
+        $return['model'] = $detector->getModel();
 
         $browserFamily            = Browser::getBrowserFamily($client['short_name']);
         $return['browser_family'] = (false !== $browserFamily) ? $browserFamily : 'Unknown';
 
-        $return['touch'] = $dd->isTouchEnabled();
+        $return['touch'] = $detector->isTouchEnabled();
 
-        unset($os, $client, $osFamily, $browserFamily);
+        unset($system, $client, $osFamily, $browserFamily);
 
         return $return;
+    }
+
+    /**
+     * Get the detector class.
+     *
+     * @return DeviceDetector
+     */
+    protected function getDetector(string $userAgent)
+    {
+        $detector = app(DeviceDetector::class);
+
+        $detector->setUserAgent($userAgent);
+        $detector->setYamlParser(new Symfony());
+        $detector->parse();
+
+        return $detector;
     }
 }

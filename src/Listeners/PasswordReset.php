@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Listeners;
 
 use Diviky\Bright\Mail\Mailable;

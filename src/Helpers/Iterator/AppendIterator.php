@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Karle\Helpers\Iterator;
 
 use Iterator;
@@ -14,7 +16,7 @@ class AppendIterator extends \AppendIterator
      *
      * @param Iterator $iterator Iterator to append
      */
-    public function append(Iterator $iterator)
+    public function append(Iterator $iterator): void
     {
         $this->getArrayIterator()->append($iterator);
     }

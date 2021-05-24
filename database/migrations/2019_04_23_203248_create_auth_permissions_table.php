@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -8,9 +10,9 @@ class CreateAuthPermissionsTable extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create(config('bright.table.permissions'), function (Blueprint $table) {
+        Schema::create(config('bright.table.permissions'), function (Blueprint $table): void {
             $table->increments('id');
             $table->string('name', 191);
             $table->string('display_name', 50)->nullable();
@@ -23,7 +25,7 @@ class CreateAuthPermissionsTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop(config('bright.table.permissions'));
     }

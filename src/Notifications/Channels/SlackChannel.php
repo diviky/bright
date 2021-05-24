@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Notifications\Channels;
 
 use Diviky\Bright\Notifications\Messages\SlackAttachmentAction;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Charts;
 
 use ConsoleTVs\Charts\Classes\Chartjs\Dataset as BaseDataset;

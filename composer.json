@@ -17,7 +17,7 @@
         }
     ],
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "laravel/framework": "^8",
         "spatie/laravel-permission": "^3.12",
         "schuppo/password-strength": "^2",
@@ -58,7 +58,7 @@
         }
     },
     "scripts": {
-        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
+        "format": "vendor/bin/php-cs-fixer --allow-risky=yes --config=.php-cs-fixer.php --using-cache=no --verbose fix",
         "test": "vendor/bin/testbench package:test --parallel",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
         "psalm": "vendor/bin/psalm --no-cache",
@@ -67,7 +67,7 @@
         "phpmd": "vendor/bin/phpmd src ansi ruleset",
         "phpcs": "vendor/bin/phpcs --standard=PSR2 --ignore='*.blade.php' src",
         "fix": [
-            "vendor/bin/php-cs-fixer fix --allow-risky=yes",
+            "vendor/bin/php-cs-fixer --allow-risky=yes --config=.php-cs-fixer.php --using-cache=no --verbose fix",
             "vendor/bin/psalm --no-cache --alter --issues=InvalidReturnType,MissingReturnType,MissingParamType"
         ]
     },

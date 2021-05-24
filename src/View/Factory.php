@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\View;
 
 use Illuminate\View\Factory as BaseFactory;

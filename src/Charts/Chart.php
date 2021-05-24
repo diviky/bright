@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Charts;
 
 use Balping\JsonRaw\Encoder;
@@ -38,7 +40,7 @@ class Chart extends BaseChart
     {
         return Encoder::encode(
             Collection::make($this->datasets)
-                ->each(function ($dataset) {
+                ->each(function ($dataset): void {
                     $dataset->matchValues(\count($this->labels));
                 })
                 ->map(function ($dataset) {

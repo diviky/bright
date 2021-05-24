@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Http\Controllers\Auth;
 
 use Diviky\Bright\Routing\Controller;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Providers;
 
 use Diviky\Bright\Database\Sharding\MapManager;
@@ -24,7 +26,7 @@ class ShardingServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom($this->path() . '/config/sharding.php', 'sharding');
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Database;
 
 use Carbon\Carbon;
@@ -327,7 +329,8 @@ class Bright
     public function limit($limit, $offset = null, $page = null): ?string
     {
         if ($limit) {
-            $rt = '';
+            $rt    = '';
+            $limit = strval($limit);
             if (!\stripos($limit, 'limit') || 0 === \strpos(\strtolower($limit), 'limit')) {
                 $rt = ' LIMIT';
             }

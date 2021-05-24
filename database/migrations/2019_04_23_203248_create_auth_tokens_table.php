@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -8,9 +10,9 @@ class CreateAuthTokensTable extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create(config('bright.table.tokens'), function (Blueprint $table) {
+        Schema::create(config('bright.table.tokens'), function (Blueprint $table): void {
             $table->increments('id');
             $table->foreignId('user_id')->index('tokens_user_id_foreign');
             $table->string('access_token', 100)->unique('access_token');
@@ -25,7 +27,7 @@ class CreateAuthTokensTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop(config('bright.table.tokens'));
     }

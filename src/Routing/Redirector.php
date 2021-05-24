@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Routing;
 
 use Illuminate\Routing\Redirector as BaseRedirector;
@@ -19,7 +21,7 @@ class Redirector extends BaseRedirector
     {
         $request = $this->generator->getRequest();
         if ($request->ajax() && !$request->pjax()) {
-            return tap(new RedirectResponse($path, 200, $headers), function ($redirect) {
+            return tap(new RedirectResponse($path, 200, $headers), function ($redirect): void {
                 if (isset($this->session)) {
                     $redirect->setSession($this->session);
                 }

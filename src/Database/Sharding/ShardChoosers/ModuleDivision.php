@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Database\Sharding\ShardChoosers;
 
 class ModuleDivision implements ShardChooserInterface

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Helpers\Iterator;
 
 use Closure;
@@ -74,7 +76,7 @@ class SelectIterator implements Iterator
     /**
      * {@inheritDoc}
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->reset();
         $this->query();
@@ -96,7 +98,7 @@ class SelectIterator implements Iterator
     /**
      * {@inheritDoc}
      */
-    public function next()
+    public function next(): void
     {
         ++$this->position;
         ++$this->totalPosition;

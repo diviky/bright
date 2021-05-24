@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Traits;
 
 use Diviky\Bright\Helpers\Device;
@@ -74,7 +76,7 @@ trait Themable
         $device = $themes['device'];
 
         if (empty($device) || 'auto' == $device) {
-            $device = (new Device())->detect();
+            $device = (new Device())->detect(env('HTTP_USER_AGENT'));
             config(['theme.device' => $device]);
         }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Providers;
 
 use Diviky\Bright\Console\Commands\GeoipUpdate;
@@ -49,7 +51,7 @@ class BrightServiceProvider extends ServiceProvider
         }
     }
 
-    public function register()
+    public function register(): void
     {
         Schema::defaultStringLength(191);
 

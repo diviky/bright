@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\View;
 
 use Diviky\Bright\Traits\Themable;

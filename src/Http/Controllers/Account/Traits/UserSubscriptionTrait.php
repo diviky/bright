@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Http\Controllers\Account\Traits;
 
 trait UserSubscriptionTrait
@@ -57,7 +59,7 @@ trait UserSubscriptionTrait
         $user_id = $user_id ?: user('id');
 
         return $this->db->table('subscription_channels as c')
-            ->leftJoin('user_subscriptions as s', function ($join) use ($user_id) {
+            ->leftJoin('user_subscriptions as s', function ($join) use ($user_id): void {
                 $join->on('s.channel', 'c.name')
                     ->where('s.user_id', $user_id);
             })

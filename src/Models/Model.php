@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Models;
 
 use Diviky\Bright\Database\Eloquent\Model as BaseModel;

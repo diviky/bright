@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Services;
 
 class GeoIpUpdater
@@ -89,7 +91,11 @@ class GeoIpUpdater
             return false;
         }
 
-        $updated = file_get_contents($this->md5File) == hash('sha256', $destinationGeoDbFile, false);
+        $updated = false;
+
+        if (is_string($this->md5File)) {
+            $updated = file_get_contents($this->md5File) == hash('sha256', $destinationGeoDbFile, false);
+        }
 
         if ($updated) {
             $this->addMessage('Database is already updated.');

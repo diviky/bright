@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -9,9 +11,9 @@ class AlterUsersTable extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table(config('bright.table.users'), function (Blueprint $table) {
+        Schema::table(config('bright.table.users'), function (Blueprint $table): void {
             $table->bigInteger('parent_id')->unsigned()->nullable()->index('parent_id')->after('id');
             $table->string('role', 50)->nullable()->index('role')->after('parent_id');
             $table->string('mobile', 15)->nullable()->after('password');
@@ -29,9 +31,9 @@ class AlterUsersTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
-        Schema::table(config('bright.table.users'), function (Blueprint $table) {
+        Schema::table(config('bright.table.users'), function (Blueprint $table): void {
             $table->dropColumn('parent_id');
             $table->dropColumn('role');
             $table->dropColumn('mobile');

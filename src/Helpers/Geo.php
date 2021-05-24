@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Helpers;
 
 use Geocoder\Provider\Chain\Chain;
@@ -19,17 +21,13 @@ class Geo
     /**
      * @psalm-return array{provider: string, latitude: string, longitude: string, country: string, country_code: string, city: string, region: string, region_code: string, zipcode: string, locality: string, timezone: string}
      *
-     * @param null|mixed $address
-     * @param mixed      $db
+     * @param string $address
+     * @param string $db
      *
      * @return string[]
      */
-    public function geocode($address = null, $db = 'GeoLite2-City.mmdb'): array
+    public function geocode($address, $db = 'GeoLite2-City.mmdb'): array
     {
-        if (null === $address) {
-            $address = ip();
-        }
-
         //$address = '203.109.101.177';
 
         //http://ipinfo.io/119.63.142.37/json

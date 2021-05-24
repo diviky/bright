@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Database\Sharding;
 
 use Diviky\Bright\Database\Sharding\IdGenerators\IdGeneratorInterface;

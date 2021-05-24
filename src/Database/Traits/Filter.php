@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Database\Traits;
 
 use Illuminate\Database\Query\Builder;
@@ -253,7 +255,7 @@ trait Filter
     {
         if (false !== \strpos($column, '|')) {
             $columns = \explode('|', $column);
-            $this->where(function ($query) use ($columns, $value, $condition) {
+            $this->where(function ($query) use ($columns, $value, $condition): void {
                 foreach ($columns as $column) {
                     $query->orWhere($this->cleanField($column), $condition, $value);
                 }

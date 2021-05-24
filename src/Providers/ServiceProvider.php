@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;

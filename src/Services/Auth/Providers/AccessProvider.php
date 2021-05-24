@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Services\Auth\Providers;
 
 use App\Models\User;
@@ -62,7 +64,7 @@ class AccessProvider implements UserProvider
     /**
      * {@inheritDoc}
      */
-    public function updateRememberToken(Authenticatable $user, $token)
+    public function updateRememberToken(Authenticatable $user, $token): void
     {
         // update via remember token not necessary
     }

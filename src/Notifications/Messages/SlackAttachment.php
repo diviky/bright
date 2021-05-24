@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Notifications\Messages;
 
 use Illuminate\Notifications\Messages\SlackAttachment as BaseSlackAttachment;

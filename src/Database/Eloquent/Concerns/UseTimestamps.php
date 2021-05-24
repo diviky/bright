@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Database\Eloquent\Concerns;
 
 trait UseTimestamps
@@ -11,7 +13,12 @@ trait UseTimestamps
      */
     public $timestamps = true;
 
-    public function timestamps(bool $use = true): self
+    /**
+     * Enable timestamps.
+     *
+     * @return static
+     */
+    public function timestamps(bool $use = true)
     {
         $this->timestamps = $use;
 

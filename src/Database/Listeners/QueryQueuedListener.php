@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Database\Listeners;
 
 use Diviky\Bright\Database\Events\QueryQueued as QueryQueuedEvent;

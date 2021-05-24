@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
@@ -11,7 +13,7 @@ class Handler extends ExceptionHandler
     /**
      * {@inheritDoc}
      */
-    public function report(Throwable $e)
+    public function report(Throwable $e): void
     {
         if (!config('app.debug') && app()->bound('sentry') && $this->shouldReport($e)) {
             app('sentry')->captureException($e);

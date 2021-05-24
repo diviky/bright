@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright;
 
 use Diviky\Bright\Http\Controllers\Account\Traits\UserAvatarTrait;

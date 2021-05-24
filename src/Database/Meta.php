@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Database;
 
 use Diviky\Bright\Traits\CapsuleManager;

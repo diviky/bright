@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
@@ -45,7 +47,7 @@ class Money implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
-        return $this->asDecimal(($value / \pow(10, $this->decimals)), $this->decimals);
+        return $this->asDecimal(($value / 10 ** $this->decimals), $this->decimals);
     }
 
     /**
@@ -60,7 +62,7 @@ class Money implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes)
     {
-        return $value * \pow(10, $this->decimals);
+        return $value * 10 ** $this->decimals;
     }
 
     /**

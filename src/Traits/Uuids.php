@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Traits;
 
 use Illuminate\Support\Str;
@@ -31,10 +33,10 @@ trait Uuids
     /**
      * Boot function from Laravel.
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
-        static::creating(function ($model) {
+        static::creating(function ($model): void {
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = Str::uuid()->toString();
             }

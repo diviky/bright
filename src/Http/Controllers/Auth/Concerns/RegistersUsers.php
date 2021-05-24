@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Http\Controllers\Auth\Concerns;
 
 use Diviky\Bright\Models\Models;
@@ -115,9 +117,9 @@ trait RegistersUsers
      *
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator(array $rules)
     {
-        return Validator::make($data, [
+        return Validator::make($rules, [
             'name'     => 'required|string|max:100',
             'email'    => 'required|string|email|unique:' . config('bright.table.users'),
             'password' => 'required|case_diff|numbers|letters|min:6|max:20',

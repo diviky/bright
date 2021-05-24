@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Console\Commands;
 
 use Diviky\Bright\Services\GeoIpUpdater;

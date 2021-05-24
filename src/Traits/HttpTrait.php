@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Traits;
 
 use Illuminate\Http\JsonResponse;
@@ -359,15 +361,5 @@ trait HttpTrait
         }
 
         return Validator::make($this->request()->all(), $rules, $messages, $attributes)->validate();
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $rules)
-    {
-        return Validator::make($this->request()->all(), $rules);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Diviky\Bright\Providers;
 
 use Diviky\Bright\Database\ConnectionFactory;
@@ -11,7 +13,7 @@ class DatabaseServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         // The connection factory is used to create the actual connection instances on
         // the database. We will inject the factory into the manager so that it may

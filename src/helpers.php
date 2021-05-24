@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Diviky\Bright\Contracts\UtilInterface as Util;
 use Diviky\Bright\View\View;
 use Illuminate\Support\Str;

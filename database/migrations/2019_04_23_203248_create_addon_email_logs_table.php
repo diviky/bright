@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -8,9 +10,9 @@ class CreateAddonEmailLogsTable extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create(config('bright.table.email_logs'), function (Blueprint $table) {
+        Schema::create(config('bright.table.email_logs'), function (Blueprint $table): void {
             $table->char('id', 36)->primary();
             $table->string('from', 191)->nullable();
             $table->string('to', 191)->nullable();
@@ -27,7 +29,7 @@ class CreateAddonEmailLogsTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop(config('bright.table.email_logs'));
     }
