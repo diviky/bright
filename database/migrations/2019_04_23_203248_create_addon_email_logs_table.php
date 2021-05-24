@@ -19,9 +19,9 @@ class CreateAddonEmailLogsTable extends Migration
             $table->string('cc', 191)->nullable();
             $table->string('bcc', 191)->nullable();
             $table->string('subject', 191);
-            $table->text('body', 65535);
-            $table->text('headers', 65535)->nullable();
-            $table->text('attachments', 65535)->nullable();
+            $table->text('body');
+            $table->text('headers')->nullable();
+            $table->text('attachments')->nullable();
             $table->timestamps();
         });
     }

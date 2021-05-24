@@ -62,7 +62,7 @@ class Reader
             $lines = ('.txt' == $ext) ? 1 : 5;
             $file  = '';
 
-            \ini_set('auto_detect_line_endings', "true");
+            \ini_set('auto_detect_line_endings', 'true');
             $file = new SplFileObject($reader);
             //Auto detect delimiter
             if (empty($options['delimiter'])) {

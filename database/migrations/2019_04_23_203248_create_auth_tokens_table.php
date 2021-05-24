@@ -17,7 +17,7 @@ class CreateAuthTokensTable extends Migration
             $table->foreignId('user_id')->index('tokens_user_id_foreign');
             $table->string('access_token', 100)->unique('access_token');
             $table->string('refresh_token', 100)->nullable();
-            $table->text('allowed_ip', 65535)->nullable();
+            $table->text('allowed_ip')->nullable();
             $table->timestamp('expires_in')->nullable();
             $table->timestamps();
             $table->boolean('status')->default(1);
