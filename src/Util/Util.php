@@ -14,9 +14,9 @@ class Util implements UtilInterface
     /**
      * Convert given date to carbon supported date format.
      *
-     * @param null|int|string $time
-     * @param null|string     $format
-     * @param null|string     $timezone
+     * @param null|Carbon|int|string $time
+     * @param null|string            $format
+     * @param null|string            $timezone
      *
      * @return \Illuminate\Support\Carbon|string
      */
@@ -30,13 +30,15 @@ class Util implements UtilInterface
             return (new Carbon())->setTimezone($timezone);
         }
 
-        if (!\is_numeric($time)) {
+        if (isset($time) && !\is_numeric($time) && is_string($time)) {
             $parts = \explode('/', $time);
 
             if ($parts[0] && 4 != \strlen($parts[0])) {
                 $time = \str_replace('/', '-', \trim($time));
             }
             $carbon = new Carbon($time);
+        } elseif ($time instanceof Carbon) {
+            $carbon = $time;
         } else {
             $carbon = Carbon::createFromTimestamp($time);
         }

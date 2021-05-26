@@ -52,6 +52,18 @@ class Builder extends LaravelBuilder
     }
 
     /**
+     * Set the alias for table.
+     *
+     * @param string $as
+     */
+    public function as($as): self
+    {
+        $this->from = "{$this->from} as {$as}";
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function pluck($column, $key = null)
