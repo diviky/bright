@@ -41,7 +41,7 @@ trait Builder
     public function statement($sql)
     {
         $prefix = DB::getTablePrefix();
-        $sql    = \str_replace('#__', $prefix, $sql);
+        $sql = \str_replace('#__', $prefix, $sql);
 
         return $this->pdo()->exec($sql);
     }

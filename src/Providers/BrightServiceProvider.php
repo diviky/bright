@@ -97,11 +97,11 @@ class BrightServiceProvider extends ServiceProvider
     protected function console(): void
     {
         $this->publishes([
-            $this->path() . '/config/charts.php'      => config_path('charts.php'),
+            $this->path() . '/config/charts.php' => config_path('charts.php'),
             //$this->path() . '/config/permission.php'  => config_path('permission.php'),
-            $this->path() . '/config/bright.php'      => config_path('bright.php'),
-            $this->path() . '/config/theme.php'       => config_path('theme.php'),
-            $this->path() . '/config/sharding.php'    => config_path('sharding.php'),
+            $this->path() . '/config/bright.php' => config_path('bright.php'),
+            $this->path() . '/config/theme.php' => config_path('theme.php'),
+            $this->path() . '/config/sharding.php' => config_path('sharding.php'),
         ], 'bright-config');
 
         $this->publishes([
@@ -117,7 +117,7 @@ class BrightServiceProvider extends ServiceProvider
         ], 'bright-setup');
 
         $this->publishes([
-            $this->path() . '/resources/views'  => resource_path('views/vendor/bright'),
+            $this->path() . '/resources/views' => resource_path('views/vendor/bright'),
         ], 'bright-views-auth');
 
         $this->publishes([
@@ -145,7 +145,7 @@ class BrightServiceProvider extends ServiceProvider
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
             $userProvider = app(AccessProvider::class);
-            $request      = app('request');
+            $request = app('request');
 
             return new AccessTokenGuard($userProvider, $request, $config);
         });
@@ -153,14 +153,14 @@ class BrightServiceProvider extends ServiceProvider
         Auth::extend('auth_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
             $userProvider = app(AccessProvider::class);
-            $request      = app('request');
+            $request = app('request');
 
             return new AuthTokenGuard($userProvider, $request, $config);
         });
 
         Auth::extend('credentials', function ($app, $name, array $config) {
             $userProvider = app(AccessProvider::class);
-            $request      = app('request');
+            $request = app('request');
 
             return new CredentialsGuard($userProvider, $request, $config);
         });

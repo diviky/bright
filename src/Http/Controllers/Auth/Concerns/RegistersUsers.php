@@ -50,8 +50,8 @@ trait RegistersUsers
 
         return [
             'redirect' => $next,
-            'status'   => 'OK',
-            'message'  => \_('Registration success.'),
+            'status' => 'OK',
+            'message' => \_('Registration success.'),
         ];
     }
 
@@ -120,8 +120,8 @@ trait RegistersUsers
     protected function validator(array $rules)
     {
         return Validator::make($rules, [
-            'name'     => 'required|string|max:100',
-            'email'    => 'required|string|email|unique:' . config('bright.table.users'),
+            'name' => 'required|string|max:100',
+            'email' => 'required|string|email|unique:' . config('bright.table.users'),
             'password' => 'required|case_diff|numbers|letters|min:6|max:20',
         ]);
     }
@@ -136,10 +136,10 @@ trait RegistersUsers
         $status = $values['status'] ?? config('auth.user.status', 0);
 
         return Models::user()::create([
-            'name'         => $values['name'],
-            'email'        => $values['email'],
-            'password'     => Hash::make($values['password']),
-            'status'       => $status,
+            'name' => $values['name'],
+            'email' => $values['email'],
+            'password' => Hash::make($values['password']),
+            'status' => $status,
             'access_token' => Str::random(60),
         ]);
     }

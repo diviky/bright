@@ -25,8 +25,8 @@ trait Outfile
 
         $options = \array_merge([
             'separated' => ',',
-            'enclosed'  => '"',
-            'ends'      => '\n',
+            'enclosed' => '"',
+            'ends' => '\n',
         ], $options);
 
         if ($local) {
@@ -50,8 +50,8 @@ trait Outfile
     {
         $options = \array_merge([
             'separated' => ',',
-            'enclosed'  => '"',
-            'ends'      => '\n',
+            'enclosed' => '"',
+            'ends' => '\n',
         ], $options);
 
         $table = $this->grammar->wrapTable($table);
@@ -81,8 +81,8 @@ trait Outfile
     {
         $options = \array_merge([
             'separated' => ',',
-            'enclosed'  => '"',
-            'ends'      => '\n',
+            'enclosed' => '"',
+            'ends' => '\n',
         ], $options);
 
         $file = $this->generateFilePath($file);
@@ -110,8 +110,8 @@ trait Outfile
     {
         $options = \array_merge([
             'separated' => ',',
-            'enclosed'  => '"',
-            'ends'      => '\n',
+            'enclosed' => '"',
+            'ends' => '\n',
         ], $options);
 
         $file = $this->generateFilePath($file);
@@ -146,7 +146,7 @@ trait Outfile
      */
     protected function generateFilePath($file = null): string
     {
-        $file          = $file ?? \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
+        $file = $file ?? \sys_get_temp_dir() . '/' . \uniqid() . '.csv';
         $this->outpath = $file;
 
         return $file;

@@ -38,17 +38,17 @@ trait Themable
      */
     protected function setUpTheme($route, $component = null, $paths = []): array
     {
-        $template             = $this->identifyTheme($route);
+        $template = $this->identifyTheme($route);
         list($theme, $layout) = \explode('.', $template . '.');
 
         $themePath = resource_path('themes/' . $theme);
-        $views     = resource_path('views');
-        $location  = public_path($theme);
+        $views = resource_path('views');
+        $location = public_path($theme);
 
         $theme = [
-            'name'     => $theme,
-            'layout'   => $layout,
-            'path'     => $themePath,
+            'name' => $theme,
+            'layout' => $layout,
+            'path' => $themePath,
             'location' => $location,
         ];
 
@@ -156,7 +156,7 @@ trait Themable
      */
     protected function setUpThemeFromRequest(Request $request): void
     {
-        $route  = $request->route();
+        $route = $request->route();
         if (isset($route)) {
             $action = $route->getActionName();
             if (isset($action)) {

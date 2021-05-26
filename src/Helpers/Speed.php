@@ -23,7 +23,7 @@ class Speed extends Capsule
     public function formatToSave($save, $required = null): array
     {
         $required = ($required) ? \explode(',', $required) : null;
-        $fields   = \array_keys($save);
+        $fields = \array_keys($save);
 
         $pass = true;
         // check all required keys exits in fields
@@ -42,7 +42,7 @@ class Speed extends Capsule
         }
 
         $total = \count($save[$fields[0]]);
-        $data  = [];
+        $data = [];
 
         for ($i = 0; $i < $total; ++$i) {
             $row = [];

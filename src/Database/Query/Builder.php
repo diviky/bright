@@ -135,7 +135,7 @@ class Builder extends LaravelBuilder
     public function statement(string $sql, array $bindings = [])
     {
         $prefix = $this->connection->getTablePrefix();
-        $sql    = \str_replace('#__', $prefix, $sql);
+        $sql = \str_replace('#__', $prefix, $sql);
 
         $type = \trim(\strtolower(\explode(' ', $sql)[0]));
 
@@ -190,7 +190,7 @@ class Builder extends LaravelBuilder
 
         foreach ($this->getBindings() as $binding) {
             $value = \is_numeric($binding) ? $binding : "'" . $binding . "'";
-            $sql   = \preg_replace('/\?/', $value, $sql, 1);
+            $sql = \preg_replace('/\?/', $value, $sql, 1);
         }
 
         return $sql;

@@ -78,8 +78,8 @@ class MapManager
         }
 
         $chooserClass = $this->map[$name]['shard_chooser'];
-        $relationKey  = (isset($this->map[$name]['relation_key']) ? $this->map[$name]['relation_key'] : null);
-        $chooser      = new $chooserClass($this->currentConnections, $relationKey);
+        $relationKey = (isset($this->map[$name]['relation_key']) ? $this->map[$name]['relation_key'] : null);
+        $chooser = new $chooserClass($this->currentConnections, $relationKey);
 
         if (!$chooser instanceof ShardChooserInterface) {
             throw new ShardingException('Shard chooser must be instanceof ShardChooserInterface');
@@ -94,8 +94,8 @@ class MapManager
         }
 
         $generatorClass = $this->map[$name]['id_generator'];
-        $sequenceKey    = $this->map[$name]['sequence_key'];
-        $generator      = new $generatorClass($sequenceKey);
+        $sequenceKey = $this->map[$name]['sequence_key'];
+        $generator = new $generatorClass($sequenceKey);
 
         if (!$generator instanceof IdGeneratorInterface) {
             throw new ShardingException('Id generator must be instanceof IdGeneratorInterface');

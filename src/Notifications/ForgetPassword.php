@@ -38,7 +38,7 @@ class ForgetPassword extends Notification implements ShouldQueue
      */
     public function __construct($token, $channels = [])
     {
-        $this->token    = $token;
+        $this->token = $token;
         $this->channels = $channels;
     }
 
@@ -76,7 +76,7 @@ class ForgetPassword extends Notification implements ShouldQueue
         return (new MailMessage())
             ->subject('Password change request from ' . config('app.name'))
             ->markdown('bright::emails.auth.password', [
-                'token'      => $this->token,
+                'token' => $this->token,
                 'notifiable' => $notifiable,
             ]);
     }

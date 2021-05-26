@@ -38,7 +38,7 @@ trait Remove
         }
 
         $bindings = $this->getBindings();
-        $bindkey  = 0;
+        $bindkey = 0;
 
         // Checking all the where items
         foreach ($this->wheres as $key => $value) {

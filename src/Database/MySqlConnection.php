@@ -58,9 +58,9 @@ class MySqlConnection extends LaravelMySqlConnection
             return true;
         }
 
-        $prefix   = $this->getTablePrefix();
-        $query    = \str_replace('#__', $prefix, $query);
-        $type     = \trim(\strtolower(\explode(' ', $query)[0]));
+        $prefix = $this->getTablePrefix();
+        $query = \str_replace('#__', $prefix, $query);
+        $type = \trim(\strtolower(\explode(' ', $query)[0]));
 
         switch ($type) {
             case 'delete':
@@ -126,7 +126,7 @@ class MySqlConnection extends LaravelMySqlConnection
 
     public function toQueue(string $query, array $bindings): void
     {
-        $async       = $this->async;
+        $async = $this->async;
         $this->async = null;
         $this->event(new QueryQueued($query, $bindings, $async));
     }

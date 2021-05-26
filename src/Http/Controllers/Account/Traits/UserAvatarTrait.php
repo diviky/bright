@@ -22,7 +22,7 @@ trait UserAvatarTrait
             $img = Image::make($file);
             $img->fit($size, $size);
             $filename = $this->id . '.' . $file->getClientOriginalExtension();
-            $avatar   = 'avatar/' . $filename;
+            $avatar = 'avatar/' . $filename;
             $resource = $img->stream()->detach();
 
             $disk = $disk ?: config('filesystems.default');

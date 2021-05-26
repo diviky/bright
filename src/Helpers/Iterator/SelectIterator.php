@@ -69,8 +69,8 @@ class SelectIterator implements Iterator
         }
 
         $this->chunkSize = $chunkSize;
-        $this->builder   = $builder;
-        $this->callback  = $callback;
+        $this->builder = $builder;
+        $this->callback = $callback;
     }
 
     /**
@@ -121,11 +121,11 @@ class SelectIterator implements Iterator
      */
     protected function reset(): void
     {
-        $this->position      = 0;
+        $this->position = 0;
         $this->totalPosition = 0;
-        $this->next          = false;
-        $this->page          = 1;
-        $this->results       = [];
+        $this->next = false;
+        $this->page = 1;
+        $this->results = [];
     }
 
     protected function query(): void
@@ -142,7 +142,7 @@ class SelectIterator implements Iterator
 
             ++$this->page;
             $this->position = 0;
-            $this->results  = $rows->toArray();
+            $this->results = $rows->toArray();
         } else {
             $this->reset();
         }

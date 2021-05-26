@@ -13,7 +13,7 @@ class Meta extends BaseMeta
      *
      * @var string
      */
-    protected $table    = 'app_meta';
+    protected $table = 'app_meta';
 
     /**
      * Relation table name.

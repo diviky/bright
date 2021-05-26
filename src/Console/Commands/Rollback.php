@@ -24,9 +24,9 @@ class Rollback extends Command
     public function handle(): void
     {
         $this->call('migrate:reset', [
-            '--path'     => \realpath(__DIR__ . '/../../../database/migrations'),
+            '--path' => \realpath(__DIR__ . '/../../../database/migrations'),
             '--realpath' => true,
-            '--force'    => $this->option('force'),
+            '--force' => $this->option('force'),
         ]);
     }
 }

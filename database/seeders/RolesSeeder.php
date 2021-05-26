@@ -16,20 +16,20 @@ class RolesSeeder extends Seeder
     public function run(): void
     {
         $permission = Permission::create([
-            'name'         => '*',
+            'name' => '*',
             'display_name' => 'all',
         ]);
 
         $role = Role::create([
-            'name'         => 'admin',
+            'name' => 'admin',
             'display_name' => 'Administrator',
         ]);
 
         $permission->assignRole($role);
 
         $role = Role::create([
-            'name'             => 'customer',
-            'display_name'     => 'Customer',
+            'name' => 'customer',
+            'display_name' => 'Customer',
         ]);
 
         $permission->assignRole($role);

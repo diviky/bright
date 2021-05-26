@@ -65,14 +65,14 @@ class Bright
 
         return $this->renderStatement($type, [
             'conditions' => $this->conditions($query['conditions'], true, true),
-            'fields'     => (\count($query['fields']) > 0) ? \implode(', ', $query['fields']) : ' * ',
-            'values'     => (\count($query['values']) > 0) ? \implode(', ', $query['values']) : '',
-            'table'      => $table,
-            'alias'      => ($query['alias']) ? $this->alias . $this->name($query['alias']) : '',
-            'order'      => $this->order($query['order']),
-            'limit'      => $this->limit($query['limit'], $query['offset'], $query['page']),
-            'joins'      => \implode(' ', $query['joins']),
-            'group'      => $this->group($query['group']),
+            'fields' => (\count($query['fields']) > 0) ? \implode(', ', $query['fields']) : ' * ',
+            'values' => (\count($query['values']) > 0) ? \implode(', ', $query['values']) : '',
+            'table' => $table,
+            'alias' => ($query['alias']) ? $this->alias . $this->name($query['alias']) : '',
+            'order' => $this->order($query['order']),
+            'limit' => $this->limit($query['limit'], $query['offset'], $query['page']),
+            'joins' => \implode(' ', $query['joins']),
+            'group' => $this->group($query['group']),
         ]);
     }
 
@@ -112,9 +112,9 @@ class Bright
     public function buildJoinStatement($join)
     {
         $data = \array_merge([
-            'type'       => null,
-            'alias'      => null,
-            'table'      => 'join_table',
+            'type' => null,
+            'alias' => null,
+            'table' => 'join_table',
             'conditions' => [],
         ], $join);
 
@@ -236,14 +236,14 @@ class Bright
      */
     public function conditionKeysToString($conditions, $quoteValues = true): array
     {
-        $i    = 0;
-        $out  = [];
+        $i = 0;
+        $out = [];
         $data = $columnType = null;
         $bool = ['and', 'or', 'not', 'and not', 'or not', 'xor', '||', '&&'];
 
         foreach ($conditions as $key => $value) {
-            $join        = ' AND ';
-            $not         = '';
+            $join = ' AND ';
+            $not = '';
             $valueInsert = false;
             if (\is_array($value)) {
                 $valueInsert = (
@@ -308,7 +308,7 @@ class Bright
                         $data = \substr($data, 1, \strlen($data) - 2);
                     }
                     $out[] = $data;
-                    $data  = null;
+                    $data = null;
                 }
             }
             ++$i;
@@ -329,7 +329,7 @@ class Bright
     public function limit($limit, $offset = null, $page = null): ?string
     {
         if ($limit) {
-            $rt    = '';
+            $rt = '';
             $limit = strval($limit);
             if (!\stripos($limit, 'limit') || 0 === \strpos(\strtolower($limit), 'limit')) {
                 $rt = ' LIMIT';
@@ -375,11 +375,11 @@ class Bright
         }
 
         if (\is_array($keys)) {
-            $keys  = ($this->countDim($keys) > 1) ? \array_map([&$this, 'order'], $keys) : $keys;
+            $keys = ($this->countDim($keys) > 1) ? \array_map([&$this, 'order'], $keys) : $keys;
             $order = [];
             foreach ($keys as $key => $value) {
                 if (\is_numeric($key)) {
-                    $key   = $value   = \ltrim(\str_replace('ORDER BY ', '', $this->order($value)));
+                    $key = $value = \ltrim(\str_replace('ORDER BY ', '', $this->order($value)));
                     $value = (!\preg_match('/\\x20ASC|\\x20DESC/i', $key) ? ' ' . $direction : '');
                 } else {
                     $value = ' ' . $value;
@@ -499,7 +499,7 @@ class Bright
             return $data->value;
         }
         $array = \is_array($data);
-        $data  = (array) $data;
+        $data = (array) $data;
         $count = \count($data);
 
         for ($i = 0; $i < $count; ++$i) {
@@ -527,14 +527,14 @@ class Bright
             $data[$i] = \str_replace($this->startQuote . $this->startQuote, $this->startQuote, $data[$i]);
             $data[$i] = \str_replace($this->startQuote . '(', '(', $data[$i]);
             $data[$i] = \str_replace(')' . $this->startQuote, ')', $data[$i]);
-            $alias    = !empty($this->alias) ? $this->alias : 'AS ';
+            $alias = !empty($this->alias) ? $this->alias : 'AS ';
 
             if (\preg_match('/\s+' . $alias . '\s*/', $data[$i])) {
                 if (\preg_match('/\w+\s+' . $alias . '\s*/', $data[$i])) {
-                    $quoted   = $this->endQuote . ' ' . $alias . $this->startQuote;
+                    $quoted = $this->endQuote . ' ' . $alias . $this->startQuote;
                     $data[$i] = \str_replace(' ' . $alias, $quoted, $data[$i]);
                 } else {
-                    $quoted   = $alias . $this->startQuote;
+                    $quoted = $alias . $this->startQuote;
                     $data[$i] = \str_replace($alias, $quoted, $data[$i]) . $this->endQuote;
                 }
             }
@@ -611,11 +611,11 @@ class Bright
             list($key, $operator) = \explode(' ', \trim($key), 2);
 
             if (!\preg_match($operatorMatch, \trim($operator)) && false !== \strpos($operator, ' ')) {
-                $key      = $key . ' ' . $operator;
-                $split    = \strrpos($key, ' ');
+                $key = $key . ' ' . $operator;
+                $split = \strrpos($key, ' ');
                 if (false !== $split) {
                     $operator = \substr($key, $split);
-                    $key      = \substr($key, 0, $split);
+                    $key = \substr($key, 0, $split);
                 }
             }
         }
@@ -625,8 +625,8 @@ class Bright
         $null = (null === $value || (\is_array($value) && empty($value)));
 
         if ('not' === \strtolower($operator)) {
-            $values                  = [];
-            $values[$operator]       = [];
+            $values = [];
+            $values[$operator] = [];
             $values[$operator][$key] = $value;
 
             $data = $this->conditionKeysToString($values, true);
@@ -638,7 +638,7 @@ class Bright
 
         if ('?' !== $key) {
             $isKey = (false !== \strpos($key, '(') || false !== \strpos($key, ')'));
-            $key   = $isKey ? $this->quoteFields($key) : $this->name($key);
+            $key = $isKey ? $this->quoteFields($key) : $this->name($key);
         }
 
         if ($bound) {
@@ -699,9 +699,9 @@ class Bright
         if (false !== \strpos($str, '?') && \is_numeric(\key($value))) {
             $offset = 0;
             while (false !== ($pos = \strpos($str, '?', $offset))) {
-                $val    = \array_shift($value);
+                $val = \array_shift($value);
                 $offset = $pos + \strlen($val);
-                $str    = \substr_replace($str, $val, $pos, 1);
+                $str = \substr_replace($str, $val, $pos, 1);
             }
 
             return $str;
@@ -723,7 +723,7 @@ class Bright
      */
     protected function quoteFields($conditions)
     {
-        $start    = $end    = '';
+        $start = $end = '';
         $original = $conditions;
 
         if (!empty($this->startQuote)) {

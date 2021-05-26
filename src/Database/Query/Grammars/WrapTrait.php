@@ -42,8 +42,8 @@ trait WrapTrait
             $alias = '';
             if (false !== \stripos($table, ' as ')) {
                 $segments = \preg_split('/\s+as\s+/i', $table);
-                $alias    = ' as ' . $segments[1];
-                $table    = $segments[0];
+                $alias = ' as ' . $segments[1];
+                $table = $segments[0];
             }
 
             if (\is_array($databases) && isset($databases[$table])) {

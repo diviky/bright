@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
 
         if ('json' == $format || $request->expectsJson()) {
             return response()->json([
-                'status'  => 401,
+                'status' => 401,
                 'message' => $exception->getMessage(),
             ], 401);
         }

@@ -19,7 +19,7 @@ trait ViewTrait
      */
     public function ajax($url = null, $params = [], $method = 'post', $attributes = []): self
     {
-        $form         = [];
+        $form = [];
         $form['pjax'] = $this->get('request')->pjax();
         $form['pjax'] = $form['pjax'] ?: $this->get('request')->input('pjax');
         $form['ajax'] = $form['pjax'] ? false : $this->get('request')->ajax();
@@ -34,7 +34,7 @@ trait ViewTrait
                 $inputs .= '<input type="hidden" name="' . $k . '" value="' . $v . '" />';
             }
 
-            $class           = 'render-' . Str::slug($url);
+            $class = 'render-' . Str::slug($url);
             $params['class'] = '.' . $class;
 
             if (!\is_array($attributes)) {
@@ -43,16 +43,16 @@ trait ViewTrait
 
             $action = '/' !== \substr($url, 0, 1) ? $this->route($url) : url($url);
 
-            $attributes['role']   = 'krender';
-            $attributes['class']  = $class;
+            $attributes['role'] = 'krender';
+            $attributes['class'] = $class;
             $attributes['method'] = $method ?? 'POST';
             $attributes['action'] = $action;
 
-            $start          = '<form ' . $this->toAttribs($attributes) . '>';
-            $form['start']  = $start . $inputs . csrf_field();
+            $start = '<form ' . $this->toAttribs($attributes) . '>';
+            $form['start'] = $start . $inputs . csrf_field();
             $form['inputs'] = $inputs;
-            $form['end']    = '</form>';
-            $form['class']  = $params['class'];
+            $form['end'] = '</form>';
+            $form['class'] = $params['class'];
             $form['params'] = $params;
         }
 

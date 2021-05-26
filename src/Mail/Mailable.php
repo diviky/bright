@@ -48,7 +48,7 @@ class Mailable extends BaseMailable implements ShouldQueue
      */
     public function view($view, array $data = [])
     {
-        $this->view     = $this->prefix . $view;
+        $this->view = $this->prefix . $view;
         $this->viewData = \array_merge($this->viewData, $data);
 
         return $this;
@@ -166,28 +166,28 @@ class Mailable extends BaseMailable implements ShouldQueue
         if (\preg_match('/>[^\S]*;/', $address)) {
             $address = \explode(';', $address);
             foreach ($address as $v) {
-                $v     = \explode('<', $v);
+                $v = \explode('<', $v);
                 $email = isset($v[1]) ? \rtrim(\trim($v[1]), '>') : $v[0];
-                $name  = isset($v[1]) ? $v[0] : $from;
+                $name = isset($v[1]) ? $v[0] : $from;
 
                 $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
             }
         } elseif (\strstr($address, '|')) {
-            $delim   = (\strstr($address, ',')) ? ',' : ';';
+            $delim = (\strstr($address, ',')) ? ',' : ';';
             $address = \explode('|', $address);
             foreach ($address as $v) {
-                $v     = \explode($delim, $v);
+                $v = \explode($delim, $v);
                 $email = isset($v[1]) ? $v[1] : $v[0];
-                $name  = isset($v[1]) ? $v[1] : $from;
+                $name = isset($v[1]) ? $v[1] : $from;
 
                 $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
             }
         } else {
             $address = \preg_split("/[,|\n]/", $address);
             foreach ($address as $v) {
-                $v     = \explode(';', $v);
+                $v = \explode(';', $v);
                 $email = isset($v[1]) ? $v[1] : $v[0];
-                $name  = isset($v[1]) ? $v[1] : $from;
+                $name = isset($v[1]) ? $v[1] : $from;
 
                 $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
             }

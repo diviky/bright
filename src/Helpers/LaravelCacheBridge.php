@@ -33,7 +33,7 @@ class LaravelCacheBridge implements Cache
      */
     public function __construct(\Illuminate\Contracts\Cache\Repository $cache, $prefix = 'dd')
     {
-        $this->cache  = $cache;
+        $this->cache = $cache;
         $this->prefix = $prefix;
     }
 

@@ -34,9 +34,9 @@ trait Token
     {
         $token = $this->generateToken();
 
-        $activation          = new Activation();
+        $activation = new Activation();
         $activation->user_id = $user->id;
-        $activation->token   = $token;
+        $activation->token = $token;
         $activation->save();
 
         $this->tokenId = $activation->id;

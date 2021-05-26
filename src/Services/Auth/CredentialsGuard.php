@@ -27,9 +27,9 @@ class CredentialsGuard implements Guard
 
     public function __construct(UserProvider $provider, Request $request, array $config = [])
     {
-        $this->config   = $config;
+        $this->config = $config;
         $this->provider = $provider;
-        $this->request  = $request;
+        $this->request = $request;
     }
 
     /**
@@ -70,7 +70,7 @@ class CredentialsGuard implements Guard
     public function getCredentials(): array
     {
         $credentials = [$this->username(), 'password'];
-        $return      = [];
+        $return = [];
         foreach ($credentials as $key) {
             $token = $this->request->query($key);
             if (empty($token)) {

@@ -32,7 +32,7 @@ return $config->setRules([
     'phpdoc_scalar'                          => true,
     'unary_operator_spaces'                  => true,
     'concat_space'                           => ['spacing' => 'one'],
-    'binary_operator_spaces'                 => ['operators' => ['=>' => 'align', '=' => 'align']],
+    //'binary_operator_spaces'                 => ['operators' => ['=>' => 'align', '=' => 'align']],
     'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
     'blank_line_before_statement'            => [
         'statements' => ['break', 'continue', 'declare', 'return', 'throw', 'try'],

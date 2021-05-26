@@ -19,7 +19,7 @@ class AccessTokenGuard implements Guard
      *
      * @var array
      */
-    protected $inputKeys  = [];
+    protected $inputKeys = [];
 
     /**
      * database column.
@@ -42,9 +42,9 @@ class AccessTokenGuard implements Guard
 
     public function __construct(UserProvider $provider, Request $request, array $config = [])
     {
-        $this->config   = $config;
+        $this->config = $config;
         $this->provider = $provider;
-        $this->request  = $request;
+        $this->request = $request;
         // key to check in request
         $this->inputKeys = ['access_token', 'api_token'];
         // key to check in database
@@ -56,8 +56,8 @@ class AccessTokenGuard implements Guard
      */
     public function user()
     {
-        $token      = null;
-        $signature  = null;
+        $token = null;
+        $signature = null;
         $access_key = $this->getTokenForRequest();
 
         if (!empty($access_key)) {
@@ -78,7 +78,7 @@ class AccessTokenGuard implements Guard
         }
 
         $allowed_ips = $token->allowed_ip;
-        $allowed     = $this->validateIp($allowed_ips);
+        $allowed = $this->validateIp($allowed_ips);
 
         if (!$allowed) {
             return null;
@@ -163,9 +163,9 @@ class AccessTokenGuard implements Guard
             return true;
         }
 
-        $ips         = $this->request->ips();
+        $ips = $this->request->ips();
         $allowed_ips = \explode(',', $allowed_ips);
-        $allowed     = false;
+        $allowed = false;
 
         foreach ($ips as $ip) {
             foreach ($allowed_ips as $address) {
@@ -197,10 +197,10 @@ class AccessTokenGuard implements Guard
             return false;
         }
 
-        $algo   = $this->request->header('X-Auth-Method', 'SHA256');
-        $nonce  = $this->request->header('X-Auth-Nonce');
-        $date   = $this->request->header('X-Auth-Date');
-        $date   = $date ?? $this->request->header('Date');
+        $algo = $this->request->header('X-Auth-Method', 'SHA256');
+        $nonce = $this->request->header('X-Auth-Nonce');
+        $date = $this->request->header('X-Auth-Date');
+        $date = $date ?? $this->request->header('Date');
         $method = $this->request->method();
         $fields = $this->request->all();
         $fields = \http_build_query($fields, '', '&', PHP_QUERY_RFC3986);

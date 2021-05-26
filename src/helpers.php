@@ -84,7 +84,7 @@ if (!function_exists('markdown')) {
         }
 
         $converter = new CommonMarkConverter([
-            'html_input'         => 'strip',
+            'html_input' => 'strip',
             'allow_unsafe_links' => false,
         ]);
 

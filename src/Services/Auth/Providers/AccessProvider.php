@@ -18,7 +18,7 @@ class AccessProvider implements UserProvider
 
     public function __construct(User $user, Token $token)
     {
-        $this->user  = $user;
+        $this->user = $user;
         $this->token = $token;
     }
 

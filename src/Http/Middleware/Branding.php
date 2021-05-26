@@ -36,8 +36,8 @@ class Branding
             return redirect()->secure($request->getRequestUri());
         }
 
-        app()->owner     = optional($row)->user_id;
-        app()->name      = optional($row)->name;
+        app()->owner = optional($row)->user_id;
+        app()->name = optional($row)->name;
         app()->domain_id = optional($row)->id;
 
         $row = $this->format($row);
@@ -66,15 +66,15 @@ class Branding
      */
     protected function format($row)
     {
-        $row->logo    = disk($row->logo, 's3');
-        $row->favico  = disk($row->favico, 's3');
-        $row->icon    = $row->icon ? disk($row->icon, 's3') : $row->logo;
+        $row->logo = disk($row->logo, 's3');
+        $row->favico = disk($row->favico, 's3');
+        $row->icon = $row->icon ? disk($row->icon, 's3') : $row->logo;
 
         if (!is_array($row->options)) {
             $row->options = \json_decode($row->options, true);
         }
 
-        $row->style   = isset($row->options['style']) ? $row->options['style'] : 'app';
+        $row->style = isset($row->options['style']) ? $row->options['style'] : 'app';
 
         if ($row->name) {
             config(['mail.from.name' => $row->name]);

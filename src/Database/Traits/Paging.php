@@ -13,7 +13,7 @@ trait Paging
      *
      * @var array
      */
-    protected $tables      = [];
+    protected $tables = [];
 
     /**
      * Total records of multiple tables.
@@ -56,7 +56,7 @@ trait Paging
     public function paginateComplex($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null): \Illuminate\Pagination\LengthAwarePaginator
     {
         $total = $this->getCountForPagination($columns);
-        $page  = $page ?? Paginator::resolveCurrentPage($pageName);
+        $page = $page ?? Paginator::resolveCurrentPage($pageName);
 
         if (\count($this->tables) > 0) {
             $this->tableTotals[$this->from] = $total;
@@ -71,11 +71,11 @@ trait Paging
         $tables = [];
         if (1 == $page) {
             $tables[] = $this->from;
-            $tables   = \array_merge($tables, $this->tables);
-            $skip     = ($page - 1) * $perPage;
+            $tables = \array_merge($tables, $this->tables);
+            $skip = ($page - 1) * $perPage;
         } else {
-            $totals  = 0;
-            $offset  = $perPage * ($page - 1);
+            $totals = 0;
+            $offset = $perPage * ($page - 1);
             $offsets = 0;
 
             foreach ($this->tableTotals as $table => $count) {
@@ -104,7 +104,7 @@ trait Paging
 
         if ($total && \count($tables) > 0) {
             $count = 0;
-            $skip  = 0;
+            $skip = 0;
             $limit = $perPage;
             foreach ($tables as $table) {
                 $results = $results->merge(
@@ -116,7 +116,7 @@ trait Paging
 
                 $count += $results->count();
                 $limit = $limit - $count;
-                $skip  = 0;
+                $skip = 0;
                 if ($count >= $perPage) {
                     break;
                 }
@@ -124,7 +124,7 @@ trait Paging
         }
 
         return $this->paginator($results, $total, $perPage, $page, [
-            'path'     => Paginator::resolveCurrentPath(),
+            'path' => Paginator::resolveCurrentPath(),
             'pageName' => $pageName,
         ]);
     }
@@ -177,8 +177,8 @@ trait Paging
             $rows = $this->paginate($perPage, $columns, $pageName, $page);
         }
 
-        $rows->from   = $rows->firstItem();
-        $rows->to     = $rows->lastItem();
+        $rows->from = $rows->firstItem();
+        $rows->to = $rows->lastItem();
         $rows->serial = $rows->firstItem();
 
         $i = $rows->perPage() * ($rows->currentPage() - 1);

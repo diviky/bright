@@ -19,7 +19,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
      */
     public function dispatch(Route $route, $controller, $method)
     {
-        $action   = $route->getActionName();
+        $action = $route->getActionName();
         $response = parent::dispatch($route, $controller, $method);
 
         return new Responsable($response, $action, $controller);

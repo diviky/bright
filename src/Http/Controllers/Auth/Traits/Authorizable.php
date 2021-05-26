@@ -29,7 +29,7 @@ trait Authorizable
         $permissions = $this->getDirectPermissions();
 
         $granted = null;
-        $revoke  = false;
+        $revoke = false;
         foreach ($permissions as $permission) {
             foreach ($matches as $match) {
                 if (Str::is($permission->name, $match)) {

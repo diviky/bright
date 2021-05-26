@@ -40,10 +40,10 @@ class FreeEmailValidation implements Rule
 
         $path = \storage_path('app/tmp/free_email_provider_domains.txt');
         if ($this->files->exists($path)) {
-            $json  = \file_get_contents($path);
+            $json = \file_get_contents($path);
         } else {
-            $url   = 'https://gist.githubusercontent.com/tbrianjones/5992856/raw/93213efb652749e226e69884d6c048e595c1280a/free_email_provider_domains.txt';
-            $json  = \file_get_contents($url);
+            $url = 'https://gist.githubusercontent.com/tbrianjones/5992856/raw/93213efb652749e226e69884d6c048e595c1280a/free_email_provider_domains.txt';
+            $json = \file_get_contents($url);
             $this->files->put($path, $json);
         }
 

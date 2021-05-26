@@ -23,7 +23,7 @@ class Meta
      *
      * @var string
      */
-    protected $table    = 'meta';
+    protected $table = 'meta';
 
     /**
      * Relation table.
@@ -81,7 +81,7 @@ class Meta
         }
 
         $field = $this->getField($key);
-        $id    = $field['id'] ?? null;
+        $id = $field['id'] ?? null;
 
         if (empty($id)) {
             return false;
@@ -120,7 +120,7 @@ class Meta
         $time = new Carbon();
 
         $values = [
-            'option_id'  => $id,
+            'option_id' => $id,
             'meta_value' => $value,
             'created_at' => $time,
             'updated_at' => $time,

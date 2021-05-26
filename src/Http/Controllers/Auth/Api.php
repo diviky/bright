@@ -41,9 +41,9 @@ class Api extends Controller
         $user->notify(new ForgetPassword($token));
 
         return [
-            'status'  => 'OK',
+            'status' => 'OK',
             'message' => __('Verification code sent to your registered :username.', ['username' => $this->address()]),
-            'id'      => $id,
+            'id' => $id,
         ];
     }
 
@@ -51,7 +51,7 @@ class Api extends Controller
     {
         if (\is_null($id)) {
             return [
-                'status'  => 'ERROR',
+                'status' => 'ERROR',
                 'message' => 'Invalid request',
             ];
         }
@@ -60,7 +60,7 @@ class Api extends Controller
 
         if (\is_null($activation)) {
             return [
-                'status'  => 'ERROR',
+                'status' => 'ERROR',
                 'message' => 'Invalid request',
             ];
         }
@@ -70,9 +70,9 @@ class Api extends Controller
         $user->notify(new ForgetPassword($activation->token));
 
         return [
-            'status'  => 'OK',
+            'status' => 'OK',
             'message' => __('Verification code resent to your registered :username.', ['username' => $this->address()]),
-            'id'      => $id,
+            'id' => $id,
         ];
     }
 
@@ -80,7 +80,7 @@ class Api extends Controller
     {
         if (\is_null($id)) {
             return [
-                'status'  => 'ERROR',
+                'status' => 'ERROR',
                 'message' => 'Invalid request',
             ];
         }
@@ -97,7 +97,7 @@ class Api extends Controller
 
         if (empty($activation)) {
             return [
-                'status'  => 'ERROR',
+                'status' => 'ERROR',
                 'message' => 'Invalid verification code.',
             ];
         }
@@ -107,9 +107,9 @@ class Api extends Controller
         $activation->delete();
 
         return [
-            'status'  => 'OK',
+            'status' => 'OK',
             'message' => 'Account verified successfully.',
-            'user'    => $user,
+            'user' => $user,
         ];
     }
 
@@ -124,14 +124,14 @@ class Api extends Controller
 
         if ($user) {
             return [
-                'status'  => 'OK',
+                'status' => 'OK',
                 'message' => 'Password changed successfully.',
-                'user'    => $user,
+                'user' => $user,
             ];
         }
 
         return [
-            'status'  => 'ERROR',
+            'status' => 'ERROR',
             'message' => 'Unable to reset password.',
         ];
     }

@@ -111,12 +111,12 @@ trait Filter
                 $date = \explode(' - ', $date);
                 $date = [
                     'from' => $date[0] ?? null,
-                    'to'   => $date[1] ?? null,
+                    'to' => $date[1] ?? null,
                 ];
             }
 
-            $from   = $this->toTime($date['from'], 'Y-m-d');
-            $to     = $this->toTime($date['to'], 'Y-m-d');
+            $from = $this->toTime($date['from'], 'Y-m-d');
+            $to = $this->toTime($date['to'], 'Y-m-d');
             $column = $this->cleanField($column);
 
             if ($from && $to) {
@@ -139,18 +139,18 @@ trait Filter
                 $date = \explode(' - ', $date);
                 $date = [
                     'from' => $date[0] ?? null,
-                    'to'   => $date[1] ?? null,
+                    'to' => $date[1] ?? null,
                 ];
             }
 
             $from = \trim($date['from']);
-            $to   = \trim($date['to']);
-            $to   = $to ?: $from;
+            $to = \trim($date['to']);
+            $to = $to ?: $from;
 
             $column = $this->cleanField($column);
 
             $from = $this->toTime($from, 'Y-m-d H:i:s', '00:00:00');
-            $to   = $this->toTime($to, 'Y-m-d H:i:s', '23:59:59');
+            $to = $this->toTime($to, 'Y-m-d H:i:s', '23:59:59');
 
             $this->whereBetween($column, [$from, $to]);
         }
@@ -169,13 +169,13 @@ trait Filter
                 $date = \explode(' - ', $date);
                 $date = [
                     'from' => $date[0] ?? null,
-                    'to'   => $date[1] ?? null,
+                    'to' => $date[1] ?? null,
                 ];
             }
 
-            $from   = \trim($date['from']);
-            $to     = \trim($date['to']);
-            $to     = $to ?: $from;
+            $from = \trim($date['from']);
+            $to = \trim($date['to']);
+            $to = $to ?: $from;
             $column = $this->cleanField($column);
 
             if (!\is_numeric($from)) {
@@ -201,12 +201,12 @@ trait Filter
                 $date = \explode(' - ', $date);
                 $date = [
                     'from' => \trim($date[0]),
-                    'to'   => \trim($date[1]),
+                    'to' => \trim($date[1]),
                 ];
             }
 
-            $from   = $this->toTime($date['from']);
-            $to     = $this->toTime($date['to']);
+            $from = $this->toTime($date['from']);
+            $to = $this->toTime($date['to']);
             $column = $this->cleanField($column);
 
             if ($from && $to) {
@@ -226,12 +226,12 @@ trait Filter
                 $date = \explode(' - ', $date);
                 $date = [
                     'from' => \trim($date[0]),
-                    'to'   => \trim($date[1]),
+                    'to' => \trim($date[1]),
                 ];
             }
 
-            $from   = $date['from'];
-            $to     = $date['to'];
+            $from = $date['from'];
+            $to = $date['to'];
             $column = $this->cleanField($column);
 
             if ($from && $to) {

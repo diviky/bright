@@ -36,8 +36,8 @@ class Responsable implements BaseResponsable
      */
     public function __construct($response, $action, $controller)
     {
-        $this->response   = $response;
-        $this->action     = $action;
+        $this->response = $response;
+        $this->action = $action;
         $this->controller = $controller;
     }
 
@@ -51,7 +51,7 @@ class Responsable implements BaseResponsable
     public function toResponse($request)
     {
         $response = $this->getResponse();
-        $format   = $request->input('_request') ?: $request->input('format');
+        $format = $request->input('_request') ?: $request->input('format');
 
         if (!$format && $request->expectsJson()) {
             return $response;
@@ -96,7 +96,7 @@ class Responsable implements BaseResponsable
         }
 
         if ($ajax && isset($response['route'])) {
-            $redirect             = $this->getNextRedirect($response, 'route');
+            $redirect = $this->getNextRedirect($response, 'route');
             if (isset($redirect)) {
                 $response['redirect'] = $redirect->getTargetUrl();
             }
@@ -118,8 +118,8 @@ class Responsable implements BaseResponsable
 
         list($component, $view) = \explode('.', $route);
 
-        $path   = $this->getViewsFrom($this->controller, $this->action);
-        $theme  = $this->setUpTheme($route, $component, $path);
+        $path = $this->getViewsFrom($this->controller, $this->action);
+        $theme = $this->setUpTheme($route, $component, $path);
         $layout = 'html' == $format ? 'html' : $theme['layout'];
 
         return $this->getView($view, $response, $layout);

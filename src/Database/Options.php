@@ -18,14 +18,14 @@ class Options
      *
      * @var string
      */
-    protected $table   = 'app_options';
+    protected $table = 'app_options';
 
     /**
      * Values to save.
      *
      * @var array
      */
-    protected $values  = [];
+    protected $values = [];
 
     /**
      * Values for update.
@@ -39,14 +39,14 @@ class Options
      *
      * @var array
      */
-    protected $extra   = [];
+    protected $extra = [];
 
     /**
      * Conditions.
      *
      * @var array
      */
-    protected $where   = [];
+    protected $where = [];
 
     /**
      * @param string $table
@@ -128,8 +128,8 @@ class Options
 
         $values = [
             'option_value' => $value,
-            'option_type'  => $type,
-            'updated_at'   => $time,
+            'option_type' => $type,
+            'updated_at' => $time,
         ];
 
         $values = \array_merge($values, $this->updates);
@@ -160,11 +160,11 @@ class Options
         }
 
         $values = [
-            'option_name'  => $key,
+            'option_name' => $key,
             'option_value' => $value,
-            'option_type'  => $type,
-            'created_at'   => $time,
-            'updated_at'   => $time,
+            'option_type' => $type,
+            'created_at' => $time,
+            'updated_at' => $time,
         ];
 
         $values = \array_merge($values, $this->values);

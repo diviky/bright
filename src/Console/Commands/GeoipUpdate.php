@@ -34,7 +34,7 @@ class GeoipUpdate extends Command
             return 1;
         }
 
-        $success  = $updater->updateGeoIpFiles($config['database_path'], $config['update_url']);
+        $success = $updater->updateGeoIpFiles($config['database_path'], $config['update_url']);
         $messages = $updater->getMessages();
 
         foreach ($messages as $message) {

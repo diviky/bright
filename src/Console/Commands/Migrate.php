@@ -24,10 +24,10 @@ class Migrate extends Command
     public function handle(): void
     {
         $this->call('migrate', [
-            '--path'     => \realpath(__DIR__ . '/../../../database/migrations'),
+            '--path' => \realpath(__DIR__ . '/../../../database/migrations'),
             '--realpath' => true,
-            '--force'    => $this->option('force'),
-            '--step'     => true,
+            '--force' => $this->option('force'),
+            '--step' => true,
         ]);
     }
 }

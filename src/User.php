@@ -35,14 +35,14 @@ class User extends Authenticatable
      *
      * @var string
      */
-    protected $admin   = 'super-admin';
+    protected $admin = 'super-admin';
 
     /**
      * The column name of the "Api Token" token.
      *
      * @var string
      */
-    protected $apiTokenName    = 'access_token';
+    protected $apiTokenName = 'access_token';
 
     /**
      * Access token column name.

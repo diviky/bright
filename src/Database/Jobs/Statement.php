@@ -36,7 +36,7 @@ class Statement implements ShouldQueue
      */
     public function __construct($sql, $bindings = [])
     {
-        $this->sql      = $sql;
+        $this->sql = $sql;
         $this->bindings = $bindings;
     }
 

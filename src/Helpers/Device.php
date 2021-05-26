@@ -28,52 +28,52 @@ class Device
 
         //device wrapper
         $devicelist = [
-            'desktop'               => 'computer',
-            'smartphone'            => 'phone',
-            'tablet'                => 'tablet',
-            'feature phone'         => 'phone',
-            'phablet'               => 'phone',
-            'console'               => 'phone',
-            'tv'                    => 'tablet',
-            'car browser'           => 'tablet',
-            'smart display'         => 'tablet',
-            'camera'                => 'tablet',
+            'desktop' => 'computer',
+            'smartphone' => 'phone',
+            'tablet' => 'tablet',
+            'feature phone' => 'phone',
+            'phablet' => 'phone',
+            'console' => 'phone',
+            'tv' => 'tablet',
+            'car browser' => 'tablet',
+            'smart display' => 'tablet',
+            'camera' => 'tablet',
             'portable media player' => 'phone',
         ];
 
         $device = $detector->getDeviceName();
-        $type   = (isset($devicelist[$device])) ? $devicelist[$device] : 'computer';
+        $type = (isset($devicelist[$device])) ? $devicelist[$device] : 'computer';
 
-        $system     = $detector->getOs();
-        $system     = !is_array($system) ? [] : $system;
+        $system = $detector->getOs();
+        $system = !is_array($system) ? [] : $system;
 
-        $client     = $detector->getClient();
-        $client     = !is_array($client) ? [] : $client;
+        $client = $detector->getClient();
+        $client = !is_array($client) ? [] : $client;
 
         //legacy params
-        $return['device']          = $device;
-        $return['type']            = $type;
-        $return['brand']           = $detector->getBrandName();
-        $return['os']              = Arr::get($system, 'name');
-        $return['os_version']      = Arr::get($system, 'version');
-        $return['os_code']         = Arr::get($system, 'short_name');
-        $return['browser']         = Arr::get($client, 'name');
+        $return['device'] = $device;
+        $return['type'] = $type;
+        $return['brand'] = $detector->getBrandName();
+        $return['os'] = Arr::get($system, 'name');
+        $return['os_version'] = Arr::get($system, 'version');
+        $return['os_code'] = Arr::get($system, 'short_name');
+        $return['browser'] = Arr::get($client, 'name');
         $return['browser_version'] = Arr::get($client, 'version');
-        $return['browser_code']    = Arr::get($client, 'short_name');
-        $return['browser_type']    = Arr::get($client, 'type');
-        $return['browser_engine']  = Arr::get($client, 'engine');
+        $return['browser_code'] = Arr::get($client, 'short_name');
+        $return['browser_type'] = Arr::get($client, 'type');
+        $return['browser_engine'] = Arr::get($client, 'engine');
 
         if (!$advanced) {
             return \array_map('trim', $return);
         }
 
         //advanced params
-        $osFamily            = OperatingSystem::getOsFamily($system['short_name']);
+        $osFamily = OperatingSystem::getOsFamily($system['short_name']);
         $return['os_family'] = (false !== $osFamily) ? $osFamily : 'Unknown';
 
         $return['model'] = $detector->getModel();
 
-        $browserFamily            = Browser::getBrowserFamily($client['short_name']);
+        $browserFamily = Browser::getBrowserFamily($client['short_name']);
         $return['browser_family'] = (false !== $browserFamily) ? $browserFamily : 'Unknown';
 
         $return['touch'] = $detector->isTouchEnabled();

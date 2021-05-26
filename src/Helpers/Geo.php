@@ -33,9 +33,9 @@ class Geo
         //http://ipinfo.io/119.63.142.37/json
 
         $geocoder = new ProviderAggregator();
-        $adapter  = new GuzzleAdapter();
+        $adapter = new GuzzleAdapter();
 
-        $reader        = new Reader(storage_path('geoip') . '/' . $db);
+        $reader = new Reader(storage_path('geoip') . '/' . $db);
         $geoIP2Adapter = new GeoIP2Adapter($reader);
 
         $chain = new Chain([
@@ -65,17 +65,17 @@ class Geo
 
                 $data = $value->toArray();
 
-                $result['provider']     = $data['providedBy'];
-                $result['latitude']     = $data['latitude'];
-                $result['longitude']    = $data['longitude'];
-                $result['country']      = $data['country'];
+                $result['provider'] = $data['providedBy'];
+                $result['latitude'] = $data['latitude'];
+                $result['longitude'] = $data['longitude'];
+                $result['country'] = $data['country'];
                 $result['country_code'] = $data['countryCode'];
-                $result['city']         = $data['locality'];
-                $result['region']       = ($region) ? $region->getName() : '';
-                $result['region_code']  = ($region) ? $region->getCode() : '';
-                $result['zipcode']      = $data['postalCode'];
-                $result['locality']     = $data['locality'];
-                $result['timezone']     = $data['timezone'];
+                $result['city'] = $data['locality'];
+                $result['region'] = ($region) ? $region->getName() : '';
+                $result['region_code'] = ($region) ? $region->getCode() : '';
+                $result['zipcode'] = $data['postalCode'];
+                $result['locality'] = $data['locality'];
+                $result['timezone'] = $data['timezone'];
             }
         }
 

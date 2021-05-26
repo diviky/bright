@@ -32,12 +32,12 @@ class ActivationController extends Controller
         }
 
         $token = $request->input('token');
-        $user  = user();
+        $user = user();
 
         if (1 == $user->status) {
             return [
-                'status'   => 'OK',
-                'message'  => 'Your account is already activated',
+                'status' => 'OK',
+                'message' => 'Your account is already activated',
                 'redirect' => 'home',
             ];
         }
@@ -48,7 +48,7 @@ class ActivationController extends Controller
 
         if (empty($activation)) {
             return [
-                'status'  => 'ERROR',
+                'status' => 'ERROR',
                 'message' => 'Invalid activation key.',
             ];
         }
@@ -61,8 +61,8 @@ class ActivationController extends Controller
         $activation->delete();
 
         return [
-            'status'   => 'OK',
-            'message'  => 'Your account activated successfully.',
+            'status' => 'OK',
+            'message' => 'Your account activated successfully.',
             'redirect' => 'home',
         ];
     }
@@ -78,7 +78,7 @@ class ActivationController extends Controller
 
         if (is_null($user)) {
             return [
-                'status'  => 'ERROR',
+                'status' => 'ERROR',
                 'message' => __('Unable to find the user'),
             ];
         }
@@ -88,7 +88,7 @@ class ActivationController extends Controller
         $user->notify(new SendActivationToken($token));
 
         return [
-            'status'  => 'OK',
+            'status' => 'OK',
             'message' => __('Verification code resent to your registered :username.', ['username' => $this->address()]),
         ];
     }

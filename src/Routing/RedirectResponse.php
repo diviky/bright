@@ -12,7 +12,7 @@ class RedirectResponse extends BaseRedirectResponse
     /**
      * @var array
      */
-    protected $with  = [];
+    protected $with = [];
 
     /**
      * {@inheritDoc}
@@ -39,8 +39,8 @@ class RedirectResponse extends BaseRedirectResponse
 
         $this->headers->set('Content-Type', 'application/json');
 
-        $this->targetUrl  = $url;
-        $data             = $this->with;
+        $this->targetUrl = $url;
+        $data = $this->with;
         $data['redirect'] = $url;
 
         $this->setContent(\json_encode($data));

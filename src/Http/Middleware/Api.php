@@ -26,8 +26,8 @@ class Api
     public function handle($request, Closure $next, $keep_code = true)
     {
         $this->keep_code = $keep_code;
-        $response        = $next($request);
-        $response        = $this->addCorsHeaders($response);
+        $response = $next($request);
+        $response = $this->addCorsHeaders($response);
 
         return $this->respond($response);
     }

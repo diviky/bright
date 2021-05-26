@@ -42,17 +42,17 @@ trait UserTrait
 
         $roles = [
             'customer' => 'customers',
-            'client'   => 'customers',
-            'partner'  => 'resellers',
+            'client' => 'customers',
+            'partner' => 'resellers',
             'reseller' => 'resellers',
         ];
 
-        $results                                  = [];
-        $results['users'][$parent_id]             = $parent_id;
+        $results = [];
+        $results['users'][$parent_id] = $parent_id;
         $results['customers'][$parent_id]['user'] = $this->getUserById($parent_id);
 
         foreach ($rows as $row) {
-            $id   = $row->id;
+            $id = $row->id;
             $role = $row->role;
 
             if ('agent' == $role) {
@@ -63,7 +63,7 @@ trait UserTrait
 
             $results['users'][$id] = $id;
 
-            $users      = [];
+            $users = [];
             $users[$id] = $row;
 
             $results[$role][$id]['user'] = $this->getUserById($id);

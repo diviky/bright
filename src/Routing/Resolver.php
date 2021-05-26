@@ -42,7 +42,7 @@ class Resolver
         }
 
         $helper = $name;
-        $group  = null;
+        $group = null;
         $option = null;
 
         if (false !== \strpos($name, ':')) {
@@ -53,7 +53,7 @@ class Resolver
             list($helper, $option) = \explode('.', $name);
         }
 
-        $paths       = [];
+        $paths = [];
         $helperClass = 'Helpers\\' . (($group) ? $group . '\\' : '') . \ucfirst($helper);
 
         if ($namespace) {
@@ -62,7 +62,7 @@ class Resolver
             ];
         } else {
             if ($option) {
-                $option    = $this->sanitize($option);
+                $option = $this->sanitize($option);
                 $namespace = $this->getNameSpace($option);
 
                 $paths[] = [
@@ -87,7 +87,7 @@ class Resolver
 
             if ($exists) {
                 $helperClass = $path['class'];
-                $instance    = $this->app->make($helperClass);
+                $instance = $this->app->make($helperClass);
 
                 if (\method_exists($instance, 'setContainer')) {
                     $instance->setContainer($this->getContainer());
@@ -147,7 +147,7 @@ class Resolver
      */
     protected function getNameSpace($option, $type = 'controllers')
     {
-        $path      = $this->getPath($option, $type);
+        $path = $this->getPath($option, $type);
         $namespace = $path['namespace'];
 
         return \rtrim($namespace, '\\') . '\\';

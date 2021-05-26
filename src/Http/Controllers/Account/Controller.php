@@ -22,12 +22,12 @@ class Controller extends BaseController
     public function index(): array
     {
         $user_id = user('id');
-        $user    = Models::user()::find($user_id);
+        $user = Models::user()::find($user_id);
 
         if ($this->isMethod('post')) {
             $this->rules([
-                'name'   => 'required',
-                'email'  => 'required|email',
+                'name' => 'required',
+                'email' => 'required|email',
                 'mobile' => 'required',
                 'avatar' => 'nullable|image|max:2000',
             ]);
@@ -35,7 +35,7 @@ class Controller extends BaseController
             $password = user('password');
             if (!Hash::check($this->input('password'), $password)) {
                 return [
-                    'status'  => 'ERROR',
+                    'status' => 'ERROR',
                     'message' => __('Your current password didn\'t match.'),
                 ];
             }
@@ -49,14 +49,14 @@ class Controller extends BaseController
 
                 if ($exists) {
                     return [
-                        'status'  => 'ERROR',
+                        'status' => 'ERROR',
                         'message' => __('Email address already registered.'),
                     ];
                 }
             }
 
-            $user->name   = $this->input('name');
-            $user->email  = $this->input('email');
+            $user->name = $this->input('name');
+            $user->email = $this->input('email');
             $user->mobile = $this->input('mobile');
 
             $file = $this->request->file('avatar');
@@ -81,12 +81,12 @@ class Controller extends BaseController
     public function password(): array
     {
         $user_id = user('id');
-        $user    = Models::user()::find($user_id);
+        $user = Models::user()::find($user_id);
 
         if ($this->isMethod('post')) {
             $this->rules([
-                'oldpassword'      => 'required',
-                'password'         => 'required|min:6',
+                'oldpassword' => 'required',
+                'password' => 'required|min:6',
                 'password_confirm' => 'required|same:password',
             ]);
 
@@ -95,14 +95,14 @@ class Controller extends BaseController
 
             if (!Hash::check($this->input('oldpassword'), $password)) {
                 return [
-                    'status'  => 'ERROR',
+                    'status' => 'ERROR',
                     'message' => __('Your current password didn\'t match.'),
                 ];
             }
 
             if (Hash::check($inputpwd, $password)) {
                 return [
-                    'status'  => 'ERROR',
+                    'status' => 'ERROR',
                     'message' => __('New password shouldn\'t be same as old one.'),
                 ];
             }
@@ -117,7 +117,7 @@ class Controller extends BaseController
             foreach ($rows as $pwd) {
                 if (Hash::check($inputpwd, $pwd)) {
                     return [
-                        'status'  => 'ERROR',
+                        'status' => 'ERROR',
                         'message' => __('Password shouldn\'t be same as last :limit passwords.', ['limit' => $limit]),
                     ];
                 }
@@ -156,7 +156,7 @@ class Controller extends BaseController
         $values = \explode('|', $decrypted);
 
         $user_id = $values[0];
-        $login   = carbon($values[1]);
+        $login = carbon($values[1]);
 
         // get UserById
         $user = Models::user()::where('id', $user_id)
@@ -208,7 +208,7 @@ class Controller extends BaseController
         $token = Str::random(30);
 
         $user_id = user('id');
-        $user    = Models::user()::find($user_id);
+        $user = Models::user()::find($user_id);
 
         $user->setAccessToken($token);
         $user->save();

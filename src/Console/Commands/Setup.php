@@ -32,56 +32,56 @@ class Setup extends Command
 
         if ($this->confirm('Do you wish to publish config?', true)) {
             $this->call('vendor:publish', [
-                '--tag'   => 'bright-config',
+                '--tag' => 'bright-config',
                 '--force' => 1,
             ]);
         }
 
         if ($this->confirm('Do you wish to publish app boostrap js?', true)) {
             $this->call('vendor:publish', [
-                '--tag'   => 'bright-assets-app',
+                '--tag' => 'bright-assets-app',
                 '--force' => 1,
             ]);
         }
 
         if ($this->confirm('Do you wish to publish js assets?', true)) {
             $this->call('vendor:publish', [
-                '--tag'   => 'bright-assets-js',
+                '--tag' => 'bright-assets-js',
                 '--force' => 1,
             ]);
         }
 
         if ($this->confirm('Do you wish to publish migrations?', true)) {
             $this->call('vendor:publish', [
-                '--tag'   => 'bright-migrations',
+                '--tag' => 'bright-migrations',
                 '--force' => 1,
             ]);
         }
 
         if ($this->confirm('Do you wish to publish seeders?', true)) {
             $this->call('vendor:publish', [
-                '--tag'   => 'bright-seeders',
+                '--tag' => 'bright-seeders',
                 '--force' => 1,
             ]);
         }
 
         if ($this->confirm('Do you wish to publish auth views?', true)) {
             $this->call('vendor:publish', [
-                '--tag'   => 'bright-views-auth',
+                '--tag' => 'bright-views-auth',
                 '--force' => 1,
             ]);
         }
 
         if ($this->confirm('Do you wish to publish vendor views?', true)) {
             $this->call('vendor:publish', [
-                '--tag'   => 'bright-views-vendor',
+                '--tag' => 'bright-views-vendor',
                 '--force' => 1,
             ]);
         }
 
         if ($this->confirm('Do you wish to publish setup files?', true)) {
             $this->call('vendor:publish', [
-                '--tag'   => 'bright-setup',
+                '--tag' => 'bright-setup',
                 '--force' => 1,
             ]);
 

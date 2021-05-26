@@ -151,12 +151,12 @@ trait Authorize
             return [];
         }
 
-        $action     = \explode('@', $action);
-        $method     = $route->getActionMethod();
+        $action = \explode('@', $action);
+        $method = $route->getActionMethod();
         $controller = \explode('\\', $action[0]);
 
         $component = \strtolower($controller[\count($controller) - 2]);
-        $method    = \strtolower($method);
+        $method = \strtolower($method);
         $namespace = \strtolower($controller[\count($controller) - 5]);
 
         $mappings = config('permission.grouping');

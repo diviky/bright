@@ -9,7 +9,7 @@ class PasswordHistory extends Model
     /**
      * {@inheritDoc}
      */
-    public $timestamps   = false;
+    public $timestamps = false;
 
     /**
      * {@inheritDoc}

@@ -31,7 +31,7 @@ class RoleMiddleware
             throw UnauthorizedException::notLoggedIn();
         }
 
-        $user  = Auth::user();
+        $user = Auth::user();
         $roles = \is_array($role)
         ? $role
         : \explode('|', $role);

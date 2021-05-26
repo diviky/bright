@@ -14,7 +14,7 @@ class Model extends BaseModel
     /**
      * {@inheritDoc}
      */
-    public $guarded  = [];
+    public $guarded = [];
 
     /**
      * Scope active column.

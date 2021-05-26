@@ -36,8 +36,8 @@ class QueryQueued
      */
     public function __construct($sql, $bindings, $async)
     {
-        $this->sql      = $sql;
+        $this->sql = $sql;
         $this->bindings = $bindings;
-        $this->async    = $async;
+        $this->async = $async;
     }
 }

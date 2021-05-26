@@ -13,7 +13,7 @@ trait Eventable
      *
      * @var bool
      */
-    protected $eventState   = true;
+    protected $eventState = true;
 
     /**
      * Event column names.
@@ -121,7 +121,7 @@ trait Eventable
 
         $from = \preg_split('/ as /i', $this->from)[0];
 
-        if ($bright['ignore'] && isset($bright['ignore'][$from])) {
+        if (isset($bright['ignore'], $bright['ignore'][$from])) {
             return [];
         }
 
@@ -152,7 +152,7 @@ trait Eventable
             }
 
             $column = \key($columns);
-            $field  = $columns[$column];
+            $field = $columns[$column];
 
             foreach ($values as $key => $value) {
                 if (isset($value[$column])) {
@@ -231,15 +231,15 @@ trait Eventable
 
         $eventColumns = $this->getEventTables($type);
         $eventColumns = \array_merge($eventColumns, $this->eventColumns);
-        $from         = \preg_split('/ as /i', $this->from);
-        $mainAlias    = (\count($from) > 1) ? last($from) . '.' : '';
+        $from = \preg_split('/ as /i', $this->from);
+        $mainAlias = (\count($from) > 1) ? last($from) . '.' : '';
 
         foreach ($eventColumns as $columns) {
             if (!\is_array($columns)) {
                 $columns = [$columns => $columns];
             }
 
-            $alias  = $mainAlias;
+            $alias = $mainAlias;
             $column = \key($columns);
             if (false !== \strpos($column, '.')) {
                 list($alias, $column) = \explode('.', $column);

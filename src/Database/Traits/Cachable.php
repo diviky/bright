@@ -74,7 +74,7 @@ trait Cachable
         // that are used on this query, providing great convenience when caching.
         list($key, $seconds) = $this->getCacheInfo();
 
-        $cache    = $this->getCache();
+        $cache = $this->getCache();
         $callback = $this->getCacheCallback($columns);
         // If we've been given a DateTime instance or a "seconds" value that is
         // greater than zero then we'll pass it on to the remember method.
@@ -215,9 +215,9 @@ trait Cachable
      */
     public function getCacheKey($appends = null)
     {
-        $cache =  $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey($appends));
+        $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey($appends));
 
-        return \str_replace(':uid:', user('id'), $cache);
+        return \str_replace(':uid:', strval(user('id')), $cache);
     }
 
     /**

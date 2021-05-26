@@ -21,7 +21,7 @@ trait Responsable
      */
     protected function getView($route, $data = [], $layout = null)
     {
-        $layout            = $layout ?: 'index';
+        $layout = $layout ?: 'index';
         $data['component'] = $route;
 
         return view('layouts.' . $layout, $data);
@@ -34,7 +34,7 @@ trait Responsable
      */
     protected function getRoute($action): string
     {
-        $method    = $this->getMethod($action);
+        $method = $this->getMethod($action);
         $component = $this->getNamespace($action);
 
         return \strtolower($component . '.' . $method);
@@ -61,7 +61,7 @@ trait Responsable
             return null;
         }
 
-        $action     = \explode('@', $action);
+        $action = \explode('@', $action);
         $controller = \explode('\\', $action[0]);
         $controller = $controller[\count($controller) - 2];
 

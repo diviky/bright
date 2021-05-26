@@ -20,16 +20,16 @@ class Stream
      * @var array
      */
     protected $mime_types = [
-        '.txt'  => 'text/plain',
+        '.txt' => 'text/plain',
         '.json' => 'application/json',
-        '.xml'  => 'application/xml',
-        '.doc'  => 'application/msword',
-        '.rtf'  => 'application/rtf',
-        '.xls'  => 'application/vnd.ms-excel',
+        '.xml' => 'application/xml',
+        '.doc' => 'application/msword',
+        '.rtf' => 'application/rtf',
+        '.xls' => 'application/vnd.ms-excel',
         '.xlsx' => 'application/vnd.ms-excel',
-        '.csv'  => 'application/vnd.ms-excel',
-        '.ppt'  => 'application/vnd.ms-powerpoint',
-        '.pdf'  => 'application/pdf',
+        '.csv' => 'application/vnd.ms-excel',
+        '.ppt' => 'application/vnd.ms-powerpoint',
+        '.pdf' => 'application/pdf',
     ];
 
     /**
@@ -44,7 +44,7 @@ class Stream
      *
      * @var string
      */
-    protected $lineEnd   = "\r\n";
+    protected $lineEnd = "\r\n";
 
     /**
      * File streamr.
@@ -67,7 +67,7 @@ class Stream
             return $this->write($filename);
         }
 
-        $ext  = \strtolower(\strrchr($filename, '.'));
+        $ext = \strtolower(\strrchr($filename, '.'));
         $type = $this->mime_types[$ext];
 
         if ('.csv' == $ext) {
@@ -230,7 +230,7 @@ class Stream
     public function readFile($filename): bool
     {
         $chunksize = 2 * (1024 * 1024); // how many bytes per chunk
-        $buffer    = '';
+        $buffer = '';
 
         $stream = \fopen($filename, 'rb');
 

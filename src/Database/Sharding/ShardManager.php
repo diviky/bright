@@ -45,7 +45,7 @@ class ShardManager
     {
         $this->mapManager->setService($name);
         $this->shardChooser = $this->mapManager->getShardChooser();
-        $this->idGenerator  = $this->mapManager->getidGenerator();
+        $this->idGenerator = $this->mapManager->getidGenerator();
 
         return $this;
     }

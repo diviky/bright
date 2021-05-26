@@ -17,7 +17,7 @@ trait Relations
      */
     public function flatten($except = [])
     {
-        $relations  = $this->getRelations();
+        $relations = $this->getRelations();
 
         foreach ($relations as $relation_key => $relation) {
             if (isset($relation) && !in_array($relation_key, $except)) {

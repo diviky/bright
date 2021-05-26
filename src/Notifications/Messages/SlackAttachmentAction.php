@@ -167,12 +167,12 @@ class SlackAttachmentAction
     public function toArray()
     {
         $values = [
-            'type'    => $this->type,
-            'text'    => $this->text,
-            'name'    => $this->name,
-            'value'   => $this->value,
-            'url'     => $this->url,
-            'style'   => $this->style,
+            'type' => $this->type,
+            'text' => $this->text,
+            'name' => $this->name,
+            'value' => $this->value,
+            'url' => $this->url,
+            'style' => $this->style,
             'confirm' => $this->confirm,
         ];
 

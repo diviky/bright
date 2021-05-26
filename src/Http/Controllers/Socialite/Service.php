@@ -36,16 +36,16 @@ class Service
      */
     public function linkAccount($provider, $user, $socialite)
     {
-        $values                         = [];
-        $values['user_id']              = $user->id;
-        $values['provider']             = $provider;
-        $values['socialite_id']         = $socialite->getId();
-        $values['nickname']             = $socialite->getNickname();
-        $values['name']                 = $socialite->getName();
-        $values['email']                = $socialite->getEmail();
-        $values['secret']               = $socialite->token;
-        $values['refresh_token']        = $socialite->refreshToken;
-        $values['expires']              = $socialite->expiresIn;
+        $values = [];
+        $values['user_id'] = $user->id;
+        $values['provider'] = $provider;
+        $values['socialite_id'] = $socialite->getId();
+        $values['nickname'] = $socialite->getNickname();
+        $values['name'] = $socialite->getName();
+        $values['email'] = $socialite->getEmail();
+        $values['secret'] = $socialite->token;
+        $values['refresh_token'] = $socialite->refreshToken;
+        $values['expires'] = $socialite->expiresIn;
 
         return SocialiteUser::create($values);
     }

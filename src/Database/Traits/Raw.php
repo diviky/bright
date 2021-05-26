@@ -112,7 +112,7 @@ trait Raw
     {
         if (\preg_match_all('/([^\W]+)\.([^\W]+)?/', $value, $matches)) {
             foreach ($matches[0] as $match) {
-                $exp   = $this->grammar->wrap(\trim($match));
+                $exp = $this->grammar->wrap(\trim($match));
                 $value = \str_replace($match, $exp, $value);
             }
         }

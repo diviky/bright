@@ -18,14 +18,14 @@ class DatabaseManager extends LaravelDatabaseManager
      */
     public function table($name)
     {
-        $config      = $this->app['config']['bright'];
+        $config = $this->app['config']['bright'];
         $connections = $config['connections'];
 
         $alias = '';
         if (false !== \stripos($name, ' as ')) {
             $segments = \preg_split('/\s+as\s+/i', $name);
-            $alias    = ' as ' . $segments[1];
-            $name     = $segments[0];
+            $alias = ' as ' . $segments[1];
+            $name = $segments[0];
         }
 
         if (\is_array($connections) && isset($connections[$name])) {
@@ -49,10 +49,10 @@ class DatabaseManager extends LaravelDatabaseManager
         $manager = $this->getShardManager();
 
         if ($manager) {
-            $shard_key  = $shard_key ?? user('id');
+            $shard_key = $shard_key ?? user('id');
             $connection = $shard_key ? $manager->getShardById($shard_key) : null;
             if ($connection) {
-                $config     = $manager->getShardConfig();
+                $config = $manager->getShardConfig();
                 $connection = $this->connection($connection);
                 $connection->getQueryGrammar()->setConfig($config['connection']);
 
@@ -65,7 +65,7 @@ class DatabaseManager extends LaravelDatabaseManager
 
     public function getShardManager(): ?ShardManager
     {
-        $config  = $this->app['config']['bright'];
+        $config = $this->app['config']['bright'];
 
         if ($config['sharding']) {
             $manager = $this->app['bright.shardmanager'];

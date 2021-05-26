@@ -21,17 +21,17 @@ class PasswordReset
             'password' => $event->password ?? null,
         ];
 
-        $save               = [];
-        $save['user_id']    = $user->id;
+        $save = [];
+        $save['user_id'] = $user->id;
         $save['created_at'] = carbon();
-        $save['password']   = $user->password;
+        $save['password'] = $user->password;
 
         Models::passwordHistory()::create($save);
 
         (new Mailable())
             ->subject('Your password has been changed!!!')
             ->with([
-                'row'  => $values,
+                'row' => $values,
                 'user' => $user,
             ])
             ->prefix('bright::emails.')

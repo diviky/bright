@@ -12,13 +12,13 @@ use Diviky\Bright\Helpers\Iterator\MapIterator;
 use EmptyIterator;
 use finfo;
 use Generator;
+use Illuminate\Container\RewindableGenerator;
 use Iterator;
 use LimitIterator;
 use Port\Csv\CsvReader;
 use Port\Excel\ExcelReader;
 use Port\Reader\ArrayReader;
 use Port\Spreadsheet\SpreadsheetReader;
-use RewindableGenerator;
 use SplFileObject;
 use Traversable;
 use wapmorgan\UnifiedArchive\UnifiedArchive;
@@ -47,11 +47,11 @@ class Reader
             $ext = isset($options['ext']) ? $options['ext'] : '.array';
         } else {
             $reader = $this->unzip($reader, $options);
-            $ext    = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
-            $ext    = '.' == $ext ? '.xls' : $ext;
+            $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
+            $ext = '.' == $ext ? '.xls' : $ext;
         }
 
-        $ext     = \strtolower($ext);
+        $ext = \strtolower($ext);
         $special = \in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
 
         if (!$special) {
@@ -60,9 +60,9 @@ class Reader
             }
 
             $lines = ('.txt' == $ext) ? 1 : 5;
-            $file  = '';
+            $file = '';
 
-            \ini_set('auto_detect_line_endings', 'true');
+            \ini_set('auto_detect_line_endings', 'on');
             $file = new SplFileObject($reader);
             //Auto detect delimiter
             if (empty($options['delimiter'])) {
@@ -79,13 +79,14 @@ class Reader
                     } else {
                         $reader = new CsvReader($file);
                     }
+                    $reader->setStrict(false);
                     $reader->setHeaderRowNumber($options['header'] - 1, $duplicates);
 
                     break;
                 case '.xls':
                 case '.xlsx':
                     $finfo = new finfo(FILEINFO_MIME_TYPE);
-                    $mime  = $finfo->file($file->getRealPath());
+                    $mime = $finfo->file($file->getRealPath());
 
                     if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
                         $reader = new CsvReader($file, $options['delimiter']);
@@ -113,9 +114,6 @@ class Reader
 
                     break;
                 case '.generator':
-                    $reader = new RewindableGenerator($reader);
-
-                    break;
                 case '.iterator':
                 default:
                     break;
@@ -158,7 +156,7 @@ class Reader
 
             $options['offset'] = $offset;
 
-            $count             = isset($options['total']) ? $options['total'] : null;
+            $count = isset($options['total']) ? $options['total'] : null;
 
             if (null !== $count && $offset >= $count) {
                 $reader = new EmptyIterator();
@@ -230,8 +228,10 @@ class Reader
 
     /**
      * Count the interator values.
+     *
+     * @param ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
      */
-    public function count(Traversable $iterator): int
+    public function count($iterator): int
     {
         return \iterator_count($iterator);
     }
@@ -239,9 +239,11 @@ class Reader
     /**
      * check the next row from iterator.
      *
+     * @param ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
+     *
      * @return bool
      */
-    public function hasNext(Traversable $iterator)
+    public function hasNext($iterator)
     {
         return $this->count($iterator) ? true : false;
     }
@@ -270,8 +272,10 @@ class Reader
 
     /**
      * Convert interator to array.
+     *
+     * @param ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
      */
-    public function toArray(Traversable $iterator): array
+    public function toArray($iterator): array
     {
         return \iterator_to_array($iterator);
     }
@@ -284,19 +288,19 @@ class Reader
     public function detectDelimiter($file, int $sample = 5): ?string
     {
         $delimsRegex = ",|;:\t"; // whichever is first in the list will be the default
-        $delims      = \str_split($delimsRegex);
-        $delimCount  = [];
-        $delimiters  = [];
+        $delims = \str_split($delimsRegex);
+        $delimCount = [];
+        $delimiters = [];
         foreach ($delims as $delim) {
             $delimCount[$delim] = 0;
-            $delimiters[]       = $delim;
+            $delimiters[] = $delim;
         }
 
         $lines = $this->getLines($file, $sample);
 
         foreach ($lines as $row) {
-            $row      = \preg_replace('/\r\n/', '', \trim($row)); // clean up .. strip new line and line return chars
-            $row      = \preg_replace("/[^{$delimsRegex}]/", '', $row); // clean up .. strip evthg which is not a dilim'r
+            $row = \preg_replace('/\r\n/', '', \trim($row)); // clean up .. strip new line and line return chars
+            $row = \preg_replace("/[^{$delimsRegex}]/", '', $row); // clean up .. strip evthg which is not a dilim'r
             $rowChars = \str_split($row); // break it apart char by char
 
             foreach ($rowChars as $char) {
@@ -328,7 +332,7 @@ class Reader
     {
         $handle = \fopen($file, 'r');
 
-        $line  = 0;
+        $line = 0;
         $lines = [];
         while (!\feof($handle)) {
             $lines[] = \fgets($handle, 1024);
@@ -362,13 +366,13 @@ class Reader
 
         if ($ext && \in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
             $extensions = ['.csv', '.xls', '.xlsx', '.txt'];
-            $directory  = \dirname($zip);
-            $extract    = '/tmp/' . \uniqid() . '/';
+            $directory = \dirname($zip);
+            $extract = '/tmp/' . \uniqid() . '/';
 
             try {
-                $archive   = UnifiedArchive::open($zip);
-                $files     = $archive->getFileNames();
-                $tmpfile   = null;
+                $archive = UnifiedArchive::open($zip);
+                $files = $archive->getFileNames();
+                $tmpfile = null;
                 $extension = null;
 
                 foreach ($files as $file) {

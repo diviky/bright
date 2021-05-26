@@ -59,7 +59,7 @@ class GeoIpUpdater
      */
     public function updateGeoIpFiles($destinationPath, $geoDbUrl = null, $geoDbMd5Url = null)
     {
-        $this->geoDbUrl    = $this->getDbFileUrl($geoDbUrl);
+        $this->geoDbUrl = $this->getDbFileUrl($geoDbUrl);
         $this->geoDbMd5Url = $this->getMd5FileName($geoDbMd5Url);
 
         if ($this->databaseIsUpdated($this->geoDbMd5Url, $destinationPath)) {
@@ -171,8 +171,8 @@ class GeoIpUpdater
         }
 
         $fileWriteName = $destinationPath . ($fileName ?? basename($uri));
-        $fileRead      = fopen($uri, 'rb');
-        $fileWrite     = fopen($fileWriteName, 'wb');
+        $fileRead = fopen($uri, 'rb');
+        $fileWrite = fopen($fileWriteName, 'wb');
 
         if (false === $fileRead || (false === $fileWrite)) {
             $this->addMessage("Unable to open {$uri} (read) or {$fileWriteName} (write).");

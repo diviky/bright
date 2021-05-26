@@ -20,7 +20,7 @@ trait UsersParent
     {
         $values = [
             'parent_id' => $parent_id,
-            'user_id'   => $this->id,
+            'user_id' => $this->id,
         ];
 
         return Models::users()::create($values);

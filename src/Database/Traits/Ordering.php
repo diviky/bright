@@ -18,7 +18,7 @@ trait Ordering
             if (empty($data['order'])) {
                 $sort = \explode('|', $data['sort'], 2);
 
-                $data['sort']  = $sort[0];
+                $data['sort'] = $sort[0];
                 $data['order'] = $sort[1] ?? 'asc';
             }
 

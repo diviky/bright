@@ -17,17 +17,17 @@ class EmailLogger
     {
         $message = $event->message;
         Models::emailLogs()::create([
-            'id'          => Str::uuid(),
-            'from'        => $this->formatAddressField($message, 'From'),
-            'to'          => $this->formatAddressField($message, 'To'),
-            'cc'          => $this->formatAddressField($message, 'Cc'),
-            'bcc'         => $this->formatAddressField($message, 'Bcc'),
-            'subject'     => $message->getSubject(),
-            'body'        => $message->getBody(),
-            'headers'     => (string) $message->getHeaders(),
+            'id' => Str::uuid(),
+            'from' => $this->formatAddressField($message, 'From'),
+            'to' => $this->formatAddressField($message, 'To'),
+            'cc' => $this->formatAddressField($message, 'Cc'),
+            'bcc' => $this->formatAddressField($message, 'Bcc'),
+            'subject' => $message->getSubject(),
+            'body' => $message->getBody(),
+            'headers' => (string) $message->getHeaders(),
             'attachments' => $message->getChildren() ? \implode("\n\n", $message->getChildren()) : null,
-            'created_at'  => carbon(),
-            'updated_at'  => carbon(),
+            'created_at' => carbon(),
+            'updated_at' => carbon(),
         ]);
     }
 
@@ -52,7 +52,7 @@ class EmailLogger
         }
 
         $mailboxes = $header->getFieldBodyModel();
-        $strings   = [];
+        $strings = [];
         foreach ($mailboxes as $email => $name) {
             $mailboxStr = $email;
             if (null !== $name) {

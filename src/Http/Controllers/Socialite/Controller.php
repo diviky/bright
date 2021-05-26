@@ -39,7 +39,7 @@ class Controller extends BaseController
         } catch (\Exception $e) {
             return redirect('login')
                 ->with([
-                    'status'  => 'ERROR',
+                    'status' => 'ERROR',
                     'message' => $e->getMessage(),
                 ]);
         }
@@ -47,13 +47,13 @@ class Controller extends BaseController
         if (!$socialite->getId()) {
             return redirect('login')
                 ->with([
-                    'status'  => 'ERROR',
+                    'status' => 'ERROR',
                     'message' => 'Unable to get the user details',
                 ]);
         }
 
         $service = new Service();
-        $linked  = $service->linked($provider, $socialite->getId());
+        $linked = $service->linked($provider, $socialite->getId());
 
         if ($linked) {
             return $service->login($linked->user_id, $this->redirectPath());
@@ -66,17 +66,17 @@ class Controller extends BaseController
             return $service->login($user->id, $this->redirectPath());
         }
 
-        $name   = \explode(' ', $socialite->getName(), 2);
+        $name = \explode(' ', $socialite->getName(), 2);
 
         $values = [
             'socialite_id' => $socialite->getId(),
-            'name'         => $socialite->getName(),
-            'nickname'     => $socialite->getNickname(),
-            'first_name'   => $name[0] ?? null,
-            'last_name'    => $name[1] ?? null,
-            'email'        => $socialite->getEmail(),
-            'password'     => $socialite->getNickname(),
-            'status'       => 1,
+            'name' => $socialite->getName(),
+            'nickname' => $socialite->getNickname(),
+            'first_name' => $name[0] ?? null,
+            'last_name' => $name[1] ?? null,
+            'email' => $socialite->getEmail(),
+            'password' => $socialite->getNickname(),
+            'status' => 1,
         ];
 
         $user = $this->registers($values);
