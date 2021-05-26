@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Diviky\Bright\Helpers;
 
 use ArrayAccess;
-use Closure;
 use Diviky\Bright\Helpers\Iterator\ChunkedIterator;
 use Diviky\Bright\Helpers\Iterator\MapGeneratorIterator;
 use Diviky\Bright\Helpers\Iterator\MapIterator;
@@ -39,7 +38,7 @@ class Reader
      *
      * @return ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
      */
-    public function fetchAll($reader, Closure $callable = null, $options = [])
+    public function fetchAll($reader, callable $callable = null, $options = [])
     {
         \set_time_limit(0);
 
@@ -127,12 +126,12 @@ class Reader
      * Modify the iterator using callback closure.
      *
      * @param ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $reader   Travarsable object
-     * @param Closure                                                                                                                               $callable
+     * @param callable                                                                                                                              $callable
      * @param array                                                                                                                                 $options
      *
      * @return ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
      */
-    public function modify($reader, Closure $callable = null, $options = [])
+    public function modify($reader, callable $callable = null, $options = [])
     {
         if (isset($options['limit']) && \is_numeric($options['limit'])) {
             $offset = 0;
@@ -179,13 +178,13 @@ class Reader
     /**
      * Ftech the first row from file.
      *
-     * @param string  $file
-     * @param Closure $callable
-     * @param array   $options
+     * @param string   $file
+     * @param callable $callable
+     * @param array    $options
      *
      * @return array
      */
-    public function fetchHeader($file, Closure $callable = null, $options = [])
+    public function fetchHeader($file, callable $callable = null, $options = [])
     {
         $options['limit'] = 1;
 
@@ -197,13 +196,13 @@ class Reader
     /**
      * Get the file rows as array.
      *
-     * @param string  $file
-     * @param Closure $callable
-     * @param array   $options
+     * @param string   $file
+     * @param callable $callable
+     * @param array    $options
      *
      * @return array
      */
-    public function fetchArray($file, Closure $callable = null, $options = [])
+    public function fetchArray($file, callable $callable = null, $options = [])
     {
         $rows = $this->fetchAll($file, $callable, $options);
 
@@ -213,13 +212,13 @@ class Reader
     /**
      * Get the number of rows in file.
      *
-     * @param string  $file
-     * @param Closure $callable
-     * @param array   $options
+     * @param string   $file
+     * @param callable $callable
+     * @param array    $options
      *
      * @return int
      */
-    public function fetchCount($file, Closure $callable = null, $options = [])
+    public function fetchCount($file, callable $callable = null, $options = [])
     {
         $rows = $this->fetchAll($file, $callable, $options);
 

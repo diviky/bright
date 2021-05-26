@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Helpers\Iterator;
 
-use Closure;
 use InvalidArgumentException;
 use IteratorIterator;
 use Traversable;
@@ -18,8 +17,8 @@ class MapIterator extends IteratorIterator
     protected $callback;
 
     /**
-     * @param Traversable   $iterator Traversable iterator
-     * @param array|Closure $callback Callback used for iterating
+     * @param Traversable    $iterator Traversable iterator
+     * @param array|callable $callback Callback used for iterating
      *
      * @throws InvalidArgumentException if the callback if not callable
      */
