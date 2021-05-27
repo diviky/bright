@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Helpers;
 
-use ArrayAccess;
 use Diviky\Bright\Helpers\Iterator\ChunkedIterator;
 use Diviky\Bright\Helpers\Iterator\MapGeneratorIterator;
 use Diviky\Bright\Helpers\Iterator\MapIterator;
@@ -33,10 +32,10 @@ class Reader
     /**
      * Fetch all the values form file.
      *
-     * @param array|ArrayAccess|Iterator|string|Traversable $reader
-     * @param array                                         $options
+     * @param array|Iterator|string|Traversable $reader
+     * @param array                             $options
      *
-     * @return ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
+     * @return Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
      */
     public function fetchAll($reader, callable $callable = null, $options = [])
     {
@@ -125,11 +124,11 @@ class Reader
     /**
      * Modify the iterator using callback closure.
      *
-     * @param ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $reader   Travarsable object
-     * @param callable                                                                                                                              $callable
-     * @param array                                                                                                                                 $options
+     * @param Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $reader   Travarsable object
+     * @param callable                                                                                                                  $callable
+     * @param array                                                                                                                     $options
      *
-     * @return ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
+     * @return Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
      */
     public function modify($reader, callable $callable = null, $options = [])
     {
@@ -228,7 +227,7 @@ class Reader
     /**
      * Count the interator values.
      *
-     * @param ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
+     * @param Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
      */
     public function count($iterator): int
     {
@@ -238,7 +237,7 @@ class Reader
     /**
      * check the next row from iterator.
      *
-     * @param ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
+     * @param Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
      *
      * @return bool
      */
@@ -272,7 +271,7 @@ class Reader
     /**
      * Convert interator to array.
      *
-     * @param ArrayAccess|Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
+     * @param Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
      */
     public function toArray($iterator): array
     {
