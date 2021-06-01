@@ -12,10 +12,10 @@ trait ViewTrait
     /**
      * set the required data for ajax request.
      *
-     * @param null|string $url
-     * @param null|array  $params
-     * @param null|string $method
-     * @param null|array  $attributes
+     * @param null|array|string $url
+     * @param null|array        $params
+     * @param null|string       $method
+     * @param null|array        $attributes
      */
     public function ajax($url = null, $params = [], $method = 'post', $attributes = []): self
     {
@@ -25,23 +25,41 @@ trait ViewTrait
         $form['ajax'] = $form['pjax'] ? false : $this->get('request')->ajax();
 
         if (!$form['ajax']) {
-            $inputs = '';
+            $parameters = [];
+            if (is_array($url)) {
+                $parameters = $url[1];
+                $url = $url[0];
+            }
+
+            $action = $url;
+
+            if (is_string($url)) {
+                if ('/' !== \substr($url, 0, 1)) {
+                    $action = route($url, $parameters);
+                } else {
+                    $url = str_replace(['"', "'"], ['%22', '%27'], $url);
+                    $action = url($url, $parameters);
+                }
+            }
+
             if (!\is_array($params)) {
                 $params = [];
             }
 
+            $inputs = '';
             foreach ($params as $k => $v) {
                 $inputs .= '<input type="hidden" name="' . $k . '" value="' . $v . '" />';
             }
 
-            $class = 'render-' . Str::slug($url);
-            $params['class'] = '.' . $class;
+            $class = '';
+            if (is_string($url)) {
+                $class = 'render-' . Str::slug($url);
+                $params['class'] = '.' . $class;
+            }
 
             if (!\is_array($attributes)) {
                 $attributes = [];
             }
-
-            $action = '/' !== \substr($url, 0, 1) ? $this->route($url) : url($url);
 
             $attributes['role'] = 'krender';
             $attributes['class'] = $class;
