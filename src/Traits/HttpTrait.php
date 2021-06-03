@@ -55,8 +55,8 @@ trait HttpTrait
     /**
      * Retrieve a query string item from the request.
      *
-     * @param string                     $key
-     * @param null|array|bool|int|string $default
+     * @param string            $key
+     * @param null|array|string $default
      *
      * @return null|array|string
      */
@@ -68,8 +68,8 @@ trait HttpTrait
     /**
      * Retrieve a cookie from the request.
      *
-     * @param string                     $key
-     * @param null|array|bool|int|string $default
+     * @param string            $key
+     * @param null|array|string $default
      *
      * @return null|array|string
      */

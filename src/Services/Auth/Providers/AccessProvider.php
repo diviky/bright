@@ -41,11 +41,9 @@ class AccessProvider implements UserProvider
      */
     public function retrieveByAccessToken($token)
     {
-        $user = $this->user->where($this->user->getAccessTokenName(), $token)
+        return $this->user->where($this->user->getAccessTokenName(), $token)
             ->remember(null, 'access_token:' . $token)
             ->first();
-
-        return $user ? $user : null;
     }
 
     /**
@@ -53,12 +51,10 @@ class AccessProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        $token = $this->token
+        return $this->token
             ->remember(null, 'token:' . $token)
             ->where($identifier, $token)
             ->first();
-
-        return $token ? $token : null;
     }
 
     /**

@@ -37,28 +37,24 @@ class CredentialsGuard implements Guard
      */
     public function user()
     {
+        if (!\is_null($this->user)) {
+            return $this->user;
+        }
+
         $user = null;
 
         $credentials = $this->getCredentials();
 
         $user = $this->provider->retrieveByCredentials($credentials);
 
-        if (\is_null($user)) {
-            return;
-        }
-
-        if (!\is_null($user->deleted_at)) {
-            return;
-        }
-
-        if (1 != $user->status) {
-            return;
+        if (\is_null($user) || !\is_null($user->deleted_at) || 1 != $user->status) {
+            return null;
         }
 
         $valid = $this->provider->validateCredentials($user, $credentials);
 
         if (!$valid) {
-            return;
+            return null;
         }
 
         return $this->user = $user;

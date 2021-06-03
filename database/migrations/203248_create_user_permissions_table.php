@@ -17,8 +17,8 @@ class CreateAuthUserPermissionsTable extends Migration
             $table->string('model_type', 191);
             $table->foreignId('model_id');
             $table->boolean('is_exclude')->default(0);
-            $table->primary(['permission_id', 'model_id', 'model_type']);
-            $table->index(['model_type', 'model_id'], 'user_permissions_model_type_model_id_index');
+            $table->primary(['permission_id', 'model_id', 'model_type'], 'permission_model_type');
+            $table->index(['model_type', 'model_id'], 'permissions_model_id_index');
         });
     }
 

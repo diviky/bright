@@ -67,18 +67,15 @@ class Reader
                 $options['delimiter'] = $this->detectDelimiter($reader, $lines);
             }
 
-            $duplicates = null;
             switch ($ext) {
                 case '.txt':
                 case '.csv':
-                    $duplicates = CsvReader::DUPLICATE_HEADERS_INCREMENT;
                     if ($options['delimiter']) {
                         $reader = new CsvReader($file, $options['delimiter']);
                     } else {
                         $reader = new CsvReader($file);
                     }
                     $reader->setStrict(false);
-                    $reader->setHeaderRowNumber($options['header'] - 1, $duplicates);
 
                     break;
                 case '.xls':
@@ -94,10 +91,7 @@ class Reader
                         } else {
                             $reader = new SpreadsheetReader($file, null, 0);
                         }
-                        $duplicates = null;
                     }
-
-                    $reader->setHeaderRowNumber($options['header'] - 1, $duplicates);
 
                     break;
             }

@@ -31,21 +31,6 @@ trait Paging
     }
 
     /**
-     * Set the pagination.
-     *
-     * @param int         $perPage
-     * @param array       $columns
-     * @param string      $pageName
-     * @param null|string $page
-     *
-     *  @return \Illuminate\Pagination\LengthAwarePaginator
-     */
-    public function complexPaginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
-    {
-        return $this->paginateComplex($perPage, $columns, $pageName, $page);
-    }
-
-    /**
      * Create a new length-aware paginator instance.
      *
      * @param int      $perPage
@@ -53,7 +38,7 @@ trait Paging
      * @param string   $pageName
      * @param null|int $page
      */
-    public function paginateComplex($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null): \Illuminate\Pagination\LengthAwarePaginator
+    public function complexPaginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null): \Illuminate\Pagination\LengthAwarePaginator
     {
         $total = $this->getCountForPagination($columns);
         $page = $page ?? Paginator::resolveCurrentPage($pageName);
@@ -172,7 +157,7 @@ trait Paging
     public function paging($perPage = 25, $columns = ['*'], $pageName = 'page', $page = null)
     {
         if (\count($this->tables) > 0) {
-            $rows = $this->paginateComplex($perPage, $columns, $pageName, $page);
+            $rows = $this->complexPaginate($perPage, $columns, $pageName, $page);
         } else {
             $rows = $this->paginate($perPage, $columns, $pageName, $page);
         }

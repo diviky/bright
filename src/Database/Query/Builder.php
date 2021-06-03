@@ -24,10 +24,7 @@ class Builder extends LaravelBuilder
 {
     use Async;
     use Build;
-    use Cachable {
-        Cachable::get as cachableGet;
-        Cachable::pluck as cachablePluck;
-    }
+    use Cachable;
     use Eventable;
     use Filter;
     use Ordering;
@@ -61,32 +58,6 @@ class Builder extends LaravelBuilder
         $this->from = "{$this->from} as {$as}";
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function pluck($column, $key = null)
-    {
-        return $this->cachablePluck($column, $key);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get($columns = ['*'])
-    {
-        return $this->cachableGet($columns);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function exists()
-    {
-        $this->atomicEvent('select');
-
-        return parent::exists();
     }
 
     /**

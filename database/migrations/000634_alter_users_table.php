@@ -18,7 +18,8 @@ class AlterUsersTable extends Migration
             $table->string('role', 50)->nullable()->index('role')->after('parent_id');
             $table->string('mobile', 15)->nullable()->after('password');
             $table->string('avatar', 191)->nullable()->after('mobile');
-            $table->string('access_token', 100)->nullable()->index('users_token_index')->after('password');
+            $table->string('access_token', 100)->nullable()->unique()->index('users_access_token')->after('password');
+            $table->string('api_token', 80)->nullable()->unique()->index('users_api_token')->after('password');
             $table->text('options')->nullable()->after('access_token');
             $table->timestamp('last_password_at')->nullable()->after('remember_token');
             $table->timestamp('last_login_at')->nullable()->after('last_password_at');
@@ -40,6 +41,7 @@ class AlterUsersTable extends Migration
             $table->dropColumn('avatar');
             $table->dropColumn('options');
             $table->dropColumn('access_token');
+            $table->dropColumn('api_token');
             $table->dropColumn('last_password_at');
             $table->dropColumn('last_login_at');
             $table->dropColumn('last_login_ip');

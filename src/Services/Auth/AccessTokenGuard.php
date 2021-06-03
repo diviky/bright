@@ -56,31 +56,34 @@ class AccessTokenGuard implements Guard
      */
     public function user()
     {
-        $token = null;
-        $signature = null;
-        $access_key = $this->getTokenForRequest();
-
-        if (!empty($access_key)) {
-            if (false !== \strpos($access_key, ':')) {
-                list($access_key, $signature) = \explode(':', $access_key, 2);
-            }
-
-            // the token was found, how you want to pass?
-            $token = $this->provider->retrieveByToken($this->storageKey, $access_key);
+        if (!\is_null($this->user)) {
+            return $this->user;
         }
 
+        $access_key = $this->getTokenForRequest();
+
+        if (empty($access_key)) {
+            return null;
+        }
+
+        $token = null;
+        $signature = null;
+        if (false !== \strpos($access_key, ':')) {
+            list($access_key, $signature) = \explode(':', $access_key, 2);
+        }
+
+        // the token was found, how you want to pass?
+        $token = $this->provider->retrieveByToken($this->storageKey, $access_key);
+
         if (\is_null($token) || \is_null($token->user_id)) {
-            return;
+            return null;
         }
 
         if (1 != $token->status || !\is_null($token->deleted_at)) {
-            return;
+            return null;
         }
 
-        $allowed_ips = $token->allowed_ip;
-        $allowed = $this->validateIp($allowed_ips);
-
-        if (!$allowed) {
+        if (!$this->validateIp($token->allowed_ip)) {
             return null;
         }
 
@@ -95,6 +98,7 @@ class AccessTokenGuard implements Guard
         }
 
         $this->user = $user;
+        $this->user->token = $token;
 
         return $this->user;
     }

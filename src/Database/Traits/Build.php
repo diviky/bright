@@ -14,9 +14,9 @@ trait Build
      * @param string                                       $boolean
      * @param bool                                         $not
      *
-     * @return $this
+     * @return static
      */
-    public function whereDateBetween($column, $values, $boolean = 'and', $not = false): self
+    public function whereDateBetween($column, $values, $boolean = 'and', $not = false)
     {
         if (!\is_array($values)) {
             return parent::whereDate((string) $column, $values);

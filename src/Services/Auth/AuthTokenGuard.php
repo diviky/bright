@@ -11,6 +11,10 @@ class AuthTokenGuard extends AccessTokenGuard
      */
     public function user()
     {
+        if (!\is_null($this->user)) {
+            return $this->user;
+        }
+
         $user = null;
         // retrieve via token
         $token = $this->getTokenForRequest();

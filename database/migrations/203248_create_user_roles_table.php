@@ -17,7 +17,7 @@ class CreateAuthUserRolesTable extends Migration
             $table->string('model_type', 191);
             $table->foreignId('model_id')->index('model_id');
             $table->primary(['role_id', 'model_id', 'model_type']);
-            $table->index(['model_type', 'model_id'], 'user_roles_model_type_model_id_index');
+            $table->index(['model_type', 'model_id'], 'user_roles_model_id_index');
         });
     }
 

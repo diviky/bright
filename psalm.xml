@@ -94,11 +94,23 @@
             </errorLevel>
         </UndefinedInterfaceMethod>
 
-         <MissingClosureParamType>
+        <PossiblyInvalidPropertyAssignmentValue>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </PossiblyInvalidPropertyAssignmentValue>
+
+        <MissingClosureParamType>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </MissingClosureParamType>
+
+        <InvalidScalarArgument>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </InvalidScalarArgument>
 
         <InvalidStringClass>
             <errorLevel type="suppress">
@@ -118,11 +130,11 @@
             </errorLevel>
         </InvalidMethodCall>
 
-        <InvalidScalarArgument>
+        <RedundantConditionGivenDocblockType>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
-        </InvalidScalarArgument>
+        </RedundantConditionGivenDocblockType>
 
         <LessSpecificImplementedReturnType>
             <errorLevel type="suppress">

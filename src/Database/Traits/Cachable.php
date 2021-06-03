@@ -20,7 +20,7 @@ trait Cachable
      *
      * @var null|DateTime|int
      */
-    protected $cacheseconds;
+    protected $cacheSeconds;
 
     /**
      * The tags for the query cache.
@@ -44,11 +44,15 @@ trait Cachable
     protected $cachePrefix = 'sql';
 
     /**
-     * {@inheritdoc}
+     * Execute the query as a "select" statement.
+     *
+     * @param array|string $columns
+     *
+     * @return \Illuminate\Support\Collection
      */
     public function get($columns = ['*'])
     {
-        if ($this->cacheEnabled()) {
+        if (!\is_null($this->cacheSeconds) && $this->cacheEnabled()) {
             return collect($this->getCached($columns));
         }
 
@@ -58,9 +62,41 @@ trait Cachable
     }
 
     /**
+     * Get the values of a given key.
+     *
+     * @param null|array|int|string $value
+     * @param null|string           $key
+     * @param mixed                 $column
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function pluck($column, $key = null)
+    {
+        if (!\is_null($this->cacheSeconds) && $this->cacheEnabled()) {
+            return collect($this->pluckCached($column, $key));
+        }
+
+        $this->atomicEvent('select');
+
+        return parent::pluck($column, $key);
+    }
+
+    /**
+     * Determine if any rows exist for the current query.
+     *
+     * @return bool
+     */
+    public function exists()
+    {
+        $this->atomicEvent('select');
+
+        return parent::exists();
+    }
+
+    /**
      * Execute the query as a cached "select" statement.
      *
-     * @param array $columns
+     * @param array|string $columns
      *
      * @return array
      */
@@ -72,32 +108,21 @@ trait Cachable
         // If the query is requested to be cached, we will cache it using a unique key
         // for this database connection and query statement, including the bindings
         // that are used on this query, providing great convenience when caching.
-        list($key, $seconds) = $this->getCacheInfo();
+        $cacheKey = $this->getCacheKey();
+
+        $seconds = $this->cacheSeconds;
 
         $cache = $this->getCache();
+
         $callback = $this->getCacheCallback($columns);
         // If we've been given a DateTime instance or a "seconds" value that is
         // greater than zero then we'll pass it on to the remember method.
         // Otherwise we'll cache it indefinitely.
         if ($seconds instanceof DateTime || $seconds > 0) {
-            return $cache->remember($key, $seconds, $callback);
+            return $cache->remember($cacheKey, $seconds, $callback);
         }
 
-        return $cache->rememberForever($key, $callback);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function pluck($column, $key = null)
-    {
-        if ($this->cacheEnabled()) {
-            return collect($this->pluckCached($column, $key));
-        }
-
-        $this->atomicEvent('select');
-
-        return parent::pluck($column, $key);
+        return $cache->rememberForever($cacheKey, $callback);
     }
 
     /**
@@ -139,7 +164,7 @@ trait Cachable
             $seconds = 10 * 60;
         }
 
-        list($this->cacheseconds, $this->cacheKey) = [$seconds, $key];
+        list($this->cacheSeconds, $this->cacheKey) = [$seconds, $key];
 
         return $this;
     }
@@ -163,7 +188,7 @@ trait Cachable
      */
     public function dontRemember()
     {
-        $this->cacheseconds = $this->cacheKey = $this->cacheTags = null;
+        $this->cacheSeconds = $this->cacheKey = $this->cacheTags = null;
 
         return $this;
     }
@@ -289,26 +314,16 @@ trait Cachable
     }
 
     /**
-     * Get the cache key and cache seconds as an array.
-     *
-     * @return array
-     */
-    protected function getCacheInfo()
-    {
-        return [$this->getCacheKey(), $this->cacheseconds];
-    }
-
-    /**
      * Get the Closure callback used when caching queries.
      *
-     * @param array $columns
+     * @param array|string $columns
      *
      * @return \Closure
      */
     protected function getCacheCallback($columns)
     {
         return function () use ($columns) {
-            $this->cacheseconds = null;
+            $this->cacheSeconds = null;
 
             return $this->get($columns);
         };
@@ -338,7 +353,7 @@ trait Cachable
      */
     protected function cacheEnabled()
     {
-        if (\is_null($this->cacheseconds)) {
+        if (\is_null($this->cacheSeconds)) {
             return false;
         }
 

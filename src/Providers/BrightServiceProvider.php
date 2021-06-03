@@ -19,6 +19,7 @@ use Diviky\Bright\Services\Auth\Providers\AccessProvider;
 use Diviky\Bright\Support\ServiceProvider;
 use Diviky\Bright\Traits\Provider;
 use Diviky\Bright\Util\Util;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
@@ -30,7 +31,7 @@ class BrightServiceProvider extends ServiceProvider
 {
     use Provider;
 
-    public function boot(): void
+    public function boot(Filesystem $filesystem): void
     {
         $this->directive();
         $this->macros();
@@ -47,7 +48,7 @@ class BrightServiceProvider extends ServiceProvider
         $this->registerEvents();
 
         if ($this->app->runningInConsole()) {
-            $this->console();
+            $this->console($filesystem);
         }
     }
 
@@ -94,7 +95,7 @@ class BrightServiceProvider extends ServiceProvider
         return __DIR__ . '/../..';
     }
 
-    protected function console(): void
+    protected function console(Filesystem $filesystem): void
     {
         $this->publishes([
             $this->path() . '/config/charts.php' => config_path('charts.php'),
@@ -124,9 +125,7 @@ class BrightServiceProvider extends ServiceProvider
             $this->path() . '/resources/vendor' => resource_path('views/vendor'),
         ], 'bright-views-vendor');
 
-        $this->publishes([
-            $this->path() . '/database/migrations' => database_path('migrations'),
-        ], 'bright-migrations');
+        $this->publishes($this->getMigrationFiles($filesystem), 'bright-migrations');
 
         $this->publishes([
             $this->path() . '/database/seeders' => database_path('seeders'),
@@ -204,5 +203,23 @@ class BrightServiceProvider extends ServiceProvider
 
             //$router->pushMiddlewareToGroup('rest', 'auth:api,access_token,access_token,credentials');
         }
+    }
+
+    /**
+     * Returns existing migration file if found, else uses the current timestamp.
+     */
+    protected function getMigrationFiles(Filesystem $filesystem): array
+    {
+        $timestamp = date('Y_m_d');
+
+        $path = $this->path() . '/database/migrations/';
+        $files = $filesystem->glob($path . '*.php');
+
+        $output = [];
+        foreach ($files as $file) {
+            $output[$file] = database_path('migrations') . '/' . $timestamp . '_' . basename($file);
+        }
+
+        return $output;
     }
 }

@@ -17,6 +17,7 @@ class Token extends Model
         'refresh_token',
         'allowed_ip',
         'expires_in',
+        'status',
     ];
 
     /**

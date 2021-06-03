@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Traits;
 
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
 
 trait Eventable
@@ -31,8 +32,10 @@ trait Eventable
      * Set event state.
      *
      * @param bool $event
+     *
+     * @return static
      */
-    public function eventState($event = false): self
+    public function eventState($event = false)
     {
         $this->eventState = $event;
 
@@ -45,8 +48,10 @@ trait Eventable
      * @deprecated 2.0
      *
      * @param bool|string $event
+     *
+     * @return static
      */
-    public function setEvent($event): self
+    public function setEvent($event)
     {
         if (\is_bool($event)) {
             return $this->eventState($event);
@@ -59,8 +64,10 @@ trait Eventable
      * Set the event column.
      *
      * @param array|string $name
+     *
+     * @return static
      */
-    public function eventColumn($name): self
+    public function eventColumn($name)
     {
         if (\is_array($name)) {
             $this->eventColumns = \array_merge($this->eventColumns, $name);
@@ -119,7 +126,7 @@ trait Eventable
         $bright = $this->getBrightConfig();
         $bright = $bright['tables'];
 
-        $from = \preg_split('/ as /i', $this->from)[0];
+        $from = $this->getTableBaseName();
 
         if (isset($bright['ignore'], $bright['ignore'][$from])) {
             return [];
@@ -222,8 +229,10 @@ trait Eventable
      * Event.
      *
      * @param string $type
+     *
+     * @return static
      */
-    protected function atomicEvent($type = 'update'): self
+    protected function atomicEvent($type = 'update')
     {
         if (!$this->useEvent()) {
             return $this;
@@ -231,7 +240,13 @@ trait Eventable
 
         $eventColumns = $this->getEventTables($type);
         $eventColumns = \array_merge($eventColumns, $this->eventColumns);
-        $from = \preg_split('/ as /i', $this->from);
+
+        if ($this->from instanceof Expression) {
+            $from = \preg_split('/ as /i', $this->from->getValue());
+        } else {
+            $from = \preg_split('/ as /i', $this->from);
+        }
+
         $mainAlias = (\count($from) > 1) ? last($from) . '.' : '';
 
         foreach ($eventColumns as $columns) {
@@ -274,6 +289,20 @@ trait Eventable
         }
 
         return $this;
+    }
+
+    /**
+     * Get the table name without alias.
+     */
+    protected function getTableBaseName(): string
+    {
+        if ($this->from instanceof Expression) {
+            $from = \preg_split('/ as /i', $this->from->getValue())[0];
+        } else {
+            $from = \preg_split('/ as /i', $this->from)[0];
+        }
+
+        return $from;
     }
 
     /**
