@@ -276,6 +276,12 @@ trait Filter
      */
     protected function cleanField($string)
     {
+        if (false !== strpos($string, '.')) {
+            list($alias, $column) = explode('.', $string, 2);
+
+            return (string) $this->raw($alias . '.' . $this->wrap($column));
+        }
+
         return (string) $this->raw($this->wrap($string));
     }
 

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Diviky\Bright\Support;
 
 use Illuminate\Contracts\Foundation\CachesConfiguration;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+use Illuminate\Support\Str;
 
 class ServiceProvider extends LaravelServiceProvider
 {
@@ -77,5 +79,21 @@ class ServiceProvider extends LaravelServiceProvider
                 ));
             }
         }
+    }
+
+    /**
+     * Register factories.
+     *
+     * @param string $namespace
+     */
+    protected function registerFactoriesFor($namespace): void
+    {
+        Factory::guessFactoryNamesUsing(function (string $modelName) use ($namespace) {
+            if (Str::startsWith($modelName, $namespace . '\\')) {
+                return $namespace . '\\Database\\Factories\\' . class_basename($modelName) . 'Factory';
+            }
+
+            return 'Database\\Factories\\' . class_basename($modelName) . 'Factory';
+        });
     }
 }
