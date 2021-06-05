@@ -20,7 +20,7 @@
                 <label for="password" class="form-label">{{ __('Password') }}</label>
                 <input id="password" autocomplete="current-password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}"
                     name="password" tabindex="2" required placeholder="Password">
-                <a href="{{ route('password.reset') }}" class="float-right pt-1 small">I forgot password</a>
+                <a href="{{ url('password/reset') }}" class="float-right pt-1 small">I forgot password</a>
             </div>
 
             <div class="form-footer">

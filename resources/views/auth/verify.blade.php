@@ -8,7 +8,7 @@
         <x-bright::flash />
         <p class="text-muted">Enter the code sent to your email address.</p>
 
-        <form method="POST" action="{{ route('password.verify') }}" role="ksubmit">
+        <form method="POST" action="{{ url('password/verify') }}" role="ksubmit">
             @csrf
 
             <div class="form-group">
@@ -25,6 +25,6 @@
     </div>
 </div>
 <div class="text-center text-muted">
-	Did not receive the code? <a href="#" data-href="{{ route('password.resend') }}">resent it</a>.
+	Did not receive the code? <a href="#" data-href="{{ url('password/resend') }}">resent it</a>.
 </div>
 @endsection

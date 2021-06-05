@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Util;
 
+use Carbon\Exceptions\InvalidFormatException;
 use Diviky\Bright\Contracts\UtilInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -159,8 +160,10 @@ class Util implements UtilInterface
     /**
      * Convert give time to UTC time.
      *
-     * @param null|int|string $date
-     * @param null|string     $timezone
+     * @param null|\DateTimeInterface|string $date
+     * @param null|\DateTimeZone|string      $timezone
+     *
+     * @throws InvalidFormatException
      *
      * @return \Illuminate\Support\Carbon
      */

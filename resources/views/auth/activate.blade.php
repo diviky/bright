@@ -8,7 +8,7 @@
         <x-bright::flash />
         <p class="text-muted">Enter the code sent to your email address.</p>
 
-        <form method="POST" action="{{ route('user.activate') }}" role="ksubmit">
+        <form method="POST" action="{{ url('activate') }}" role="ksubmit">
             @csrf
 
             <div class="form-group">
@@ -25,6 +25,6 @@
     </div>
 </div>
 <div class="text-center text-muted">
-    Did not receive the code? <a href="#" data-href="{{ route('activate.resend') }}">resent it</a>.
+    Did not receive the code? <a href="#" data-href="{{ url('resend') }}">resent it</a>.
 </div>
 @endsection

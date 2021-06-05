@@ -5,7 +5,7 @@
     <div class="card-body form-float">
         <div class="card-title">{{ __('Change Your Password') }}</div>
 
-        <form method="POST" action="{{ route('password.change') }}" role="ksubmit">
+        <form method="POST" action="{{ url('password/change') }}" role="ksubmit">
             @csrf
             <div class="form-group">
                 <label for="password" class="form-label">{{ __('New Password') }}</label>

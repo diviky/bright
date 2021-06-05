@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Http\Controllers\Auth\Traits;
+namespace Diviky\Bright\Concerns;
 
 use Illuminate\Support\Str;
 

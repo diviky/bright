@@ -21,14 +21,14 @@ class SendActivationToken extends Notification implements ShouldQueue
      *
      * @var int
      */
-    protected $token;
+    public $token;
 
     /**
      * Channels to send notifcation.
      *
      * @var array
      */
-    protected $channels = [];
+    public $channels = [];
 
     /**
      * Create a new notification instance.

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Diviky\Bright;
 
+use Diviky\Bright\Concerns\AccessToken;
+use Diviky\Bright\Concerns\Authorizable;
 use Diviky\Bright\Http\Controllers\Account\Traits\UserAvatarTrait;
-use Diviky\Bright\Http\Controllers\Auth\Traits\AccessToken;
-use Diviky\Bright\Http\Controllers\Auth\Traits\Authorizable;
 use Diviky\Bright\Http\Controllers\Auth\Traits\HasRoles;
 use Diviky\Bright\Http\Controllers\Auth\Traits\UserParent;
 use Diviky\Bright\Http\Controllers\Auth\Traits\UserRole;

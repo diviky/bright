@@ -31,6 +31,10 @@ class ActivationController extends Controller
             return view('bright::auth.activate');
         }
 
+        $request->validate([
+            'token' => 'required',
+        ]);
+
         $token = $request->input('token');
         $user = user();
 
@@ -68,28 +72,20 @@ class ActivationController extends Controller
     }
 
     /**
-     * @return (array|null|string)[]
-     *
-     * @psalm-return array{status: string, message: array|null|string}
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function resend(): array
+    public function resend()
     {
         $user = Auth::user();
 
-        if (is_null($user)) {
-            return [
-                'status' => 'ERROR',
-                'message' => __('Unable to find the user'),
-            ];
+        if (isset($user)) {
+            $token = $this->saveToken($user);
+            $user->notify(new SendActivationToken($token));
         }
 
-        $token = $this->saveToken($user);
-
-        $user->notify(new SendActivationToken($token));
-
-        return [
+        return response()->json([
             'status' => 'OK',
             'message' => __('Verification code resent to your registered :username.', ['username' => $this->address()]),
-        ];
+        ]);
     }
 }

@@ -22,9 +22,7 @@ class ForgotPasswordController extends Controller
     use ColumnsTrait;
 
     /**
-     * @return (array|null|string)[]|\Illuminate\View\View
-     *
-     * @psalm-return \Illuminate\View\View|array{status: string, message: array|null|string, redirect: string}
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function reset(Request $request)
     {
@@ -41,72 +39,58 @@ class ForgotPasswordController extends Controller
 
             $this->notifyForgotPassword($user, $token);
 
-            return [
+            return response()->json([
                 'status' => 'OK',
                 'message' => __('Verification code sent to your registered :username.', ['username' => $this->address()]),
-                'redirect' => 'password.verify',
-            ];
+                'redirect' => '/password/verify',
+            ]);
         }
 
         return view('bright::auth.passwords.token');
     }
 
     /**
-     * @return (array|null|string)[]
-     *
-     * @psalm-return array{status: string, message: array|null|string, redirect?: string}
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function resend(Request $request): array
+    public function resend(Request $request)
     {
         $id = session('reset-token');
 
         unset($request);
 
         if (\is_null($id)) {
-            return [
+            return response()->json([
                 'status' => 'ERROR',
                 'message' => 'Invalid request',
-                'redirect' => 'password.reset',
-            ];
+                'redirect' => '/password/reset',
+            ]);
         }
 
         $activation = Activation::where('id', $id)->first();
 
         if (\is_null($activation)) {
-            return [
+            return response()->json([
                 'status' => 'ERROR',
                 'message' => 'Invalid request',
-                'redirect' => 'password.reset',
-            ];
+                'redirect' => '/password/reset',
+            ]);
         }
 
         $user = $activation->user;
 
         $this->notifyForgotPassword($user, $activation->token);
 
-        return [
+        return response()->json([
             'status' => 'OK',
             'message' => __('Verification code resent to your registered  :username.', ['username' => $this->address()]),
-        ];
+        ]);
     }
 
     /**
-     * @return \Illuminate\View\View|string[]
-     *
-     * @psalm-return \Illuminate\View\View|array{status: string, message: string, redirect?: string}
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
      */
     public function verify(Request $request)
     {
-        $id = session('reset-token');
-
-        if (\is_null($id)) {
-            return [
-                'status' => 'ERROR',
-                'message' => 'Invalid request',
-                'redirect' => 'password.reset',
-            ];
-        }
-
         if ($request->isMethod('get')) {
             return view('bright::auth.verify');
         }
@@ -115,6 +99,16 @@ class ForgotPasswordController extends Controller
             'token' => 'required',
         ]);
 
+        $id = session('reset-token');
+
+        if (\is_null($id)) {
+            return response()->json([
+                'status' => 'ERROR',
+                'message' => 'Invalid request',
+                'redirect' => '/password/reset',
+            ]);
+        }
+
         $token = $request->input('token');
 
         $activation = Activation::where('token', $token)
@@ -122,10 +116,10 @@ class ForgotPasswordController extends Controller
             ->first();
 
         if (empty($activation)) {
-            return [
+            return response()->json([
                 'status' => 'ERROR',
                 'message' => 'Invalid verification code.',
-            ];
+            ]);
         }
 
         session(['forget-userid' => $activation->user_id]);
@@ -133,11 +127,11 @@ class ForgotPasswordController extends Controller
         $activation->delete();
         session()->forget('reset-token');
 
-        return [
+        return response()->json([
             'status' => 'OK',
             'message' => 'Account verified successfully.',
-            'redirect' => 'password.change',
-        ];
+            'redirect' => '/password/change',
+        ]);
     }
 
     /**
@@ -150,7 +144,7 @@ class ForgotPasswordController extends Controller
         $id = session('forget-userid');
 
         if (\is_null($id)) {
-            return redirect()->route('password.reset')
+            return redirect()->url('password/reset')
                 ->with('message', 'Invalid request');
         }
 

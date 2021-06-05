@@ -41,9 +41,6 @@ trait UserParent
         return $this->save();
     }
 
-    /**
-     * @psalm-return \Illuminate\Database\Eloquent\Relations\HasOne<\Illuminate\Database\Eloquent\Model>
-     */
     public function parent(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(Models::user(), 'parent_id');

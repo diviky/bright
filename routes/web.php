@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,8 +15,8 @@
 
 Route::group([
     'middleware' => ['web', 'guest'],
-    'namespace'  => '\Diviky\Bright\Http\Controllers',
-], function () {
+    'namespace' => '\Diviky\Bright\Http\Controllers',
+], function (): void {
     Route::get('account/sniff/{id}', 'Account\Controller@sniff');
     // Authentication Routes...
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -24,11 +26,17 @@ Route::group([
     Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
     Route::post('register', 'Auth\RegisterController@register');
 
+    Route::group(['middleware' => ['throttle:3,5']], function (): void {
+        Route::post('password/resend', 'Auth\ForgotPasswordController@resend');
+        Route::post('password/reset', 'Auth\ForgotPasswordController@reset');
+    });
+
     // Password Reset Routes...
-    Route::any('password/reset', 'Auth\ForgotPasswordController@reset')->name('password.reset');
-    Route::any('password/verify', 'Auth\ForgotPasswordController@verify')->name('password.verify');
-    Route::any('password/resend', 'Auth\ForgotPasswordController@resend')->name('password.resend');
-    Route::any('password/change', 'Auth\ForgotPasswordController@change')->name('password.change');
+    Route::get('password/reset', 'Auth\ForgotPasswordController@reset');
+    Route::get('password/verify', 'Auth\ForgotPasswordController@verify');
+    Route::post('password/verify', 'Auth\ForgotPasswordController@verify');
+    Route::get('password/change', 'Auth\ForgotPasswordController@change');
+    Route::post('password/change', 'Auth\ForgotPasswordController@change');
 
     Route::get('social/connect/{provider}', 'Socialite\Controller@connect');
     Route::get('social/connect/{provider}/callback', 'Socialite\Controller@callback');
@@ -36,11 +44,15 @@ Route::group([
 
 Route::group([
     'middleware' => ['web', 'auth'],
-    'namespace'  => '\Diviky\Bright\Http\Controllers',
-], function () {
-    Route::any('activate', 'Auth\ActivationController@activate')->name('user.activate');
-    Route::any('resend', 'Auth\ActivationController@resend')->name('activate.resend');
+    'namespace' => '\Diviky\Bright\Http\Controllers',
+], function (): void {
+    Route::get('activate', 'Auth\ActivationController@activate')->name('user.activate');
     Route::any('logout', 'Auth\LoginController@logout')->name('logout');
+
+    Route::group(['middleware' => ['throttle:3,5']], function (): void {
+        Route::post('resend', 'Auth\ActivationController@resend');
+        Route::post('activate', 'Auth\ActivationController@activate');
+    });
 
     Route::any('account', 'Account\Controller@index');
     Route::any('account/password', 'Account\Controller@password');
