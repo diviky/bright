@@ -53,8 +53,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Diviky\\Bright\\Test\\": "tests",
-            "Tests\\": "tests/"
+            "Diviky\\Bright\\Test\\": "tests"
         }
     },
     "scripts": {

@@ -36,13 +36,13 @@ grumphp:
     #   configuration: phpstan.neon
     #   level: 5
     #   metadata: { priority: 300 }
-    phpcpd:
-      directory: ['src']
-      exclude: ['vendor']
-      fuzzy: false
-      min_lines: 5
-      min_tokens: 70
-      triggered_by: ['php']
+    # phpcpd:
+    #   directory: ['src']
+    #   exclude: ['vendor']
+    #   fuzzy: false
+    #   min_lines: 5
+    #   min_tokens: 70
+    #   triggered_by: ['php']
     phpmd:
       whitelist_patterns: ['/^src(.*)/', '/^app(.*)/', '/^config(.*)/', '/^recources(.*)/']
       ruleset: ['ruleset.xml']

@@ -23,16 +23,19 @@ class ConnectionFactory extends LaravelConnectionFactory
      */
     protected function createConnection($driver, $connection, $database, $prefix = '', array $config = [])
     {
-        if ('mysql' !== $driver) {
-            return parent::createConnection($driver, $connection, $database, $prefix, $config);
-        }
-
         $resolver = Connection::getResolver($driver);
 
         if ($resolver) {
             return $resolver($connection, $database, $prefix, $config);
         }
 
-        return new MySqlConnection($connection, $database, $prefix, $config);
+        switch ($driver) {
+            case 'mysql':
+                return new MySqlConnection($connection, $database, $prefix, $config);
+            case 'sqlite':
+                return new SQLiteConnection($connection, $database, $prefix, $config);
+        }
+
+        return parent::createConnection($driver, $connection, $database, $prefix, $config);
     }
 }

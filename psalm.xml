@@ -7,14 +7,13 @@
 >
     <projectFiles>
         <directory name="src"/>
-         <ignoreFiles>
+        <ignoreFiles>
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
     <plugins>
-    <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
+        <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
     </plugins>
-
     <issueHandlers>
         <UndefinedClass>
             <errorLevel type="suppress">
@@ -28,26 +27,22 @@
                 <directory name="src/Helpers"/>
             </errorLevel>
         </UndefinedClass>
-
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <directory name="src"/>
                 <directory name="tests"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
-
         <NoInterfaceProperties>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </NoInterfaceProperties>
-
         <PossiblyUndefinedMethod>
             <errorLevel type="suppress">
                 <directory name="src/Http/Controllers"/>
             </errorLevel>
         </PossiblyUndefinedMethod>
-
         <PossiblyInvalidArgument>
             <errorLevel type="suppress">
                 <file name="src/Helpers/Reader.php"/>
@@ -55,93 +50,81 @@
                 <file name="src/Services/Auth/AccessTokenGuard.php"/>
             </errorLevel>
         </PossiblyInvalidArgument>
-
         <ArgumentTypeCoercion>
             <errorLevel type="suppress">
                 <file name="src/Helpers/Reader.php"/>
             </errorLevel>
         </ArgumentTypeCoercion>
-
         <MoreSpecificReturnType>
             <errorLevel type="suppress">
                 <file name="src/Database/MySqlConnection.php"/>
+                <file name="src/Database/SQLiteConnection.php"/>
             </errorLevel>
         </MoreSpecificReturnType>
-
         <ImplementedReturnTypeMismatch>
             <errorLevel type="suppress">
                 <file name="src/Database/MySqlConnection.php"/>
+                <file name="src/Database/SQLiteConnection.php"/>
             </errorLevel>
         </ImplementedReturnTypeMismatch>
-
         <LessSpecificReturnStatement>
             <errorLevel type="suppress">
                 <file name="src/Database/MySqlConnection.php"/>
+                <file name="src/Database/SQLiteConnection.php"/>
                 <file name="src/Helpers/Stream.php"/>
             </errorLevel>
         </LessSpecificReturnStatement>
-
         <UnresolvableInclude>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </UnresolvableInclude>
-
         <UndefinedInterfaceMethod>
             <errorLevel type="suppress">
                 <directory name="src"/>
                 <directory name="tests"/>
             </errorLevel>
         </UndefinedInterfaceMethod>
-
         <PossiblyInvalidPropertyAssignmentValue>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </PossiblyInvalidPropertyAssignmentValue>
-
         <MissingClosureParamType>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </MissingClosureParamType>
-
         <InvalidScalarArgument>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </InvalidScalarArgument>
-
         <InvalidStringClass>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </InvalidStringClass>
-
         <PossiblyNullArgument>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </PossiblyNullArgument>
-
         <InvalidMethodCall>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </InvalidMethodCall>
-
         <RedundantConditionGivenDocblockType>
             <errorLevel type="suppress">
                 <directory name="src"/>
             </errorLevel>
         </RedundantConditionGivenDocblockType>
-
         <LessSpecificImplementedReturnType>
             <errorLevel type="suppress">
                 <file name="src/Routing/Responsable.php"/>
             </errorLevel>
         </LessSpecificImplementedReturnType>
-
         <!-- @todo: Can't get this to work within a package? Ide helper or migrations somehow? -->
         <UndefinedMagicPropertyFetch>
             <errorLevel type="suppress">
