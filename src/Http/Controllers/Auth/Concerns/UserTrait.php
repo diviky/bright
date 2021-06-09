@@ -2,38 +2,43 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Http\Controllers\Auth\Traits;
+namespace Diviky\Bright\Http\Controllers\Auth\Concerns;
+
+use App\Models\User;
 
 trait UserTrait
 {
     public function getUserBy($value, $column = 'id')
     {
-        return $this->db->table('users_view')
+        return User::from('users_view')
             ->where($column, $value)
             ->first();
     }
 
     public function getUsersBy($value, $column = 'id')
     {
-        return $this->db->table('users_role_view')
+        return User::from('users_role_view')
             ->where($column, $value)
-            ->get(['id', 'username', 'parent_id', 'role_name as role', 'status']);
+            ->select(['id', 'username', 'parent_id', 'role_name as role', 'status'])
+            ->get();
     }
 
     public function getUserById($id)
     {
         $id = is_array($id) ? array_map('intval', $id) : intval($id);
 
-        return $this->db->table('users_role_view')
+        return User::from('users_role_view')
             ->where('id', $id)
-            ->first(['id', 'username', 'parent_id', 'role_name as role', 'status']);
+            ->select(['id', 'username', 'parent_id', 'role_name as role', 'status'])
+            ->first();
     }
 
     public function getParentById($id)
     {
-        return $this->db->table('users_role_view')
+        return User::from('users_role_view')
             ->where('parent_id', $id)
-            ->first(['id', 'username', 'parent_id', 'role_name as role', 'status']);
+            ->select(['id', 'username', 'parent_id', 'role_name as role', 'status'])
+            ->first();
     }
 
     public function getLinkedUsers($parent_id)

@@ -7,14 +7,17 @@ namespace Diviky\Bright;
 use Diviky\Bright\Concerns\AccessToken;
 use Diviky\Bright\Concerns\Authorizable;
 use Diviky\Bright\Http\Controllers\Account\Traits\UserAvatarTrait;
-use Diviky\Bright\Http\Controllers\Auth\Traits\HasRoles;
-use Diviky\Bright\Http\Controllers\Auth\Traits\UserParent;
-use Diviky\Bright\Http\Controllers\Auth\Traits\UserRole;
-use Diviky\Bright\Http\Controllers\Auth\Traits\UsersParent;
+use Diviky\Bright\Http\Controllers\Auth\Concerns\HasRoles;
+use Diviky\Bright\Http\Controllers\Auth\Concerns\UserParent;
+use Diviky\Bright\Http\Controllers\Auth\Concerns\UserRole;
+use Diviky\Bright\Http\Controllers\Auth\Concerns\UsersParent;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    use HasFactory;
     use HasRoles;
     use Authorizable;
     use AccessToken;
@@ -22,6 +25,7 @@ class User extends Authenticatable
     use UserRole;
     use UsersParent;
     use UserAvatarTrait;
+    use Notifiable;
 
     /**
      * Guard name.
@@ -52,9 +56,7 @@ class User extends Authenticatable
     protected $accessTokenName = 'access_token';
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var string[]
+     * {@inheritDoc}
      */
     protected $fillable = [
         'name',
@@ -67,15 +69,24 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * {@inheritDoc}
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'options' => 'array',
+    ];
+
+    /**
+     * {@inheritDoc}
      */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
+    /**
+     * {@inheritDoc}
+     */
     public function getTable(): string
     {
         return config('bright.table.users', 'users');

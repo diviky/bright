@@ -23,7 +23,7 @@ class ActivationController extends Controller
     /**
      * @return \Illuminate\View\View|string[]
      *
-     * @psalm-return \Illuminate\View\View|array{status: string, message: string, redirect?: string}
+     * @psalm-return \Illuminate\View\View|array{status: mixed|string, message: string, redirect?: string}
      */
     public function activate(Request $request)
     {
