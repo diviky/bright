@@ -9,6 +9,8 @@
         <directory name="src"/>
         <ignoreFiles>
             <directory name="vendor"/>
+            <directory name="tests"/>
+            <file name="rector.php"/>
         </ignoreFiles>
     </projectFiles>
     <plugins>
@@ -46,7 +48,7 @@
         <PossiblyInvalidArgument>
             <errorLevel type="suppress">
                 <file name="src/Helpers/Reader.php"/>
-                <file name="src/Database/Traits/Build.php"/>
+                <file name="src/Database/Concerns/Build.php"/>
                 <file name="src/Services/Auth/AccessTokenGuard.php"/>
             </errorLevel>
         </PossiblyInvalidArgument>

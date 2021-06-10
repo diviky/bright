@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Diviky\Bright\Helpers;
 
 use Diviky\Bright\Helpers\Iterator\ChunkedIterator;
-use Diviky\Bright\Helpers\Iterator\MapGeneratorIterator;
 use Diviky\Bright\Helpers\Iterator\MapIterator;
 use EmptyIterator;
 use finfo;
@@ -159,7 +158,7 @@ class Reader
 
         if (!\is_null($callable)) {
             if ($reader instanceof Generator) {
-                $reader = new MapGeneratorIterator($reader, $callable);
+                $reader = new MapIterator($reader, $callable);
             } else {
                 $reader = new MapIterator($reader, $callable);
             }

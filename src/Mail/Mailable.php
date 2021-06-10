@@ -170,7 +170,7 @@ class Mailable extends BaseMailable implements ShouldQueue
                 $email = isset($v[1]) ? \rtrim(\trim($v[1]), '>') : $v[0];
                 $name = isset($v[1]) ? $v[0] : $from;
 
-                $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
+                $addresses[] = ['email' => \trim($email), 'name' => $name];
             }
         } elseif (\strstr($address, '|')) {
             $delim = (\strstr($address, ',')) ? ',' : ';';
@@ -180,7 +180,7 @@ class Mailable extends BaseMailable implements ShouldQueue
                 $email = isset($v[1]) ? $v[1] : $v[0];
                 $name = isset($v[1]) ? $v[1] : $from;
 
-                $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
+                $addresses[] = ['email' => \trim($email), 'name' => $name];
             }
         } else {
             $address = \preg_split("/[,|\n]/", $address);
@@ -189,7 +189,7 @@ class Mailable extends BaseMailable implements ShouldQueue
                 $email = isset($v[1]) ? $v[1] : $v[0];
                 $name = isset($v[1]) ? $v[1] : $from;
 
-                $addresses[] = ['email' => \trim($email), 'name' => \trim($name)];
+                $addresses[] = ['email' => \trim($email), 'name' => $name];
             }
         }
 

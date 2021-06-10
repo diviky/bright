@@ -13,17 +13,13 @@ class Money implements CastsAttributes
 {
     /**
      * Currency Code.
-     *
-     * @var string
      */
-    protected $currency;
+    protected string $currency;
 
     /**
      * Currenncy Decimal Places.
-     *
-     * @var int
      */
-    protected $decimals = 2;
+    protected int $decimals = 2;
 
     /**
      * @param int    $decimals

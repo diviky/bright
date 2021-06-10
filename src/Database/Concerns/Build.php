@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Database\Traits;
+namespace Diviky\Bright\Database\Concerns;
 
 trait Build
 {

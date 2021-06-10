@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database\Query;
 
 use Diviky\Bright\Database\Bright;
-use Diviky\Bright\Database\Traits\Async;
-use Diviky\Bright\Database\Traits\Build;
-use Diviky\Bright\Database\Traits\BuildsQueries;
-use Diviky\Bright\Database\Traits\Cachable;
-use Diviky\Bright\Database\Traits\Eventable;
-use Diviky\Bright\Database\Traits\Filter;
-use Diviky\Bright\Database\Traits\Ordering;
-use Diviky\Bright\Database\Traits\Outfile;
-use Diviky\Bright\Database\Traits\Paging;
-use Diviky\Bright\Database\Traits\Raw;
-use Diviky\Bright\Database\Traits\Remove;
-use Diviky\Bright\Database\Traits\SoftDeletes;
-use Diviky\Bright\Database\Traits\Timestamps;
+use Diviky\Bright\Database\Concerns\Async;
+use Diviky\Bright\Database\Concerns\Build;
+use Diviky\Bright\Database\Concerns\BuildsQueries;
+use Diviky\Bright\Database\Concerns\Cachable;
+use Diviky\Bright\Database\Concerns\Eventable;
+use Diviky\Bright\Database\Concerns\Filter;
+use Diviky\Bright\Database\Concerns\Ordering;
+use Diviky\Bright\Database\Concerns\Outfile;
+use Diviky\Bright\Database\Concerns\Paging;
+use Diviky\Bright\Database\Concerns\Raw;
+use Diviky\Bright\Database\Concerns\Remove;
+use Diviky\Bright\Database\Concerns\SoftDeletes;
+use Diviky\Bright\Database\Concerns\Timestamps;
 use Illuminate\Database\Query\Builder as LaravelBuilder;
 
 class Builder extends LaravelBuilder

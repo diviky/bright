@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace Diviky\Bright\Tests\Unit;
 
-use Tests\TestCase;
+use Diviky\Bright\Tests\TestCase;
 
 /**
  * @internal

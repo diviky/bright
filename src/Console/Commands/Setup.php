@@ -100,11 +100,8 @@ class Setup extends Command
     {
         $command = \str_replace('\\', '\\\\', $command);
         $this->info('running... ' . $command);
-        if ('WIN' === \strtoupper(\substr(PHP_OS, 0, 3))) {
-            $process = Process::fromShellCommandline($command);
-        } else {
-            $process = Process::fromShellCommandline($command);
-        }
+
+        $process = Process::fromShellCommandline($command);
 
         $process->setTimeout(10 * 60);
         $process->run(function ($type, $buffer): void {

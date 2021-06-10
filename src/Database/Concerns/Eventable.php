@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Database\Traits;
+namespace Diviky\Bright\Database\Concerns;
 
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
@@ -36,6 +36,20 @@ trait Eventable
      * @return static
      */
     public function eventState($event = false)
+    {
+        $this->eventState = $event;
+
+        return $this;
+    }
+
+    /**
+     * Set event state.
+     *
+     * @param bool $event
+     *
+     * @return static
+     */
+    public function es($event = false)
     {
         $this->eventState = $event;
 

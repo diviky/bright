@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests;
+namespace Diviky\Bright\Tests;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {
-    use RefreshDatabase;
-
     public function setUp(): void
     {
         parent::setUp();

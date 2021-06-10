@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Database\Traits;
+namespace Diviky\Bright\Database\Concerns;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
@@ -110,8 +110,8 @@ trait Filter
             if (!\is_array($date)) {
                 $date = \explode(' - ', $date);
                 $date = [
-                    'from' => $date[0] ?? null,
-                    'to' => $date[1] ?? null,
+                    'from' => isset($date[0]) ? \trim($date[0]) : null,
+                    'to' => isset($date[1]) ? \trim($date[1]) : null,
                 ];
             }
 
@@ -138,13 +138,13 @@ trait Filter
             if (!\is_array($date)) {
                 $date = \explode(' - ', $date);
                 $date = [
-                    'from' => $date[0] ?? null,
-                    'to' => $date[1] ?? null,
+                    'from' => isset($date[0]) ? \trim($date[0]) : null,
+                    'to' => isset($date[1]) ? \trim($date[1]) : null,
                 ];
             }
 
-            $from = \trim($date['from']);
-            $to = \trim($date['to']);
+            $from = $date['from'];
+            $to = $date['to'];
             $to = $to ?: $from;
 
             $column = $this->cleanField($column);
@@ -168,14 +168,14 @@ trait Filter
             if (!\is_array($date)) {
                 $date = \explode(' - ', $date);
                 $date = [
-                    'from' => $date[0] ?? null,
-                    'to' => $date[1] ?? null,
+                    'from' => isset($date[0]) ? \trim($date[0]) : null,
+                    'to' => isset($date[1]) ? \trim($date[1]) : null,
                 ];
             }
 
-            $from = \trim($date['from']);
-            $to = \trim($date['to']);
-            $to = $to ?: $from;
+            $from = isset($date['from']) ? \trim($date['from']) : null;
+            $to = isset($date['to']) ? \trim($date['to']) : null;
+            $to = $to ?? $from;
             $column = $this->cleanField($column);
 
             if (!\is_numeric($from)) {
@@ -200,8 +200,8 @@ trait Filter
             if (!\is_array($date)) {
                 $date = \explode(' - ', $date);
                 $date = [
-                    'from' => \trim($date[0]),
-                    'to' => \trim($date[1]),
+                    'from' => isset($date[0]) ? \trim($date[0]) : null,
+                    'to' => isset($date[1]) ? \trim($date[1]) : null,
                 ];
             }
 
@@ -225,8 +225,8 @@ trait Filter
             if (!\is_array($date)) {
                 $date = \explode(' - ', $date);
                 $date = [
-                    'from' => \trim($date[0]),
-                    'to' => \trim($date[1]),
+                    'from' => isset($date[0]) ? \trim($date[0]) : null,
+                    'to' => isset($date[1]) ? \trim($date[1]) : null,
                 ];
             }
 
