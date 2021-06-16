@@ -21,7 +21,7 @@ trait Message
             $response = [
                 'status' => 'OK',
                 'code' => 200,
-                'message' => __(':Name :action successfully', ['name' => $name, 'action' => $action . 'd']),
+                'message' => trans(':Name :action successfully', ['name' => $name, 'action' => $action . 'd']),
             ];
 
             if (!is_bool($result) && !is_string($result)) {
@@ -34,7 +34,7 @@ trait Message
         return [
             'status' => 'ERROR',
             'code' => 500,
-            'message' => __('Unable to :action :name. Please try again.', ['name' => $name, 'action' => $action]),
+            'message' => trans('Unable to :action :name. Please try again.', ['name' => $name, 'action' => $action]),
         ];
     }
 

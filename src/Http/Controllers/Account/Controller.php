@@ -36,7 +36,7 @@ class Controller extends BaseController
             if (!Hash::check($this->input('password'), $password)) {
                 return [
                     'status' => 'ERROR',
-                    'message' => __('Your current password didn\'t match.'),
+                    'message' => trans('Your current password didn\'t match.'),
                 ];
             }
 
@@ -50,7 +50,7 @@ class Controller extends BaseController
                 if ($exists) {
                     return [
                         'status' => 'ERROR',
-                        'message' => __('Email address already registered.'),
+                        'message' => trans('Email address already registered.'),
                     ];
                 }
             }
@@ -96,14 +96,14 @@ class Controller extends BaseController
             if (!Hash::check($this->input('oldpassword'), $password)) {
                 return [
                     'status' => 'ERROR',
-                    'message' => __('Your current password didn\'t match.'),
+                    'message' => trans('Your current password didn\'t match.'),
                 ];
             }
 
             if (Hash::check($inputpwd, $password)) {
                 return [
                     'status' => 'ERROR',
-                    'message' => __('New password shouldn\'t be same as old one.'),
+                    'message' => trans('New password shouldn\'t be same as old one.'),
                 ];
             }
 
@@ -118,7 +118,7 @@ class Controller extends BaseController
                 if (Hash::check($inputpwd, $pwd)) {
                     return [
                         'status' => 'ERROR',
-                        'message' => __('Password shouldn\'t be same as last :limit passwords.', ['limit' => $limit]),
+                        'message' => trans('Password shouldn\'t be same as last :limit passwords.', ['limit' => $limit]),
                     ];
                 }
             }

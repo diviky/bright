@@ -85,7 +85,7 @@ class ActivationController extends Controller
 
         return response()->json([
             'status' => 'OK',
-            'message' => __('Verification code resent to your registered :username.', ['username' => $this->address()]),
+            'message' => trans('Verification code resent to your registered :username.', ['username' => $this->address()]),
         ]);
     }
 }

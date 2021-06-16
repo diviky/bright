@@ -13,13 +13,13 @@ class Handler extends ExceptionHandler
     /**
      * {@inheritDoc}
      */
-    public function report(Throwable $e): void
+    public function register(): void
     {
-        if (!config('app.debug') && app()->bound('sentry') && $this->shouldReport($e)) {
-            app('sentry')->captureException($e);
-        }
-
-        parent::report($e);
+        $this->reportable(function (Throwable $e): void {
+            if ($this->shouldReport($e) && app()->bound('sentry')) {
+                app('sentry')->captureException($e);
+            }
+        });
     }
 
     /**

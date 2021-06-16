@@ -51,7 +51,7 @@ trait RegistersUsers
         return [
             'redirect' => $next,
             'status' => 'OK',
-            'message' => \_('Registration success.'),
+            'message' => trans('Registration success.'),
         ];
     }
 
