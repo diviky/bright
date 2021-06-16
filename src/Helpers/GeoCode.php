@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Helpers;
 
+use Illuminate\Support\Arr;
+
 /**
  * @author sankar <sankar.suda@gmail.com>
  */
@@ -36,17 +38,17 @@ class GeoCode
 
             $data = $value->toArray();
 
-            $result['provider'] = $data['providedBy'];
-            $result['latitude'] = $data['latitude'];
-            $result['longitude'] = $data['longitude'];
-            $result['country'] = $data['country'];
-            $result['country_code'] = $data['countryCode'];
-            $result['city'] = $data['locality'];
+            $result['provider'] = Arr::get($data, 'providedBy');
+            $result['latitude'] = Arr::get($data, 'latitude');
+            $result['longitude'] = Arr::get($data, 'longitude');
+            $result['country'] = Arr::get($data, 'country');
+            $result['country_code'] = Arr::get($data, 'countryCode');
+            $result['city'] = Arr::get($data, 'locality');
             $result['region'] = ($region) ? $region->getName() : '';
             $result['region_code'] = ($region) ? $region->getCode() : '';
-            $result['zipcode'] = $data['postalCode'];
-            $result['locality'] = $data['locality'];
-            $result['timezone'] = $data['timezone'];
+            $result['zipcode'] = Arr::get($data, 'postalCode');
+            $result['locality'] = Arr::get($data, 'locality');
+            $result['timezone'] = Arr::get($data, 'timezone');
         }
 
         return \array_map('trim', $result);
