@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Response;
 
 class Api
 {
@@ -58,6 +59,10 @@ class Api
      */
     protected function respond($response)
     {
+        if (!$response instanceof Response) {
+            return $response;
+        }
+
         $original = $response->getOriginalContent();
 
         if (\is_array($original) && isset($original['code'])) {
@@ -65,12 +70,12 @@ class Api
 
             if ($code && \is_numeric($code)) {
                 if (200 == $code) {
-                    $response->setStatusCode($code, 'OK');
+                    $response->setStatusCode((int) $code, 'OK');
                 } else {
-                    $response->setStatusCode($code, $original['message'] ?? 'OK');
+                    $response->setStatusCode((int) $code, $original['message'] ?? 'OK');
                 }
             } elseif (\is_numeric($original['status'])) {
-                $response->setStatusCode($original['status'], $original['message'] ?? 'OK');
+                $response->setStatusCode((int) $original['status'], $original['message'] ?? 'OK');
             }
 
             if (!$this->keep_code) {
