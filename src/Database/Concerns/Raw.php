@@ -9,22 +9,27 @@ trait Raw
     /**
      * Add a "group by" clause to the query.
      *
-     * @param array|string $groups
+     * @param array|string $sql
      */
-    public function groupByRaw($groups, array $bindings = [])
+    public function groupByRaw($sql, array $bindings = [])
     {
-        if (\is_array($groups)) {
-            $groups = \implode(', ', $groups);
+        if (is_string($sql)) {
+            $sql = array_filter(explode(', ', $sql), 'trim');
         }
 
-        $this->groupBy((string) $this->raw($groups));
-
-        if ($bindings) {
-            $this->setBindings($bindings, 'group');
-            $this->addBinding($bindings, 'group');
+        foreach ($sql as &$exp) {
+            if (\is_string($exp) && false !== \strpos($exp, '.')) {
+                if (false !== \strpos($exp, '(')) {
+                    $exp = $this->wrap($exp);
+                } else {
+                    $exp = $this->grammar->wrap($exp);
+                }
+            }
         }
 
-        return $this;
+        $sql = \implode(', ', $sql);
+
+        return parent::groupByRaw($sql, $bindings);
     }
 
     /**
