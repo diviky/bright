@@ -52,11 +52,11 @@ trait Authorize
     /**
      * Check authorization view action class.
      *
-     * @param Route $action
+     * @param Route $route
      */
-    public function isActionAuthorized($action): bool
+    public function isActionAuthorized($route): bool
     {
-        $names = $this->getRouteFromAction($action);
+        $names = $this->getRoutesFromRoute($route);
 
         return $this->isAuthorized($names);
     }
@@ -144,7 +144,7 @@ trait Authorize
      *
      * @param Route $route
      */
-    protected function getRouteFromAction($route): array
+    protected function getRoutesFromRoute($route): array
     {
         $action = $route->getActionName();
         if (false === \strpos($action, '@')) {

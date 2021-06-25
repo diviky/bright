@@ -32,7 +32,7 @@ trait Responsable
      *
      * @param string $action
      */
-    protected function getRoute($action): string
+    protected function getRouteFromAction($action): string
     {
         $method = $this->getMethod($action);
         $component = $this->getNamespace($action);

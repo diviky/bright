@@ -57,10 +57,8 @@ class Responsable implements BaseResponsable
             return $response;
         }
 
-        $route = $this->getRoute($this->action);
-
         if (!\is_array($response) && $response instanceof View) {
-            $this->setUpTheme($route);
+            $this->setUpThemeFromRequest($request);
 
             return $response;
         }
@@ -116,10 +114,11 @@ class Responsable implements BaseResponsable
             $format = 'html';
         }
 
+        $route = $this->getRouteFromAction($this->action);
         list($component, $view) = \explode('.', $route);
 
         $path = $this->getViewsFrom($this->controller, $this->action);
-        $theme = $this->setUpTheme($route, $component, $path);
+        $theme = $this->setUpThemeFromRequest($request, $component, $path);
         $layout = 'html' == $format ? 'html' : $theme['layout'];
 
         return $this->getView($view, $response, $layout);

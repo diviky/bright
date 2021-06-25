@@ -24,7 +24,7 @@ class View
     public function make($controller, $view, $data = [], $mergeData = [])
     {
         $action = !\is_string($controller) ? \get_class($controller) : $controller;
-        $route = $this->getRoute($action);
+        $route = $this->getRouteFromAction($action);
 
         if (\is_string($controller)) {
             $controller = new $controller();
@@ -33,7 +33,7 @@ class View
         $component = \explode('.', $route, 2)[0];
 
         $paths = $this->getViewsFrom($controller, $action);
-        $this->setUpTheme($route, $component, $paths);
+        $this->setUpThemeFromRoute($route, $component, $paths);
 
         return view($view, $data, $mergeData);
     }
