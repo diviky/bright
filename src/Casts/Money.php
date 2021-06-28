@@ -28,7 +28,7 @@ class Money implements CastsAttributes
     public function __construct($decimals = 2, $currency = 'INR')
     {
         $this->currency = $currency;
-        $this->decimals = $decimals;
+        $this->decimals = intval($decimals);
     }
 
     /**
@@ -39,11 +39,11 @@ class Money implements CastsAttributes
      * @param mixed                               $value
      * @param array                               $attributes
      *
-     * @return mixed
+     * @return string
      */
     public function get($model, $key, $value, $attributes)
     {
-        return $this->asDecimal(($value / 10 ** $this->decimals), $this->decimals);
+        return $this->from($value);
     }
 
     /**
@@ -54,11 +54,35 @@ class Money implements CastsAttributes
      * @param mixed                               $value
      * @param array                               $attributes
      *
-     * @return mixed
+     * @return float|int
      */
     public function set($model, $key, $value, $attributes)
     {
+        return $this->to($value);
+    }
+
+    /**
+     * Convert to int from decimals.
+     *
+     * @param float|int $value
+     *
+     * @return float|int
+     */
+    public function to($value)
+    {
         return $value * 10 ** $this->decimals;
+    }
+
+    /**
+     * Convert to int from decimals.
+     *
+     * @param int $value
+     *
+     * @return string
+     */
+    public function from($value)
+    {
+        return $this->asDecimal(($value / 10 ** $this->decimals), $this->decimals);
     }
 
     /**

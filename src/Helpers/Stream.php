@@ -158,7 +158,7 @@ class Stream
     {
         $rows = $this->toArray($rows);
 
-        if (empty($fields)) {
+        if (empty($fields) && !empty($rows)) {
             $fields = (array) $rows[0];
         }
 
