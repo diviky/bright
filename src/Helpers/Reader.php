@@ -290,15 +290,21 @@ class Reader
         $lines = $this->getLines($file, $sample);
 
         foreach ($lines as $row) {
+            if (!is_string($row)) {
+                continue;
+            }
+
             $row = \preg_replace('/\r\n/', '', \trim($row)); // clean up .. strip new line and line return chars
             $row = \preg_replace("/[^{$delimsRegex}]/", '', $row); // clean up .. strip evthg which is not a dilim'r
             $rowChars = \str_split($row); // break it apart char by char
 
-            foreach ($rowChars as $char) {
-                foreach ($delimiters as $delim) {
-                    if (false !== \strpos($char, $delim)) {
-                        // if the char is the delim ...
-                        ++$delimCount[$delim]; // ... increment
+            if (is_array($rowChars)) {
+                foreach ($rowChars as $char) {
+                    foreach ($delimiters as $delim) {
+                        if (false !== \strpos($char, $delim)) {
+                            // if the char is the delim ...
+                            ++$delimCount[$delim]; // ... increment
+                        }
                     }
                 }
             }

@@ -20,8 +20,6 @@ use Illuminate\Support\Arr;
 class Geo
 {
     /**
-     * @psalm-return array{provider: string, latitude: string, longitude: string, country: string, country_code: string, city: string, region: string, region_code: string, zipcode: string, locality: string, timezone: string}
-     *
      * @param string $address
      * @param string $db
      *
@@ -29,14 +27,20 @@ class Geo
      */
     public function geocode($address, $db = 'GeoLite2-City.mmdb'): array
     {
-        //$address = '203.109.101.177';
+        $path = config('bright.geoip.database_path');
+
+        $db = $path . '/' . $db;
+
+        if (!file_exists($db)) {
+            return [];
+        }
 
         //http://ipinfo.io/119.63.142.37/json
 
         $geocoder = new ProviderAggregator();
         $adapter = new GuzzleAdapter();
 
-        $reader = new Reader(storage_path('geoip') . '/' . $db);
+        $reader = new Reader($db);
         $geoIP2Adapter = new GeoIP2Adapter($reader);
 
         $chain = new Chain([
