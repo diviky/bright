@@ -107,7 +107,11 @@ trait Filter
     public function filterDateRange(array $date_range): self
     {
         foreach ($date_range as $column => $date) {
-            if (!\is_array($date)) {
+            if (empty($date)) {
+                continue;
+            }
+
+            if (!\is_array($date) && is_string($date)) {
                 $date = \explode(' - ', $date);
                 $date = [
                     'from' => isset($date[0]) ? \trim($date[0]) : null,
@@ -135,6 +139,7 @@ trait Filter
             if (empty($date)) {
                 continue;
             }
+
             if (!\is_array($date)) {
                 $date = \explode(' - ', $date);
                 $date = [
@@ -197,6 +202,10 @@ trait Filter
     public function filterRange(array $ranges): self
     {
         foreach ($ranges as $column => $date) {
+            if (empty($date)) {
+                continue;
+            }
+
             if (!\is_array($date)) {
                 $date = \explode(' - ', $date);
                 $date = [
@@ -222,6 +231,10 @@ trait Filter
     public function filterBetween(array $between): self
     {
         foreach ($between as $column => $date) {
+            if (empty($date)) {
+                continue;
+            }
+
             if (!\is_array($date)) {
                 $date = \explode(' - ', $date);
                 $date = [

@@ -152,7 +152,7 @@ class Reader
             if (null !== $count && $offset >= $count) {
                 $reader = new EmptyIterator();
             } else {
-                $reader = new LimitIterator($reader, $options['offset'], $options['limit']);
+                $reader = new LimitIterator($reader, intval($options['offset']), intval($options['limit']));
             }
         }
 
