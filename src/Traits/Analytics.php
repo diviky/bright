@@ -153,6 +153,46 @@ trait Analytics
     }
 
     /**
+     * @psalm-pure
+     *
+     * @param float|int|string $num
+     *
+     * @return int|string
+     */
+    public function shortFormat($num)
+    {
+        $num = (float) $num;
+
+        $n_format = '';
+        $suffix = '';
+
+        $num = intval($num);
+        if ($num >= 0 && $num < 1000) {
+            // 1 - 999
+            $n_format = floor($num);
+            $suffix = '';
+        } elseif ($num >= 1000 && $num < 1000000) {
+            // 1k-999k
+            $n_format = floor($num / 1000);
+            $suffix = 'K+';
+        } elseif ($num >= 1000000 && $num < 1000000000) {
+            // 1m-999m
+            $n_format = floor($num / 1000000);
+            $suffix = 'M+';
+        } elseif ($num >= 1000000000 && $num < 1000000000000) {
+            // 1b-999b
+            $n_format = floor($num / 1000000000);
+            $suffix = 'B+';
+        } elseif ($num >= 1000000000000) {
+            // 1t+
+            $n_format = floor($num / 1000000000000);
+            $suffix = 'T+';
+        }
+
+        return !empty($n_format . $suffix) ? $n_format . $suffix : 0;
+    }
+
+    /**
      * @param int    $diff
      * @param string $time
      *
