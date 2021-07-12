@@ -26,8 +26,16 @@ class Chart extends BaseChart
     {
         parent::__construct();
 
+        $this->container = 'charts::chartjs.container';
+        $this->script = 'charts::chartjs.script';
+
         return $this->options([
             'responsive' => true,
+            'scales' => [],
+            'interaction' => [
+                'mode' => 'index',
+                'intersect' => false,
+            ],
         ]);
     }
 

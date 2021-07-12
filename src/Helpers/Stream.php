@@ -111,7 +111,7 @@ class Stream
 
         $out = [];
         foreach ($fields as $field) {
-            $field = \strtoupper($field);
+            $field = \strtoupper((string) $field);
             if (false !== \strpos($field, ' AS ')) {
                 $field = \explode(' AS ', $field);
                 $field = \trim($field[1]);

@@ -72,4 +72,206 @@ trait Analytics
 
         return [$format, $group, $time];
     }
+
+    /**
+     * Get the sql group and date formats.
+     *
+     * @param string $time
+     * @param string $interval
+     *
+     * @return array
+     */
+    public function getRange($interval = 'auto', $time = '1d')
+    {
+        list($start, $end) = $this->getTimeRange($time);
+        $minutes = 0;
+
+        switch ($interval) {
+            case '1m':
+                $group = ['created_at'];
+                $format = 'dS M h:i A';
+                $minutes = 1;
+
+                break;
+            case '5m':
+                $group = ['created_at'];
+                $format = 'dS M h:i A';
+                $minutes = 5;
+
+                break;
+            case '10m':
+                $group = ['created_at'];
+                $format = 'dS M h:i A';
+                $minutes = 10;
+
+                break;
+            case '15m':
+                $group = ['created_at'];
+                $format = 'dS M h:i A';
+                $minutes = 15;
+
+                break;
+            case '30m':
+                $group = ['created_at'];
+                $format = 'dS M h:i A';
+                $minutes = 30;
+
+                break;
+            case '1h':
+                $group = ['created_time'];
+                $format = 'dS M h A';
+                $minutes = 60;
+
+                break;
+            case '1d':
+                $group = ['created_date'];
+                $format = 'dS M';
+                $minutes = 24 * 60;
+
+                break;
+            case '1w':
+                $group = ['created_wk'];
+                $format = 'dS M';
+                $minutes = 7 * 24 * 60;
+
+                break;
+            case '1m':
+                $group = ['created_ym'];
+                $format = 'M Y';
+                $minutes = 30 * 24 * 60;
+
+                break;
+            default:
+                $diff = $start->diffInMinutes($end);
+
+                return $this->getCustomRange($diff, $time);
+
+                break;
+        }
+
+        return [$format, $group, $start, $end, $minutes, $interval];
+    }
+
+    /**
+     * @param int    $diff
+     * @param string $time
+     *
+     * @return []
+     */
+    protected function getCustomRange($diff, $time): array
+    {
+        if ($diff <= 30) {
+            return $this->getRange('1m', $time);
+        }
+
+        if ($diff <= 60) {
+            return $this->getRange('5m', $time);
+        }
+
+        if ($diff <= 3 * 60) {
+            return $this->getRange('10m', $time);
+        }
+
+        if ($diff <= 6 * 60) {
+            return $this->getRange('15m', $time);
+        }
+
+        if ($diff <= 12 * 60) {
+            return $this->getRange('30m', $time);
+        }
+
+        if ($diff <= 24 * 60) {
+            return $this->getRange('1h', $time);
+        }
+
+        if ($diff <= 30 * 24 * 60) {
+            return $this->getRange('1d', $time);
+        }
+
+        if ($diff <= 60 * 24 * 60) {
+            return $this->getRange('1w', $time);
+        }
+
+        if ($diff <= 360 * 24 * 60) {
+            return $this->getRange('1m', $time);
+        }
+
+        return $this->getRange('1d', $time);
+    }
+
+    /**
+     * @param string $time
+     *
+     * @return []
+     */
+    protected function getTimeRange($time = '1d')
+    {
+        $now = now();
+        if ('1h' == $time) {
+            return [$now->copy()->subHours(1), $now];
+        }
+
+        if ('3h' == $time) {
+            return [$now->copy()->subHours(3), $now];
+        }
+
+        if ('6h' == $time) {
+            return [$now->copy()->subHours(6), $now];
+        }
+
+        if ('12h' == $time) {
+            return [$now->copy()->subHours(12), $now];
+        }
+
+        if ('1d' == $time) {
+            return [$now->copy()->subDays(1), $now];
+        }
+
+        if ('3d' == $time) {
+            return [$now->copy()->subDays(3), $now];
+        }
+
+        if ('1w' == $time) {
+            return [$now->copy()->subWeeks(1), $now];
+        }
+
+        if ('1m' == $time) {
+            return [$now->copy()->subMonths(1), $now];
+        }
+
+        if ('3m' == $time) {
+            return [$now->copy()->subMonths(3), $now];
+        }
+
+        if ('6m' == $time) {
+            return [$now->copy()->subMonths(6), $now];
+        }
+
+        list($start, $end) = \array_pad(\explode(' - ', $time ?? ''), 3, null);
+        $start = carbon($start);
+        $end = $end ? carbon($end) : $start;
+
+        return [$start, $end];
+    }
+
+    protected function getDateLables($start, $end, $interval = 15, $format = 'h:i A'): array
+    {
+        $next = true;
+        $i = 0;
+        $lables = [];
+        do {
+            if ($start->gte($end) || $i > 30) {
+                $next = false;
+            }
+
+            $timestamp = intval(round($start->timestamp / ($interval * 60)) * ($interval * 60));
+
+            $lables[] = date($format, $timestamp);
+
+            $start->addMinutes($interval);
+            ++$i;
+        } while ($next);
+
+        return $lables;
+    }
 }
