@@ -195,8 +195,6 @@ trait Analytics
     /**
      * @param int    $diff
      * @param string $time
-     *
-     * @return []
      */
     protected function getCustomRange($diff, $time): array
     {
