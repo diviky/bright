@@ -242,7 +242,7 @@ trait Analytics
     /**
      * @param string $time
      *
-     * @return []
+     * @return array
      */
     protected function getTimeRange($time = '1d')
     {
@@ -294,6 +294,14 @@ trait Analytics
         return [$start, $end];
     }
 
+    /**
+     * Generate the time ranges.
+     *
+     * @param \Illuminate\Support\Carbon $start
+     * @param \Illuminate\Support\Carbon $end
+     * @param int                        $interval
+     * @param string                     $format
+     */
     protected function getDateLables($start, $end, $interval = 15, $format = 'h:i A'): array
     {
         $next = true;

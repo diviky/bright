@@ -97,8 +97,10 @@ class Reader
         } else {
             switch ($ext) {
                 case '.array':
-                    if (!\is_array($reader)) {
+                    if (!\is_array($reader) && isset($reader)) {
                         $reader = \explode("\n", $reader);
+                    } else {
+                        $reader = [];
                     }
 
                     $reader = new ArrayReader($reader);
