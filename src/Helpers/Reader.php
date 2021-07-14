@@ -99,7 +99,9 @@ class Reader
                 case '.array':
                     if (!\is_array($reader) && isset($reader)) {
                         $reader = \explode("\n", $reader);
-                    } else {
+                    }
+
+                    if (!is_array($reader)) {
                         $reader = [];
                     }
 
