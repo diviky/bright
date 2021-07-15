@@ -68,7 +68,7 @@ class Stream
         }
 
         $ext = \strtolower(\strrchr($filename, '.'));
-        $type = $this->mime_types[$ext];
+        $type = $this->mime_types[$ext] ?? 'text/plain';
 
         if ('.csv' == $ext) {
             $this->separator = ',';

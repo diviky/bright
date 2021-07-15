@@ -186,7 +186,7 @@ class Reader
 
         $columns = $this->fetchArray($file, $callable, $options);
 
-        return $columns[0];
+        return $columns[0] ?? [];
     }
 
     /**
