@@ -91,7 +91,7 @@ class Util implements UtilInterface
         $disk = $disk ?: config('filesystems.default');
         $disk = ('local' == $disk) ? 'public' : $disk;
 
-        if ($time) {
+        if ($time && 's3' == $disk) {
             try {
                 return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
             } catch (\Exception $e) {

@@ -100,7 +100,7 @@ return [
     ],
 
     'geoip' => [
-        'database_path' => env('GEOIP_DB_PATH', storage_path('geoip')),
+        'database_path' => env('GEOIP_DB_PATH', storage_path('app/geoip')),
         'update_url' => sprintf('https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=%s&suffix=tar.gz', env('MAXMIND_LICENSE_KEY', 'J8y0pS9JmwliTB1f')),
     ],
 ];

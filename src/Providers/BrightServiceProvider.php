@@ -191,17 +191,6 @@ class BrightServiceProvider extends ServiceProvider
             foreach ($middlewares as $name => $value) {
                 $router->aliasMiddleware($name, $value);
             }
-
-            $router->pushMiddlewareToGroup('web', 'ajax');
-            $router->pushMiddlewareToGroup('web', 'theme');
-
-            $router->pushMiddlewareToGroup('api', 'accept');
-            $router->pushMiddlewareToGroup('api', 'api.response');
-
-            $router->pushMiddlewareToGroup('rest', 'accept');
-            $router->pushMiddlewareToGroup('rest', 'api.response');
-
-            //$router->pushMiddlewareToGroup('rest', 'auth:api,access_token,access_token,credentials');
         }
     }
 

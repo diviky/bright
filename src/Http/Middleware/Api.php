@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class Api
@@ -22,7 +23,7 @@ class Api
      * @param \Illuminate\Http\Request $request
      * @param bool                     $keep_code
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function handle($request, Closure $next, $keep_code = true)
     {
@@ -55,11 +56,11 @@ class Api
      *
      * @param mixed $response
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     protected function respond($response)
     {
-        if (!$response instanceof Response) {
+        if (!$response instanceof Response && !$response instanceof JsonResponse) {
             return $response;
         }
 
