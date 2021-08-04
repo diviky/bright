@@ -144,7 +144,7 @@ class ForgotPasswordController extends Controller
         $id = session('forget-userid');
 
         if (\is_null($id)) {
-            return redirect()->url('password/reset')
+            return redirect('password/reset')
                 ->with('message', 'Invalid request');
         }
 
