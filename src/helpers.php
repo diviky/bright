@@ -88,7 +88,7 @@ if (!function_exists('markdown')) {
             'allow_unsafe_links' => false,
         ]);
 
-        return $converter->convertToHtml($text);
+        return (string) $converter->convertToHtml($text);
     }
 }
 

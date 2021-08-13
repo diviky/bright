@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Diviky\Bright\Helpers;
 
 use Geocoder\Provider\Chain\Chain;
-use Geocoder\Provider\FreeGeoIp\FreeGeoIp;
 use Geocoder\Provider\GeoIP2\GeoIP2;
 use Geocoder\Provider\GeoIP2\GeoIP2Adapter;
-use Geocoder\Provider\HostIp\HostIp;
 use Geocoder\ProviderAggregator;
 use GeoIp2\Database\Reader;
-use Http\Adapter\Guzzle7\Client as GuzzleAdapter;
 use Illuminate\Support\Arr;
 
 /**
@@ -38,15 +35,12 @@ class Geo
         //http://ipinfo.io/119.63.142.37/json
 
         $geocoder = new ProviderAggregator();
-        $adapter = new GuzzleAdapter();
 
         $reader = new Reader($db);
         $geoIP2Adapter = new GeoIP2Adapter($reader);
 
         $chain = new Chain([
             new GeoIP2($geoIP2Adapter),
-            new FreeGeoIp($adapter),
-            new HostIp($adapter),
         ]);
 
         $geocoder->registerProvider($chain);
