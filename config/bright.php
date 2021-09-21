@@ -41,6 +41,10 @@ return [
         //'table' => 'database',
     ],
 
+    'database_patterns' => [
+        //'table_*' => 'database',
+    ],
+
     'connections' => [
         //'table' => 'connection',
     ],

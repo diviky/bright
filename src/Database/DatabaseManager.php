@@ -6,13 +6,14 @@ namespace Diviky\Bright\Database;
 
 use Diviky\Bright\Database\Sharding\ShardManager;
 use Illuminate\Database\DatabaseManager as LaravelDatabaseManager;
+use Illuminate\Database\Query\Expression;
 
 class DatabaseManager extends LaravelDatabaseManager
 {
     /**
      * Database table.
      *
-     * @param string $name
+     * @param \Illuminate\Database\Query\Expression|string $name
      *
      * @return \Illuminate\Database\Query\Builder
      */
@@ -20,6 +21,10 @@ class DatabaseManager extends LaravelDatabaseManager
     {
         $config = $this->app['config']['bright'];
         $connections = $config['connections'];
+
+        if ($name instanceof Expression) {
+            $name = $name->getValue();
+        }
 
         $alias = '';
         if (false !== \stripos($name, ' as ')) {
@@ -67,7 +72,7 @@ class DatabaseManager extends LaravelDatabaseManager
     {
         $config = $this->app['config']['bright'];
 
-        if ($config['sharding']) {
+        if (!empty($config['sharding'])) {
             $manager = $this->app['bright.shardmanager'];
             $manager->setService($config['sharding']);
 

@@ -51,6 +51,11 @@ class Responsable implements BaseResponsable
     public function toResponse($request)
     {
         $response = $this->getResponse();
+
+        if ($request->post('fingerprint')) {
+            return $response;
+        }
+
         $format = $request->input('_request') ?: $request->input('format');
 
         if (!$format && $request->expectsJson()) {

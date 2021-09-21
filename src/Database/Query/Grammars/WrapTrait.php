@@ -24,35 +24,47 @@ trait WrapTrait
     /**
      * Wrap a table in keyword identifiers.
      *
-     * @param \Illuminate\Database\Query\Expression|string $table
+     * @param \Illuminate\Database\Query\Expression|string $name
      *
      * @return string
      */
-    public function wrapTable($table)
+    public function wrapTable($name)
     {
-        if (is_string($table)) {
-            if (false !== \strpos($table, '.')) {
-                list($database, $table) = \explode('.', $table);
-
-                return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $table, true);
-            }
-
-            $databases = $this->config['databases'];
-
-            $alias = '';
-            if (false !== \stripos($table, ' as ')) {
-                $segments = \preg_split('/\s+as\s+/i', $table);
-                $alias = ' as ' . $segments[1];
-                $table = $segments[0];
-            }
-
-            if (\is_array($databases) && isset($databases[$table])) {
-                return $this->wrap($databases[$table]) . '.' . $this->wrap($this->tablePrefix . $table . $alias, true);
-            }
-
-            return $this->wrap($this->tablePrefix . $table . $alias, true);
+        if (!is_string($name)) {
+            return $this->getValue($name);
         }
 
-        return $this->getValue($table);
+        if (false !== \strpos($name, '.')) {
+            list($database, $name) = \explode('.', $name);
+            $name = preg_replace('/^' . $this->tablePrefix . '/', '', $name);
+
+            return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $name, true);
+        }
+
+        $databases = $this->config['databases'];
+
+        $alias = '';
+        if (false !== \stripos($name, ' as ')) {
+            $segments = \preg_split('/\s+as\s+/i', $name);
+            $alias = ' as ' . $segments[1];
+            $name = $segments[0];
+        }
+
+        $name = preg_replace('/^' . $this->tablePrefix . '/', '', $name);
+
+        if (\is_array($databases) && isset($databases[$name])) {
+            return $this->wrap($databases[$name]) . '.' . $this->wrap($this->tablePrefix . $name . $alias, true);
+        }
+
+        $patterns = $this->config['database_patterns'];
+        if (\is_array($patterns)) {
+            foreach ($patterns as $pattern => $database) {
+                if (preg_match('/^' . $pattern . '/', $name)) {
+                    return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $name . $alias, true);
+                }
+            }
+        }
+
+        return $this->wrap($this->tablePrefix . $name . $alias, true);
     }
 }
