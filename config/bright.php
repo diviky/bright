@@ -38,15 +38,21 @@ return [
     ],
     // append database based on table name
     'databases' => [
-        //'table' => 'database',
-    ],
-
-    'database_patterns' => [
-        //'table_*' => 'database',
+        'names' => [
+            //'table' => 'database',
+        ],
+        'patterns' => [
+            //'table_*' => 'database',
+        ],
     ],
 
     'connections' => [
-        //'table' => 'connection',
+        'names' => [
+            //'table' => 'connection',
+        ],
+        'patterns' => [
+            //'table_*' => 'database',
+        ],
     ],
 
     'notifications' => [

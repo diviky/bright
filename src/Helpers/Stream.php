@@ -216,11 +216,11 @@ class Stream
     /**
      * Clean the values.
      *
-     * @param string $string
+     * @param mixed $string
      */
     public function clean($string): string
     {
-        $string = '"' . \str_replace('"', '""', $string) . '"';
+        $string = '"' . \str_replace('"', '""', (string) $string) . '"';
 
         return \str_replace(["\n", "\t", "\r"], '', $string);
     }

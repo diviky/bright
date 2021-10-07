@@ -19,9 +19,6 @@ class DatabaseManager extends LaravelDatabaseManager
      */
     public function table($name)
     {
-        $config = $this->app['config']['bright'];
-        $connections = $config['connections'];
-
         if ($name instanceof Expression) {
             $name = $name->getValue();
         }
@@ -33,10 +30,40 @@ class DatabaseManager extends LaravelDatabaseManager
             $name = $segments[0];
         }
 
-        if (\is_array($connections) && isset($connections[$name])) {
-            $connection = $this->connection($connections[$name]);
+        $config = $this->app['config']['bright'];
+        $connections = $config['connections'] ?? [];
+        $shard_key = $config['shard_key'] ?? null;
+        $shard_val = null;
+
+        if (isset($shard_key)) {
+            if (app()->has($shard_key)) {
+                $shard_val = app($shard_key);
+            }
+        }
+
+        $connection = null;
+        if (\is_array($connections)) {
+            $patterns = $connections['patterns'] ?? [];
+
+            if (\is_array($connections['names']) && isset($connections['names'][$name])) {
+                $connection = $this->connection($connections['names'][$name]);
+            } elseif (\is_array($patterns)) {
+                foreach ($patterns as $pattern => $database) {
+                    if (preg_match('/^' . $pattern . '/', $name)) {
+                        $connection = $this->connection($database);
+
+                        break;
+                    }
+                }
+            } else {
+                $connection = $this->shard($shard_val);
+            }
         } else {
-            $connection = $this->shard();
+            $connection = $this->shard($shard_val);
+        }
+
+        if (is_null($connection)) {
+            $connection = $this->connection();
         }
 
         $connection->getQueryGrammar()->setConfig($config);
