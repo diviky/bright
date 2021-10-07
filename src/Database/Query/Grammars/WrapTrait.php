@@ -52,7 +52,7 @@ trait WrapTrait
 
         $databases = $this->config['databases'];
         if (\is_array($databases)) {
-            if (\is_array($databases['names']) && isset($databases['names'][$table])) {
+            if (isset($databases['names']) && \is_array($databases['names']) && isset($databases['names'][$table])) {
                 return $this->wrap($databases['names'][$table]) . '.' . $this->wrap($this->tablePrefix . $table . $alias, true);
             }
 

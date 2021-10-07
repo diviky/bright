@@ -45,7 +45,7 @@ class DatabaseManager extends LaravelDatabaseManager
         if (\is_array($connections)) {
             $patterns = $connections['patterns'] ?? [];
 
-            if (\is_array($connections['names']) && isset($connections['names'][$name])) {
+            if (isset($connections['names']) && \is_array($connections['names']) && isset($connections['names'][$name])) {
                 $connection = $this->connection($connections['names'][$name]);
             } elseif (\is_array($patterns)) {
                 foreach ($patterns as $pattern => $database) {
