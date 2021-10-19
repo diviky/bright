@@ -173,6 +173,27 @@ trait Themable
     /**
      * Identify the theme from route.
      *
+     * @param \Illuminate\Routing\Route $route
+     */
+    protected function getThemeFromName($route): ?string
+    {
+        $route = $route->getName();
+
+        if (\is_null($route)) {
+            return null;
+        }
+
+        $matches = [
+            'name:' . $route,
+            'name:' . $route . '.*',
+        ];
+
+        return $this->getMatchingTheme($matches);
+    }
+
+    /**
+     * Identify the theme from route.
+     *
      * @param string $route
      * @param mixed  $matches
      */
@@ -237,6 +258,10 @@ trait Themable
             list($option, $view) = \explode('.', $route_name);
 
             $template = $this->getThemeFromPrefix($route, $option, $view);
+        }
+
+        if (is_null($template)) {
+            $template = $this->getThemeFromName($route);
         }
 
         return $this->setUpTheme($template, $component, $paths);
