@@ -24,7 +24,7 @@ class Statement implements ShouldQueue
     /**
      * Statment bindings.
      *
-     * @var array
+     * @var array|string
      */
     protected $bindings = [];
 
@@ -33,6 +33,7 @@ class Statement implements ShouldQueue
      *
      * @param string $sql
      * @param array  $bindings
+     * @param mixed  $serialized
      */
     public function __construct($sql, $bindings = [])
     {
@@ -45,6 +46,10 @@ class Statement implements ShouldQueue
      */
     public function handle(): void
     {
-        DB::statement($this->sql, $this->bindings);
+        if (is_array($this->bindings)) {
+            DB::statement($this->sql, $this->bindings);
+        } else {
+            DB::statement($this->sql, (array) unserialize($this->bindings));
+        }
     }
 }
