@@ -55,6 +55,7 @@ trait Outfile
         ], $options);
 
         $table = $this->grammar->wrapTable($table);
+
         if ($path) {
             $path = $this->outFile($path, $options);
 

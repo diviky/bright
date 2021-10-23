@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * @SuppressWarnings(PHPMD)
@@ -379,7 +380,7 @@ class Bright
             $order = [];
             foreach ($keys as $key => $value) {
                 if (\is_numeric($key)) {
-                    $key = $value = \ltrim(\str_replace('ORDER BY ', '', $this->order($value)));
+                    $key = $value = \ltrim(Str::replace('ORDER BY ', '', $this->order($value)));
                     $value = (!\preg_match('/\\x20ASC|\\x20DESC/i', $key) ? ' ' . $direction : '');
                 } else {
                     $value = ' ' . $value;
@@ -401,7 +402,7 @@ class Bright
                 $order[] = $this->order($key . $value);
             }
 
-            return ' ORDER BY ' . \trim(\str_replace('ORDER BY', '', \implode(',', $order)));
+            return ' ORDER BY ' . \trim(Str::replace('ORDER BY', '', \implode(',', $order)));
         }
         $keys = \preg_replace('/ORDER\\x20BY/i', '', $keys);
 
@@ -522,20 +523,20 @@ class Bright
                     }
                 }
             }
-            $data[$i] = \str_replace('.', $this->endQuote . '.' . $this->startQuote, $data[$i]);
+            $data[$i] = Str::replace('.', $this->endQuote . '.' . $this->startQuote, $data[$i]);
             $data[$i] = $this->startQuote . $data[$i] . $this->endQuote;
-            $data[$i] = \str_replace($this->startQuote . $this->startQuote, $this->startQuote, $data[$i]);
-            $data[$i] = \str_replace($this->startQuote . '(', '(', $data[$i]);
-            $data[$i] = \str_replace(')' . $this->startQuote, ')', $data[$i]);
+            $data[$i] = Str::replace($this->startQuote . $this->startQuote, $this->startQuote, $data[$i]);
+            $data[$i] = Str::replace($this->startQuote . '(', '(', $data[$i]);
+            $data[$i] = Str::replace(')' . $this->startQuote, ')', $data[$i]);
             $alias = !empty($this->alias) ? $this->alias : 'AS ';
 
             if (\preg_match('/\s+' . $alias . '\s*/', $data[$i])) {
                 if (\preg_match('/\w+\s+' . $alias . '\s*/', $data[$i])) {
                     $quoted = $this->endQuote . ' ' . $alias . $this->startQuote;
-                    $data[$i] = \str_replace(' ' . $alias, $quoted, $data[$i]);
+                    $data[$i] = Str::replace(' ' . $alias, $quoted, $data[$i]);
                 } else {
                     $quoted = $alias . $this->startQuote;
-                    $data[$i] = \str_replace($alias, $quoted, $data[$i]) . $this->endQuote;
+                    $data[$i] = Str::replace($alias, $quoted, $data[$i]) . $this->endQuote;
                 }
             }
 
@@ -549,9 +550,9 @@ class Bright
                 }
             }
             if (\strpos($data[$i], '*')) {
-                $data[$i] = \str_replace($this->endQuote . '*' . $this->endQuote, '*', $data[$i]);
+                $data[$i] = Str::replace($this->endQuote . '*' . $this->endQuote, '*', $data[$i]);
             }
-            $data[$i] = \str_replace($this->endQuote . $this->endQuote, $this->endQuote, $data[$i]);
+            $data[$i] = Str::replace($this->endQuote . $this->endQuote, $this->endQuote, $data[$i]);
         }
 
         return (!$array) ? $data[0] : $data;
@@ -708,7 +709,7 @@ class Bright
         }
 
         foreach ($value as $key => $val) {
-            $str = \str_replace(':' . $key, $val, $str);
+            $str = Str::replace(':' . $key, $val, $str);
         }
 
         return $str;
@@ -732,7 +733,7 @@ class Bright
         if (!empty($this->endQuote)) {
             $end = \preg_quote($this->endQuote);
         }
-        $conditions = \str_replace([$start, $end], '', $conditions);
+        $conditions = Str::replace([$start, $end], '', $conditions);
         \preg_match_all('/(?:[\'\"][^\'\"\\\]*(?:\\\.[^\'\"\\\]*)*[\'\"])|([a-z0-9_' . $start . $end . ']*\\.[a-z0-9_' . $start . $end . ']*)/i', $conditions, $replace, PREG_PATTERN_ORDER);
 
         if (isset($replace['1']['0'])) {

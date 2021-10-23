@@ -137,7 +137,8 @@ trait Eventable
      */
     protected function getEventTables($type): array
     {
-        $bright = $this->getBrightConfig();
+        $bright = $this->getConfig();
+
         $bright = $bright['tables'];
 
         $from = $this->getTableBaseName();
@@ -210,7 +211,7 @@ trait Eventable
             }
         }
 
-        $bright = $this->getBrightConfig();
+        $bright = $this->getConfig();
 
         if (false !== $bright['timestamps']) {
             foreach ($values as &$value) {
@@ -230,7 +231,7 @@ trait Eventable
     {
         $this->atomicEvent('update');
 
-        $bright = $this->getBrightConfig();
+        $bright = $this->getConfig();
 
         if (false !== $bright['timestamps']) {
             $values = $this->setTimeStamp($values);
@@ -317,15 +318,5 @@ trait Eventable
         }
 
         return $from;
-    }
-
-    /**
-     * Get the configuration.
-     *
-     * @return \Illuminate\Config\Repository|mixed
-     */
-    protected function getBrightConfig()
-    {
-        return config('bright');
     }
 }

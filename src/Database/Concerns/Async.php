@@ -34,7 +34,7 @@ trait Async
      */
     protected function asyncConfig()
     {
-        $bright = $this->getBrightConfig();
+        $bright = $this->getConfig();
 
         return isset($bright['async']) ? $bright['async'] : [];
     }

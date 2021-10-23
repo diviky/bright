@@ -34,11 +34,15 @@ class MySqlConnection extends LaravelMySqlConnection
      */
     public function query()
     {
-        return new QueryBuilder(
+        $builder = new QueryBuilder(
             $this,
             $this->getQueryGrammar(),
             $this->getPostProcessor()
         );
+
+        $builder->setConfig($this->config['bright'] ?? []);
+
+        return $builder;
     }
 
     /**
@@ -52,14 +56,21 @@ class MySqlConnection extends LaravelMySqlConnection
      */
     public function statement($query, $bindings = [])
     {
+        if (preg_match_all('/#__([^\s]+)/', $query, $matches)) {
+            foreach ($matches[1] as $table) {
+                $query = \str_replace('#__' . $table . ' ', $this->getDefaultQueryGrammar()->wrapTable($table) . ' ', $query);
+            }
+        }
+
+        $prefix = $this->getTablePrefix();
+        $query = \str_replace('#__', $prefix, $query);
+
         if ($this->shouldQueue()) {
             $this->toQueue($query, $bindings);
 
             return true;
         }
 
-        $prefix = $this->getTablePrefix();
-        $query = \str_replace('#__', $prefix, $query);
         $type = \trim(\strtolower(\explode(' ', $query)[0]));
 
         switch ($type) {

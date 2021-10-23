@@ -9,6 +9,7 @@ use Diviky\Bright\Database\Concerns\Async;
 use Diviky\Bright\Database\Concerns\Build;
 use Diviky\Bright\Database\Concerns\BuildsQueries;
 use Diviky\Bright\Database\Concerns\Cachable;
+use Diviky\Bright\Database\Concerns\Config;
 use Diviky\Bright\Database\Concerns\Eventable;
 use Diviky\Bright\Database\Concerns\Filter;
 use Diviky\Bright\Database\Concerns\Ordering;
@@ -35,6 +36,7 @@ class Builder extends LaravelBuilder
     use SoftDeletes;
     use Timestamps;
     use BuildsQueries;
+    use Config;
 
     /**
      * Set the alias for table.
@@ -115,41 +117,47 @@ class Builder extends LaravelBuilder
      *
      * @return array|bool|int
      */
-    public function statement(string $sql, array $bindings = [])
+    public function statement(string $query, array $bindings = [])
     {
-        $prefix = $this->connection->getTablePrefix();
-        $sql = \str_replace('#__', $prefix, $sql);
+        if (preg_match_all('/#__([^\s]+)/', $query, $matches)) {
+            foreach ($matches[1] as $table) {
+                $query = \str_replace('#__' . $table . ' ', $this->grammar->wrapTable($table) . ' ', $query);
+            }
+        }
 
-        $type = \trim(\strtolower(\explode(' ', $sql)[0]));
+        $prefix = $this->connection->getTablePrefix();
+        $query = \str_replace('#__', $prefix, $query);
+
+        $type = \trim(\strtolower(\explode(' ', $query)[0]));
 
         switch ($type) {
             case 'delete':
-                return $this->connection->delete($sql, $bindings);
+                return $this->connection->delete($query, $bindings);
 
                 break;
             case 'update':
-                return $this->connection->update($sql, $bindings);
+                return $this->connection->update($query, $bindings);
 
                 break;
             case 'insert':
-                return $this->connection->insert($sql, $bindings);
+                return $this->connection->insert($query, $bindings);
 
                 break;
             case 'select':
-                if (\preg_match('/outfile\s/i', $sql)) {
-                    return $this->connection->statement($sql, $bindings);
+                if (\preg_match('/outfile\s/i', $query)) {
+                    return $this->connection->statement($query, $bindings);
                 }
 
-                return $this->connection->select($sql, $bindings);
+                return $this->connection->select($query, $bindings);
 
                 break;
             case 'load':
-                return $this->connection->unprepared($sql);
+                return $this->connection->unprepared($query);
 
                 break;
         }
 
-        return $this->connection->statement($sql, $bindings);
+        return $this->connection->statement($query, $bindings);
     }
 
     /**
