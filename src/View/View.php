@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\View;
 
-use Diviky\Bright\Traits\Themable;
+use Diviky\Bright\Concerns\Themable;
 use Illuminate\Routing\Controller;
 
 class View

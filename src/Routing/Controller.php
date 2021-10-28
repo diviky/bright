@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Routing;
 
-use Diviky\Bright\Traits\Builder;
-use Diviky\Bright\Traits\CapsuleManager;
-use Diviky\Bright\Traits\HttpTrait;
-use Diviky\Bright\Traits\Message;
-use Diviky\Bright\Traits\ViewTrait;
+use Diviky\Bright\Concerns\Builder;
+use Diviky\Bright\Concerns\CapsuleManager;
+use Diviky\Bright\Concerns\HttpTrait;
+use Diviky\Bright\Concerns\Message;
+use Diviky\Bright\Concerns\ViewTrait;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database;
 
-use Diviky\Bright\Traits\CapsuleManager;
+use Diviky\Bright\Concerns\CapsuleManager;
 use Illuminate\Support\Carbon;
 
 class Meta

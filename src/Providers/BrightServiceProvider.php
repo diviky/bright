@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Providers;
 
+use Diviky\Bright\Concerns\Provider;
 use Diviky\Bright\Console\Commands\GeoipUpdate;
 use Diviky\Bright\Console\Commands\Migrate;
 use Diviky\Bright\Console\Commands\Rollback;
@@ -17,7 +18,6 @@ use Diviky\Bright\Services\Auth\AuthTokenGuard;
 use Diviky\Bright\Services\Auth\CredentialsGuard;
 use Diviky\Bright\Services\Auth\Providers\AccessProvider;
 use Diviky\Bright\Support\ServiceProvider;
-use Diviky\Bright\Traits\Provider;
 use Diviky\Bright\Util\Util;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Auth;
@@ -144,24 +144,21 @@ class BrightServiceProvider extends ServiceProvider
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
             $userProvider = app(AccessProvider::class);
-            $request = app('request');
 
-            return new AccessTokenGuard($userProvider, $request, $config);
+            return new AccessTokenGuard($userProvider, $app['request'], $config);
         });
 
         Auth::extend('auth_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
             $userProvider = app(AccessProvider::class);
-            $request = app('request');
 
-            return new AuthTokenGuard($userProvider, $request, $config);
+            return new AuthTokenGuard($userProvider, $app['request'], $config);
         });
 
         Auth::extend('credentials', function ($app, $name, array $config) {
             $userProvider = app(AccessProvider::class);
-            $request = app('request');
 
-            return new CredentialsGuard($userProvider, $request, $config);
+            return new CredentialsGuard($userProvider, $app['request'], $config);
         });
     }
 

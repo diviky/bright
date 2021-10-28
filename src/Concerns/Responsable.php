@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Traits;
+namespace Diviky\Bright\Concerns;
 
 use Closure;
-use Illuminate\Routing\Controller;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Arr;
 
 trait Responsable
@@ -23,8 +23,11 @@ trait Responsable
     {
         $layout = $layout ?: 'index';
         $data['component'] = $route;
+        $view = 'layouts.' . $layout;
 
-        return view('layouts.' . $layout, $data);
+        $factory = app(ViewFactory::class);
+
+        return $factory->make($view, $data);
     }
 
     /**

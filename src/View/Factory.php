@@ -9,12 +9,27 @@ use Illuminate\View\Factory as BaseFactory;
 class Factory extends BaseFactory
 {
     /**
-     * Add a location to the array of view locations.
+     * The array of active view paths.
      *
-     * @param string $location
+     * @var array
      */
-    public function prependLocation($location): void
+    protected $paths;
+
+    /**
+     * Get the active view paths.
+     */
+    public function setDefaultPaths(): void
     {
-        $this->finder->prependLocation($location);
+        $this->paths = $this->finder->getPaths();
+    }
+
+    /**
+     * Get the active view paths.
+     */
+    public function resetDefaultPaths(): void
+    {
+        if (!empty($this->paths)) {
+            $this->finder->setPaths($this->paths);
+        }
     }
 }

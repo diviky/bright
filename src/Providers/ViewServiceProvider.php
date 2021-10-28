@@ -50,6 +50,7 @@ class ViewServiceProvider extends BaseServiceProvider
             $factory->setContainer($app);
 
             $factory->share('app', $app);
+            $factory->setDefaultPaths();
 
             return $factory;
         });

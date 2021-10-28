@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Routing;
 
 use Closure;
-use Diviky\Bright\Traits\CapsuleManager;
+use Diviky\Bright\Concerns\CapsuleManager;
 use Exception;
 use Illuminate\Contracts\Container\Container;
 

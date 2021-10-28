@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Routing;
 
-use Diviky\Bright\Traits\Themable;
+use Diviky\Bright\Concerns\Themable;
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
 use Illuminate\Contracts\View\View;
 
@@ -122,8 +122,8 @@ class Responsable implements BaseResponsable
         $route = $this->getRouteFromAction($this->action);
         list($component, $view) = \explode('.', $route);
 
-        $path = $this->getViewsFrom($this->controller, $this->action);
-        $theme = $this->setUpThemeFromRequest($request, $component, $path);
+        $paths = $this->getViewsFrom($this->controller, $this->action);
+        $theme = $this->setUpThemeFromRequest($request, $component, $paths);
         $layout = 'html' == $format ? 'html' : $theme['layout'];
 
         return $this->getView($view, $response, $layout);

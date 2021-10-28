@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Traits;
+namespace Diviky\Bright\Concerns;
 
 use Diviky\Bright\Helpers\Device;
 use Illuminate\Database\Eloquent\Model;
@@ -80,12 +80,17 @@ trait Themable
 
         View::share('theme', $theme);
 
+        // Added to avoid the cache views with same name in different components
+        View::resetDefaultPaths();
+        $finder = View::getFinder();
+        $finder->flush();
+
         $paths[] = $views . '/' . $component;
         $paths[] = $themePath;
         $paths[] = $themePath . '/views/' . $component;
 
         foreach ($paths as $path) {
-            View::prependLocation($path);
+            $finder->prependLocation($path);
         }
 
         return $theme;

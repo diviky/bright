@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
-use Diviky\Bright\Traits\Authorize;
-use Diviky\Bright\Traits\Themable;
+use Diviky\Bright\Concerns\Authorize;
+use Diviky\Bright\Concerns\Themable;
 use Illuminate\Routing\Route;
 use Spatie\Permission\Exceptions\UnauthorizedException;
 

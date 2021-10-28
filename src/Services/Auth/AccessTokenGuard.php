@@ -72,7 +72,7 @@ class AccessTokenGuard implements Guard
             list($access_key, $signature) = \explode(':', $access_key, 2);
         }
 
-        // the token was found, how you want to pass?
+        // the token was found, how do you want to pass?
         $token = $this->provider->retrieveByToken($this->storageKey, $access_key);
 
         if (\is_null($token) || \is_null($token->user_id)) {

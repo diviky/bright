@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
-use Diviky\Bright\Traits\Themable;
+use Diviky\Bright\Concerns\Themable;
 
 class ThemeMiddleware
 {

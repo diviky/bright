@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Models;
 
-use Diviky\Bright\Traits\Uuids;
+use Diviky\Bright\Concerns\Uuids;
 
 class EmailLogs extends Model
 {

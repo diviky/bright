@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Traits;
+namespace Diviky\Bright\Concerns;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Validator;
