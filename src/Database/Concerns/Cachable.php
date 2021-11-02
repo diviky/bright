@@ -256,7 +256,7 @@ trait Cachable
     {
         $name = $this->connection->getName();
 
-        return hash('sha256', $name . $this->toSql() . serialize($this->getBindings()) . $appends);
+        return hash('md5', $name . $this->toSql() . serialize($this->getBindings()) . $appends);
     }
 
     /**

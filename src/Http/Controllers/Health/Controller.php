@@ -18,7 +18,7 @@ class Controller extends BaseController
     public function ping()
     {
         Cache::set('ping', carbon());
-        DB::connection()->getDatabaseName();
+        DB::connection()->getPdo();
 
         return response('pong');
     }
