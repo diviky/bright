@@ -91,7 +91,7 @@ trait Authorize
             return false;
         }
 
-        return $this->isAuthorized(['prefix:' . $prefix]);
+        return $this->isAuthorized(['prefix:' . str_replace('/', '.', $prefix)]);
     }
 
     /**
@@ -102,6 +102,7 @@ trait Authorize
     public function isUriAuthorized($route): bool
     {
         $uri = $route->uri();
+        $uri = str_replace('/', '.', $uri);
 
         $methods = $route->methods();
 

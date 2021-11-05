@@ -165,6 +165,7 @@ trait Themable
     protected function getThemeFromPrefix($route, $component, $method = null): ?string
     {
         $prefix = 'prefix:' . $route->getPrefix();
+        $prefix = str_replace('/', '.', $prefix);
 
         $matches = [
             $prefix . '.' . $component . ':' . $method,
