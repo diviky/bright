@@ -1,7 +1,7 @@
 function setTask($this, form, task) {
     var task = task || $this.data('task');
     var name = $this.data('task-name') || 'task';
-    var input = form.find('input[name=\'' + name + '\']');
+    var input = form.find("input[name='" + name + "']");
 
     if (input.length > 0) {
         input.val(task);
@@ -9,68 +9,72 @@ function setTask($this, form, task) {
         $('<input/>', {
             name: name,
             value: task,
-            type: 'hidden'
+            type: 'hidden',
         }).appendTo(form);
     }
 }
 
 function brightSystemJs() {
-    $(document).on('click', '[data-href]', function (e) {
+    $(document).on('click', '[data-href]', function(e) {
         e.preventDefault();
 
         var $this = $(this);
         var message = $this.attr('data-confirm');
-        box.confirm(message, (result) => {
+        box.confirm(message, result => {
             if (result) {
+                var method = $this.data('method') || 'GET';
                 $.ajax({
                     url: $this.data('href'),
+                    method: method,
                     data: {
-                        format: 'json'
+                        format: 'json',
                     },
-                    complete: function (xhr) {
+                    complete: function(xhr) {
                         displayNoti(xhr, $this);
-                    }
+                    },
                 });
             }
-        })
+        });
     });
 
-    $(document).on('click', '[data-post]', function (e) {
+    $(document).on('click', '[data-post]', function(e) {
         e.preventDefault();
 
         var $this = $(this);
         var message = $this.attr('data-confirm');
-        box.confirm(message, (result) => {
+        box.confirm(message, result => {
             if (result) {
-                var data = $this.data('post-data');
+                var data = $this.data('post-data') || {};
 
                 $.ajax({
                     url: $this.data('post'),
                     data: data,
                     method: 'POST',
-                    complete: function (xhr) {
+                    complete: function(xhr) {
                         displayNoti(xhr, $this);
-                    }
+                    },
                 });
             }
-        })
+        });
     });
 
     // common delete script
-    $(document).on('click', '[data-delete], [data-action="delete"]', function (e) {
-        box.confirm('Are you sure want to delete?', (result) => {
+    $(document).on('click', '[data-delete], [data-action="delete"]', function(e) {
+        box.confirm('Are you sure want to delete?', result => {
             if (result) {
                 var $this = $(this);
                 var tag = $this.data('tag') || 'tr';
                 var parent = $this.parents(tag + ':eq(0)');
                 var link = $(this).attr('href') || $this.data('delete');
+                var method = $this.data('method') || 'GET';
 
                 $.ajax({
                     url: link,
+                    method: method,
                     data: {
-                        format: 'json'
+                        format: 'json',
                     },
-                    complete: function (xhr) {
+                    complete: function(xhr) {
                         var res = parseJSON(xhr.responseText);
                         if (isSuccess(res.status)) {
                             parent.remove();
@@ -78,7 +82,7 @@ function brightSystemJs() {
                         }
 
                         displayNoti(xhr, $this);
-                    }
+                    },
                 });
             }
         });
@@ -87,39 +91,44 @@ function brightSystemJs() {
     });
 
     // common delete script
-    $(document).on('click', '[data-ajax]', function (e) {
+    $(document).on('click', '[data-ajax]', function(e) {
         var $this = $(this);
         var message = $this.attr('data-confirm');
-        box.confirm(message, (result) => {
+        box.confirm(message, result => {
             if (result) {
                 var link = $this.attr('href') || $this.data('ajax');
+                var method = $this.data('method') || 'GET';
+
                 $.ajax({
                     url: link,
+                    method: method,
                     data: {
-                        format: 'json'
+                        format: 'json',
                     },
-                    complete: function (xhr) {
+                    complete: function(xhr) {
                         displayNoti(xhr, $this);
-                    }
+                    },
                 });
             }
-        })
+        });
 
         e.preventDefault();
     });
 
     // common status change script
-    $(document).on('click', '.ac-action-status a', function (e) {
+    $(document).on('click', '.ac-action-status a', function(e) {
         var $this = $(this);
         var parent = $this.parent('.ac-action-status');
+        var method = $this.data('method') || 'GET';
 
         $.ajax({
             url: parent.data('link'),
+            method: method,
             data: {
                 status: $this.data('status'),
-                format: 'json'
+                format: 'json',
             },
-            complete: function (xhr) {
+            complete: function(xhr) {
                 var res = parseJSON(xhr.responseText);
                 if (isSuccess(res.status)) {
                     parent.find('a:hidden').show();
@@ -127,51 +136,56 @@ function brightSystemJs() {
                 }
 
                 displayNoti(xhr, $this);
-            }
+            },
         });
 
         e.preventDefault();
     });
 
     // common status change script
-    $(document).on('change', '.ac-action-status select', function (e) {
+    $(document).on('change', '.ac-action-status select', function(e) {
         var $this = $(this);
         var parent = $this.parent('.ac-action-status');
         var v = $(this).val();
+        var method = $this.data('method') || 'GET';
 
         $.ajax({
             url: parent.data('link'),
+            method: method,
             data: {
                 status: v,
-                format: 'json'
+                format: 'json',
             },
-            complete: function (xhr) {
+            complete: function(xhr) {
                 displayNoti(xhr, $this);
-            }
+            },
         });
 
         e.preventDefault();
     });
 
-    $(document).on("change", "[data-change-href]", function (e) {
+    $(document).on('change', '[data-change-href]', function(e) {
         var $this = $(this);
-        var url = $this.attr("data-change-href");
+        var url = $this.attr('data-change-href');
         var val = $this.val();
-        var link = $this.find(":selected").data("link");
+        var link = $this.find(':selected').data('link');
 
         if (!val) {
             return false;
         }
 
-        var message = $this.attr("data-confirm");
-        box.confirm(message, (result) => {
+        var message = $this.attr('data-confirm');
+        var method = $this.data('method') || 'GET';
+
+        box.confirm(message, result => {
             if (result) {
                 $.ajax({
-                    url: link ? link : url + "/" + val,
+                    url: link ? link : url + '/' + val,
+                    method: method,
                     data: {
-                        format: "json",
+                        format: 'json',
                     },
-                    complete: function (xhr) {
+                    complete: function(xhr) {
                         displayNoti(xhr, $this);
                     },
                 });
@@ -182,19 +196,22 @@ function brightSystemJs() {
     });
 
     // common delete script
-    $(document).on('click', '[ajax-confirm]', function (e) {
+    $(document).on('click', '[ajax-confirm]', function(e) {
         var $this = $(this);
         var message = $this.attr('ajax-confirm') || 'Are you sure want to proceed?';
-        box.confirm(message, (result) => {
+        var method = $this.data('method') || 'GET';
+
+        box.confirm(message, result => {
             if (result) {
                 $.ajax({
                     url: $(this).attr('href'),
+                    method: method,
                     data: {
-                        format: 'json'
+                        format: 'json',
                     },
-                    complete: function (xhr) {
+                    complete: function(xhr) {
                         displayNoti(xhr, $this);
-                    }
+                    },
                 });
             }
         });
@@ -202,14 +219,14 @@ function brightSystemJs() {
         e.preventDefault();
     });
 
-    $(document).on('click', '[ajax-reset]', function (e) {
+    $(document).on('click', '[ajax-reset]', function(e) {
         var form = getForm($(this));
         form[0].reset();
         e.preventDefault();
         form.submit();
     });
 
-    $(document).on('click', '[ajax-export]', function (e) {
+    $(document).on('click', '[ajax-export]', function(e) {
         var $this = $(this);
         var form = getForm($this);
         var base = $this.attr('base-href');
@@ -224,7 +241,7 @@ function brightSystemJs() {
         $this.attr('href', url + separator + form.serialize());
     });
 
-    $(document).on('click', '[data-order]', function (e) {
+    $(document).on('click', '[data-order]', function(e) {
         e.preventDefault();
 
         var name = $(this).attr('data-order');
@@ -241,9 +258,13 @@ function brightSystemJs() {
 
         if (task == 1) {
             $(this).attr('data-order-type', 'ASC');
-            $(this).removeClass('desc').addClass('asc');
+            $(this)
+                .removeClass('desc')
+                .addClass('asc');
         } else {
-            $(this).removeClass('asc').addClass('desc');
+            $(this)
+                .removeClass('asc')
+                .addClass('desc');
             $(this).attr('data-order-type', 'DESC');
         }
         var form = getForm($(this));
@@ -255,9 +276,8 @@ function brightSystemJs() {
                 class: 'ac-sort-name',
                 name: 'sort',
                 value: name,
-                type: 'hidden'
-            })
-                .appendTo(form);
+                type: 'hidden',
+            }).appendTo(form);
         }
 
         if (form.find('.ac-sort-order').length > 0) {
@@ -267,50 +287,63 @@ function brightSystemJs() {
                 class: 'ac-sort-order',
                 name: 'order',
                 value: order,
-                type: 'hidden'
-            })
-                .appendTo(form);
+                type: 'hidden',
+            }).appendTo(form);
         }
 
-        form.find('input[name=\'page\']').val(page);
+        form.find("input[name='page']").val(page);
         $('#page').val(page);
         form.submit();
     });
 
-    $('[notchecked]').each(function () {
-        $(this).prev('[dummy-checkbox]').remove();
+    $('[notchecked]').each(function() {
+        $(this)
+            .prev('[dummy-checkbox]')
+            .remove();
         $(this).before(
-            '<input type="hidden" name="' + $(this).attr('name') + '" value="' +
-            $(this).attr('notchecked') + '"  dummy-checkbox="true"/>');
+            '<input type="hidden" name="' +
+                $(this).attr('name') +
+                '" value="' +
+                $(this).attr('notchecked') +
+                '"  dummy-checkbox="true"/>'
+        );
     });
 
-    $(document).on('change', '[notchecked]', function () {
-        $(this).prev('[dummy-checkbox]').remove();
+    $(document).on('change', '[notchecked]', function() {
+        $(this)
+            .prev('[dummy-checkbox]')
+            .remove();
         $(this).before(
-            '<input type="hidden" name="' + $(this).attr('name') + '" value="' +
-            $(this).attr('notchecked') + '"  dummy-checkbox="true"/>');
+            '<input type="hidden" name="' +
+                $(this).attr('name') +
+                '" value="' +
+                $(this).attr('notchecked') +
+                '"  dummy-checkbox="true"/>'
+        );
     });
 
-    $(document).on('click', '[data-prevent]', function (e) {
+    $(document).on('click', '[data-prevent]', function(e) {
         e.preventDefault();
         return false;
     });
 
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
     });
 
-    $(document).on('click', '.noty_close', function (e) {
-        $(this).parents('.noty_bar:first').slideUp('slow');
+    $(document).on('click', '.noty_close', function(e) {
+        $(this)
+            .parents('.noty_bar:first')
+            .slideUp('slow');
     });
 
-    $(document).on('click', 'div.is-invalid-feedback', function () {
+    $(document).on('click', 'div.is-invalid-feedback', function() {
         $(this).fadeOut();
     });
 
-    $(document).on('form:reset', function (e) {
+    $(document).on('form:reset', function(e) {
         var form = getForm($(this));
         form.find('input[name=page]').val(1);
         $('#page').val(1);
@@ -325,17 +358,18 @@ function brightSystemJs() {
         form.find('[ajax-total]').html(total);
     });
 
-    $(document).on('click', '[data-filter]', function () {
+    $(document).on('click', '[data-filter]', function() {
         $(document).trigger('form:reset', $(this));
     });
 
-    $(document).on('keyup blur', '[data-slug]', function (e) {
+    $(document).on('keyup blur', '[data-slug]', function(e) {
         var target = $(this).data('slug');
         var realTarget = '[data-slug-' + target + ']';
 
         var value = $(this).val();
         value = $.trim(value);
-        value = value.replace(/[^a-z0-9-]/gi, '-')
+        value = value
+            .replace(/[^a-z0-9-]/gi, '-')
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '');
         value = value.toLowerCase();
@@ -343,14 +377,14 @@ function brightSystemJs() {
         $(realTarget).val(value);
     });
 
-    $(document).on('keyup blur', '[data-copy]', function (e) {
+    $(document).on('keyup blur', '[data-copy]', function(e) {
         var target = $(this).data('copy');
         var realTarget = '[data-copy-' + target + ']';
 
         $(realTarget).val(value);
     });
 
-    $(document).on('click', '[data-add]', function (e) {
+    $(document).on('click', '[data-add]', function(e) {
         var target = $(this).parents('table:first');
         var clone = target.find('tfoot:first tr').clone();
         target.find('tbody:first').append(clone);
@@ -358,27 +392,32 @@ function brightSystemJs() {
         e.preventDefault();
     });
 
-    $(document).on('click', '[data-remove]', function (e) {
-        $(this).parents('tr:eq(0)').remove();
+    $(document).on('click', '[data-remove]', function(e) {
+        $(this)
+            .parents('tr:eq(0)')
+            .remove();
 
         e.preventDefault();
     });
 
-    $(document).on('change', '.custom-file-input', function () {
+    $(document).on('change', '.custom-file-input', function() {
         var files = $(this).prop('files');
 
         if (files.length > 0) {
             var name = files[0]['name'];
-            $(this).parent().find('.custom-file-label').html(name);
+            $(this)
+                .parent()
+                .find('.custom-file-label')
+                .html(name);
         }
     });
 
     // prevent hash url
-    $(document).on('click', 'a[href="#"]', function (e) {
+    $(document).on('click', 'a[href="#"]', function(e) {
         e.preventDefault();
     });
 
-    $(document).on('click', '[role=login]', function (e) {
+    $(document).on('click', '[role=login]', function(e) {
         if (is_user_logged_in) {
             return true;
         }
@@ -389,83 +428,100 @@ function brightSystemJs() {
 
         $.fn.easyModalShow({
             url: url,
-            event: 'ready'
+            event: 'ready',
         });
     });
 
-    if ($.support.pjax) {
-        $(document).on('click', '[data-pjax] a, a[data-pjax]', function (e) {
+    if ($.fn.pjax) {
+        $(document).on('click', '[data-pjax] a, a[data-pjax]', function(e) {
             if ($(this).data('nojax')) {
                 return true;
             }
 
             var container = $(this).data('pjax-container') || '[data-pjax-container]';
-            $(this).parents('[data-pjax]').find('a').removeClass('active');
+            $(this)
+                .parents('[data-pjax]')
+                .find('a')
+                .removeClass('active');
             $(this).addClass('active');
 
             $.pjax.click(e, {
-                container: container
+                container: container,
             });
         });
 
-        $(document).on('pjax:end', function () {
+        $(document).on('pjax:end', function() {
             $(document).trigger('ajax:loaded');
         });
     }
 
-    $(document).on('click', '[data-poload]', function (e) {
+    $(document).on('click', '[data-poload]', function(e) {
         var $this = $(this);
         //$this.off('hover');
-        $.get($this.data('poload'), {
-            format: 'html'
-        }, function (d) {
-            $this.popover('dispose')
-            $this.popover({
-                content: d,
-                html: true,
-                sanitize: false,
-                placement: 'bottom'
-            }).popover('show');
+        $.get(
+            $this.data('poload'),
+            {
+                format: 'html',
+            },
+            function(d) {
+                $this.popover('dispose');
+                $this
+                    .popover({
+                        content: d,
+                        html: true,
+                        sanitize: false,
+                        placement: 'bottom',
+                    })
+                    .popover('show');
 
-            $this.on('shown.bs.popover', function (e) {
-                $('[data-poload]').not(e.target).popover('dispose');
-                $(document).trigger('ajax:loaded');
-            });
-        });
+                $this.on('shown.bs.popover', function(e) {
+                    $('[data-poload]')
+                        .not(e.target)
+                        .popover('dispose');
+                    $(document).trigger('ajax:loaded');
+                });
+            }
+        );
 
         e.preventDefault();
     });
 
-    $('body').on('click', function (e) {
-        $('[data-original-title]').each(function () {
+    $('body').on('click', function(e) {
+        $('[data-original-title]').each(function() {
             // hide any open popovers when the anywhere else in the body is clicked
-            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 &&
-                $('.popover').has(e.target).length === 0) {
+            if (
+                !$(this).is(e.target) &&
+                $(this).has(e.target).length === 0 &&
+                $('.popover').has(e.target).length === 0
+            ) {
                 $(this).popover('hide');
             }
         });
     });
 
-    $(document).on('click', '[data-popover]', function (e) {
+    $(document).on('click', '[data-popover]', function(e) {
         var $this = $(this);
         var d = $($this.data('popover')).html();
 
-        $this.popover({
-            content: d,
-            html: true,
-            sanitize: false,
-            placement: 'bottom'
-        })
+        $this
+            .popover({
+                content: d,
+                html: true,
+                sanitize: false,
+                placement: 'bottom',
+            })
             .popover('show');
 
-        $this.on('show.bs.popover', function (e) {
-            $('[data-popover]').not(e.target).popover('dispose');
+        $this.on('show.bs.popover', function(e) {
+            $('[data-popover]')
+                .not(e.target)
+                .popover('dispose');
         });
 
         e.preventDefault();
     });
 
-    $(document).on('click', '[data-toggle="tabs"] a', function (e) {
+    $(document).on('click', '[data-toggle="tabs"] a', function(e) {
         e.preventDefault();
         $(this).tab('show');
         window.location.hash = this.hash;
@@ -479,7 +535,7 @@ function brightSystemJs() {
         $('[data-toggle="tab"][href="' + hash + '"]').tab('show');
     }
 
-    $(window).on('hashchange', function () {
+    $(window).on('hashchange', function() {
         var hash = window.location.hash;
         if (hash) {
             $('[data-toggle="tabs"], a[href="' + hash + '"]').tab('show');
@@ -487,13 +543,13 @@ function brightSystemJs() {
         }
     });
 
-    $(document).on('click', '[data-toggle="sidebar"]', function () {
+    $(document).on('click', '[data-toggle="sidebar"]', function() {
         $(this).toggleClass('collapsed');
         var target = $(this).data('target');
         $(target).toggleClass('in');
     });
 
-    $(document).on('click', '[data-toggle="backdrop"]', function () {
+    $(document).on('click', '[data-toggle="backdrop"]', function() {
         var parent = $(this).parent();
         $(parent).removeClass('in');
 
@@ -501,11 +557,13 @@ function brightSystemJs() {
         $('[data-target="#' + target + '"]').addClass('collapsed');
     });
 
-    $(document).on('click', '#search', function () {
-        $(this).parents('div:first').toggleClass('active');
+    $(document).on('click', '#search', function() {
+        $(this)
+            .parents('div:first')
+            .toggleClass('active');
     });
 
-    $(document).on('click change', '[data-set-task]', function (e) {
+    $(document).on('click change', '[data-set-task]', function(e) {
         var $this = $(this);
         var form = getForm($this);
         var task = $this.data('set-task');
@@ -513,7 +571,7 @@ function brightSystemJs() {
         setTask($this, form, task);
     });
 
-    $(document).on('click change', '[data-task]', function (e) {
+    $(document).on('click change', '[data-task]', function(e) {
         var $this = $(this);
         var form = getForm($this);
 
@@ -527,7 +585,7 @@ function brightSystemJs() {
         }
     });
 
-    $(document).on('click', '[data-task-checkbox]', function (e) {
+    $(document).on('click', '[data-task-checkbox]', function(e) {
         e.preventDefault();
 
         var $this = $(this);
@@ -537,7 +595,8 @@ function brightSystemJs() {
         setTask($this, form, task);
 
         // check the checkbox
-        $this.parents('tr:first')
+        $this
+            .parents('tr:first')
             .find('input[type="checkbox"]')
             .attr('checked', true);
 
@@ -545,7 +604,7 @@ function brightSystemJs() {
     });
 
     var timer;
-    $(document).on('change', '[auto-submit]', function () {
+    $(document).on('change', '[auto-submit]', function() {
         var delay = 1000;
         var $this = $(this);
 
@@ -553,13 +612,13 @@ function brightSystemJs() {
             clearTimeout(timer);
         }
 
-        timer = setTimeout(function () {
+        timer = setTimeout(function() {
             var form = getForm($this);
             form.submit();
         }, delay);
     });
 
-    $(document).on('keyup', '[auto-keyup-submit]', function () {
+    $(document).on('keyup', '[auto-keyup-submit]', function() {
         var val = $.trim($(this).val());
         var min = 3;
         var delay = 1000;
@@ -579,30 +638,31 @@ function brightSystemJs() {
 
         $(document).trigger('form:reset', $(this));
 
-        timer = setTimeout(function () {
+        timer = setTimeout(function() {
             return form.submit();
         }, delay);
     });
 
-    $(document).on('click', '[data-ajax-replace]', function (e) {
+    $(document).on('click', '[data-ajax-replace]', function(e) {
         e.preventDefault();
         var $this = $(this);
         var target = $this.data('target');
         var url = $this.data('ajax-replace');
+        var method = $this.data('method') || 'POST';
 
         var message = $this.attr('data-confirm');
-        box.confirm(message, (result) => {
+        box.confirm(message, result => {
             if (result) {
                 var data = $this.data('post-data');
                 $.ajax({
                     url: url,
                     data: data,
-                    method: 'POST',
-                    complete: function (xhr) {
+                    method: method,
+                    complete: function(xhr) {
                         $(target).html(xhr.responseText);
-                    }
+                    },
                 });
             }
         });
     });
-};
+}
