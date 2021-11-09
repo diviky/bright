@@ -19,9 +19,10 @@
     "require": {
         "php": ">=7.4",
         "laravel/framework": "^8",
-        "spatie/laravel-permission": "^3.12",
+        "laravel/ui": "^3.0",
+        "ralphschindler/basic-query-filter": "^0.1.0",
         "schuppo/password-strength": "^2",
-        "laravel/ui": "^3.0"
+        "spatie/laravel-permission": "^3.12"
     },
     "require-dev": {
         "kitloong/laravel-migrations-generator": "^4.4",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a49cf56d0e0553aa3823ee3e3dba4582",
+    "content-hash": "3260bed86b21c1c680db255d17237718",
     "packages": [
         {
             "name": "brick/math",
@@ -1745,6 +1745,43 @@
                 "source": "https://github.com/php-fig/simple-cache/tree/master"
             },
             "time": "2017-10-23T01:57:42+00:00"
+        },
+        {
+            "name": "ralphschindler/basic-query-filter",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ralphschindler/basic-query-filter.git",
+                "reference": "84e12db96f722ce41f6f0e10b1704d4dec852c80"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ralphschindler/basic-query-filter/zipball/84e12db96f722ce41f6f0e10b1704d4dec852c80",
+                "reference": "84e12db96f722ce41f6f0e10b1704d4dec852c80",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BasicQueryFilter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Ralph Schindler",
+                    "email": "ralph@ralphschindler.com"
+                }
+            ],
+            "description": "Basic Query Filter",
+            "support": {
+                "issues": "https://github.com/ralphschindler/basic-query-filter/issues",
+                "source": "https://github.com/ralphschindler/basic-query-filter/tree/0.1.0"
+            },
+            "time": "2017-03-28T14:36:50+00:00"
         },
         {
             "name": "ramsey/collection",

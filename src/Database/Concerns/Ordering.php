@@ -33,4 +33,15 @@ trait Ordering
 
         return $this;
     }
+
+    /**
+     * Add Ordering to query.
+     *
+     * @param array &$data
+     * @param mixed $ordering
+     */
+    public function sorting($data = [], $ordering = []): self
+    {
+        return $this->ordering($data, $ordering);
+    }
 }

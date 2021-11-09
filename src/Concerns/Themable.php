@@ -11,6 +11,7 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
 trait Themable
 {
@@ -137,7 +138,6 @@ trait Themable
 
         $matches = [
             $option . '.' . $view,
-            $option . '.*',
         ];
 
         return $this->getMatchingTheme($matches);
@@ -169,8 +169,6 @@ trait Themable
 
         $matches = [
             $prefix . '.' . $component . ':' . $method,
-            $prefix . '.' . $component . ':*',
-            $prefix . '.*',
         ];
 
         return $this->getMatchingTheme($matches);
@@ -191,7 +189,6 @@ trait Themable
 
         $matches = [
             'name:' . $route,
-            'name:' . $route . '.*',
         ];
 
         return $this->getMatchingTheme($matches);
@@ -211,10 +208,12 @@ trait Themable
 
         $template = null;
         foreach ($matches as $match) {
-            if (isset($this->theme[$match])) {
-                $template = $this->theme[$match];
+            foreach (array_keys($this->theme) as $theme) {
+                if (Str::is($theme, $match)) {
+                    $template = $this->theme[$theme];
 
-                break;
+                    break;
+                }
             }
         }
 

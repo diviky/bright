@@ -45,6 +45,21 @@
                 <directory name="src/Http/Controllers"/>
             </errorLevel>
         </PossiblyUndefinedMethod>
+        <UndefinedMethod>
+            <errorLevel type="suppress">
+                <file name="src/Database/Filters/FiltersScope.php"/>
+            </errorLevel>
+        </UndefinedMethod>
+        <PossiblyNullReference>
+            <errorLevel type="suppress">
+                <file name="src/Database/Filters/FiltersScope.php"/>
+            </errorLevel>
+        </PossiblyNullReference>
+        <UnsafeInstantiation>
+            <errorLevel type="suppress">
+                <file name="src/Database/Exceptions/InvalidFilterValue.php"/>
+            </errorLevel>
+        </UnsafeInstantiation>
         <PossiblyInvalidArgument>
             <errorLevel type="suppress">
                 <file name="src/Helpers/Reader.php"/>

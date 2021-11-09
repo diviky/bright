@@ -10,6 +10,7 @@ use Diviky\Bright\Database\Concerns\Build;
 use Diviky\Bright\Database\Concerns\BuildsQueries;
 use Diviky\Bright\Database\Concerns\Cachable;
 use Diviky\Bright\Database\Concerns\Config;
+use Diviky\Bright\Database\Concerns\Eloquent;
 use Diviky\Bright\Database\Concerns\Eventable;
 use Diviky\Bright\Database\Concerns\Filter;
 use Diviky\Bright\Database\Concerns\Ordering;
@@ -37,6 +38,7 @@ class Builder extends LaravelBuilder
     use Timestamps;
     use BuildsQueries;
     use Config;
+    use Eloquent;
 
     /**
      * Set the alias for table.
