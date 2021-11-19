@@ -124,7 +124,7 @@ class Responsable implements BaseResponsable
 
         $paths = $this->getViewsFrom($this->controller, $this->action);
         $theme = $this->setUpThemeFromRequest($request, $component, $paths);
-        $layout = 'html' == $format ? 'html' : $theme['layout'];
+        $layout = 'html' == $format ? 'layouts.html' : $theme['layout'];
 
         return $this->getView($view, $response, $layout);
     }

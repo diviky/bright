@@ -66,7 +66,12 @@ trait Themable
             $template = $this->getDefaultTheme();
         }
 
-        list($theme, $layout) = \explode('.', $template . '.');
+        if (Str::contains($template, '|')) {
+            list($theme, $layout) = \explode('|', $template);
+        } else {
+            $layout = $template;
+            $theme = '';
+        }
 
         $themePath = resource_path('themes/' . $theme);
         $views = resource_path('views');

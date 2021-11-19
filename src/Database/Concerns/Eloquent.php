@@ -34,4 +34,9 @@ trait Eloquent
 
         return $this;
     }
+
+    public function hasEloquent(): bool
+    {
+        return isset($this->eloquent) ? true : false;
+    }
 }

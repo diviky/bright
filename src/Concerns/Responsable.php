@@ -23,11 +23,10 @@ trait Responsable
     {
         $layout = $layout ?: 'index';
         $data['component'] = $route;
-        $view = 'layouts.' . $layout;
 
         $factory = app(ViewFactory::class);
 
-        return $factory->make($view, $data);
+        return $factory->make($layout, $data);
     }
 
     /**

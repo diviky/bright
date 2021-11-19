@@ -12,18 +12,22 @@ use Illuminate\Support\Str;
 trait Filter
 {
     /**
+     * Filter types.
+     *
      * @var array
      */
-    protected $filters = [];
+    protected $types = [];
 
     /**
+     * Alias names for filters.
+     *
      * @var array
      */
     protected $aliases = [];
 
-    public function filters(array $filters = [], array $aliases = []): void
+    public function filters(array $types = [], array $aliases = []): void
     {
-        $this->filters = $filters;
+        $this->types = $types;
         $this->aliases = $aliases;
     }
 
@@ -102,11 +106,35 @@ trait Filter
         return $this;
     }
 
+    /**
+     * Set alias names for filters.
+     *
+     * @return self
+     */
+    public function addColumnAlias(string $column, string $alias)
+    {
+        $this->aliases[$column] = $alias;
+
+        return $this;
+    }
+
+    /**
+     * Set filter type.
+     *
+     * @return self
+     */
+    public function addFilterType(string $filter, string $type)
+    {
+        $this->types[$filter] = $type;
+
+        return $this;
+    }
+
     protected function filterExact(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
             if (isset($value) && '' != $value[0]) {
-                $type = $this->filters[$column] ?? null;
+                $type = $this->types[$column] ?? null;
 
                 if (is_null($type)) {
                     $this->addWhere($column, $value);
@@ -210,12 +238,16 @@ trait Filter
 
     protected function filterScopes(array $scopes): self
     {
-        foreach ($scopes as $scope => $values) {
-            if (empty($scope)) {
-                continue;
-            }
+        if ($this->hasEloquent()) {
+            foreach ($scopes as $scope => $values) {
+                if (empty($scope)) {
+                    continue;
+                }
 
-            (new FiltersScope())($this->getEloquent(), $values, $scope);
+                $scope = $this->aliases[$scope] ?? $scope;
+
+                (new FiltersScope())($this->getEloquent(), $values, $scope);
+            }
         }
 
         return $this;
@@ -401,7 +433,7 @@ trait Filter
      */
     protected function addWhere($column, $value, $condition = '='): self
     {
-        if (Str::contains($column, ':') && $this->getEloquent()) {
+        if (Str::contains($column, ':') && $this->hasEloquent()) {
             (new FilterRelation($condition))($this->getEloquent(), $value, $column);
 
             return $this;

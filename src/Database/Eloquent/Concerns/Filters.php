@@ -12,4 +12,11 @@ trait Filters
 
         return $this;
     }
+
+    public function filters(array $types = [], array $aliases = []): self
+    {
+        $this->query->setEloquent($this)->filters($types, $aliases);
+
+        return $this;
+    }
 }
