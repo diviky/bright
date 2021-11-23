@@ -169,7 +169,7 @@ trait Themable
      */
     protected function getThemeFromPrefix($route, $component, $method = null): ?string
     {
-        $prefix = 'prefix:' . ltrim($route->getPrefix(), '/');
+        $prefix = 'prefix:' . ltrim((string) $route->getPrefix(), '/');
         $prefix = str_replace('/', '.', $prefix);
 
         $matches = [

@@ -1,6 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 return [
-    'device'   => 'computer',
+    'device' => 'computer',
     /*
     |----------------------------------------------------------------------------
     | Default theme config all devices
@@ -8,11 +11,13 @@ return [
     |
     | Default config will be applied for all devices. Devices are identified by
     | their headers
+    |
+    | prefix:auth.*  (all methods starting with prefix)
      */
-    'default'  => [
-        'default'    => 'tabler',
-        'auth.login' => 'tabler',
-        'auth.*'     => 'tabler',
+    'default' => [
+        'default' => 'tabler|layouts.index',
+        'auth.login' => 'tabler|layouts.index',
+        'auth.*' => 'tabler|layouts.index',
     ],
     /*
     |----------------------------------------------------------------------------
@@ -34,7 +39,7 @@ return [
         |  members.login (members component and login method)
         |  members.* (members component and all methods)
          */
-        'auth.changepass' => 'tabler',
+        'auth.changepass' => 'tabler|layouts.index',
     ],
 
     /*
@@ -42,12 +47,12 @@ return [
     | Theme configuration for mobile devices
     |----------------------------------------------------------------------------
      */
-    'phone'    => [],
+    'phone' => [],
 
     /*
     |----------------------------------------------------------------------------
     | Theme configuration for tablet devices
     |----------------------------------------------------------------------------
      */
-    'tablet'   => [],
+    'tablet' => [],
 ];
