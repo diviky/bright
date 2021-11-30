@@ -27,7 +27,7 @@ trait ViewTrait
         if (!$form['ajax']) {
             $parameters = [];
             if (is_array($url)) {
-                $parameters = $url[1];
+                $parameters = $url[1] ?? [];
                 $url = $url[0];
             }
 
@@ -61,12 +61,14 @@ trait ViewTrait
                 $attributes = [];
             }
 
-            $attributes['role'] = 'krender';
-            $attributes['class'] = $class;
-            $attributes['method'] = $method ?? 'POST';
-            $attributes['action'] = $action;
+            $attribs = [];
+            $attribs['role'] = 'krender';
+            $attribs['class'] = $class;
+            $attribs['name'] = $class;
+            $attribs['method'] = $method ?: 'POST';
+            $attribs['action'] = $action;
 
-            $start = '<form ' . $this->toAttribs($attributes) . '>';
+            $start = '<form ' . $this->toAttribs(array_merge($attribs, $attributes)) . '>';
             $form['start'] = $start . $inputs . csrf_field();
             $form['inputs'] = $inputs;
             $form['end'] = '</form>';

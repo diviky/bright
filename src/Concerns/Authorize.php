@@ -91,7 +91,7 @@ trait Authorize
             return false;
         }
 
-        return $this->isAuthorized(['prefix:' . str_replace('/', '.', $prefix)]);
+        return $this->isAuthorized(['prefix:' . str_replace('/', '.', trim($prefix, '/'))]);
     }
 
     /**

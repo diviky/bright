@@ -33,7 +33,7 @@ class IsUserActivated
         }
 
         if (0 == $user->status) {
-            return redirect()->url('activate');
+            return redirect()->url('user.activate');
         }
 
         if (!empty($user->deleted_at)) {
