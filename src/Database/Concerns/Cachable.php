@@ -242,7 +242,7 @@ trait Cachable
     {
         $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey($appends));
 
-        return \str_replace(':uid:', strval(user('id')), $cache);
+        return substr(\str_replace(':uid:', strval(user('id')), $cache), 0, 100);
     }
 
     /**
