@@ -249,7 +249,7 @@ class Bright
             if (\is_array($value)) {
                 $valueInsert = (
                     !empty($value)
-                    && (\substr_count($key, '?') == \count($value) || \substr_count($key, ':') == \count($value))
+                    && (\substr_count((string) $key, '?') == \count($value) || \substr_count((string) $key, ':') == \count($value))
                 );
             }
 
@@ -258,8 +258,8 @@ class Bright
             }
             if (\is_numeric($key) && \is_string($value)) {
                 $out[] = $not . $this->quoteFields($value);
-            } elseif ((\is_numeric($key) && \is_array($value)) || \in_array(\strtolower(\trim($key)), $bool)) {
-                if (\in_array(\strtolower(\trim($key)), $bool)) {
+            } elseif ((\is_numeric($key) && \is_array($value)) || \in_array(\strtolower(\trim((string) $key)), $bool)) {
+                if (\in_array(\strtolower(\trim((string) $key)), $bool)) {
                     $join = ' ' . \strtoupper($key) . ' ';
                 } else {
                     $key = $join;

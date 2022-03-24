@@ -50,6 +50,10 @@ class DatabaseManager extends LaravelDatabaseManager
             } elseif (\is_array($patterns)) {
                 foreach ($patterns as $pattern => $database) {
                     if (preg_match('/^' . $pattern . '/', $name)) {
+                        if (\is_array($database)) {
+                            $database = $database[0];
+                        }
+                        
                         $connection = $this->connection($database);
 
                         break;
