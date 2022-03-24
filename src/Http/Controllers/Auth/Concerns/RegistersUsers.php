@@ -35,7 +35,7 @@ trait RegistersUsers
      *
      * @return string[]
      *
-     * @psalm-return array{redirect: string, status: string, message: string}
+     * @psalm-return array{message: array<array-key, mixed>|string, redirect: string, status: "OK"}
      */
     public function register(Request $request): array
     {

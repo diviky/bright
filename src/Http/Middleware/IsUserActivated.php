@@ -39,13 +39,13 @@ class IsUserActivated
         if (!empty($user->deleted_at)) {
             Auth::logout();
 
-            return abort(401, 'Account Deleted');
+            abort(401, 'Account Deleted');
         }
 
         if (1 != $user->status) {
             Auth::logout();
 
-            return abort(401, 'Account Suspended');
+            abort(401, 'Account Suspended');
         }
 
         return $next($request);

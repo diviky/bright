@@ -50,6 +50,16 @@
                 <file name="src/Database/Filters/FiltersScope.php"/>
             </errorLevel>
         </UndefinedMethod>
+        <InvalidArrayOffset>
+            <errorLevel type="suppress">
+                <file name="src/Database/Bright.php"/>
+            </errorLevel>
+        </InvalidArrayOffset>
+        <RedundantFunctionCallGivenDocblockType>
+            <errorLevel type="suppress">
+                <file name="src/Database/Bright.php"/>
+            </errorLevel>
+        </RedundantFunctionCallGivenDocblockType>
         <PossiblyNullReference>
             <errorLevel type="suppress">
                 <file name="src/Database/Filters/FiltersScope.php"/>

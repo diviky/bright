@@ -37,6 +37,6 @@ trait Eloquent
 
     public function hasEloquent(): bool
     {
-        return isset($this->eloquent) ? true : false;
+        return ($this->eloquent instanceof Builder) ? true : false;
     }
 }

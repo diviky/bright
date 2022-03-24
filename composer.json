@@ -17,8 +17,8 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
-        "laravel/framework": "^8",
+        "php": "^8.0|^8.1",
+        "laravel/framework": "^8.75",
         "laravel/ui": "^3.0",
         "ralphschindler/basic-query-filter": "^0.1.0",
         "schuppo/password-strength": "^2",
@@ -75,7 +75,11 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true,
-        "platform-check": false
+        "platform-check": false,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "phpro/grumphp": true
+        }
     },
     "prefer-stable": true,
     "minimum-stability": "dev",
