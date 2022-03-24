@@ -60,6 +60,10 @@ trait WrapTrait
             if (\is_array($patterns)) {
                 foreach ($patterns as $pattern => $database) {
                     if (preg_match('/^' . $pattern . '/', $table)) {
+                        if (\is_array($database)) {
+                            $database = $database[0];
+                        }
+                                                
                         return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $table . $alias, true);
                     }
                 }
