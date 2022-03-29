@@ -31,4 +31,57 @@ class Controller extends BaseController
 
         return response('pong');
     }
+
+    /**
+     * Check if the server is ready to receive traffic
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function readiness()
+    {
+        return response('ok', 200);
+    }
+
+    /**
+     * Check if the backend service is running without problems
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function livenessBackend()
+    {
+        return response('ok', 200);
+    }
+
+    /**
+     * Check if the database service is running without problems
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function livenessDatabase()
+    {
+        // Check database connection
+        try {
+            DB::connection()->getPdo();
+            return response('ok', 200);
+        } catch (\Exception $exception) {
+            return response("No database connection", 503);
+        }
+    }
+
+    /**
+     * Check if the database service is running without problems
+     *
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
+    public function livenessCache()
+    {
+        // Check database connection
+        try {
+            Cache::set('ping', carbon());
+            return response('ok', 200);
+        } catch (\Exception $exception) {
+            return response("No database connection", 503);
+        }
+    }
+
 }
