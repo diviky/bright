@@ -16,7 +16,7 @@ class SQLiteConnection extends LaravelSQLiteConnection
     /**
      * Number of attempts to retry.
      */
-    const ATTEMPTS_COUNT = 3;
+    public const ATTEMPTS_COUNT = 3;
 
     /**
      * Async config.

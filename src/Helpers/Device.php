@@ -26,7 +26,7 @@ class Device
             return $return;
         }
 
-        //device wrapper
+        // device wrapper
         $devicelist = [
             'desktop' => 'computer',
             'smartphone' => 'phone',
@@ -50,7 +50,7 @@ class Device
         $client = $detector->getClient();
         $client = !is_array($client) ? [] : $client;
 
-        //legacy params
+        // legacy params
         $return['device'] = $device;
         $return['type'] = $type;
         $return['brand'] = $detector->getBrandName();
@@ -70,7 +70,7 @@ class Device
         $return['os_family'] = 'Unknown';
         $return['browser_family'] = 'Unknown';
 
-        //advanced params
+        // advanced params
         if (isset($system['short_name'])) {
             $osFamily = OperatingSystem::getOsFamily($system['short_name']);
             $return['os_family'] = (false !== $osFamily) ? $osFamily : 'Unknown';

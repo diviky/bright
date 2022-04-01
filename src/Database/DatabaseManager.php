@@ -53,7 +53,7 @@ class DatabaseManager extends LaravelDatabaseManager
                         if (\is_array($database)) {
                             $database = $database[0];
                         }
-                        
+
                         $connection = $this->connection($database);
 
                         break;

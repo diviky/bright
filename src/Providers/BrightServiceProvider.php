@@ -99,7 +99,7 @@ class BrightServiceProvider extends ServiceProvider
     {
         $this->publishes([
             $this->path() . '/config/charts.php' => config_path('charts.php'),
-            //$this->path() . '/config/permission.php'  => config_path('permission.php'),
+            // $this->path() . '/config/permission.php'  => config_path('permission.php'),
             $this->path() . '/config/bright.php' => config_path('bright.php'),
             $this->path() . '/config/theme.php' => config_path('theme.php'),
             $this->path() . '/config/sharding.php' => config_path('sharding.php'),

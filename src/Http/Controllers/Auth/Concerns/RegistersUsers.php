@@ -96,7 +96,7 @@ trait RegistersUsers
      */
     protected function registered($user): void
     {
-        //Assign a role to user
+        // Assign a role to user
         $role = $this->role ?: config('auth.user.role');
 
         if ($role) {

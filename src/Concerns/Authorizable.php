@@ -15,6 +15,53 @@ trait Authorizable
      *
      * @return null|mixed
      */
+    public function isPermissionRevoked($ability)
+    {
+        list($option, $view) = \array_pad(\explode('.', $ability), 2, null);
+
+        $matches = [
+            '*',
+            $option . '.*',
+            $option . '.' . $view,
+            $ability,
+        ];
+
+        $permissions = $this->getDirectPermissions();
+
+        foreach ($permissions as $permission) {
+            foreach ($matches as $match) {
+                if (Str::is($permission->name, $match)) {
+                    $pivot = $permission->pivot;
+                    if ($pivot && $pivot->is_exclude) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        $permissions = $this->getAllPermissions();
+
+        foreach ($permissions as $permission) {
+            foreach ($matches as $match) {
+                if (Str::is($permission->name, $match)) {
+                    $pivot = $permission->pivot;
+                    if ($pivot && $pivot->is_exclude) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check user as right permission.
+     *
+     * @param string $ability
+     *
+     * @return null|mixed
+     */
     protected function isMatched($ability)
     {
         list($option, $view) = \array_pad(\explode('.', $ability), 2, null);

@@ -63,7 +63,7 @@ trait WrapTrait
                         if (\is_array($database)) {
                             $database = $database[0];
                         }
-                                                
+
                         return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $table . $alias, true);
                     }
                 }

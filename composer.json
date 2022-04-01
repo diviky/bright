@@ -27,7 +27,7 @@
     "require-dev": {
         "kitloong/laravel-migrations-generator": "^4.4",
         "bpocallaghan/generators": "^5.0",
-        "diviky/code-analysis": "dev-master",
+        "diviky/code-analysis": "^1.1",
         "mnabialek/laravel-sql-logger": "^2.2"
     },
     "suggest": {
@@ -58,7 +58,7 @@
         }
     },
     "scripts": {
-        "format": "vendor/bin/php-cs-fixer --allow-risky=yes --config=.php-cs-fixer.php --using-cache=no --verbose fix",
+        "format": "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer --allow-risky=yes --config=.php-cs-fixer.php --using-cache=no --verbose fix",
         "test": "vendor/bin/testbench package:test --parallel",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
         "psalm": "vendor/bin/psalm --no-cache",

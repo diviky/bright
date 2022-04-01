@@ -23,7 +23,7 @@ trait Relations
             if (isset($relation) && !in_array($relation_key, $except)) {
                 $attributes = $relation->getAttributes();
                 foreach ($attributes as $key => $value) {
-                    //$this->attributes[$key] = $value;
+                    // $this->attributes[$key] = $value;
                     $this->setAttribute($key, $value);
                 }
 

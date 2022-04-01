@@ -33,7 +33,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Check if the server is ready to receive traffic
+     * Check if the server is ready to receive traffic.
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
@@ -43,7 +43,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Check if the backend service is running without problems
+     * Check if the backend service is running without problems.
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
@@ -53,7 +53,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Check if the database service is running without problems
+     * Check if the database service is running without problems.
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
@@ -62,14 +62,15 @@ class Controller extends BaseController
         // Check database connection
         try {
             DB::connection()->getPdo();
+
             return response('ok', 200);
         } catch (\Exception $exception) {
-            return response("No database connection", 503);
+            return response('No database connection', 503);
         }
     }
 
     /**
-     * Check if the database service is running without problems
+     * Check if the database service is running without problems.
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
@@ -78,10 +79,10 @@ class Controller extends BaseController
         // Check database connection
         try {
             Cache::set('ping', carbon());
+
             return response('ok', 200);
         } catch (\Exception $exception) {
-            return response("No database connection", 503);
+            return response('No database connection', 503);
         }
     }
-
 }

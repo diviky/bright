@@ -15,6 +15,30 @@ trait Authorize
      *
      * @param null|array $names
      */
+    public function isAuthorizationRevoked($names): bool
+    {
+        if (\is_null($names)) {
+            return false;
+        }
+
+        // Check user has permission
+        $user = Auth::user();
+        if ($user) {
+            foreach ($names as $route) {
+                if ($user->isPermissionRevoked($route)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check given permission name is allowed.
+     *
+     * @param null|array $names
+     */
     public function isAuthorized($names): bool
     {
         if (\is_null($names)) {
@@ -87,7 +111,7 @@ trait Authorize
     {
         $prefix = $route->getPrefix();
 
-        if (\is_null($prefix)) {
+        if (empty($prefix)) {
             return false;
         }
 
@@ -115,12 +139,81 @@ trait Authorize
     }
 
     /**
+     * Check authorization view action class.
+     *
+     * @param Route $route
+     */
+    public function isActionAuthorizeRevoked($route): bool
+    {
+        $names = $this->getRoutesFromRoute($route);
+
+        return $this->isAuthorizationRevoked($names);
+    }
+
+    /**
+     * Check authorization via route names
+     * should prefix permission with name:.
+     *
+     * @param Route $route
+     */
+    public function isRouteAuthorizeRevoked($route): bool
+    {
+        $route = $route->getName();
+
+        if (\is_null($route)) {
+            return false;
+        }
+
+        return $this->isAuthorizationRevoked(['name:' . $route]);
+    }
+
+    /**
+     * Check authorization via route prefix.
+     *
+     * @param Route $route
+     */
+    public function isPrefixAuthorizeRevoked($route): bool
+    {
+        $prefix = $route->getPrefix();
+
+        if (empty($prefix)) {
+            return false;
+        }
+
+        return $this->isAuthorizationRevoked(['prefix:' . str_replace('/', '.', trim($prefix, '/'))]);
+    }
+
+    /**
+     * Check authorization via route uri.
+     *
+     * @param Route $route
+     */
+    public function isUriAuthorizeRevoked($route): bool
+    {
+        $uri = $route->uri();
+        $uri = str_replace('/', '.', $uri);
+
+        $methods = $route->methods();
+
+        $names = [];
+        foreach ($methods as $method) {
+            $names[] = 'uri:' . $method . ':' . $uri;
+        }
+
+        return $this->isAuthorizationRevoked($names);
+    }
+
+    /**
      * Check authorization via route.
      *
      * @param Route $route
      */
     public function isAuthorizedAny($route): bool
     {
+        if ($this->isAuthorizeRevokedAny($route)) {
+            return false;
+        }
+
         if ($this->isActionAuthorized($route)) {
             return true;
         }
@@ -134,6 +227,32 @@ trait Authorize
         }
 
         if ($this->isUriAuthorized($route)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check authorization via route.
+     *
+     * @param Route $route
+     */
+    public function isAuthorizeRevokedAny($route): bool
+    {
+        if ($this->isActionAuthorizeRevoked($route)) {
+            return true;
+        }
+
+        if ($this->isRouteAuthorizeRevoked($route)) {
+            return true;
+        }
+
+        if ($this->isPrefixAuthorizeRevoked($route)) {
+            return true;
+        }
+
+        if ($this->isUriAuthorizeRevoked($route)) {
             return true;
         }
 

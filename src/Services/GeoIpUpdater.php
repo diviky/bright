@@ -6,7 +6,7 @@ namespace Diviky\Bright\Services;
 
 class GeoIpUpdater
 {
-    const GEOLITE2_URL_BASE = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=%s&suffix=tar.gz';
+    public const GEOLITE2_URL_BASE = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=%s&suffix=tar.gz';
 
     /**
      * @var bool|string

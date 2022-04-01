@@ -61,7 +61,7 @@ class Reader
 
             \ini_set('auto_detect_line_endings', 'on');
             $file = new SplFileObject($reader);
-            //Auto detect delimiter
+            // Auto detect delimiter
             if (empty($options['delimiter'])) {
                 $options['delimiter'] = $this->detectDelimiter($reader, $lines);
             }

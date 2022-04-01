@@ -196,7 +196,7 @@ class AccessTokenGuard implements Guard
      */
     protected function validateSignature($token, $signature = null): bool
     {
-        //check is expired
+        // check is expired
         if (isset($token->expires_in) && now()->gt($token->expires_in)) {
             return false;
         }

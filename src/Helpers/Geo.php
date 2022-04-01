@@ -32,7 +32,7 @@ class Geo
             return [];
         }
 
-        //http://ipinfo.io/119.63.142.37/json
+        // http://ipinfo.io/119.63.142.37/json
 
         $geocoder = new ProviderAggregator();
 

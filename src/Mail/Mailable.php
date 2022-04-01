@@ -104,7 +104,7 @@ class Mailable extends BaseMailable implements ShouldQueue
      */
     public function deliver($to = null, $exception = false): bool
     {
-        //$to = $this->format($to);
+        // $to = $this->format($to);
 
         if ($exception) {
             Mail::to($to)->send($this);
