@@ -29,6 +29,13 @@ trait Eventable
     protected $lastId;
 
     /**
+     * Event State Executed.
+     *
+     * @var bool
+     */
+    protected $executed = false;
+
+    /**
      * Set event state.
      *
      * @param bool $event
@@ -162,6 +169,12 @@ trait Eventable
             return $values;
         }
 
+        if ($this->executed) {
+            return $values;
+        }
+
+        $this->executed = true;
+
         if (!\is_array(\reset($values))) {
             $values = [$values];
         }
@@ -252,6 +265,12 @@ trait Eventable
         if (!$this->useEvent()) {
             return $this;
         }
+
+        if ($this->executed) {
+            return $this;
+        }
+
+        $this->executed = true;
 
         $eventColumns = $this->getEventTables($type);
         $eventColumns = \array_merge($eventColumns, $this->eventColumns);
