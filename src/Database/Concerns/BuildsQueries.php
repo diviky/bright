@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
-use Illuminate\Support\LazyCollection;
+use Diviky\Bright\Helpers\Iterator\SelectIterator;
 use InvalidArgumentException;
 
 trait BuildsQueries
@@ -18,34 +18,25 @@ trait BuildsQueries
      *
      * @return \Illuminate\Support\LazyCollection
      */
+    public function lazyMap($chunkSize = 1000, callable $callback = null)
+    {
+        return $this->lazy($chunkSize)->map(function ($item, $key) use ($callback) {
+            return $callback($item, $key);
+        });
+    }
+
+    /**
+     * Query lazily, by chunks of the given size.
+     *
+     * @param int $chunkSize
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return \Illuminate\Support\LazyCollection
+     */
     public function flatChunk($chunkSize = 1000, callable $callback = null)
     {
-        if ($chunkSize < 1) {
-            throw new InvalidArgumentException('The chunk size should be at least 1');
-        }
-
-        return LazyCollection::make(function () use ($chunkSize, $callback) {
-            $page = 1;
-
-            while (true) {
-                $results = $this->forPage($page++, $chunkSize)->get();
-
-                if ($callback) {
-                    foreach ($results as $result) {
-                        yield $result = $callback($result);
-                    }
-                } else {
-                    // Flatten the chunks out
-                    foreach ($results as $result) {
-                        yield $result;
-                    }
-                }
-
-                if ($results->count() < $chunkSize) {
-                    return;
-                }
-            }
-        });
+        return $this->lazyMap($chunkSize, $callback);
     }
 
     /**
@@ -56,11 +47,15 @@ trait BuildsQueries
      *
      * @throws \InvalidArgumentException
      *
-     * @return \Illuminate\Support\LazyCollection
+     * @return \Iterator
      */
     public function iterate($chunkSize = 10000, $callback = null)
     {
-        return $this->flatChunk($chunkSize, $callback);
+        if ($chunkSize < 1) {
+            throw new InvalidArgumentException('The chunk size should be at least 1');
+        }
+
+        return new SelectIterator($this, $chunkSize, $callback);
     }
 
     /**
@@ -72,10 +67,10 @@ trait BuildsQueries
      *
      * @deprecated 2.0
      *
-     * @return \Illuminate\Support\LazyCollection
+     * @return \Iterator
      */
     public function iterator($chunkSize = 10000, callable $callback = null)
     {
-        return $this->flatChunk($chunkSize, $callback);
+        return $this->iterate($chunkSize, $callback);
     }
 }

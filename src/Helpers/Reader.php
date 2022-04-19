@@ -8,9 +8,13 @@ use Diviky\Bright\Helpers\Iterator\ChunkedIterator;
 use Diviky\Bright\Helpers\Iterator\MapIterator;
 use EmptyIterator;
 use finfo;
-use Generator;
 use Illuminate\Container\RewindableGenerator;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 use Iterator;
+use JsonSerializable;
 use LimitIterator;
 use Port\Csv\CsvReader;
 use Port\Excel\ExcelReader;
@@ -161,11 +165,7 @@ class Reader
         }
 
         if (!\is_null($callable)) {
-            if ($reader instanceof Generator) {
-                $reader = new MapIterator($reader, $callable);
-            } else {
-                $reader = new MapIterator($reader, $callable);
-            }
+            $reader = new MapIterator($reader, $callable);
         }
 
         return $reader;
@@ -224,17 +224,33 @@ class Reader
     /**
      * Count the interator values.
      *
-     * @param Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
+     * @param Arrayable|Collection|Iterator|JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
      */
     public function count($iterator): int
     {
+        if ($iterator instanceof Collection) {
+            return $iterator->count();
+        }
+
+        if ($iterator instanceof LazyCollection) {
+            return $iterator->count();
+        }
+
+        if ($iterator instanceof Arrayable) {
+            return count($iterator->toArray());
+        }
+
+        if ($iterator instanceof JsonSerializable) {
+            return count($iterator->jsonSerialize());
+        }
+
         return \iterator_count($iterator);
     }
 
     /**
      * check the next row from iterator.
      *
-     * @param Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
+     * @param Arrayable|Collection|Iterator|JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
      *
      * @return bool
      */
@@ -263,16 +279,6 @@ class Reader
     public function chunk(Traversable $iterator, int $size = 100): ChunkedIterator
     {
         return new ChunkedIterator($iterator, $size);
-    }
-
-    /**
-     * Convert interator to array.
-     *
-     * @param Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
-     */
-    public function toArray($iterator): array
-    {
-        return \iterator_to_array($iterator);
     }
 
     /**
@@ -403,5 +409,33 @@ class Reader
         }
 
         return $zip;
+    }
+
+    /**
+     * Convert rows to array.
+     *
+     * @param array|Arrayable|Collection|JsonResource|JsonSerializable|LazyCollection|mixed|Traversable $rows
+     *
+     * @return array
+     */
+    public function toArray($rows)
+    {
+        if ($rows instanceof Collection) {
+            return $rows->toArray();
+        }
+
+        if ($rows instanceof LazyCollection) {
+            return $rows->toArray();
+        }
+
+        if ($rows instanceof Arrayable) {
+            return $rows->toArray();
+        }
+
+        if ($rows instanceof JsonSerializable) {
+            return $rows->jsonSerialize();
+        }
+
+        return \iterator_to_array($rows);
     }
 }
