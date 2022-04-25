@@ -491,6 +491,10 @@ trait Filter
             $time = Str::contains($time, ':') ? $time : $time . ' ' . $prefix;
         }
 
+        if (false === \strtotime($time)) {
+            $time = now()->toDateTimeString();
+        }
+
         return carbon(\trim($time), $format);
     }
 }
