@@ -40,6 +40,11 @@
                 <directory name="src"/>
             </errorLevel>
         </NoInterfaceProperties>
+        <MissingClosureReturnType>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </MissingClosureReturnType>
         <PossiblyUndefinedMethod>
             <errorLevel type="suppress">
                 <directory name="src/Http/Controllers"/>

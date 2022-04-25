@@ -20,9 +20,13 @@ trait BuildsQueries
      */
     public function lazyMap($chunkSize = 1000, callable $callback = null)
     {
-        return $this->lazy($chunkSize)->map(function ($item, $key) use ($callback) {
-            return $callback($item, $key);
-        });
+        if (isset($callback)) {
+            return $this->lazy($chunkSize)->map(function ($item, $key) use ($callback) {
+                return $callback($item, $key);
+            });
+        }
+
+        return $this->lazy($chunkSize);
     }
 
     /**

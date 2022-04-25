@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Diviky\Bright\Helpers\Iterator;
 
 use Closure;
-use Illuminate\Database\Query\Builder;
 use InvalidArgumentException;
 use Iterator;
 
@@ -35,7 +34,7 @@ class SelectIterator implements Iterator
     protected $results;
 
     /**
-     * @var Builder
+     * @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder
      */
     protected $builder;
 
@@ -56,9 +55,9 @@ class SelectIterator implements Iterator
     protected $chunk;
 
     /**
-     * @param Builder $builder
-     * @param int     $chunkSize
-     * @param Closure $callback
+     * @param \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $builder
+     * @param int                                                                      $chunkSize
+     * @param Closure                                                                  $callback
      *
      * @throws InvalidArgumentException
      */
