@@ -61,4 +61,30 @@ trait Relations
 
         return $this;
     }
+
+    /**
+     * Append the relations attributes.
+     *
+     * @param array $keys
+     *
+     * @return static
+     */
+    public function append($keys = [])
+    {
+        $relations = $this->getRelations();
+        $keys = array_fill_keys($keys, 1);
+
+        foreach ($relations as $relation_key => $relation) {
+            if (isset($relation)) {
+                $attributes = $relation->getAttributes();
+                foreach ($attributes as $key => $value) {
+                    if (isset($keys[$relation_key . '.' . $key])) {
+                        $this->setAttribute($key, $value);
+                    }
+                }
+            }
+        }
+
+        return $this;
+    }
 }

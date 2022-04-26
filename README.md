@@ -263,6 +263,8 @@ $model = $model->some(['id']);
 // Take except
 $model = $model->except(['id']);
 
+// Apped relation keys
+$model = $model->append(['relation.id']);
 ```
 
 # Database Filter
