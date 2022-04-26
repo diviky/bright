@@ -21,9 +21,15 @@ class FilterRelation implements Filter
      */
     protected $condition = '=';
 
-    public function __construct(string $condition = '=')
+    /**
+     * @var string
+     */
+    protected $separator = ':';
+
+    public function __construct(string $condition = '=', string $separator = ':')
     {
         $this->condition = $condition;
+        $this->separator = $separator;
     }
 
     /**
@@ -57,9 +63,21 @@ class FilterRelation implements Filter
         $query->where($query->qualifyColumn($property), $this->condition, $value);
     }
 
+    /**
+     * Set the value of separator.
+     *
+     * @return self
+     */
+    public function setSeparator(string $separator)
+    {
+        $this->separator = $separator;
+
+        return $this;
+    }
+
     protected function isRelationProperty(Builder $query, string $property): bool
     {
-        if (!Str::contains($property, ':')) {
+        if (!Str::contains($property, $this->separator)) {
             return false;
         }
 
@@ -67,7 +85,7 @@ class FilterRelation implements Filter
             return false;
         }
 
-        $firstRelationship = Str::camel(explode(':', $property)[0]);
+        $firstRelationship = Str::camel(explode($this->separator, $property)[0]);
 
         if (!method_exists($query->getModel(), $firstRelationship)) {
             return false;
@@ -81,7 +99,7 @@ class FilterRelation implements Filter
      */
     protected function withRelationConstraint(Builder $query, $value, string $property): void
     {
-        [$relation, $property] = collect(explode(':', $property))
+        [$relation, $property] = collect(explode($this->separator, $property))
             ->pipe(function (Collection $parts) {
                 return [
                     $parts->except(count($parts) - 1)->map([Str::class, 'camel'])->implode('.'),

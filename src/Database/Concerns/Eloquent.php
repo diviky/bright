@@ -37,6 +37,12 @@ trait Eloquent
 
     public function hasEloquent(): bool
     {
+        if (method_exists($this, 'getModel')) {
+            $this->eloquent = $this->getModel();
+
+            return true;
+        }
+
         return ($this->eloquent instanceof Builder) ? true : false;
     }
 }

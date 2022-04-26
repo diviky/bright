@@ -20,15 +20,11 @@
         "php": "^8.0|^8.1",
         "laravel/framework": "^8.75|^9.0",
         "laravel/ui": "^3.4",
-        "ralphschindler/basic-query-filter": "^0.1.0",
         "schuppo/password-strength": "^2.6",
         "spatie/laravel-permission": "^3.12"
     },
     "require-dev": {
-        "kitloong/laravel-migrations-generator": "^4.4",
-        "bpocallaghan/generators": "^5.0",
-        "diviky/code-analysis": "^1.1",
-        "mnabialek/laravel-sql-logger": "^2.2"
+        "diviky/code-analysis": "^1.1"
     },
     "suggest": {
         "portphp/csv": "^1.1",

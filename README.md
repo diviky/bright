@@ -265,6 +265,37 @@ $model = $model->except(['id']);
 
 ```
 
+# Database Filter
+
+`filter` method used to filter the database columns in query builder. it accepts `requets` object as `array`.
+
+Avaliable filters
+
+`filter[]` uses the `$builder->where($column, $value)`. uses array key as column name and value as value. ex: `filter[column]='value'`
+
+`lfilter[]` uses the `$builder->where($column, '%'.$value.'%')` with like match. uses array key as column name and value as value. ex: `lfilter[column]='value'`
+
+use the `|` notation to filter or condition. ex: `filter[comments|title]=xxx`
+use the `:` notation to filter with relation table. ex: `filter[posts:title]=xxx`
+use the `.` notation to filter the table alias in join query. ex: `filter[comments.title]=xxx`
+use the `scope[]` to filter the model scopes. ex: `scope[status]=1` will run `$builder->status(1)`
+use `parse[]` to DSL Parser for a filter query langague.
+Example queries in this language:
+
+-   `price = 100`
+-   `price != 100`
+-   `price > 100`
+-   `price < 100`
+-   `price <= 100`
+-   `price >= 100`
+-   `name =~ "brig%"`
+-   `price > 100 AND active = 1`
+-   `status = "pending" OR status = "approved"`
+-   `product.price > 100 AND category.id = 7`
+-   `name =~ "Foo%"`
+-   `created_at > "2017-01-01" and created_at < "2017-01-31"`
+-   `status = 1 AND (name = "PHP Rocks" or name = "I ♥ PHP")`
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

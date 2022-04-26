@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
-use BasicQueryFilter\Parser;
 use Diviky\Bright\Database\Filters\FilterRelation;
 use Diviky\Bright\Database\Filters\FiltersScope;
+use Diviky\Bright\Database\Filters\Ql\Parser;
 use Illuminate\Support\Str;
 
 trait Filter
@@ -130,6 +130,41 @@ trait Filter
         return $this;
     }
 
+    /**
+     * Add where condition for filters.
+     *
+     * @param string       $column
+     * @param array|string $value
+     * @param string       $condition
+     */
+    public function addWhere($column, $value, $condition = '='): self
+    {
+        if (Str::startsWith($column, ':') && $this->hasEloquent()) {
+            return $this->filterScopes([substr($column, 1) => $value]);
+        }
+
+        if (Str::contains($column, ':') && $this->hasEloquent()) {
+            (new FilterRelation($condition))($this->getEloquent(), $value, $column);
+
+            return $this;
+        }
+
+        if (Str::contains($column, '|')) {
+            $columns = \explode('|', $column);
+            $this->where(function ($query) use ($columns, $value, $condition): void {
+                foreach ($columns as $column) {
+                    $query->orWhere($this->cleanField($column), $condition, $value);
+                }
+            });
+        } elseif (is_array($value)) {
+            $this->whereIn($this->cleanField($column), $value);
+        } else {
+            $this->where($this->cleanField($column), $condition, $value);
+        }
+
+        return $this;
+    }
+
     protected function filterExact(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
@@ -154,13 +189,9 @@ trait Filter
                     $this->filterBetween([$column => $value]);
                 } elseif ('range' == $type) {
                     $this->filterRange([$column => $value]);
-                } elseif ('unixtime' == $type) {
+                } elseif ('unixtime' == $type || 'unix' == $type) {
                     $this->filterUnixTimes([$column => $value]);
-                } elseif ('unix' == $type) {
-                    $this->filterUnixTimes([$column => $value]);
-                } elseif ('datetime' == $type) {
-                    $this->filterDatetimes([$column => $value]);
-                } elseif ('timestamp' == $type) {
+                } elseif ('datetime' == $type || 'timestamp' == $type) {
                     $this->filterDatetimes([$column => $value]);
                 } elseif ('date' == $type) {
                     $this->filterDateRanges([$column => $value]);
@@ -238,16 +269,18 @@ trait Filter
 
     protected function filterScopes(array $scopes): self
     {
-        if ($this->hasEloquent()) {
-            foreach ($scopes as $scope => $values) {
-                if (empty($scope)) {
-                    continue;
-                }
+        if (!$this->hasEloquent()) {
+            return $this;
+        }
 
-                $scope = $this->aliases[$scope] ?? $scope;
-
-                (new FiltersScope())($this->getEloquent(), $values, $scope);
+        foreach ($scopes as $scope => $values) {
+            if (empty($scope)) {
+                continue;
             }
+
+            $scope = $this->aliases[$scope] ?? $scope;
+
+            (new FiltersScope())($this->getEloquent(), $values, $scope);
         }
 
         return $this;
@@ -410,45 +443,43 @@ trait Filter
     {
         foreach ($filters as $filter) {
             $parseTree = (new Parser())->parse($filter);
-            foreach ($parseTree->getPredicates() as $predicateInfo) {
-                list($combinedBy, $predicate) = $predicateInfo;
-                $op = ('=~' == $predicate->op) ? 'like' : $predicate->op;
-                if ('OR' === $combinedBy) {
-                    $this->orWhere((string) $predicate->left, $op, $predicate->right);
-                } else {
-                    $this->where((string) $predicate->left, $op, $predicate->right);
-                }
+
+            if (isset($parseTree)) {
+                $this->addParserPredicates($parseTree->getPredicates());
             }
         }
 
         return $this;
     }
 
-    /**
-     * Add where condition for filters.
-     *
-     * @param string $column
-     * @param string $value
-     * @param string $condition
-     */
-    protected function addWhere($column, $value, $condition = '='): self
+    protected function addParserPredicates(array $predicates): self
     {
-        if (Str::contains($column, ':') && $this->hasEloquent()) {
-            (new FilterRelation($condition))($this->getEloquent(), $value, $column);
+        $this->where(function ($query) use ($predicates): void {
+            foreach ($predicates as $result) {
+                if (is_array($result)) {
+                    $this->addParserPredicates($result);
+                } else {
+                    $combinedBy = $result->getCombinedBy();
+                    $predicate = $result->getPredicate();
 
-            return $this;
-        }
+                    $op = ('=~' == $predicate->op) ? 'like' : $predicate->op;
 
-        if (Str::contains($column, '|')) {
-            $columns = \explode('|', $column);
-            $this->where(function ($query) use ($columns, $value, $condition): void {
-                foreach ($columns as $column) {
-                    $query->orWhere($this->cleanField($column), $condition, $value);
+                    if (':' == $op) {
+                        $this->filterScopes([(string) $predicate->left => $predicate->right]);
+                    } elseif (':' == substr($op, 0, 1)) {
+                        if ($this->hasEloquent()) {
+                            (new FilterRelation(substr($op, 1), '.'))($this->getEloquent(), $predicate->right, (string) $predicate->left);
+                        }
+                    } else {
+                        if ('OR' === $combinedBy) {
+                            $query->orWhere($this->cleanField((string) $predicate->left), $op, $predicate->right);
+                        } else {
+                            $query->where($this->cleanField((string) $predicate->left), $op, $predicate->right);
+                        }
+                    }
                 }
-            });
-        } else {
-            $this->where($this->cleanField($column), $condition, $value);
-        }
+            }
+        });
 
         return $this;
     }
