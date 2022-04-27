@@ -17,7 +17,7 @@ trait Async
     public function async($queue = null, $connection = null)
     {
         $config = $this->asyncConfig();
-        if ($config['enable']) {
+        if (!empty($config['enable']) || !empty($config['all'])) {
             $queue = $queue ?? $config['queue'];
             $connection = $connection ?? $config['connection'];
 

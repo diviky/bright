@@ -12,6 +12,7 @@ return [
 
     'async' => [
         'enable' => env('DB_ASYNC_QUERY', false),
+        'all' => env('DB_ASYNC_QUERY_ALL', false),
         'connection' => env('DB_ASYNC_CONNECTION', 'sync'),
         'queue' => env('DB_ASYNC_QUEUE', 'sql'),
     ],
@@ -39,19 +40,19 @@ return [
     // append database based on table name
     'databases' => [
         'names' => [
-            //'table' => 'database',
+            // 'table' => 'database',
         ],
         'patterns' => [
-            //'table_*' => 'database',
+            // 'table_*' => 'database',
         ],
     ],
 
     'connections' => [
         'names' => [
-            //'table' => 'connection',
+            // 'table' => 'connection',
         ],
         'patterns' => [
-            //'table_*' => 'database',
+            // 'table_*' => 'database',
         ],
     ],
 
