@@ -69,7 +69,7 @@ trait Relations
      *
      * @return static
      */
-    public function append($keys = [])
+    public function concat($keys = [])
     {
         $relations = $this->getRelations();
         $keys = array_fill_keys($keys, 1);
