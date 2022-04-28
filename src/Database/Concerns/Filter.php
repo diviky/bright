@@ -144,9 +144,7 @@ trait Filter
         }
 
         if (Str::contains($column, ':') && $this->hasEloquent()) {
-            (new FilterRelation($condition))($this->getEloquent(), $value, $column);
-
-            return $this;
+            return $this->filterRelations([$column => $value], $condition);
         }
 
         if (Str::contains($column, '|')) {
@@ -281,6 +279,23 @@ trait Filter
             $scope = $this->aliases[$scope] ?? $scope;
 
             (new FiltersScope())($this->getEloquent(), $values, $scope);
+        }
+
+        return $this;
+    }
+
+    protected function filterRelations(array $relations, string $condition = '='): self
+    {
+        if (!$this->hasEloquent()) {
+            return $this;
+        }
+
+        foreach ($relations as $column => $values) {
+            if (empty($column)) {
+                continue;
+            }
+
+            (new FilterRelation($condition))($this->getEloquent(), $values, $column);
         }
 
         return $this;
@@ -441,8 +456,12 @@ trait Filter
 
     protected function filterParse(array $filters): self
     {
-        foreach ($filters as $filter) {
-            $parseTree = (new Parser())->parse($filter);
+        foreach ($filters as $input) {
+            if (empty($input)) {
+                continue;
+            }
+
+            $parseTree = (new Parser())->parse($input);
 
             if (isset($parseTree)) {
                 $this->addParserPredicates($parseTree->getPredicates());

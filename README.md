@@ -263,8 +263,14 @@ $model = $model->some(['id']);
 // Take except
 $model = $model->except(['id']);
 
-// Apped relation keys
-$model = $model->append(['relation.id']);
+// Append keys to attributes
+$model = $model->merge(['id' => 1]);
+
+// Apped relation keys to attributes
+$model = $model->concat(['relation.id']);
+
+// combination of merge and contact
+$model = $model->combine(['relation.id']);
 ```
 
 # Database Filter

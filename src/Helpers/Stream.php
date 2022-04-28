@@ -128,16 +128,19 @@ class Stream
      * Export as excel.
      *
      * @param array|Collection|Iterator $rows
-     * @param array|Collection|Iterator $headers
+     * @param array|Collection|Iterator $fields
+     * @param mixed                     $disposition
      *
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function excel($rows, $headers)
+    public function excel($rows, $fields, array $headers = [], $disposition = 'attachment')
     {
-        return response()->streamDownload(function () use ($rows, $headers): void {
-            $this->setHeader($headers);
+        $headers = array_merge(['X-Vapor-Base64-Encode' => 'True'], $headers);
+
+        return response()->streamDownload(function () use ($rows, $fields): void {
+            $this->setHeader($fields);
             $this->flushRows($rows);
-        }, $this->filename);
+        }, $this->filename, $headers, $disposition);
     }
 
     /**
@@ -145,14 +148,17 @@ class Stream
      *
      * @param array|Collection|Iterator $rows
      * @param array                     $fields
+     * @param string                    $disposition
      *
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function stream($rows, $fields = [])
+    public function stream($rows, $fields = [], array $headers = [], $disposition = 'attachment')
     {
+        $headers = array_merge(['X-Vapor-Base64-Encode' => 'True'], $headers);
+
         return response()->streamDownload(function () use ($rows, $fields): void {
             $this->output($rows, $fields);
-        }, $this->filename);
+        }, $this->filename, $headers, $disposition);
     }
 
     /**
@@ -251,13 +257,17 @@ class Stream
     /**
      * Clean the values.
      *
-     * @param mixed $string
+     * @param mixed $input
      */
-    protected function clean($string): string
+    protected function clean($input): string
     {
-        $string = '"' . \str_replace('"', '""', (string) $string) . '"';
+        if (is_array($input)) {
+            $input = implode(',', $input);
+        }
 
-        return \str_replace(["\n", "\t", "\r"], '', $string);
+        $input = '"' . \str_replace('"', '""', (string) $input) . '"';
+
+        return \str_replace(["\n", "\t", "\r"], '', $input);
     }
 
     /**

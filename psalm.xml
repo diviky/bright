@@ -96,12 +96,12 @@
             <errorLevel type="suppress">
                 <file name="src/Database/MySqlConnection.php"/>
                 <file name="src/Database/SQLiteConnection.php"/>
+                <file name="src/Database/Concerns/Connection.php"/>
             </errorLevel>
         </MoreSpecificReturnType>
         <ImplementedReturnTypeMismatch>
             <errorLevel type="suppress">
-                <file name="src/Database/MySqlConnection.php"/>
-                <file name="src/Database/SQLiteConnection.php"/>
+                <file name="src/Database/Concerns/Connection.php"/>
             </errorLevel>
         </ImplementedReturnTypeMismatch>
         <LessSpecificReturnStatement>

@@ -188,7 +188,7 @@ class Parser
         $identifier = new Identifier();
         $identifier->field = $this->currentToken()['value'];
         $token = $this->nextToken();
-        if (self::T_IDENTIFIER_SEPARATOR == $token['type']) {
+        if (isset($token['type']) && self::T_IDENTIFIER_SEPARATOR == $token['type']) {
             $identifier->name = $identifier->field;
             $token = $this->nextToken();
             if (self::T_IDENTIFIER !== $token['type']) {
@@ -198,11 +198,11 @@ class Parser
             $token = $this->nextToken();
         }
 
-        if (self::T_COMPARISON_OPERATOR !== $token['type']) {
+        if (!isset($token['type']) || self::T_COMPARISON_OPERATOR !== $token['type']) {
             throw new ParserException('A function name or comparison operator must follow an identifer');
         }
 
-        if (self::T_COMPARISON_OPERATOR == $token['type']) {
+        if (isset($token['type']) && self::T_COMPARISON_OPERATOR == $token['type']) {
             $operator = $token['value'];
             $token = $this->nextToken();
             $peekToken = $this->peekToken();
