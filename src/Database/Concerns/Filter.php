@@ -166,7 +166,7 @@ trait Filter
     protected function filterExact(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && '' != $value[0]) {
+            if (isset($value) && '' != $value[0] && isset($column)) {
                 $type = $this->types[$column] ?? null;
 
                 if (is_null($type)) {
@@ -207,7 +207,7 @@ trait Filter
     protected function filterLike(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if ('' != $value) {
+            if (isset($value) && '' != $value && isset($column)) {
                 $value = '%' . $value . '%';
 
                 $this->addWhere($column, $value, 'like');
@@ -220,7 +220,7 @@ trait Filter
     protected function filterLeft(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if ('' != $value) {
+            if (isset($value) && '' != $value && isset($column)) {
                 $value = '%' . $value;
                 $this->addWhere($column, $value, 'like');
             }
@@ -232,7 +232,7 @@ trait Filter
     protected function filterRight(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if ('' != $value) {
+            if (isset($value) && '' != $value && isset($column)) {
                 $value = $value . '%';
                 $this->addWhere($column, $value, 'like');
             }
@@ -245,7 +245,7 @@ trait Filter
     {
         foreach ($filters as $value => $column) {
             $value = $data[$value];
-            if ('' != $value) {
+            if (isset($value) && '' != $value && isset($column)) {
                 if (Str::startsWith('%', $column)) {
                     $value = '%' . $value;
 
