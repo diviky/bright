@@ -21,7 +21,8 @@
         "laravel/framework": "^8.75|^9.0",
         "laravel/ui": "^3.4",
         "schuppo/password-strength": "^2.6",
-        "spatie/laravel-permission": "^3.12"
+        "spatie/laravel-permission": "^3.12",
+        "matomo/decompress": "^2.1"
     },
     "require-dev": {
         "diviky/code-analysis": "^1.1"
@@ -38,7 +39,8 @@
         "geoip2/geoip2": "^2.9",
         "willdurand/geocoder": "^4.2",
         "symfony/yaml": "*",
-        "laravel/socialite": "^5.0"
+        "laravel/socialite": "^5.0",
+        "matomo/decompress": "^2.1"
     },
     "autoload": {
         "psr-4": {

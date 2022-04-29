@@ -25,10 +25,12 @@ trait Filter
      */
     protected $aliases = [];
 
-    public function filters(array $types = [], array $aliases = []): void
+    public function filters(array $types = [], array $aliases = []): self
     {
         $this->types = $types;
         $this->aliases = $aliases;
+
+        return $this;
     }
 
     /**
@@ -40,70 +42,19 @@ trait Filter
      */
     public function filter($data = []): self
     {
-        $filter = isset($data['filter']) ? $data['filter'] : null;
-        if (\is_array($filter)) {
-            $this->filterExact($filter);
-        }
-
-        $filter = isset($data['parse']) ? $data['parse'] : null;
-        if (\is_array($filter)) {
-            $this->filterParse($filter);
-        }
-
-        $filter = isset($data['dfilter']) ? $data['dfilter'] : null;
-        if (\is_array($filter)) {
-            $this->filterMatch($filter, $data);
-        }
-
-        $filter = isset($data['lfilter']) ? $data['lfilter'] : null;
-        if (\is_array($filter)) {
-            $this->filterLike($filter);
-        }
-
-        $filter = isset($data['rfilter']) ? $data['rfilter'] : null;
-        if (\is_array($filter)) {
-        }
-
-        $filter = isset($data['efilter']) ? $data['efilter'] : null;
-        if (\is_array($filter)) {
-            $this->filterLeft($filter);
-        }
-
-        $date_range = isset($data['date']) ? $data['date'] : null;
-        if (\is_array($date_range)) {
-            $this->filterDateRanges($date_range);
-        }
-
-        $datetime = isset($data['datetime']) ? $data['datetime'] : null;
-        $datetime = $datetime ?: (isset($data['timestamp']) ? $data['timestamp'] : null);
-
-        if (\is_array($datetime)) {
-            $this->filterDatetimes($datetime);
-        }
-
-        $unixtime = isset($data['unix']) ? $data['unix'] : null;
-        $unixtime = $unixtime ?: (isset($data['unixtime']) ? $data['unixtime'] : null);
-
-        if (\is_array($unixtime)) {
-            $this->filterUnixTimes($unixtime);
-        }
-
-        $ranges = isset($data['range']) ? $data['range'] : null;
-        if (\is_array($ranges)) {
-            $this->filterRange($ranges);
-        }
-
-        $between = isset($data['between']) ? $data['between'] : null;
-        if (\is_array($between)) {
-            $this->filterBetween($between);
-        }
-
-        $scopes = isset($data['scope']) ? $data['scope'] : null;
-        if (\is_array($scopes)) {
-            $this->filterScopes($scopes);
-        }
-
-        return $this;
+        return $this->filterExact($this->cleanUpFilters($data['filter'] ?? []))
+            ->filterParse($this->cleanUpFilters($data['parse'] ?? []))
+            ->filterMatch($this->cleanUpFilters($data['dfilter'] ?? []), $data)
+            ->filterLike($this->cleanUpFilters($data['lfilter'] ?? []))
+            ->filterLeft($this->cleanUpFilters($data['efilter'] ?? []))
+            ->filterDateRanges($this->cleanUpFilters($data['date'] ?? []))
+            ->filterDatetimes($this->cleanUpFilters($data['datetime'] ?? []))
+            ->filterDatetimes($this->cleanUpFilters($data['timestamp'] ?? []))
+            ->filterUnixTimes($this->cleanUpFilters($data['unix'] ?? []))
+            ->filterUnixTimes($this->cleanUpFilters($data['unixtime'] ?? []))
+            ->filterRange($this->cleanUpFilters($data['range'] ?? []))
+            ->filterBetween($this->cleanUpFilters($data['between'] ?? []))
+            ->filterScopes($this->cleanUpFilters($data['scope'] ?? []));
     }
 
     /**
@@ -163,10 +114,30 @@ trait Filter
         return $this;
     }
 
+    /**
+     * Clean the filters.
+     *
+     * @param mixed $filters
+     *
+     * @return array
+     */
+    protected function cleanUpFilters($filters)
+    {
+        if (!isset($filters)) {
+            return [];
+        }
+
+        if (!is_array($filters) || empty($filters)) {
+            return [];
+        }
+
+        return array_filter($filters);
+    }
+
     protected function filterExact(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && '' != $value[0] && isset($column)) {
+            if (isset($value) && '' != $value[0]) {
                 $type = $this->types[$column] ?? null;
 
                 if (is_null($type)) {
@@ -207,7 +178,7 @@ trait Filter
     protected function filterLike(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && '' != $value && isset($column)) {
+            if (isset($value) && '' != $value && !empty($column)) {
                 $value = '%' . $value . '%';
 
                 $this->addWhere($column, $value, 'like');
@@ -220,7 +191,7 @@ trait Filter
     protected function filterLeft(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && '' != $value && isset($column)) {
+            if (isset($value) && '' != $value && !empty($column)) {
                 $value = '%' . $value;
                 $this->addWhere($column, $value, 'like');
             }
@@ -232,7 +203,7 @@ trait Filter
     protected function filterRight(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && '' != $value && isset($column)) {
+            if (isset($value) && '' != $value && !empty($column)) {
                 $value = $value . '%';
                 $this->addWhere($column, $value, 'like');
             }
@@ -245,7 +216,7 @@ trait Filter
     {
         foreach ($filters as $value => $column) {
             $value = $data[$value];
-            if (isset($value) && '' != $value && isset($column)) {
+            if (isset($value) && '' != $value && !empty($column)) {
                 if (Str::startsWith('%', $column)) {
                     $value = '%' . $value;
 
@@ -349,12 +320,10 @@ trait Filter
             $to = $date['to'];
             $to = $to ?: $from;
 
-            $column = $this->cleanField($column);
-
             $from = $this->toTime($from, 'Y-m-d H:i:s', '00:00:00');
             $to = $this->toTime($to, 'Y-m-d H:i:s', '23:59:59');
 
-            $this->whereBetween($column, [$from, $to]);
+            $this->whereBetween($this->cleanField($column), [$from, $to]);
         }
 
         return $this;
@@ -378,7 +347,6 @@ trait Filter
             $from = isset($date['from']) ? \trim($date['from']) : null;
             $to = isset($date['to']) ? \trim($date['to']) : null;
             $to = $to ?? $from;
-            $column = $this->cleanField($column);
 
             if (!\is_numeric($from)) {
                 $from = $this->toTime($from, null, '00:00:00');
@@ -390,7 +358,7 @@ trait Filter
                 $to = $to && !is_string($to) ? $to->timestamp : null;
             }
 
-            $this->whereBetween($column, [$from, $to]);
+            $this->whereBetween($this->cleanField($column), [$from, $to]);
         }
 
         return $this;

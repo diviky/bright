@@ -97,6 +97,7 @@
                 <file name="src/Database/MySqlConnection.php"/>
                 <file name="src/Database/SQLiteConnection.php"/>
                 <file name="src/Database/Concerns/Connection.php"/>
+                <file name="src/Database/Concerns/Filter.php"/>
             </errorLevel>
         </MoreSpecificReturnType>
         <ImplementedReturnTypeMismatch>

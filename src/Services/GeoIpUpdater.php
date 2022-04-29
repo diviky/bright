@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Services;
 
+use Matomo\Decompress\Tar;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 class GeoIpUpdater
 {
     public const GEOLITE2_URL_BASE = 'https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=%s&suffix=tar.gz';
@@ -119,9 +123,9 @@ class GeoIpUpdater
      */
     protected function downloadGzipped($destinationPath, $geoDbUrl)
     {
-        $this->databaseFileGzipped = $this->getHTTPFile($geoDbUrl, ($destination = $destinationPath . DIRECTORY_SEPARATOR), $this->getDbFileName() . '.tar.gz');
+        $zipped = $this->getHTTPFile($geoDbUrl, ($destination = $destinationPath . DIRECTORY_SEPARATOR), $this->getDbFileName() . '.tar.gz');
 
-        if (!$this->databaseFileGzipped) {
+        if (!$zipped) {
             $this->addMessage("Unable to download file {$geoDbUrl} to {$destination}.");
         }
 
@@ -140,18 +144,6 @@ class GeoIpUpdater
     protected function makeDir($destinationPath)
     {
         return file_exists($destinationPath) || mkdir($destinationPath, 0770, true);
-    }
-
-    /**
-     * Remove .gzip extension from file.
-     *
-     * @param string $filePath
-     *
-     * @return mixed
-     */
-    protected function removeGzipExtension($filePath)
-    {
-        return str_replace('.gz', '', $filePath);
     }
 
     /**
@@ -205,36 +197,50 @@ class GeoIpUpdater
      */
     protected function dezipGzFile(string $filePath)
     {
-        $buffer_size = 8192; // read 8kb at a time
+        $zip = $this->getDbFileName($filePath) . '.tar.gz';
+        $out = $this->getDbFileName($filePath);
+        $sha = $this->getDbFileName($filePath) . '.sha256';
 
-        $out_file_name = $this->getDbFileName($filePath);
+        $folder = explode('  ', file_get_contents($sha))[1];
+        $folder = explode('.', $folder)[0];
 
-        $fileRead = gzopen($this->getDbFileName($filePath) . '.tar.gz', 'rb');
+        // Extracting Gzip file
+        $archive = new Tar($zip, 'gz');
 
-        $fileWrite = fopen($out_file_name, 'wb');
+        $files = $archive->extract($filePath);
 
-        if (false === $fileRead || false === $fileWrite) {
-            $this->addMessage("Unable to extract gzip file {$filePath} to {$out_file_name}.");
+        if (file_exists($zip)) {
+            unlink($zip);
+        }
+
+        if (true !== $files) {
+            $this->addMessage($archive->errorInfo());
+            $this->addMessage("Unable to extract gzip file {$filePath} to {$out}.");
 
             return false;
         }
 
-        while (!gzeof($fileRead)) {
-            $success = fwrite($fileWrite, gzread($fileRead, $buffer_size));
+        $dir = $filePath . '/' . $folder . '/';
+        copy($this->getDbFileName($dir), $out);
 
-            if (false === $success) {
-                $this->addMessage("Error degzipping file {$filePath} to {$out_file_name}.");
+        $this->cleanup($dir);
 
-                return false;
-            }
+        return $out;
+    }
+
+    protected function cleanup(string $dir): void
+    {
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($files as $fileinfo) {
+            $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
+            $todo($fileinfo->getRealPath());
         }
 
-        // Files are done, close files
-        fclose($fileWrite);
-
-        gzclose($fileRead);
-
-        return $out_file_name;
+        rmdir($dir);
     }
 
     /**
