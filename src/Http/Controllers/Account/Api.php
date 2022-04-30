@@ -32,8 +32,7 @@ class Api extends BaseController
             return [];
         }
 
-        $row = Models::user()::where('id', $user_id)
-            ->first();
+        $row = Models::user()::findOrFail($user_id);
 
         return [
             'user' => $row,

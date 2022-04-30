@@ -22,7 +22,7 @@ class Controller extends BaseController
     public function index(): array
     {
         $user_id = user('id');
-        $user = Models::user()::find($user_id);
+        $user = Models::user()::findOrFail($user_id);
 
         if ($this->isMethod('post')) {
             $this->rules([
@@ -81,7 +81,7 @@ class Controller extends BaseController
     public function password(): array
     {
         $user_id = user('id');
-        $user = Models::user()::find($user_id);
+        $user = Models::user()::findOrFail($user_id);
 
         if ($this->isMethod('post')) {
             $this->rules([
@@ -208,7 +208,7 @@ class Controller extends BaseController
         $token = Str::random(30);
 
         $user_id = user('id');
-        $user = Models::user()::find($user_id);
+        $user = Models::user()::findOrFail($user_id);
 
         $user->setAccessToken($token);
         $user->save();

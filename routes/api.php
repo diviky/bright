@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -12,29 +16,24 @@
  */
 
 Route::group([
-    'middleware' => ['api', 'auth:credentials'],
-    'prefix'     => 'api/v1',
-    'namespace'  => '\Diviky\Bright\Http\Controllers',
-], function () {
-    Route::post('login', 'Auth\Api@login');
-});
-
-Route::group([
     'middleware' => ['api'],
-    'namespace'  => '\Diviky\Bright\Http\Controllers',
-    'prefix'     => 'api/v1',
-], function () {
+    'namespace' => '\Diviky\Bright\Http\Controllers',
+    'prefix' => 'api/v1/auth',
+], function (): void {
+    Route::group([
+        'middleware' => ['auth:credentials'],
+    ], function (): void {
+        Route::post('login', 'Auth\Api@login');
+    });
+
+    Route::group([
+        'middleware' => ['rest'],
+    ], function (): void {
+        Route::post('password/change', 'Auth\Api@change');
+        Route::post('account/token/refresh', 'Account\Controller@token');
+    });
     // Password Reset Routes...
     Route::post('password/reset', 'Auth\Api@reset');
     Route::get('password/resend/{id}', 'Auth\Api@resend');
     Route::post('password/verify/{id}', 'Auth\Api@verify');
-});
-
-Route::group([
-    'middleware' => ['api', 'rest'],
-    'namespace'  => '\Diviky\Bright\Http\Controllers',
-    'prefix'     => 'api/v1',
-], function () {
-    Route::post('password/change', 'Auth\Api@change');
-    Route::post('account/token/refresh', 'Account\Controller@token');
 });

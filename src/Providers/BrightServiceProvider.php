@@ -22,6 +22,7 @@ use Diviky\Bright\Util\Util;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
 /**
@@ -50,6 +51,12 @@ class BrightServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->console($filesystem);
         }
+
+        Route::macro('health', function (string $prefix = ''): void {
+            Route::prefix($prefix)->group(__DIR__ . '/../../routes/health.php');
+        });
+
+        Route::health();
     }
 
     public function register(): void
