@@ -222,7 +222,7 @@ trait Themable
             }
         }
 
-        return $template;
+        return is_array($template) ? $template[0] : $template;
     }
 
     /**

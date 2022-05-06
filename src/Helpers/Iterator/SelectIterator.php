@@ -89,6 +89,9 @@ class SelectIterator implements Iterator
         return $this->results[$this->position];
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function key()
     {
         return $this->totalPosition;
@@ -110,7 +113,7 @@ class SelectIterator implements Iterator
     /**
      * {@inheritDoc}
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->results[$this->position]) && $this->next;
     }
