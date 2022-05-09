@@ -98,7 +98,7 @@ trait Raw
     public function updateRaw(array $values): int
     {
         foreach ($values as $key => $value) {
-            if (':' == \substr($value, 0, 1)) {
+            if (is_string($value) && ':' == \substr($value, 0, 1)) {
                 $values[$key] = $this->raw(\substr($value, 1));
             }
         }
