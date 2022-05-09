@@ -16,7 +16,7 @@ class QueryQueuedListener
     {
         $async = $event->async;
 
-        Statement::dispatch($event->sql, serialize($event->bindings))
+        Statement::dispatch($event->sql, base64_encode(serialize($event->bindings)), 2)
             ->onConnection($async[0])
             ->onQueue($async[1]);
     }

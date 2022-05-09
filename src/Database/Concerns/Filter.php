@@ -131,7 +131,9 @@ trait Filter
             return [];
         }
 
-        return array_filter($filters);
+        return array_filter($filters, function ($value) {
+            return null !== $value && false !== $value && '' !== $value;
+        });
     }
 
     protected function filterExact(array $filters = []): self

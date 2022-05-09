@@ -13,7 +13,7 @@ return [
     'async' => [
         'enable' => env('DB_ASYNC_QUERY', false),
         'all' => env('DB_ASYNC_QUERY_ALL', false),
-        'connection' => env('DB_ASYNC_CONNECTION', 'sync'),
+        'connection' => env('DB_ASYNC_CONNECTION', env('QUEUE_CONNECTION', 'sync')),
         'queue' => env('DB_ASYNC_QUEUE', 'sql'),
     ],
     /*

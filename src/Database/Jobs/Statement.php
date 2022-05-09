@@ -24,21 +24,30 @@ class Statement implements ShouldQueue
     /**
      * Statment bindings.
      *
-     * @var array|string
+     * @var string
      */
-    protected $bindings = [];
+    protected $bindings;
+
+    /**
+     * Change version.
+     *
+     * @var int
+     */
+    protected $version = 1;
 
     /**
      * Create a new job instance.
      *
      * @param string $sql
-     * @param array  $bindings
+     * @param string $bindings
      * @param mixed  $serialized
+     * @param mixed  $version
      */
-    public function __construct($sql, $bindings = [])
+    public function __construct($sql, $bindings, $version = 1)
     {
         $this->sql = $sql;
         $this->bindings = $bindings;
+        $this->version = $version;
     }
 
     /**
@@ -46,10 +55,12 @@ class Statement implements ShouldQueue
      */
     public function handle(): void
     {
-        if (is_array($this->bindings)) {
-            DB::statement($this->sql, $this->bindings);
-        } else {
-            DB::statement($this->sql, (array) unserialize($this->bindings));
+        if (2 == $this->version) {
+            DB::statement($this->sql, (array) unserialize(base64_decode($this->bindings)));
+
+            return;
         }
+
+        DB::statement($this->sql, (array) unserialize($this->bindings));
     }
 }
