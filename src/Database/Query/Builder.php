@@ -183,7 +183,7 @@ class Builder extends LaravelBuilder
 
         foreach ($this->getBindings() as $binding) {
             $value = \is_numeric($binding) ? $binding : "'" . $binding . "'";
-            $sql = \preg_replace('/\?/', $value, $sql, 1);
+            $sql = \preg_replace('/\?/', (string) $value, $sql, 1);
         }
 
         return $sql;
