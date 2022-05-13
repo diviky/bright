@@ -11,17 +11,19 @@ trait Async
      *
      * @param null|string $queue
      * @param null|string $connection
+     * @param null|string $name
      *
      * @return static
      */
-    public function async($queue = null, $connection = null)
+    public function async($name = null, $queue = null, $connection = null)
     {
         $config = $this->asyncConfig();
         if (!empty($config['enable']) || !empty($config['all'])) {
             $queue = $queue ?? $config['queue'];
             $connection = $connection ?? $config['connection'];
+            $name = $name ?? $this->getTableBaseName();
 
-            $this->connection->async($connection, $queue);
+            $this->connection->async($connection, $queue, $name);
         }
 
         return $this;

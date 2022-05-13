@@ -44,9 +44,7 @@ trait Eventable
      */
     public function eventState($event = false)
     {
-        $this->eventState = $event;
-
-        return $this;
+        return $this->es($event);
     }
 
     /**
@@ -107,6 +105,20 @@ trait Eventable
     public function getLastId()
     {
         return $this->lastId;
+    }
+
+    /**
+     * Run the query in async mode.
+     *
+     * @param array|string $events
+     *
+     * @return static
+     */
+    public function events($events = null)
+    {
+        $this->connection->events($events);
+
+        return $this;
     }
 
     /**

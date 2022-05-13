@@ -23,6 +23,13 @@ trait Connection
     protected $async;
 
     /**
+     * Async config.
+     *
+     * @var array
+     */
+    protected $query_events = [];
+
+    /**
      * Execute an SQL statement and return the boolean result.
      *
      * @param string $query
@@ -41,6 +48,10 @@ trait Connection
 
         $prefix = $this->getTablePrefix();
         $query = \str_replace('#__', $prefix, $query);
+
+        if ($this->hasEvents()) {
+            $this->fireEvents($query, $bindings);
+        }
 
         if ($this->shouldQueue()) {
             $this->toQueue($query, $bindings);
@@ -90,6 +101,10 @@ trait Connection
      */
     public function affectingStatement($query, $bindings = [])
     {
+        if ($this->hasEvents()) {
+            $this->fireEvents($query, $bindings);
+        }
+
         if ($this->shouldQueue()) {
             $this->toQueue($query, $bindings);
 
@@ -104,19 +119,40 @@ trait Connection
      *
      * @param null|string $connection
      * @param string      $queue
+     * @param null|string $name
      */
-    public function async($connection = null, $queue = null): self
+    public function async($connection = null, $queue = null, $name = null): self
     {
-        $this->async = [$connection, $queue];
+        $this->async = [$connection, $queue, $name];
 
         return $this;
     }
 
-    public function toQueue(string $query, array $bindings): void
+    public function toQueue(string $query, array $bindings): self
     {
         $async = $this->async;
         $this->async = null;
         $this->event(new QueryQueued($query, $bindings, $async));
+
+        unset($async);
+
+        return $this;
+    }
+
+    /**
+     * Run the query events mode.
+     *
+     * @param array|string $events
+     */
+    public function events($events = null): self
+    {
+        if (!is_array($events)) {
+            $events = [$events];
+        }
+
+        $this->query_events = array_merge($this->query_events, $events);
+
+        return $this;
     }
 
     /**
@@ -175,5 +211,36 @@ trait Connection
         $bright = $this->config['bright'] ?? [];
 
         return isset($bright['async']) ? $bright['async'] : [];
+    }
+
+    protected function hasEvents(): bool
+    {
+        if (!empty($this->events())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Fire the query events.
+     *
+     * @param string $query
+     * @param array  $bindings
+     */
+    protected function fireEvents($query, $bindings): self
+    {
+        $events = $this->events();
+        $this->query_events = [];
+
+        foreach ($events as $event) {
+            $event = app()->makeWith($event, ['query' => $query, 'bindings' => $bindings]);
+
+            $this->event($event);
+        }
+
+        unset($events);
+
+        return $this;
     }
 }
