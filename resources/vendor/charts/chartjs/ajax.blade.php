@@ -13,9 +13,9 @@
     function formatChartData(data)
     {
         var config = {
-            type: {!! $chart->type ? "'{$chart->type}'" : 'data[0].type' !!},
+            type: {!! $chart->type ? "'{$chart->type}'" : "(data[0] !== undefined ? data[0].type : 'bar')" !!},
             data: {
-                labels: data[0].labels,
+                labels: data[0] !== undefined ? data[0].labels : [],
                 datasets: data
             },
             options: {!! $chart->formatOptions(true) !!}
@@ -25,7 +25,7 @@
     }
 
     function {{ $chart->id }}_update(data) {
-        window.{{ $chart->id }}.data.labels = data[0].labels;
+        window.{{ $chart->id }}.data.labels = data[0] !== undefined ? data[0].labels : [];
         window.{{ $chart->id }}.data.datasets = data;
         window.{{ $chart->id }}.update();
     }

@@ -68,9 +68,9 @@ class Controller extends BaseController
         }
 
         if (empty($user->avatar)) {
-            $user->avatar = storage('avatar/avatar.png');
+            $user->avatar = disk('avatar/avatar.png');
         } else {
-            $user->avatar = storage($user->avatar);
+            $user->avatar = disk($user->avatar);
         }
 
         return [

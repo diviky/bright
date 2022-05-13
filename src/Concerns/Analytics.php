@@ -6,6 +6,33 @@ namespace Diviky\Bright\Concerns;
 
 trait Analytics
 {
+    public function getGroupFormats($column, $interval = '1d')
+    {
+        switch ($interval) {
+            case '1h':
+            case '3h':
+            case '6h':
+            case '12h':
+                return $this->getFormats($column, 'hourly');
+
+            break;
+            case '1d':
+                return $this->getFormats($column, 'daily');
+
+            break;
+            case '1w':
+                return $this->getFormats($column, 'weekly');
+
+                break;
+            case '1m':
+                return $this->getFormats($column, 'monthly');
+
+                break;
+        }
+
+        return [];
+    }
+
     /**
      * Get the sql group and date formats.
      *
@@ -28,6 +55,11 @@ trait Analytics
 
                 break;
             case 'hourly':
+                $group = ['DATE_FORMAT(' . $column . ', \'%h:%p \')'];
+                $format = 'h A';
+
+                break;
+            case 'minutes':
                 $group = ['DATE_FORMAT(' . $column . ', \'%h:%p \')'];
                 $format = 'h A';
 
@@ -87,31 +119,31 @@ trait Analytics
         $minutes = 0;
 
         switch ($interval) {
-            case '1m':
+            case '1i':
                 $group = ['created_at'];
                 $format = 'dS M h:i A';
                 $minutes = 1;
 
                 break;
-            case '5m':
+            case '5i':
                 $group = ['created_at'];
                 $format = 'dS M h:i A';
                 $minutes = 5;
 
                 break;
-            case '10m':
+            case '10i':
                 $group = ['created_at'];
                 $format = 'dS M h:i A';
                 $minutes = 10;
 
                 break;
-            case '15m':
+            case '15i':
                 $group = ['created_at'];
                 $format = 'dS M h:i A';
                 $minutes = 15;
 
                 break;
-            case '30m':
+            case '30i':
                 $group = ['created_at'];
                 $format = 'dS M h:i A';
                 $minutes = 30;
@@ -199,23 +231,23 @@ trait Analytics
     protected function getCustomRange($diff, $time): array
     {
         if ($diff <= 30) {
-            return $this->getRange('1m', $time);
+            return $this->getRange('1i', $time);
         }
 
         if ($diff <= 60) {
-            return $this->getRange('5m', $time);
+            return $this->getRange('5i', $time);
         }
 
         if ($diff <= 3 * 60) {
-            return $this->getRange('10m', $time);
+            return $this->getRange('10i', $time);
         }
 
         if ($diff <= 6 * 60) {
-            return $this->getRange('15m', $time);
+            return $this->getRange('15i', $time);
         }
 
         if ($diff <= 12 * 60) {
-            return $this->getRange('30m', $time);
+            return $this->getRange('30i', $time);
         }
 
         if ($diff <= 24 * 60) {

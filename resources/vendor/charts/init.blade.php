@@ -12,6 +12,7 @@ let {{ $chart->id }}_load = function () {
 };
 window.addEventListener("load", {{ $chart->id }}_load);
 document.addEventListener("turbolinks:load", {{ $chart->id }}_load);
+document.addEventListener("ajax:loaded", {{ $chart->id }}_load);
 
 if(window.jQuery){
     jQuery(document).ready({{ $chart->id }}_load);

@@ -65,6 +65,19 @@ trait Message
     }
 
     /**
+     * Insert message.
+     *
+     * @param mixed  $result
+     * @param string $name
+     *
+     * @return (array|int|mixed|null|string)[]
+     */
+    public function created($result = true, $name = 'row')
+    {
+        return $this->message($result, 'save', $name);
+    }
+
+    /**
      * Updated message.
      *
      * @param mixed  $result

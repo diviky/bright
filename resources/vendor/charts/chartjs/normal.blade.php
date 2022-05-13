@@ -5,7 +5,7 @@
         loader_element.parentNode.removeChild(loader_element);
         document.getElementById("{{ $chart->id }}").style.display = 'block';
         window.{{ $chart->id }} = new Chart(document.getElementById("{{ $chart->id }}").getContext("2d"), {
-            type: {!! $chart->type ? "'{$chart->type}'" : 'data[0].type' !!},
+            types: {!! $chart->type ? "'{$chart->type}'" : "(data[0] !== undefined ? data[0].type : 'bar')" !!},
             data: {
                 labels: {!! $chart->formatLabels() !!},
                 datasets: data

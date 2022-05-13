@@ -67,4 +67,20 @@ class Chart extends BaseChart
     {
         return $this->formatApiDatasets();
     }
+
+    /**
+     * @param null|int $index
+     *
+     * @return array|string
+     */
+    public function colors($index = null)
+    {
+        $colors = config('charts.default.colors');
+
+        if (is_null($index)) {
+            return $colors;
+        }
+
+        return $colors[$index];
+    }
 }

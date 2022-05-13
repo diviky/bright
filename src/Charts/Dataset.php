@@ -16,7 +16,7 @@ class Dataset extends BaseDataset
         parent::__construct($name, $type, $values);
 
         $this->options([
-            'color' => config(config('charts.default.color')),
+            'color' => config('charts.default.color'),
         ]);
 
         $this->backgroundColor(config('charts.default.colors'));
