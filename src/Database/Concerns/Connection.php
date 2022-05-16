@@ -215,7 +215,7 @@ trait Connection
 
     protected function hasEvents(): bool
     {
-        if (!empty($this->events())) {
+        if (!empty($this->query_events)) {
             return true;
         }
 
@@ -234,9 +234,11 @@ trait Connection
         $this->query_events = [];
 
         foreach ($events as $event) {
-            $event = app()->makeWith($event, ['query' => $query, 'bindings' => $bindings]);
-
-            $this->event($event);
+            if ($event instanceof \Closure) {
+                $this->event($event($query, $bindings));
+            } else {
+                $this->event(new $event($query, $bindings));
+            }
         }
 
         unset($events);
