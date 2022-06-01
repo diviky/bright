@@ -98,13 +98,13 @@ if (!function_exists('disk')) {
      *
      * @param null|string $path
      * @param null|string $disk
-     * @param null|int    $time
+     * @param null|int    $minutes
      *
      * @return null|string
      */
-    function disk($path, $disk = null, $time = null)
+    function disk($path, $disk = null, $minutes = null)
     {
-        return app(Util::class)->disk($path, $disk, $time);
+        return app(Util::class)->disk($path, $disk, $minutes);
     }
 }
 

@@ -9,6 +9,14 @@ trait Analytics
     public function getGroupFormats($column, $interval = '1d')
     {
         switch ($interval) {
+            case '1i':
+            case '5i':
+            case '10i':
+            case '15i':
+            case '30i':
+                return $this->getFormats($column, 'minutes');
+
+                break;
             case '1h':
             case '3h':
             case '6h':
@@ -28,6 +36,10 @@ trait Analytics
                 return $this->getFormats($column, 'monthly');
 
                 break;
+            default:
+                return $this->getFormats($column, 'hourly');
+
+            break;
         }
 
         return [];
@@ -81,7 +93,9 @@ trait Analytics
 
                 $diff = $start->diffInDays($end);
 
-                if ($diff < 1) {
+                dd($diff);
+
+                if ($diff <= 1) {
                     return $this->getFormats($column, 'hourly');
                 }
 
@@ -230,6 +244,10 @@ trait Analytics
      */
     protected function getCustomRange($diff, $time): array
     {
+        if ($diff <= 0) {
+            return $this->getRange('1h', $time);
+        }
+
         if ($diff <= 30) {
             return $this->getRange('1i', $time);
         }
