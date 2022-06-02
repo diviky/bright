@@ -93,8 +93,6 @@ trait Analytics
 
                 $diff = $start->diffInDays($end);
 
-                dd($diff);
-
                 if ($diff <= 1) {
                     return $this->getFormats($column, 'hourly');
                 }
