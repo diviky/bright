@@ -185,21 +185,21 @@ trait Eventable
             return $values;
         }
 
-        $this->executed = true;
+        return $this->addInsertEvent($values);
+    }
 
+    protected function addInsertEvent(array $values): array
+    {
         if (!\is_array(\reset($values))) {
             $values = [$values];
         }
 
         $tables = $this->getEventTables('insert');
 
-        foreach ($tables as $columns) {
-            if (!\is_array($columns)) {
-                $columns = [$columns => $columns];
+        foreach ($tables as $column => $field) {
+            if (\is_numeric($column)) {
+                $column = $field;
             }
-
-            $column = \key($columns);
-            $field = $columns[$column];
 
             foreach ($values as $key => $value) {
                 if (isset($value[$column])) {
@@ -225,7 +225,9 @@ trait Eventable
 
                         break;
                     default:
-                        if (app()->has($field)) {
+                        if (false !== strpos($field, 'user.')) {
+                            $value[$column] = user(ltrim($field, 'user.'));
+                        } elseif (app()->has($field)) {
                             $value[$column] = app($field);
                         }
 

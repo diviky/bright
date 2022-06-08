@@ -230,7 +230,7 @@ trait Connection
      */
     protected function fireEvents($query, $bindings): self
     {
-        $events = $this->events();
+        $events = $this->query_events;
         $this->query_events = [];
 
         foreach ($events as $event) {
