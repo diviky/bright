@@ -158,17 +158,17 @@ class Bright
                     $aliases = $this->alias . $data['alias'] . ' ' . $data['joins'] . ' ';
                 }
 
-                return 'UPDATE ' . $data['table'] . " {$aliases}SET " . $data['fields'] . ' ' . $data['conditions'] . '';
+            return 'UPDATE ' . $data['table'] . " {$aliases}SET " . $data['fields'] . ' ' . $data['conditions'] . '';
 
-                break;
+            break;
             case 'delete':
                 if (!empty($data['alias'])) {
                     $aliases = "{$this->alias}" . $data['alias'] . ' ' . $data['joins'] . ' ';
                 }
 
-                return 'DELETE ' . $data['alias'] . ' FROM ' . $data['table'] . " {$aliases} " . $data['conditions'] . ' ' . $data['limit'] . '';
+            return 'DELETE ' . $data['alias'] . ' FROM ' . $data['table'] . " {$aliases} " . $data['conditions'] . ' ' . $data['limit'] . '';
 
-                break;
+            break;
         }
 
         return null;

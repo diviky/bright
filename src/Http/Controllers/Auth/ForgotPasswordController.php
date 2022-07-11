@@ -76,6 +76,17 @@ class ForgotPasswordController extends Controller
             ]);
         }
 
+        // is token expired
+        if (isset($activation->expires_at) && $activation->expires_at->lessThan(now())) {
+            $activation->delete();
+
+            return response()->json([
+                'status' => 'ERROR',
+                'message' => 'Token Expired. Please request again',
+                'redirect' => '/password/reset',
+            ]);
+        }
+
         $user = $activation->user;
 
         $this->notifyForgotPassword($user, $activation->token);
@@ -119,6 +130,14 @@ class ForgotPasswordController extends Controller
             return response()->json([
                 'status' => 'ERROR',
                 'message' => 'Invalid verification code.',
+            ]);
+        }
+
+        // is token expired
+        if (isset($activation->expires_at) && $activation->expires_at->lessThan(now())) {
+            return response()->json([
+                'status' => 'ERROR',
+                'message' => 'Token Expired. Please request again',
             ]);
         }
 

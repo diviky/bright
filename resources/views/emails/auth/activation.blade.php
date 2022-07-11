@@ -7,5 +7,7 @@
 
 <p><strong>{{ $token }}</strong></p>
 
+If you don’t use this token within 15 minutes, it will expire.
+
 <p>Please do not reply to this mail as this is an auto-generated email.</p>
 @endcomponent

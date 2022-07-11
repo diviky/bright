@@ -23,11 +23,11 @@ trait Analytics
             case '12h':
                 return $this->getFormats($column, 'hourly');
 
-            break;
+                break;
             case '1d':
                 return $this->getFormats($column, 'daily');
 
-            break;
+                break;
             case '1w':
                 return $this->getFormats($column, 'weekly');
 
@@ -39,7 +39,7 @@ trait Analytics
             default:
                 return $this->getFormats($column, 'hourly');
 
-            break;
+                break;
         }
 
         return [];
@@ -88,30 +88,30 @@ trait Analytics
                     return $this->getFormats($column, $day);
                 }
 
-                $start = carbon($start);
-                $end = $end ? carbon($end) : $start;
+            $start = carbon($start);
+            $end = $end ? carbon($end) : $start;
 
-                $diff = $start->diffInDays($end);
+            $diff = $start->diffInDays($end);
 
-                if ($diff <= 1) {
-                    return $this->getFormats($column, 'hourly');
-                }
+            if ($diff <= 1) {
+                return $this->getFormats($column, 'hourly');
+            }
 
-                if ($diff <= 13) {
-                    return $this->getFormats($column, 'daily');
-                }
+            if ($diff <= 13) {
+                return $this->getFormats($column, 'daily');
+            }
 
-                if ($diff <= 60) {
-                    return $this->getFormats($column, 'weekly');
-                }
+            if ($diff <= 60) {
+                return $this->getFormats($column, 'weekly');
+            }
 
-                if ($diff <= 360) {
-                    return $this->getFormats($column, 'monthly');
-                }
+            if ($diff <= 360) {
+                return $this->getFormats($column, 'monthly');
+            }
 
-                return $this->getFormats($column, 'yearly');
+            return $this->getFormats($column, 'yearly');
 
-                break;
+            break;
         }
 
         return [$format, $group, $time];

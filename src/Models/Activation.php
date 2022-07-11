@@ -6,6 +6,10 @@ namespace Diviky\Bright\Models;
 
 class Activation extends Model
 {
+    protected $casts = [
+        'expires_at' => 'datetime',
+    ];
+
     /**
      * {@inheritDoc}
      */

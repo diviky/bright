@@ -65,9 +65,19 @@ class Api extends Controller
             ];
         }
 
+        // is token expired
+        if (isset($activation->expires_at) && $activation->expires_at->lessThan(now())) {
+            return [
+                'status' => 'ERROR',
+                'message' => 'Token Expired. Please request again',
+            ];
+        }
+
         $user = Models::user()::where('id', $activation->user_id)->first();
 
         $user->notify(new ForgetPassword($activation->token));
+
+        $activation->delete();
 
         return [
             'status' => 'OK',
@@ -99,6 +109,14 @@ class Api extends Controller
             return [
                 'status' => 'ERROR',
                 'message' => 'Invalid verification code.',
+            ];
+        }
+
+        // is token expired
+        if (isset($activation->expires_at) && $activation->expires_at->lessThan(now())) {
+            return [
+                'status' => 'ERROR',
+                'message' => 'Token Expired. Please request again',
             ];
         }
 

@@ -50,7 +50,8 @@ class Speed extends Capsule
             foreach ($fields as $field) {
                 $value = $save[$field][$i];
 
-                if (!empty($required)
+                if (
+                    !empty($required)
                     && \in_array($field, $required)
                     && empty($value)
                 ) {

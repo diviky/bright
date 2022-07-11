@@ -57,6 +57,14 @@ class ActivationController extends Controller
             ];
         }
 
+        // is token expired
+        if (isset($activation->expires_at) && $activation->expires_at->lessThan(now())) {
+            return [
+                'status' => 'ERROR',
+                'message' => 'Token Expired. Please request again',
+            ];
+        }
+
         event(new Verified($user));
 
         $user->status = 1;

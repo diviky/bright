@@ -79,9 +79,9 @@ trait Connection
                     return parent::statement($query, $bindings);
                 }
 
-                return $this->select($query, $bindings);
+            return $this->select($query, $bindings);
 
-                break;
+            break;
             case 'load':
                 return $this->unprepared($query);
 

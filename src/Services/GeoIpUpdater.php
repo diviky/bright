@@ -123,7 +123,7 @@ class GeoIpUpdater
      */
     protected function downloadGzipped($destinationPath, $geoDbUrl)
     {
-        $zipped = $this->getHTTPFile($geoDbUrl, ($destination = $destinationPath . DIRECTORY_SEPARATOR), $this->getDbFileName() . '.tar.gz');
+        $zipped = $this->getHTTPFile($geoDbUrl, $destination = $destinationPath . DIRECTORY_SEPARATOR, $this->getDbFileName() . '.tar.gz');
 
         if (!$zipped) {
             $this->addMessage("Unable to download file {$geoDbUrl} to {$destination}.");

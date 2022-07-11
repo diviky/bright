@@ -5,7 +5,7 @@ But don’t worry! You can use the following token to reset your password:
 
 **Verification Code: {{ $token }}**
 
-If you don’t use this token within 3 hours, it will expire.
+If you don’t use this token within 15 minutes, it will expire.
 
 Thanks,<br>
 {{ config('app.name') }}

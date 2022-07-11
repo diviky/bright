@@ -82,7 +82,7 @@ class Money implements CastsAttributes
      */
     public function from($value)
     {
-        return $this->asDecimal(($value / 10 ** $this->decimals), $this->decimals);
+        return $this->asDecimal($value / 10 ** $this->decimals, $this->decimals);
     }
 
     /**

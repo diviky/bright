@@ -127,6 +127,9 @@ class Builder extends LaravelBuilder
             }
         }
 
+        $from = $this->getTableBaseName();
+        $query = \str_replace('#from#', $this->grammar->wrapTable($from), $query);
+
         $prefix = $this->connection->getTablePrefix();
         $query = \str_replace('#__', $prefix, $query);
 
@@ -150,9 +153,9 @@ class Builder extends LaravelBuilder
                     return $this->connection->statement($query, $bindings);
                 }
 
-                return $this->connection->select($query, $bindings);
+            return $this->connection->select($query, $bindings);
 
-                break;
+            break;
             case 'load':
                 return $this->connection->unprepared($query);
 

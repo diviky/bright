@@ -24,9 +24,15 @@ grumphp:
     git_blacklist:
       keywords: [die(, var_dump(, exit;]
       metadata: { priority: 500 }
+    phplint:
+      exclude: ['vendor']
+      jobs: 10
+      short_open_tag: false
+      ignore_patterns: []
+      triggered_by: ['php', 'phtml', 'php3', 'php4', 'php5']
     phpcs:
       standard:
-        - PSR2
+        - PSR12
       whitelist_patterns: ['/^src(.*)/', '/^app(.*)/', '/^config(.*)/', '/^test(.*)/']
       ignore_patterns: ['*.blade.php']
       metadata: { priority: 400 }

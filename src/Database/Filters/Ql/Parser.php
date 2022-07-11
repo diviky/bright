@@ -73,7 +73,7 @@ class Parser
                         $logic = ParseTree::COMBINED_BY_AND;
                     }
 
-                    break;
+                break;
                 case self::T_PRECEDENCE_OPERATOR == $token['type'] && '(' == $token['value']:
                     $parseTree = $parseTree->nest();
 
@@ -175,7 +175,7 @@ class Parser
             return false;
         }
 
-        return $this->tokens[($this->tokenIndex + $increment)];
+        return $this->tokens[$this->tokenIndex + $increment];
     }
 
     /**

@@ -16,6 +16,7 @@ class CreateAuthActivationsTable extends Migration
             $table->increments('id');
             $table->foreignId('user_id')->index('activations_user_id_index');
             $table->string('token', 100)->nullable();
+            $table->timestamp('expires_at');
             $table->timestamps();
         });
     }

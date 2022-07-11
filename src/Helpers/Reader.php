@@ -78,9 +78,9 @@ class Reader
                     } else {
                         $reader = new CsvReader($file);
                     }
-                    $reader->setStrict(false);
+                $reader->setStrict(false);
 
-                    break;
+                break;
                 case '.xls':
                 case '.xlsx':
                     $finfo = new finfo(FILEINFO_MIME_TYPE);
@@ -96,7 +96,7 @@ class Reader
                         }
                     }
 
-                    break;
+                break;
             }
         } else {
             switch ($ext) {
@@ -105,13 +105,13 @@ class Reader
                         $reader = \explode("\n", $reader);
                     }
 
-                    if (!is_array($reader)) {
-                        $reader = [];
-                    }
+                if (!is_array($reader)) {
+                    $reader = [];
+                }
 
-                    $reader = new ArrayReader($reader);
+                $reader = new ArrayReader($reader);
 
-                    break;
+                break;
                 case '.generator':
                 case '.iterator':
                 default:

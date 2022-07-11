@@ -34,10 +34,13 @@ trait Token
     {
         $token = $this->generateToken();
 
-        $activation = new Activation();
-        $activation->user_id = $user->id;
-        $activation->token = $token;
-        $activation->save();
+        $values = [
+            'token' => $token,
+            'user_id' => $user->id,
+            'expires_at' => now()->addMinutes(15),
+        ];
+
+        $activation = Activation::create($values);
 
         $this->tokenId = $activation->id;
 
