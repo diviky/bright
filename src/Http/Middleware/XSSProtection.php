@@ -26,7 +26,9 @@ class XSSProtection
         $input = $request->all();
 
         array_walk_recursive($input, function (&$input): void {
-            $input = strip_tags($input);
+            if (isset($input)) {
+                $input = strip_tags($input);
+            }
         });
 
         $request->merge($input);
