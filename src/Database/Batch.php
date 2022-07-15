@@ -45,11 +45,17 @@ class Batch
     protected $path;
 
     /**
+     * @var \Illuminate\Database\Query\Builder
+     */
+    protected $builder;
+
+    /**
      * @param \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model $model
      */
     public function __construct($model)
     {
         $this->model = $model;
+        $this->builder = $model->getQuery();
         $this->values = [];
     }
 
@@ -70,6 +76,7 @@ class Batch
     public function add(array $values = []): self
     {
         $values = $this->model->make($values)->getAttributes();
+        $values = $this->builder->insertEvent($values);
 
         if ($this->bulk && $this->stream) {
             \fwrite($this->stream, \implode('[F]', $values) . '[L]');
@@ -100,7 +107,7 @@ class Batch
             $sql .= " FIELDS TERMINATED  BY '[F]' LINES TERMINATED BY '[L]'";
             $sql .= ' (' . \implode(',', $this->fields) . ') ';
 
-            return $this->model->getQuery()->statement($sql);
+            return $this->builder->statement($sql);
         }
 
         $result = true;

@@ -36,7 +36,7 @@ grumphp:
       whitelist_patterns: ['/^src(.*)/', '/^app(.*)/', '/^config(.*)/', '/^test(.*)/']
       ignore_patterns: ['*.blade.php']
       metadata: { priority: 400 }
-      exclude: ['Generic.Files.LineLength']
+      exclude: ['Generic.Files.LineLength', 'PSR2.ControlStructures.SwitchDeclaration']
     # phpstan:
     #   ignore_patterns: ['/^tests(.*)/', '/^database(.*)/', '/^config(.*)/', '/^routes(.*)/']
     #   configuration: phpstan.neon

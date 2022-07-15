@@ -121,6 +121,37 @@ trait Eventable
         return $this;
     }
 
+    public function insertEvent(array $values): array
+    {
+        if (!$this->useEvent()) {
+            return $values;
+        }
+
+        if ($this->executed) {
+            return $values;
+        }
+
+        return $this->addInsertEvent($values);
+    }
+
+    /**
+     * Update the values.
+     *
+     * @return array
+     */
+    public function updateEvent(array $values)
+    {
+        $this->atomicEvent('update');
+
+        $bright = $this->getConfig();
+
+        if (false !== $bright['timestamps']) {
+            $values = $this->setTimeStamp($values);
+        }
+
+        return $values;
+    }
+
     /**
      * Get the value of event.
      */
@@ -173,19 +204,6 @@ trait Eventable
         }
 
         return isset($tables[$from]) ? array_unique($tables[$from]) : [];
-    }
-
-    protected function insertEvent(array $values): array
-    {
-        if (!$this->useEvent()) {
-            return $values;
-        }
-
-        if ($this->executed) {
-            return $values;
-        }
-
-        return $this->addInsertEvent($values);
     }
 
     protected function addInsertEvent(array $values): array
@@ -244,24 +262,6 @@ trait Eventable
             foreach ($values as &$value) {
                 $value = $this->setTimeStamps($value);
             }
-        }
-
-        return $values;
-    }
-
-    /**
-     * Update the values.
-     *
-     * @return array
-     */
-    protected function updateEvent(array $values)
-    {
-        $this->atomicEvent('update');
-
-        $bright = $this->getConfig();
-
-        if (false !== $bright['timestamps']) {
-            $values = $this->setTimeStamp($values);
         }
 
         return $values;

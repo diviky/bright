@@ -20,7 +20,6 @@ $config = new PhpCsFixer\Config();
 
 return $config->setRules([
     '@PSR12' => true,
-    '@PHP71Migration:risky' => true,
     '@PHPUnit75Migration:risky' => true,
     '@Symfony' => true,
     '@PhpCsFixer' => true,
