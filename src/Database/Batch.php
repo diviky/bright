@@ -76,7 +76,7 @@ class Batch
     public function add(array $values = []): self
     {
         $values = $this->model->make($values)->getAttributes();
-        $values = $this->builder->insertEvent($values);
+        $values = $this->builder->insertEvent($values)[0];
 
         if ($this->bulk && $this->stream) {
             \fwrite($this->stream, \implode('[F]', $values) . '[L]');
