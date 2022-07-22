@@ -56,7 +56,19 @@ class BrightServiceProvider extends ServiceProvider
             Route::prefix($prefix)->group(__DIR__ . '/../../routes/health.php');
         });
 
+        Route::macro('upload', function (string $prefix = ''): void {
+            $as = $prefix ? $prefix . '.' : '';
+            Route::prefix($prefix)->as($as)->group(
+                function (): void {
+                    Route::post('upload/signed', '\Diviky\Bright\Http\Controllers\Upload\Controller@signed');
+                    Route::match(['post', 'put'], 'upload/files', '\Diviky\Bright\Http\Controllers\Upload\Controller@upload')->name('upload.files');
+                    Route::delete('upload/revert', '\Diviky\Bright\Http\Controllers\Upload\Controller@revert');
+                }
+            );
+        });
+
         Route::health();
+        Route::upload();
     }
 
     public function register(): void

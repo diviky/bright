@@ -670,4 +670,46 @@ function brightSystemJs() {
             }
         });
     });
+
+    $(document).on('click', '[data-pond-browse]', function () {
+        let id = $(this).data('pond-browse');
+        var ponds = window['ponds'] || [];
+        var target = ponds[id];
+        var pond;
+
+        if (!target) {
+            target = window.pond($('#' + id));
+        }
+
+        pond = target.pond;
+
+        if (!pond) {
+            $('#' + id).trigger('click');
+            return true;
+        }
+
+        pond.removeFiles();
+
+        setTimeout(() => {
+            pond.browse();
+        }, 200);
+
+        pond.onerror = function (error, file) {
+            noty({
+                type: 'error',
+                message: 'unable to upload the file',
+            });
+        };
+
+        if (target.form) {
+            pond.onprocessfiles = function (error) {
+                target.form.submit();
+            };
+
+            pond.onprocessfileprogress = function (file, percentComplete) {
+                let bar = target.form.attr('data-progress');
+                $(bar).width(percentComplete * 100 + '%');
+            };
+        }
+    });
 }
