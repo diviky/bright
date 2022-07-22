@@ -3,7 +3,7 @@ function load_app_filepond() {
         FilePond.registerPlugin(FilePondPluginFileValidateSize);
 
         var form = selector.parents('form:eq(0)');
-        var prefix = selector.attr('data-filepond-prefix') || '';
+        var prefix = selector.attr('data-upload-prefix') || '';
 
         if (prefix && typeof prefix === 'undefined') {
             prefix = '';
