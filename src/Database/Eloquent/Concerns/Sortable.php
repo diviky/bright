@@ -6,6 +6,7 @@ namespace Diviky\Bright\Database\Eloquent\Concerns;
 
 use ArrayAccess;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use InvalidArgumentException;
 
@@ -50,18 +51,24 @@ trait Sortable
         return (int) $this->buildSortQuery()->min($this->determineOrderColumnName());
     }
 
+    /**
+     * @return Builder
+     */
     public function scopeOrdered(Builder $query, string $direction = 'asc')
     {
         return $query->orderBy($this->determineOrderColumnName(), $direction);
     }
 
+    /**
+     * @param array|ArrayAccess $ids
+     */
     public static function setNewOrder($ids, int $startOrder = 1, string $primaryKeyColumn = null): void
     {
         if (!is_array($ids) && !$ids instanceof ArrayAccess) {
             throw new InvalidArgumentException('You must pass an array or ArrayAccess object to setNewOrder');
         }
 
-        $model = new static();
+        $model = new static([]);
 
         $orderColumnName = $model->determineOrderColumnName();
 
@@ -76,6 +83,9 @@ trait Sortable
         }
     }
 
+    /**
+     * @param array|ArrayAccess $ids
+     */
     public static function setNewOrderByCustomColumn(string $primaryKeyColumn, $ids, int $startOrder = 1): void
     {
         self::setNewOrder($ids, $startOrder, $primaryKeyColumn);
@@ -126,7 +136,7 @@ trait Sortable
         return $this->swapOrderWithModel($swapWithModel);
     }
 
-    public function swapOrderWithModel(Sortable $otherModel): static
+    public function swapOrderWithModel(Model $otherModel): static
     {
         $orderColumnName = $this->determineOrderColumnName();
 
@@ -141,7 +151,7 @@ trait Sortable
         return $this;
     }
 
-    public static function swapOrder(Sortable $model, Sortable $otherModel): void
+    public static function swapOrder(Model $model, Model $otherModel): void
     {
         $model->swapOrderWithModel($otherModel);
     }

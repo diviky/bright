@@ -88,30 +88,30 @@ trait Analytics
                     return $this->getFormats($column, $day);
                 }
 
-            $start = carbon($start);
-            $end = $end ? carbon($end) : $start;
+                $start = carbon($start);
+                $end = $end ? carbon($end) : $start;
 
-            $diff = $start->diffInDays($end);
+                $diff = $start->diffInDays($end);
 
-            if ($diff <= 1) {
-                return $this->getFormats($column, 'hourly');
-            }
+                if ($diff <= 1) {
+                    return $this->getFormats($column, 'hourly');
+                }
 
-            if ($diff <= 13) {
-                return $this->getFormats($column, 'daily');
-            }
+                if ($diff <= 13) {
+                    return $this->getFormats($column, 'daily');
+                }
 
-            if ($diff <= 60) {
-                return $this->getFormats($column, 'weekly');
-            }
+                if ($diff <= 60) {
+                    return $this->getFormats($column, 'weekly');
+                }
 
-            if ($diff <= 360) {
-                return $this->getFormats($column, 'monthly');
-            }
+                if ($diff <= 360) {
+                    return $this->getFormats($column, 'monthly');
+                }
 
-            return $this->getFormats($column, 'yearly');
+                return $this->getFormats($column, 'yearly');
 
-            break;
+                break;
         }
 
         return [$format, $group, $time];

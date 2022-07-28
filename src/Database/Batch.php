@@ -9,7 +9,7 @@ class Batch
     /**
      * @var array
      */
-    protected $values = [];
+    protected $attributes = [];
 
     /**
      * @var array
@@ -19,7 +19,7 @@ class Batch
     protected int $count = 0;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model
+     * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
 
@@ -50,13 +50,13 @@ class Batch
     protected $builder;
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model $model
+     * @param \Illuminate\Database\Eloquent\Builder $builder
      */
-    public function __construct($model)
+    public function __construct($builder)
     {
-        $this->model = $model;
-        $this->builder = $model->getQuery();
-        $this->values = [];
+        $this->model = $builder->getModel();
+        $this->builder = $builder->getQuery();
+        $this->attributes = [];
     }
 
     /**
@@ -73,19 +73,29 @@ class Batch
         return $this;
     }
 
-    public function add(array $values = []): self
+    public function add(array $attributes = []): self
     {
-        $values = $this->model->make($values)->getAttributes();
-        $values = $this->builder->insertEvent($values)[0];
+        $model = $this->model->make($attributes);
+        if (false === $model->fireEvent('creating')) {
+            return $this;
+        }
+
+        if ($model->usesTimestamps()) {
+            $model->updateTimestamps();
+        }
+
+        $attributes = $model->getAttributes();
+
+        $model->fireEvent('created', false);
 
         if ($this->bulk && $this->stream) {
-            \fwrite($this->stream, \implode('[F]', $values) . '[L]');
+            \fwrite($this->stream, \implode('[F]', $attributes) . '[L]');
         } else {
-            $this->values[] = $values;
+            $this->attributes[] = $attributes;
         }
 
         if (0 == $this->count) {
-            $this->fields = array_keys($values);
+            $this->fields = array_keys($attributes);
         }
 
         ++$this->count;
@@ -107,12 +117,16 @@ class Batch
             $sql .= " FIELDS TERMINATED  BY '[F]' LINES TERMINATED BY '[L]'";
             $sql .= ' (' . \implode(',', $this->fields) . ') ';
 
-            return $this->builder->statement($sql);
+            if ($this->builder->statement($sql)) {
+                return true;
+            }
+
+            return false;
         }
 
         $result = true;
-        foreach (array_chunk($this->values, $this->limit) as $values) {
-            if (!$this->model->insert($values)) {
+        foreach (array_chunk($this->attributes, $this->limit) as $attributes) {
+            if (!$this->model->es(false)->insert($attributes)) {
                 return false;
             }
         }

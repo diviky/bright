@@ -249,7 +249,7 @@ trait Eventable
                             $value[$column] = app($field);
                         }
 
-                    break;
+                        break;
                 }
 
                 $values[$key] = $value;
@@ -319,20 +319,20 @@ trait Eventable
                         $this->where($alias . $column, $user_id);
                     }
 
-                break;
+                    break;
                 case 'parent_id':
                     $parent_id = user('id');
                     if ($parent_id) {
                         $this->where($alias . $column, $parent_id);
                     }
 
-                break;
+                    break;
                 default:
                     if ($field && app()->has($field)) {
                         $this->where($alias . $column, app()->get($field));
                     }
 
-                break;
+                    break;
             }
         }
 

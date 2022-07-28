@@ -52,6 +52,10 @@ trait Cachable
             $builder->eventState($this->eventState);
         }
 
+        if (isset($this->es)) {
+            $builder->eventState($this->es);
+        }
+
         if (isset($this->rememberFor)) {
             $builder->remember($this->rememberFor);
         }

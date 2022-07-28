@@ -153,9 +153,9 @@ class Builder extends LaravelBuilder
                     return $this->connection->statement($query, $bindings);
                 }
 
-            return $this->connection->select($query, $bindings);
+                return $this->connection->select($query, $bindings);
 
-            break;
+                break;
             case 'load':
                 return $this->connection->unprepared($query);
 
