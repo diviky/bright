@@ -65,34 +65,37 @@ function load_app_filepond() {
                             filename: metadata.fileInfo.filenameWithoutExtension,
                             extension: metadata.fileInfo.fileExtension,
                             prefix: prefix,
+                            metadata: metadata,
                         }),
                     })
                         .then(function (response) {
                             return response.json();
                         })
                         .then(function (json) {
-                            file.inputs = json.inputs;
-                            // append the FormData() in the order below. Changing the order
-                            // would result in 403 bad request error response from S3.
-                            // No other fields are needed apart from these ones. Appending extra
-                            // fields to the formData would also result in error responses from S3.
-                            for (var field in file.inputs) {
-                                filepondFormData.append(field, file.inputs[field]);
-                            }
-
-                            filepondFormData.append('file', file);
-
-                            filepondRequest.upload.onprogress = function (e) {
-                                progress(e.lengthComputable, e.loaded, e.total);
-                            };
-
                             if (json.disk == 'local') {
+                                file.inputs = json.inputs;
+                                // append the FormData() in the order below. Changing the order
+                                // would result in 403 bad request error response from S3.
+                                // No other fields are needed apart from these ones. Appending extra
+                                // fields to the formData would also result in error responses from S3.
+                                for (var field in file.inputs) {
+                                    filepondFormData.append(field, file.inputs[field]);
+                                }
+
+                                filepondFormData.append('file', file, file.name);
+
                                 let token = $('meta[name="csrf-token"]').attr('content');
                                 filepondFormData.append('_token', token);
                                 filepondRequest.open('POST', json.attributes.action);
                             } else {
+                                filepondFormData.append('file', file, file.name);
                                 filepondRequest.open('PUT', json.attributes.action);
+                                filepondFormData = file;
                             }
+
+                            filepondRequest.upload.onprogress = function (e) {
+                                progress(e.lengthComputable, e.loaded, e.total);
+                            };
 
                             filepondRequest.onload = function (response) {
                                 if (filepondRequest.status >= 200 && filepondRequest.status < 300) {

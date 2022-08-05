@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use Symfony\Component\Mime\MimeTypes;
 
 class Controller extends BaseController
 {
@@ -19,19 +20,23 @@ class Controller extends BaseController
 
     public function forLocal(Request $request): JsonResponse
     {
+        $extension = $request->input('extension');
         $filename = (string) Str::uuid();
-        $filename .= '.' . $request->input('extension');
+        $filename .= '.' . $extension;
 
         $prefix = $request->input('prefix');
         $route = $prefix ? ltrim($prefix, '/') . '.upload.files' : 'upload.files';
 
-        $url = URL::temporarySignedRoute($route, now()->addMinutes(5), ['file' => $filename]);
+        $url = URL::temporarySignedRoute($route, now()->addMinutes(1), ['file' => $filename]);
+
+        $mimes = MimeTypes::getDefault()->getMimeTypes($extension);
+        $content_type = $request->input('content_type') ?: ($mimes ? $mimes[0] : null);
 
         return response()->json([
             'key' => $filename,
             'disk' => 'local',
             'headers' => [
-                'Content-Type' => $request->input('content_type') ?: 'application/octet-stream',
+                'Content-Type' => $content_type ?: 'application/octet-stream',
             ],
             'attributes' => [
                 'action' => $url,
@@ -100,8 +105,10 @@ class Controller extends BaseController
     public function forS3(Request $request): JsonResponse
     {
         $disk = config('filesystems.cloud');
+
+        $extension = $request->input('extension');
         $filename = (string) Str::uuid();
-        $filename .= '.' . $request->input('extension');
+        $filename .= '.' . $extension;
 
         $path = $this->path . '/';
 
@@ -110,14 +117,20 @@ class Controller extends BaseController
         $client = $adapter->getClient();
 
         $command = $this->createCommand($request, $client, $adapter, $path . $filename);
-        $signedRequest = $client->createPresignedRequest($command, '+5 minutes');
+        $signedRequest = $client->createPresignedRequest($command, '+1 minutes');
 
         $uri = $signedRequest->getUri();
+
+        $extension = $request->input('extension');
+        $mimes = MimeTypes::getDefault()->getMimeTypes($extension);
+        $content_type = $request->input('content_type') ?: ($mimes ? $mimes[0] : null);
 
         return response()->json([
             'key' => $filename,
             'disk' => 's3',
-            'headers' => $this->headers($request, $signedRequest),
+            'headers' => array_merge($signedRequest->getHeaders(), [
+                'Content-Type' => $content_type ?: 'application/octet-stream',
+            ]),
             'attributes' => [
                 'action' => (string) $uri,
                 'name' => $filename,
@@ -136,31 +149,18 @@ class Controller extends BaseController
      */
     protected function createCommand(Request $request, S3Client $client, AwsS3Adapter $adapter, $key)
     {
+        $extension = $request->input('extension');
+        $mimes = MimeTypes::getDefault()->getMimeTypes($extension);
+        $content_type = $request->input('content_type') ?: ($mimes ? $mimes[0] : null);
+
         return $client->getCommand('putObject', array_filter([
             'Bucket' => $adapter->getBucket(),
             'Key' => $adapter->getPathPrefix() . $key,
             'ACL' => $request->input('visibility') ?: $this->defaultVisibility(),
-            'ContentType' => $request->input('content_type') ?: 'application/octet-stream',
+            'ContentType' => $content_type ?: 'application/octet-stream',
             'CacheControl' => $request->input('cache_control') ?: null,
             'Expires' => $request->input('expires') ?: null,
         ]));
-    }
-
-    /**
-     * Get the headers that should be used when making the signed request.
-     *
-     * @param mixed $signedRequest
-     *
-     * @return array
-     */
-    protected function headers(Request $request, $signedRequest)
-    {
-        return array_merge(
-            $signedRequest->getHeaders(),
-            [
-                'Content-Type' => $request->input('content_type') ?: 'application/octet-stream',
-            ]
-        );
     }
 
     /**
