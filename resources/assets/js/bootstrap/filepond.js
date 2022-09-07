@@ -118,6 +118,13 @@ function load_app_filepond() {
                                             '" />';
                                         form.append(input);
                                     }
+
+                                    let auto = selector.attr('auto-submit');
+                                    if (auto && auto !== undefined) {
+                                        setTimeout(function () {
+                                            form.submit();
+                                        }, 2000);
+                                    }
                                 } else {
                                     error('oh no');
                                 }
@@ -168,6 +175,7 @@ function load_app_filepond() {
             var t = {
                 pond: pond,
                 form: form,
+                selector: selector,
             };
 
             window['ponds'][id] = t;

@@ -675,16 +675,17 @@ function brightSystemJs() {
         let id = $(this).data('pond-browse');
         var ponds = window['ponds'] || [];
         var target = ponds[id];
+        var selector = $('#' + id);
         var pond;
 
         if (!target) {
-            target = window.pond($('#' + id));
+            target = window.pond(selector);
         }
 
         pond = target.pond;
 
         if (!pond) {
-            $('#' + id).trigger('click');
+            selector.trigger('click');
             return true;
         }
 
@@ -702,9 +703,13 @@ function brightSystemJs() {
         };
 
         if (target.form) {
-            pond.onprocessfiles = function (error) {
-                target.form.submit();
-            };
+            let auto = selector.attr('auto-submit');
+
+            if (auto && auto == undefined) {
+                pond.onprocessfiles = function (error) {
+                    target.form.submit();
+                };
+            }
 
             pond.onprocessfileprogress = function (file, percentComplete) {
                 let bar = target.form.attr('data-progress');
