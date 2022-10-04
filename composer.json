@@ -21,7 +21,7 @@
         "laravel/framework": "^8.75|^9.0",
         "laravel/ui": "^3.4",
         "schuppo/password-strength": "^2.6",
-        "spatie/laravel-permission": "^3.12",
+        "spatie/laravel-permission": "^5.5",
         "matomo/decompress": "^2.1"
     },
     "require-dev": {
