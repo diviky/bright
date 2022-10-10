@@ -116,7 +116,7 @@ return [
     ],
 
     'money' => [
-        'decimals' => 2,
-        'currency' => 'USD',
+        'decimals' => env('BRIGHT_MONEY_DECIMALS', 2),
+        'currency' => env('BRIGHT_MONEY_CURRENCY', 'USD'),
     ],
 ];
