@@ -73,9 +73,9 @@ if (!function_exists('markdown')) {
      *
      * @param null|string $text
      *
-     * @throws \RuntimeException
-     *
      * @return null|string
+     *
+     * @throws \RuntimeException
      */
     function markdown($text)
     {

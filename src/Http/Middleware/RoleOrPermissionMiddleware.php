@@ -19,9 +19,9 @@ class RoleOrPermissionMiddleware
      * @param \Illuminate\Http\Request $request
      * @param array|string             $roleOrPermission
      *
-     * @throws UnauthorizedException
-     *
      * @return Closure
+     *
+     * @throws UnauthorizedException
      */
     public function handle($request, Closure $next, $roleOrPermission)
     {

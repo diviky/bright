@@ -15,10 +15,10 @@ class IsUserActivated
      * @param \Illuminate\Http\Request $request
      * @param null|string              $guard
      *
+     * @return mixed
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     *
-     * @return mixed
      */
     public function handle($request, Closure $next, $guard = null)
     {

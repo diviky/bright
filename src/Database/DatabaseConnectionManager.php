@@ -13,9 +13,9 @@ class DatabaseConnectionManager extends LaravelDatabaseManager
      *
      * @param string $name
      *
-     * @throws \InvalidArgumentException
-     *
      * @return array
+     *
+     * @throws \InvalidArgumentException
      */
     protected function configuration($name)
     {

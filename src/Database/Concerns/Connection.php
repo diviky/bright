@@ -161,9 +161,9 @@ trait Connection
      * @param string $query
      * @param array  $bindings
      *
-     * @throws \Illuminate\Database\QueryException
-     *
      * @return mixed
+     *
+     * @throws \Illuminate\Database\QueryException
      */
     protected function runQueryCallback($query, $bindings, Closure $callback)
     {

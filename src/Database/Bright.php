@@ -567,6 +567,7 @@ class Bright
      * @param int   $count Start the dimension count at this number
      *
      * @return int The number of dimensions in $array
+     *
      * @static
      */
     public function countDim($array = null, $all = false, $count = 0)

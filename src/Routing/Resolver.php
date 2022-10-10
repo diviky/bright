@@ -25,9 +25,9 @@ class Resolver
      * @param null|string    $namespace
      * @param bool           $singletone
      *
-     * @throws Exception
-     *
      * @return object
+     *
+     * @throws Exception
      */
     public function getHelper($name, $namespace = null, $singletone = true)
     {

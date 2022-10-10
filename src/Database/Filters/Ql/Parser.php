@@ -179,9 +179,9 @@ class Parser
     }
 
     /**
-     * @throws ParserException
-     *
      * @return Comparison
+     *
+     * @throws ParserException
      */
     protected function parsePredicate()
     {

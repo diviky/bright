@@ -163,9 +163,9 @@ class Util implements UtilInterface
      * @param null|\DateTimeInterface|string $date
      * @param null|\DateTimeZone|string      $timezone
      *
-     * @throws InvalidFormatException
-     *
      * @return \Illuminate\Support\Carbon
+     *
+     * @throws InvalidFormatException
      */
     public function utcTime($date = null, $timezone = null)
     {

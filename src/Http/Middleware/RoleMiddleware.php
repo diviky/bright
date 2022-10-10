@@ -19,9 +19,9 @@ class RoleMiddleware
      * @param \Illuminate\Http\Request $request
      * @param array|string             $role
      *
-     * @throws UnauthorizedException
-     *
      * @return Closure
+     *
+     * @throws UnauthorizedException
      */
     public function handle($request, Closure $next, $role)
     {

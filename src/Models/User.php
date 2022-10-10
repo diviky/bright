@@ -97,6 +97,7 @@ class User extends Authenticatable
      *
      * @param string      $permission
      * @param null|string $guardName
+     *
      * @SuppressWarnings(PHPMD)
      */
     public function hasPermissionTo($permission, $guardName = null): bool

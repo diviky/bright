@@ -14,9 +14,9 @@ trait BuildsQueries
      *
      * @param int $chunkSize
      *
-     * @throws \InvalidArgumentException
-     *
      * @return \Illuminate\Support\LazyCollection
+     *
+     * @throws \InvalidArgumentException
      */
     public function lazyMap($chunkSize = 1000, callable $callback = null)
     {
@@ -34,9 +34,9 @@ trait BuildsQueries
      *
      * @param int $chunkSize
      *
-     * @throws \InvalidArgumentException
-     *
      * @return \Illuminate\Support\LazyCollection
+     *
+     * @throws \InvalidArgumentException
      */
     public function flatChunk($chunkSize = 1000, callable $callback = null)
     {
@@ -49,9 +49,9 @@ trait BuildsQueries
      * @param int        $chunkSize
      * @param null|mixed $callback
      *
-     * @throws \InvalidArgumentException
-     *
      * @return \Iterator
+     *
+     * @throws \InvalidArgumentException
      */
     public function iterate($chunkSize = 10000, $callback = null)
     {
@@ -67,11 +67,11 @@ trait BuildsQueries
      *
      * @param int $chunkSize
      *
+     * @return \Iterator
+     *
      * @throws \InvalidArgumentException
      *
      * @deprecated 2.0
-     *
-     * @return \Iterator
      */
     public function iterator($chunkSize = 10000, callable $callback = null)
     {

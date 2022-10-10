@@ -35,6 +35,7 @@ class Batch
 
     /**
      * @var resource
+     *
      * @psalm-suppress
      */
     protected $stream;

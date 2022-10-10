@@ -20,9 +20,9 @@ class AuthorizeMiddleware
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @throws UnauthorizedException
-     *
      * @return Closure
+     *
+     * @throws UnauthorizedException
      */
     public function handle($request, Closure $next)
     {

@@ -17,9 +17,9 @@ class ConnectionFactory extends LaravelConnectionFactory
      * @param string        $database
      * @param string        $prefix
      *
-     * @throws \InvalidArgumentException
-     *
      * @return \Illuminate\Database\Connection
+     *
+     * @throws \InvalidArgumentException
      */
     protected function createConnection($driver, $connection, $database, $prefix = '', array $config = [])
     {

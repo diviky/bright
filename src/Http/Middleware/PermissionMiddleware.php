@@ -19,9 +19,9 @@ class PermissionMiddleware
      * @param \Illuminate\Http\Request $request
      * @param array|string             $permission
      *
-     * @throws UnauthorizedException
-     *
      * @return Closure
+     *
+     * @throws UnauthorizedException
      */
     public function handle($request, Closure $next, $permission)
     {

@@ -28,6 +28,7 @@ use wapmorgan\UnifiedArchive\UnifiedArchive;
  * Reader class to get details from iterator.
  *
  * @author sankar <sankar.suda@gmail.com>
+ *
  * @SuppressWarnings(PHPMD)
  */
 class Reader
