@@ -18,25 +18,7 @@ trait Relations
      */
     public function flatten($except = [])
     {
-        $relations = $this->getRelations();
-
-        foreach ($relations as $relation_key => $relation) {
-            if (isset($relation)) {
-                if (!in_array($relation_key, $except)) {
-                    $relation = $relation instanceof Collection ? $relation->first() : $relation;
-                    if (isset($relation)) {
-                        $attributes = $relation->getAttributes();
-                        foreach ($attributes as $key => $value) {
-                            $this->setAttribute($key, $value);
-                        }
-                    }
-                }
-
-                $this->unsetRelation($relation_key);
-            }
-        }
-
-        return $this;
+        return $this->flattenRelations($this->getRelations(), $except);
     }
 
     /**
@@ -97,10 +79,10 @@ trait Relations
         foreach ($relations as $relation_key => $relation) {
             if (isset($relation) && is_array($relation)) {
                 foreach ($relation as $key => $value) {
-                    $this->setAttribute($key, $value);
+                    $this->attributes[$key] = $value;
                 }
             } else {
-                $this->setAttribute($relation_key, $relation);
+                $this->attributes[$relation_key] = $relation;
             }
         }
 
@@ -134,22 +116,48 @@ trait Relations
             $keys = array_fill_keys($keys, 1);
         }
 
-        $relations = $this->getRelations();
+        return $this->concatRelations($this->getRelations(), $keys);
+    }
 
+    protected function concatRelations(array $relations, array $keys = [])
+    {
         foreach ($relations as $relation_key => $relation) {
             if (isset($relation)) {
                 $relation = $relation instanceof Collection ? $relation->first() : $relation;
                 if (isset($relation)) {
-                    $attributes = $relation->getAttributes();
-                    foreach ($attributes as $key => $value) {
+                    foreach ($relation->attributesToArray() as $key => $value) {
                         if (isset($keys[$relation_key . '.' . $key])) {
-                            $this->setAttribute($key, $value);
+                            $this->attributes[$key] = $value;
                         }
                     }
+
+                    $this->concatRelations($relation->getRelations());
                 }
             }
 
             $this->unsetRelation($relation_key);
+        }
+
+        return $this;
+    }
+
+    protected function flattenRelations(array $relations, array $except = [])
+    {
+        foreach ($relations as $relation_key => $relation) {
+            if (isset($relation)) {
+                if (!in_array($relation_key, $except)) {
+                    $relation = $relation instanceof Collection ? $relation->first() : $relation;
+                    if (isset($relation)) {
+                        foreach ($relation->attributesToArray() as $key => $value) {
+                            $this->attributes[$key] = $value;
+                        }
+
+                        $this->flattenRelations($relation->getRelations());
+                    }
+                }
+
+                $this->unsetRelation($relation_key);
+            }
         }
 
         return $this;
