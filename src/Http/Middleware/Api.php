@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 
@@ -90,7 +92,9 @@ class Api
                     $response->setStatusCode((int) $original['status'], $original['message'] ?? 'OK');
                 }
 
-                if (isset($original['data']) && $original['data'] instanceof ResourceCollection) {
+                if ($original['data'] instanceof LengthAwarePaginator) {
+                    $original = array_merge($original, JsonResource::collection($original['data'])->response()->getData(true));
+                } elseif ($original['data'] instanceof ResourceCollection) {
                     $original = array_merge($original, $original['data']->response()->getData(true));
                 }
 
