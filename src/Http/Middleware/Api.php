@@ -6,6 +6,7 @@ namespace Diviky\Bright\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
 
 class Api
@@ -66,24 +67,39 @@ class Api
 
         $original = $response->getOriginalContent();
 
-        if (\is_array($original) && isset($original['code'])) {
-            $code = $original['code'];
+        if (\is_array($original)) {
+            if (isset($original['errors'])) {
+                $original['code'] = 422;
+                $original['status'] = 'ERROR';
+            }
 
-            if ($code && \is_numeric($code)) {
-                if (200 == $code) {
-                    $response->setStatusCode((int) $code, 'OK');
-                } else {
-                    $response->setStatusCode((int) $code, $original['message'] ?? 'OK');
+            if (!isset($original['data'])) {
+                $original['data'] = [];
+            }
+
+            if (isset($original['code'])) {
+                $code = $original['code'];
+
+                if ($code && \is_numeric($code)) {
+                    if (200 == $code) {
+                        $response->setStatusCode((int) $code, 'OK');
+                    } else {
+                        $response->setStatusCode((int) $code, $original['message'] ?? 'OK');
+                    }
+                } elseif (\is_numeric($original['status'])) {
+                    $response->setStatusCode((int) $original['status'], $original['message'] ?? 'OK');
                 }
-            } elseif (\is_numeric($original['status'])) {
-                $response->setStatusCode((int) $original['status'], $original['message'] ?? 'OK');
-            }
 
-            if (!$this->keep_code) {
-                unset($original['code']);
-            }
+                if (isset($original['data']) && $original['data'] instanceof ResourceCollection) {
+                    $original = array_merge($original, $original['data']->response()->getData(true));
+                }
 
-            $response->setContent(\json_encode($original));
+                if (!$this->keep_code) {
+                    unset($original['code']);
+                }
+
+                $response->setContent(\json_encode($original));
+            }
         }
 
         return $response;
