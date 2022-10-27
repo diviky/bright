@@ -75,12 +75,12 @@ class Api
                 $original['status'] = 'ERROR';
             }
 
-            if (!isset($original['data'])) {
-                $original['data'] = [];
-            }
-
             if (isset($original['code'])) {
                 $code = $original['code'];
+
+                if (!isset($original['data'])) {
+                    $original['data'] = [];
+                }
 
                 if ($code && \is_numeric($code)) {
                     if (200 == $code) {

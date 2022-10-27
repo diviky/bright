@@ -20,8 +20,6 @@ class Accept
         $request->headers->set('Accept', 'application/json');
         $request->merge(['format' => 'json']);
 
-        app()->is_api_request = true;
-
         return $next($request);
     }
 }
