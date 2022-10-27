@@ -104,11 +104,9 @@ trait Relations
     /**
      * Append the relations attributes.
      *
-     * @param array $keys
-     *
      * @return static
      */
-    public function concat($keys = [])
+    public function concat(array $keys = [])
     {
         if (Arr::isAssoc($keys)) {
             $keys = array_fill_keys(array_keys($keys), 1);
@@ -119,6 +117,9 @@ trait Relations
         return $this->concatRelations($this->getRelations(), $keys);
     }
 
+    /**
+     * @return static
+     */
     protected function concatRelations(array $relations, array $keys = [])
     {
         foreach ($relations as $relation_key => $relation) {
@@ -141,6 +142,9 @@ trait Relations
         return $this;
     }
 
+    /**
+     * @return static
+     */
     protected function flattenRelations(array $relations, array $except = [])
     {
         foreach ($relations as $relation_key => $relation) {

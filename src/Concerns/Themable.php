@@ -34,7 +34,8 @@ trait Themable
     public function setUpThemeFromAction($action, ?string $component = null, array $paths = []): array
     {
         $route = $this->getRouteFromAction($action);
-        $template = $this->getThemeFromRoute($route);
+        $matches = $this->getThemeFromRoute($route);
+        $template = $this->getMatchingTheme($matches);
 
         return $this->setUpTheme($template, $component, $paths);
     }
@@ -48,7 +49,8 @@ trait Themable
      */
     public function setUpThemeFromRoute($route, ?string $component = null, array $paths = []): array
     {
-        $template = $this->getThemeFromRoute($route);
+        $matches = $this->getThemeFromRoute($route);
+        $template = $this->getMatchingTheme($matches);
 
         return $this->setUpTheme($template, $component, $paths);
     }
@@ -137,15 +139,13 @@ trait Themable
      *
      * @param string $route
      */
-    protected function getThemeFromRoute($route): ?string
+    protected function getThemeFromRoute($route): array
     {
         list($option, $view) = \explode('.', $route);
 
-        $matches = [
+        return [
             $option . '.' . $view,
         ];
-
-        return $this->getMatchingTheme($matches);
     }
 
     /**
@@ -167,16 +167,14 @@ trait Themable
      * @param string                    $component
      * @param null|string               $method
      */
-    protected function getThemeFromPrefix($route, $component, $method = null): ?string
+    protected function getThemeFromPrefix($route, $component, $method = null): array
     {
         $prefix = 'prefix:' . ltrim((string) $route->getPrefix(), '/');
         $prefix = str_replace('/', '.', $prefix);
 
-        $matches = [
+        return [
             $prefix . '.' . $component . '.' . $method,
         ];
-
-        return $this->getMatchingTheme($matches);
     }
 
     /**
@@ -184,19 +182,17 @@ trait Themable
      *
      * @param \Illuminate\Routing\Route $route
      */
-    protected function getThemeFromName($route): ?string
+    protected function getThemeFromName($route): array
     {
         $route = $route->getName();
 
         if (\is_null($route)) {
-            return null;
+            return [];
         }
 
-        $matches = [
+        return [
             'name:' . $route,
         ];
-
-        return $this->getMatchingTheme($matches);
     }
 
     /**
@@ -212,12 +208,12 @@ trait Themable
         }
 
         $template = null;
-        foreach ($matches as $match) {
-            foreach (array_keys($this->theme) as $theme) {
+        foreach (array_keys($this->theme) as $theme) {
+            foreach ($matches as $match) {
                 if (Str::is($theme, $match)) {
                     $template = $this->theme[$theme];
 
-                    break;
+                    break 2;
                 }
             }
         }
@@ -261,18 +257,14 @@ trait Themable
         $action = $route->getActionName();
 
         $route_name = $this->getRouteFromAction($action);
+        list($option, $view) = \explode('.', $route_name);
 
-        $template = $this->getThemeFromRoute($route_name);
+        $matches = [];
+        $matches = array_merge($matches, $this->getThemeFromRoute($route_name));
+        $matches = array_merge($matches, $this->getThemeFromPrefix($route, $option, $view));
+        $matches = array_merge($matches, $this->getThemeFromName($route));
 
-        if (is_null($template)) {
-            list($option, $view) = \explode('.', $route_name);
-
-            $template = $this->getThemeFromPrefix($route, $option, $view);
-        }
-
-        if (is_null($template)) {
-            $template = $this->getThemeFromName($route);
-        }
+        $template = $this->getMatchingTheme($matches);
 
         return $this->setUpTheme($template, $component, $paths);
     }
