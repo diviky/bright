@@ -132,9 +132,9 @@ function load_app_filepond() {
                             };
 
                             filepondRequest.onerror = function (response) {
-                                noty({
+                                notify({
                                     type: 'error',
-                                    message: 'unable to upload the file',
+                                    text: 'unable to upload the file',
                                 });
                             };
 

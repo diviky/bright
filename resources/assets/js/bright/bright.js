@@ -47,7 +47,7 @@ function brightJs() {
       $(e.trigger).tooltip('update');
     });
     clipboard.on('error', function(e) {
-      noty({
+    notify({
         text: 'Error!',
         type: 'info'
       });

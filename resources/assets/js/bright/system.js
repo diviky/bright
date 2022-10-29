@@ -696,9 +696,9 @@ function brightSystemJs() {
         }, 200);
 
         pond.onerror = function (error, file) {
-            noty({
+            notify({
                 type: 'error',
-                message: 'unable to upload the file',
+                text: 'unable to upload the file',
             });
         };
 
