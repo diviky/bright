@@ -5,22 +5,28 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database\Concerns;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 trait Eloquent
 {
     /**
+     * @var \Illuminate\Database\Eloquent\Model
+     */
+    protected $model;
+
+    /**
      * @var \Illuminate\Database\Eloquent\Builder
      */
-    protected $eloquent;
+    protected $builder;
 
     /**
      * Get the value of eloquent.
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function getEloquent()
+    public function getModel()
     {
-        return $this->eloquent;
+        return $this->model;
     }
 
     /**
@@ -28,21 +34,27 @@ trait Eloquent
      *
      * @return self
      */
-    public function setEloquent(Builder $eloquent)
+    public function setModel(Model $model)
     {
-        $this->eloquent = $eloquent;
+        $this->model = $model;
 
         return $this;
     }
 
-    public function hasEloquent(): bool
+    /**
+     * Set the value of eloquent.
+     *
+     * @return self
+     */
+    public function setBuilder(Builder $builder)
     {
-        if (method_exists($this, 'getModel')) {
-            $this->eloquent = $this->getModel();
+        $this->builder = $builder;
 
-            return true;
-        }
+        return $this;
+    }
 
-        return ($this->eloquent instanceof Builder) ? true : false;
+    public function hasModel(): bool
+    {
+        return ($this->model instanceof Model) ? true : false;
     }
 }

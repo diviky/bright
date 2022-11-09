@@ -11,6 +11,7 @@ use Diviky\Bright\Database\Eloquent\Concerns\Batch;
 use Diviky\Bright\Database\Eloquent\Concerns\Eventable;
 use Diviky\Bright\Database\Eloquent\Concerns\Filters;
 use Illuminate\Database\Eloquent\Builder as BaseBuilder;
+use Illuminate\Database\Eloquent\Model;
 
 class Builder extends BaseBuilder
 {
@@ -20,4 +21,30 @@ class Builder extends BaseBuilder
     use Async;
     use Batch;
     use Eventable;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setModel(Model $model)
+    {
+        $this->query->setModel($model)->setBuilder($this);
+
+        return parent::setModel($model);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRelation($name)
+    {
+        $relation = parent::getRelation($name);
+
+        $cache = $this->getQuery()->getCacheTime();
+
+        if (isset($cache) && is_numeric($cache)) {
+            $relation->getQuery()->remember($cache);
+        }
+
+        return $relation;
+    }
 }

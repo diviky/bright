@@ -90,11 +90,11 @@ trait Filter
      */
     public function addWhere($column, $value, $condition = '='): self
     {
-        if (Str::startsWith($column, ':') && $this->hasEloquent()) {
+        if (Str::startsWith($column, ':') && $this->hasModel()) {
             return $this->filterScopes([substr($column, 1) => $value]);
         }
 
-        if (Str::contains($column, ':') && $this->hasEloquent()) {
+        if (Str::contains($column, ':') && $this->hasModel()) {
             return $this->filterRelations([$column => $value], $condition);
         }
 
@@ -240,7 +240,7 @@ trait Filter
 
     protected function filterScopes(array $scopes): self
     {
-        if (!$this->hasEloquent()) {
+        if (!$this->hasModel()) {
             return $this;
         }
 
@@ -251,7 +251,7 @@ trait Filter
 
             $scope = $this->aliases[$scope] ?? $scope;
 
-            (new FiltersScope())($this->getEloquent(), $values, $scope);
+            (new FiltersScope())($this->builder, $values, $scope);
         }
 
         return $this;
@@ -259,7 +259,7 @@ trait Filter
 
     protected function filterRelations(array $relations, string $condition = '='): self
     {
-        if (!$this->hasEloquent()) {
+        if (!$this->hasModel()) {
             return $this;
         }
 
@@ -268,7 +268,7 @@ trait Filter
                 continue;
             }
 
-            (new FilterRelation($condition))($this->getEloquent(), $values, $column);
+            (new FilterRelation($condition))($this->builder, $values, $column);
         }
 
         return $this;
@@ -456,8 +456,8 @@ trait Filter
                     if (':' == $op) {
                         $this->filterScopes([(string) $predicate->left => $predicate->right]);
                     } elseif (':' == substr($op, 0, 1)) {
-                        if ($this->hasEloquent()) {
-                            (new FilterRelation(substr($op, 1), '.'))($this->getEloquent(), $predicate->right, (string) $predicate->left);
+                        if ($this->hasModel()) {
+                            (new FilterRelation(substr($op, 1), '.'))($this->builder, $predicate->right, (string) $predicate->left);
                         }
                     } else {
                         if ('OR' === $combinedBy) {

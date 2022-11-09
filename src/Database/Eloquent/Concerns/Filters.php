@@ -8,14 +8,14 @@ trait Filters
 {
     public function filter(array $data): self
     {
-        $this->query->setEloquent($this)->filter($data);
+        $this->query->filter($data);
 
         return $this;
     }
 
     public function filters(array $types = [], array $aliases = []): self
     {
-        $this->query->setEloquent($this)->filters($types, $aliases);
+        $this->query->filters($types, $aliases);
 
         return $this;
     }

@@ -55,6 +55,11 @@
                 <file name="src/Database/Filters/FiltersScope.php"/>
             </errorLevel>
         </UndefinedMethod>
+        <InvalidTemplateParam>
+            <errorLevel type="suppress">
+                <file name="src/Database/Eloquent/Builder.php"/>
+            </errorLevel>
+        </InvalidTemplateParam>
         <InvalidArrayOffset>
             <errorLevel type="suppress">
                 <file name="src/Database/Bright.php"/>

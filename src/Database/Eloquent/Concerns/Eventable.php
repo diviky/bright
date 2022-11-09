@@ -27,7 +27,7 @@ trait Eventable
      */
     public function es($event = false)
     {
-        $this->query->setEloquent($this)->es($event);
+        $this->query->es($event);
 
         return $this;
     }
@@ -41,7 +41,7 @@ trait Eventable
      */
     public function eventColumn($name)
     {
-        $this->query->setEloquent($this)->eventColumn($name);
+        $this->query->eventColumn($name);
 
         return $this;
     }
@@ -55,7 +55,7 @@ trait Eventable
      */
     public function events($events = null)
     {
-        $this->query->setEloquent($this)->events($events);
+        $this->query->events($events);
 
         return $this;
     }

@@ -18,7 +18,7 @@ trait Cachable
     /**
      * The number of seconds to cache the query.
      *
-     * @var null|DateTime|int
+     * @var null|\DateTime|int
      */
     protected $cacheSeconds;
 
@@ -48,12 +48,12 @@ trait Cachable
      *
      * @param array|string $columns
      *
-     * @return \Illuminate\Support\Collection
+     * @return array|\Illuminate\Support\Collection
      */
     public function get($columns = ['*'])
     {
-        if (!\is_null($this->cacheSeconds) && $this->cacheEnabled()) {
-            return collect($this->getCached($columns));
+        if ($this->shouldCache()) {
+            return $this->getCached($columns);
         }
 
         $this->atomicEvent('select');
@@ -64,16 +64,15 @@ trait Cachable
     /**
      * Get the values of a given key.
      *
-     * @param null|array|int|string $value
-     * @param null|string           $key
-     * @param mixed                 $column
+     * @param null|string $key
+     * @param string      $column
      *
-     * @return \Illuminate\Support\Collection
+     * @return array|\Illuminate\Support\Collection
      */
     public function pluck($column, $key = null)
     {
-        if (!\is_null($this->cacheSeconds) && $this->cacheEnabled()) {
-            return collect($this->pluckCached($column, $key));
+        if ($this->shouldCache()) {
+            return $this->pluckCached($column, $key);
         }
 
         $this->atomicEvent('select');
@@ -118,7 +117,7 @@ trait Cachable
         // If we've been given a DateTime instance or a "seconds" value that is
         // greater than zero then we'll pass it on to the remember method.
         // Otherwise we'll cache it indefinitely.
-        if ($seconds instanceof DateTime || $seconds > 0) {
+        if ($seconds instanceof \DateTime || $seconds > 0) {
             return $cache->remember($cacheKey, $seconds, $callback);
         }
 
@@ -143,7 +142,7 @@ trait Cachable
 
         $callback = $this->pluckCacheCallback($column, $key);
 
-        if ($seconds instanceof DateTime || $seconds > 0) {
+        if ($seconds instanceof \DateTime || $seconds > 0) {
             return $cache->remember($cacheKey, $seconds, $callback);
         }
 
@@ -167,6 +166,14 @@ trait Cachable
         list($this->cacheSeconds, $this->cacheKey) = [$seconds, $key];
 
         return $this;
+    }
+
+    /**
+     * @return null|\DateTime|int
+     */
+    public function getCacheTime()
+    {
+        return $this->cacheSeconds;
     }
 
     /**
@@ -351,7 +358,7 @@ trait Cachable
      *
      * @return bool
      */
-    protected function cacheEnabled()
+    protected function shouldCache()
     {
         if (\is_null($this->cacheSeconds)) {
             return false;

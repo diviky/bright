@@ -17,7 +17,7 @@ trait Async
      */
     public function async($name = null, $queue = null, $connection = null)
     {
-        $this->query->setEloquent($this)->async($name, $queue, $connection);
+        $this->query->async($name, $queue, $connection);
 
         return $this;
     }
