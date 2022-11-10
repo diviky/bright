@@ -35,10 +35,8 @@ class DatabaseManager extends LaravelDatabaseManager
         $shard_key = $config['shard_key'] ?? null;
         $shard_val = null;
 
-        if (isset($shard_key)) {
-            if (app()->has($shard_key)) {
-                $shard_val = app($shard_key);
-            }
+        if (isset($shard_key) && app()->has($shard_key)) {
+            $shard_val = app($shard_key);
         }
 
         $connection = null;

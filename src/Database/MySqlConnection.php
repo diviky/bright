@@ -11,7 +11,6 @@ use Illuminate\Database\MySqlConnection as LaravelMySqlConnection;
 
 class MySqlConnection extends LaravelMySqlConnection
 {
-    use DetectsConcurrencyErrors;
     use Connection;
 
     /**

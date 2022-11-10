@@ -2,13 +2,40 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Database;
+namespace Diviky\Bright\Database\Connectors;
 
+use Diviky\Bright\Database\MySqlConnection;
+use Diviky\Bright\Database\SQLiteConnection;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory as LaravelConnectionFactory;
 
 class ConnectionFactory extends LaravelConnectionFactory
 {
+    /**
+     * Create a connector instance based on the configuration.
+     *
+     * @return \Illuminate\Database\Connectors\ConnectorInterface
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function createConnector(array $config)
+    {
+        $key = "db.connector.{$config['driver']}";
+
+        if ($this->container->bound($key)) {
+            return $this->container->make($key);
+        }
+
+        switch ($config['driver']) {
+            case 'mysql':
+                return new MySqlConnector();
+            case 'pgsql':
+                return new PostgresConnector();
+        }
+
+        return parent::createConnector($config);
+    }
+
     /**
      * Create a new connection instance.
      *

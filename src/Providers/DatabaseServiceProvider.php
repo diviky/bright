@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Providers;
 
-use Diviky\Bright\Database\ConnectionFactory;
+use Diviky\Bright\Database\Connectors\ConnectionFactory;
 use Diviky\Bright\Database\DatabaseManager;
 use Illuminate\Support\ServiceProvider;
 
