@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Helpers\Iterator;
 
-use InvalidArgumentException;
 use Traversable;
 
 /**
@@ -19,15 +18,15 @@ class ChunkedIterator extends \IteratorIterator
     protected $chunk;
 
     /**
-     * @param Traversable $iterator  Traversable iterator
-     * @param int         $chunkSize Size to make each chunk
+     * @param \Traversable $iterator  Traversable iterator
+     * @param int          $chunkSize Size to make each chunk
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
-    public function __construct(Traversable $iterator, $chunkSize)
+    public function __construct(\Traversable $iterator, $chunkSize)
     {
         if ($chunkSize < 0) {
-            throw new InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
+            throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
         }
 
         parent::__construct($iterator);

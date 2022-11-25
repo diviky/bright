@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
-
 class ApiKey
 {
     /**
@@ -15,7 +13,7 @@ class ApiKey
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         $request->merge(['access_token' => $request->input('api_key')]);
 

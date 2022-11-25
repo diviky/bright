@@ -34,9 +34,6 @@ class EmailLogger
     /**
      * Format address strings for sender, to, cc, bcc.
      *
-     * @param $message
-     * @param $field
-     *
      * @return null|string
      */
     public function formatAddressField(\Swift_Message $message, string $field)

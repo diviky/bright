@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Eloquent\Concerns;
 
-use ArrayAccess;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use InvalidArgumentException;
 
 trait Sortable
 {
@@ -60,12 +58,12 @@ trait Sortable
     }
 
     /**
-     * @param array|ArrayAccess $ids
+     * @param array|\ArrayAccess $ids
      */
     public static function setNewOrder($ids, int $startOrder = 1, string $primaryKeyColumn = null): void
     {
-        if (!is_array($ids) && !$ids instanceof ArrayAccess) {
-            throw new InvalidArgumentException('You must pass an array or ArrayAccess object to setNewOrder');
+        if (!is_array($ids) && !$ids instanceof \ArrayAccess) {
+            throw new \InvalidArgumentException('You must pass an array or ArrayAccess object to setNewOrder');
         }
 
         $model = new static([]);
@@ -84,7 +82,7 @@ trait Sortable
     }
 
     /**
-     * @param array|ArrayAccess $ids
+     * @param array|\ArrayAccess $ids
      */
     public static function setNewOrderByCustomColumn(string $primaryKeyColumn, $ids, int $startOrder = 1): void
     {

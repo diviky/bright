@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Concerns;
 
-use Closure;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Arr;
 
@@ -128,7 +127,7 @@ trait Responsable
             } elseif ($next['intended']) {
                 $redirect = redirect()->intended($next['intended']);
             }
-        } elseif ($next instanceof Closure) {
+        } elseif ($next instanceof \Closure) {
             $redirect = $next();
         }
 

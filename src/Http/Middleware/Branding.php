@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
 use Diviky\Bright\Models\Models;
 use Illuminate\Support\Facades\View;
 
@@ -20,7 +19,7 @@ class Branding
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         $domain = $request->getHost();
 

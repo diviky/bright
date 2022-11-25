@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Notifications\Messages;
 
-use Closure;
 use Illuminate\Notifications\Messages\SlackMessage as BaseSlackMessage;
 
 class SlackMessage extends BaseSlackMessage
@@ -14,7 +13,7 @@ class SlackMessage extends BaseSlackMessage
      *
      * @return $this
      */
-    public function attachment(Closure $callback)
+    public function attachment(\Closure $callback)
     {
         $this->attachments[] = $attachment = new SlackAttachment();
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database\Concerns;
 
 use Diviky\Bright\Helpers\Iterator\SelectIterator;
-use InvalidArgumentException;
 
 trait BuildsQueries
 {
@@ -56,7 +55,7 @@ trait BuildsQueries
     public function iterate($chunkSize = 10000, $callback = null)
     {
         if ($chunkSize < 1) {
-            throw new InvalidArgumentException('The chunk size should be at least 1');
+            throw new \InvalidArgumentException('The chunk size should be at least 1');
         }
 
         return new SelectIterator($this, $chunkSize, $callback);

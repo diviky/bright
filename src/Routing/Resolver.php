@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Routing;
 
-use Closure;
 use Diviky\Bright\Concerns\CapsuleManager;
-use Exception;
 use Illuminate\Contracts\Container\Container;
 
 class Resolver
@@ -21,17 +19,17 @@ class Resolver
     /**
      * Load helper class.
      *
-     * @param Closure|string $name       Helper name
-     * @param null|string    $namespace
-     * @param bool           $singletone
+     * @param \Closure|string $name       Helper name
+     * @param null|string     $namespace
+     * @param bool            $singletone
      *
      * @return object
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function getHelper($name, $namespace = null, $singletone = true)
     {
-        if ($name instanceof Closure) {
+        if ($name instanceof \Closure) {
             return $name($this->getContainer());
         }
 
@@ -104,7 +102,7 @@ class Resolver
             }
         }
 
-        throw new Exception($helper . ' helper not found');
+        throw new \Exception($helper . ' helper not found');
     }
 
     /**

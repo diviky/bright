@@ -9,11 +9,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use ReflectionClass;
-use ReflectionException;
-use ReflectionObject;
-use ReflectionParameter;
-use ReflectionUnionType;
 
 class FiltersScope implements Filter
 {
@@ -51,10 +46,10 @@ class FiltersScope implements Filter
     protected function resolveParameters(Builder $query, $values, string $scope): array
     {
         try {
-            $parameters = (new ReflectionObject($query->getModel()))
+            $parameters = (new \ReflectionObject($query->getModel()))
                 ->getMethod('scope' . ucfirst($scope))
                 ->getParameters();
-        } catch (ReflectionException $e) {
+        } catch (\ReflectionException $e) {
             return $values;
         }
 
@@ -79,7 +74,7 @@ class FiltersScope implements Filter
         return $values;
     }
 
-    protected function getClass(ReflectionParameter $parameter): ?ReflectionClass
+    protected function getClass(\ReflectionParameter $parameter): ?\ReflectionClass
     {
         if (version_compare(PHP_VERSION, '8.0', '<')) {
             return $parameter->getClass();
@@ -91,7 +86,7 @@ class FiltersScope implements Filter
             return null;
         }
 
-        if ($type instanceof ReflectionUnionType) {
+        if ($type instanceof \ReflectionUnionType) {
             return null;
         }
 
@@ -103,6 +98,6 @@ class FiltersScope implements Filter
             return $parameter->getDeclaringClass();
         }
 
-        return new ReflectionClass($type->getName());
+        return new \ReflectionClass($type->getName());
     }
 }

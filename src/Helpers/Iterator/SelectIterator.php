@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Helpers\Iterator;
 
-use Closure;
-use InvalidArgumentException;
-use Iterator;
-
 /**
  * @author Sankar <sankar.suda@gmail.com>
  */
-class SelectIterator implements Iterator
+class SelectIterator implements \Iterator
 {
     /**
      * @var int
@@ -44,7 +40,7 @@ class SelectIterator implements Iterator
     protected $page = 1;
 
     /**
-     * @var null|Closure
+     * @var null|\Closure
      */
     protected $callback;
 
@@ -57,14 +53,14 @@ class SelectIterator implements Iterator
     /**
      * @param \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $builder
      * @param int                                                                      $chunkSize
-     * @param Closure                                                                  $callback
+     * @param \Closure                                                                 $callback
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
-    public function __construct($builder, $chunkSize, Closure $callback = null)
+    public function __construct($builder, $chunkSize, \Closure $callback = null)
     {
         if ($chunkSize < 0) {
-            throw new InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
+            throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
         }
 
         $this->chunkSize = $chunkSize;

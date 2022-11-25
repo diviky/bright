@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -28,7 +27,7 @@ class Api
      *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
-    public function handle($request, Closure $next, $keep_code = true)
+    public function handle($request, \Closure $next, $keep_code = true)
     {
         $this->keep_code = $keep_code;
         $response = $next($request);

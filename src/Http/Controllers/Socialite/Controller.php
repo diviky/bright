@@ -6,7 +6,6 @@ namespace Diviky\Bright\Http\Controllers\Socialite;
 
 use App\Http\Controllers\Controller as BaseController;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\RegistersUsers;
-use Socialite;
 
 class Controller extends BaseController
 {
@@ -21,7 +20,7 @@ class Controller extends BaseController
      */
     public function connect($provider)
     {
-        return Socialite::driver($provider)
+        return \Socialite::driver($provider)
             ->redirect();
     }
 
@@ -33,7 +32,7 @@ class Controller extends BaseController
     public function callback($provider)
     {
         try {
-            $socialite = Socialite::driver($provider)
+            $socialite = \Socialite::driver($provider)
                 ->stateless()
                 ->user();
         } catch (\Exception $e) {

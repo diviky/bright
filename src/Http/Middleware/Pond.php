@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
 use Diviky\Bright\Concerns\WithUploads;
 
 class Pond
@@ -18,7 +17,7 @@ class Pond
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         if (!$request->isMethod('POST') && !$request->isMethod('PUT')) {
             return $next($request);

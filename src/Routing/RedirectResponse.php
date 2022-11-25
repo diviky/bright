@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Diviky\Bright\Routing;
 
 use Illuminate\Http\RedirectResponse as BaseRedirectResponse;
-use InvalidArgumentException;
 
 class RedirectResponse extends BaseRedirectResponse
 {
@@ -34,7 +33,7 @@ class RedirectResponse extends BaseRedirectResponse
     public function setTargetUrl(string $url)
     {
         if ('' === $url) {
-            throw new InvalidArgumentException('Cannot redirect to an empty URL.');
+            throw new \InvalidArgumentException('Cannot redirect to an empty URL.');
         }
 
         $this->headers->set('Content-Type', 'application/json');

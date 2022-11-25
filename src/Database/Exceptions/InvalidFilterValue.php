@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Exceptions;
 
-use Exception;
-
-class InvalidFilterValue extends Exception
+class InvalidFilterValue extends \Exception
 {
     /**
      * @param string $value

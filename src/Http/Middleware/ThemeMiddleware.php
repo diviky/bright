@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
 use Diviky\Bright\Concerns\Themable;
 
 class ThemeMiddleware
@@ -18,7 +17,7 @@ class ThemeMiddleware
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         $this->setUpThemeFromRequest($request);
 

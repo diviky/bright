@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
 use Diviky\Bright\Concerns\Themable;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
@@ -19,11 +18,11 @@ class RoleOrPermissionMiddleware
      * @param \Illuminate\Http\Request $request
      * @param array|string             $roleOrPermission
      *
-     * @return Closure
+     * @return \Closure
      *
      * @throws UnauthorizedException
      */
-    public function handle($request, Closure $next, $roleOrPermission)
+    public function handle($request, \Closure $next, $roleOrPermission)
     {
         if (Auth::guest()) {
             $this->setUpThemeFromRequest($request);

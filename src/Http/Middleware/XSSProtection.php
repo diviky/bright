@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
-
 class XSSProtection
 {
     /**
@@ -17,7 +15,7 @@ class XSSProtection
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         if (!in_array(strtolower($request->method()), ['put', 'post'])) {
             return $next($request);

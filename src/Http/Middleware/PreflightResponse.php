@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
-
 class PreflightResponse
 {
     /**
@@ -13,9 +11,9 @@ class PreflightResponse
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return Closure|\Illuminate\Http\Response
+     * @return \Closure|\Illuminate\Http\Response
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         if ('OPTIONS' === $request->getMethod()) {
             $response = response('');

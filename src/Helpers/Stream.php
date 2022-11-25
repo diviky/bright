@@ -8,8 +8,6 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
-use Iterator;
-use JsonSerializable;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
@@ -90,7 +88,7 @@ class Stream
     /**
      * Set the headers file.
      *
-     * @param array|Collection|Iterator $fields
+     * @param array|Collection|\Iterator $fields
      */
     public function setHeader($fields): self
     {
@@ -127,9 +125,9 @@ class Stream
     /**
      * Export as excel.
      *
-     * @param array|Collection|Iterator $rows
-     * @param array|Collection|Iterator $fields
-     * @param mixed                     $disposition
+     * @param array|Collection|\Iterator $rows
+     * @param array|Collection|\Iterator $fields
+     * @param mixed                      $disposition
      *
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
@@ -146,9 +144,9 @@ class Stream
     /**
      * Out put the file.
      *
-     * @param array|Collection|Iterator $rows
-     * @param array                     $fields
-     * @param string                    $disposition
+     * @param array|Collection|\Iterator $rows
+     * @param array                      $fields
+     * @param string                     $disposition
      *
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
@@ -164,8 +162,8 @@ class Stream
     /**
      * Out put the file.
      *
-     * @param array|Collection|Iterator $rows
-     * @param array                     $fields
+     * @param array|Collection|\Iterator $rows
+     * @param array                      $fields
      */
     public function output($rows, $fields = []): self
     {
@@ -294,7 +292,7 @@ class Stream
     /**
      * Write multiple rows to file.
      *
-     * @param array|Collection|Iterator $rows
+     * @param array|Collection|\Iterator $rows
      */
     protected function flushRows($rows): self
     {
@@ -335,7 +333,7 @@ class Stream
     /**
      * Convert rows to array.
      *
-     * @param array|Arrayable|Collection|Iterator|JsonResource|JsonSerializable|LazyCollection|mixed $rows
+     * @param array|Arrayable|Collection|\Iterator|JsonResource|\JsonSerializable|LazyCollection|mixed $rows
      *
      * @return array
      */
@@ -356,12 +354,12 @@ class Stream
             $rows = \json_decode(\json_encode($rows), true);
         }
 
-        if ($rows instanceof JsonSerializable) {
+        if ($rows instanceof \JsonSerializable) {
             $rows = $rows->jsonSerialize();
             $rows = \json_decode(\json_encode($rows), true);
         }
 
-        if ($rows instanceof Iterator) {
+        if ($rows instanceof \Iterator) {
             $rows->rewind();
             $rows = \iterator_to_array($rows);
         }

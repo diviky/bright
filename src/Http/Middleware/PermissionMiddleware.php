@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
 use Diviky\Bright\Concerns\Themable;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Exceptions\UnauthorizedException;
@@ -19,11 +18,11 @@ class PermissionMiddleware
      * @param \Illuminate\Http\Request $request
      * @param array|string             $permission
      *
-     * @return Closure
+     * @return \Closure
      *
      * @throws UnauthorizedException
      */
-    public function handle($request, Closure $next, $permission)
+    public function handle($request, \Closure $next, $permission)
     {
         if (Auth::guest()) {
             $this->setUpThemeFromRequest($request);

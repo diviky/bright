@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
-
 class Accept
 {
     /**
@@ -15,7 +13,7 @@ class Accept
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         $request->headers->set('Accept', 'application/json');
         $request->merge(['format' => 'json']);

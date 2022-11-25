@@ -6,22 +6,16 @@ namespace Diviky\Bright\Helpers;
 
 use Diviky\Bright\Helpers\Iterator\ChunkedIterator;
 use Diviky\Bright\Helpers\Iterator\MapIterator;
-use EmptyIterator;
-use finfo;
 use Illuminate\Container\RewindableGenerator;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Iterator;
-use JsonSerializable;
-use LimitIterator;
 use Port\Csv\CsvReader;
 use Port\Excel\ExcelReader;
 use Port\Reader\ArrayReader;
 use Port\Spreadsheet\SpreadsheetReader;
-use SplFileObject;
-use Traversable;
 use wapmorgan\UnifiedArchive\UnifiedArchive;
 
 /**
@@ -36,10 +30,10 @@ class Reader
     /**
      * Fetch all the values form file.
      *
-     * @param array|Iterator|string|Traversable $reader
-     * @param array                             $options
+     * @param array|\Iterator|string|\Traversable $reader
+     * @param array                               $options
      *
-     * @return Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
+     * @return \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable
      */
     public function fetchAll($reader, callable $callable = null, $options = [])
     {
@@ -58,14 +52,14 @@ class Reader
 
         if (!$special) {
             if (!\is_file($reader) || !\file_exists($reader)) {
-                return new EmptyIterator();
+                return new \EmptyIterator();
             }
 
             $lines = ('.txt' == $ext) ? 1 : 5;
             $file = '';
 
             \ini_set('auto_detect_line_endings', 'on');
-            $file = new SplFileObject($reader);
+            $file = new \SplFileObject($reader);
             // Auto detect delimiter
             if (empty($options['delimiter'])) {
                 $options['delimiter'] = $this->detectDelimiter($reader, $lines);
@@ -84,7 +78,7 @@ class Reader
                     break;
                 case '.xls':
                 case '.xlsx':
-                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
                     $mime = $finfo->file($file->getRealPath());
 
                     if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
@@ -126,11 +120,11 @@ class Reader
     /**
      * Modify the iterator using callback closure.
      *
-     * @param Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $reader   Travarsable object
-     * @param callable                                                                                                                  $callable
-     * @param array                                                                                                                     $options
+     * @param \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable $reader   Travarsable object
+     * @param callable                                                                                                                    $callable
+     * @param array                                                                                                                       $options
      *
-     * @return Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable
+     * @return \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable
      */
     public function modify($reader, callable $callable = null, $options = [])
     {
@@ -159,9 +153,9 @@ class Reader
             $count = isset($options['total']) ? $options['total'] : null;
 
             if (null !== $count && $offset >= $count) {
-                $reader = new EmptyIterator();
+                $reader = new \EmptyIterator();
             } else {
-                $reader = new LimitIterator($reader, intval($options['offset']), intval($options['limit']));
+                $reader = new \LimitIterator($reader, intval($options['offset']), intval($options['limit']));
             }
         }
 
@@ -225,7 +219,7 @@ class Reader
     /**
      * Count the interator values.
      *
-     * @param Arrayable|Collection|Iterator|JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
+     * @param Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable $iterator Travarsable object
      */
     public function count($iterator): int
     {
@@ -241,7 +235,7 @@ class Reader
             return count($iterator->toArray());
         }
 
-        if ($iterator instanceof JsonSerializable) {
+        if ($iterator instanceof \JsonSerializable) {
             return count($iterator->jsonSerialize());
         }
 
@@ -251,7 +245,7 @@ class Reader
     /**
      * check the next row from iterator.
      *
-     * @param Arrayable|Collection|Iterator|JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|Traversable $iterator Travarsable object
+     * @param Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable $iterator Travarsable object
      *
      * @return bool
      */
@@ -265,7 +259,7 @@ class Reader
      *
      * @return array
      */
-    public function first(Traversable $iterator)
+    public function first(\Traversable $iterator)
     {
         $fields = [];
         foreach ($iterator as $row) {
@@ -277,7 +271,7 @@ class Reader
         return $fields;
     }
 
-    public function chunk(Traversable $iterator, int $size = 100): ChunkedIterator
+    public function chunk(\Traversable $iterator, int $size = 100): ChunkedIterator
     {
         return new ChunkedIterator($iterator, $size);
     }
@@ -415,7 +409,7 @@ class Reader
     /**
      * Convert rows to array.
      *
-     * @param array|Arrayable|Collection|JsonResource|JsonSerializable|LazyCollection|mixed|Traversable $rows
+     * @param array|Arrayable|Collection|JsonResource|\JsonSerializable|LazyCollection|mixed|\Traversable $rows
      *
      * @return array
      */
@@ -433,7 +427,7 @@ class Reader
             return $rows->toArray();
         }
 
-        if ($rows instanceof JsonSerializable) {
+        if ($rows instanceof \JsonSerializable) {
             return $rows->jsonSerialize();
         }
 

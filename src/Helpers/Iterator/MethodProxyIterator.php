@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Helpers\Iterator;
 
-use OuterIterator;
-
 /**
  * Proxies missing method calls to the innermost iterator.
  */
@@ -22,7 +20,7 @@ class MethodProxyIterator extends \IteratorIterator
     public function __call($name, array $args)
     {
         $i = $this->getInnerIterator();
-        while ($i instanceof OuterIterator) {
+        while ($i instanceof \OuterIterator) {
             $i = $i->getInnerIterator();
         }
 

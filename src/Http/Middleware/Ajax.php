@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Closure;
-
 class Ajax
 {
     /**
@@ -15,7 +13,7 @@ class Ajax
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, \Closure $next)
     {
         if ('iframe' == $request->input('_request')) {
             $request->headers->add(['Accept' => 'application/json']);

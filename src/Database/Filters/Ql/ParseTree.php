@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Filters\Ql;
 
-use InvalidArgumentException;
-
 class ParseTree
 {
     public const COMBINED_BY_AND = 'AND';
@@ -47,7 +45,7 @@ class ParseTree
     public function addPredicate(PredicateInterface $predicate, string $combinedBy = self::COMBINED_BY_AND): void
     {
         if (!in_array($combinedBy, [self::COMBINED_BY_AND, self::COMBINED_BY_OR, self::COMBINED_BY_IN])) {
-            throw new InvalidArgumentException('Must be combined by AND or OR or IN');
+            throw new \InvalidArgumentException('Must be combined by AND or OR or IN');
         }
 
         $this->predicates[] = new Result($predicate, $combinedBy);

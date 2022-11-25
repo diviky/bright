@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Diviky\Bright\Services;
 
 use Matomo\Decompress\Tar;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 class GeoIpUpdater
 {
@@ -230,9 +228,9 @@ class GeoIpUpdater
 
     protected function cleanup(string $dir): void
     {
-        $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
         );
 
         foreach ($files as $fileinfo) {
@@ -245,8 +243,6 @@ class GeoIpUpdater
 
     /**
      * Add a message.
-     *
-     * @param $string
      */
     protected function addMessage(string $string): void
     {

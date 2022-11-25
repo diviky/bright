@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
-use Closure;
 use Diviky\Bright\Database\Events\QueryQueued;
 use Illuminate\Database\QueryException;
 
@@ -165,7 +164,7 @@ trait Connection
      *
      * @throws \Illuminate\Database\QueryException
      */
-    protected function runQueryCallback($query, $bindings, Closure $callback)
+    protected function runQueryCallback($query, $bindings, \Closure $callback)
     {
         $attempts_count = $this->attempts_count;
 
