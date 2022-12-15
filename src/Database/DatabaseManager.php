@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database;
 
-use Diviky\Bright\Database\Sharding\ShardManager;
+use Diviky\Bright\Database\Concerns\Connector;
 use Illuminate\Database\DatabaseManager as LaravelDatabaseManager;
 use Illuminate\Database\Query\Expression;
 
 class DatabaseManager extends LaravelDatabaseManager
 {
+    use Connector;
+
     /**
      * Database table.
      *
@@ -30,85 +32,22 @@ class DatabaseManager extends LaravelDatabaseManager
             $name = $segments[0];
         }
 
-        $config = $this->app['config']['bright'];
-        $connections = $config['connections'] ?? [];
-        $shard_key = $config['shard_key'] ?? null;
-        $shard_val = null;
-
-        if (isset($shard_key) && app()->has($shard_key)) {
-            $shard_val = app($shard_key);
-        }
-
-        $connection = null;
-        if (\is_array($connections)) {
-            $patterns = $connections['patterns'] ?? [];
-
-            if (isset($connections['names']) && \is_array($connections['names']) && isset($connections['names'][$name])) {
-                $connection = $this->connection($connections['names'][$name]);
-            } elseif (\is_array($patterns)) {
-                foreach ($patterns as $pattern => $database) {
-                    if (preg_match('/^' . $pattern . '/', $name)) {
-                        if (\is_array($database)) {
-                            $database = $database[0];
-                        }
-
-                        $connection = $this->connection($database);
-
-                        break;
-                    }
-                }
-            } else {
-                $connection = $this->shard($shard_val);
-            }
-        } else {
-            $connection = $this->shard($shard_val);
-        }
-
-        if (is_null($connection)) {
-            $connection = $this->connection();
-        }
-
-        $connection->getQueryGrammar()->setConfig($config);
-
-        return $connection->table($name . $alias);
+        return $this->getConnectionByTable($name)->table($name . $alias);
     }
 
     /**
-     * Get a database connection instance from shard.
+     * Get a database connection instance.
      *
-     * @param null|string $shard_key
+     * @return \Illuminate\Database\Connection
      */
-    public function shard($shard_key = null): \Illuminate\Database\Connection
+    protected function getConnectionByTable(string $name)
     {
-        $manager = $this->getShardManager();
+        list($connection, $config) = $this->getConnectionDetails($name);
 
-        if ($manager) {
-            $shard_key = $shard_key ?? user('id');
-            $connection = $shard_key ? $manager->getShardById($shard_key) : null;
-            if ($connection) {
-                $config = $manager->getShardConfig();
-                $connection = $this->connection($connection);
-                $connection->getQueryGrammar()->setConfig($config['connection']);
+        $connection = $this->connection($connection);
+        $connection->getQueryGrammar()->setConfig($config);
 
-                return $connection;
-            }
-        }
-
-        return $this->connection();
-    }
-
-    public function getShardManager(): ?ShardManager
-    {
-        $config = $this->app['config']['bright'];
-
-        if (!empty($config['sharding'])) {
-            $manager = $this->app['bright.shardmanager'];
-            $manager->setService($config['sharding']);
-
-            return $manager;
-        }
-
-        return null;
+        return $connection;
     }
 
     /**
@@ -124,7 +63,7 @@ class DatabaseManager extends LaravelDatabaseManager
     {
         $config = parent::configuration($name);
 
-        $config['bright'] = $this->app['config']['bright'];
+        $config['bright'] = $this->getBrightConfig();
 
         return $config;
     }

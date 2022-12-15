@@ -49,11 +49,11 @@ trait Cachable
         $builder->timestamps(false);
 
         if (isset($this->eventState)) {
-            $builder->eventState($this->eventState);
+            $builder->es($this->eventState);
         }
 
         if (isset($this->es)) {
-            $builder->eventState($this->es);
+            $builder->es($this->es);
         }
 
         if (isset($this->rememberFor)) {

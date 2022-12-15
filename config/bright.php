@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 return [
-    // | Sharding service config name
+    // Sharding service config name
     'sharding' => env('BRIGHT_SHARDING', null),
 
     'timestamps' => env('BRIGHT_TIMESTAMPS', false),
+
+    'db_events' => env('DB_EVENTS', true),
 
     'db_cache' => env('DB_CACHE', false),
 

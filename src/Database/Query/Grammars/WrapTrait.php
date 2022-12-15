@@ -50,7 +50,7 @@ trait WrapTrait
 
         $table = preg_replace('/^' . $this->tablePrefix . '/', '', $table);
 
-        $databases = $this->config['databases'];
+        $databases = $this->config['databases'] ?? [];
         if (\is_array($databases)) {
             if (isset($databases['names']) && \is_array($databases['names']) && isset($databases['names'][$table])) {
                 return $this->wrap($databases['names'][$table]) . '.' . $this->wrap($this->tablePrefix . $table . $alias, true);

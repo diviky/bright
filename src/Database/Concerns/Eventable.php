@@ -157,6 +157,12 @@ trait Eventable
      */
     protected function useEvent(): bool
     {
+        $bright = $this->getConfig();
+
+        if (isset($bright['db_events']) && false == $bright['db_events']) {
+            return false;
+        }
+
         return $this->eventState;
     }
 
@@ -314,16 +320,10 @@ trait Eventable
 
             switch ($column) {
                 case 'user_id':
+                case 'parent_id':
                     $user_id = user('id');
                     if ($user_id) {
                         $this->where($alias . $column, $user_id);
-                    }
-
-                    break;
-                case 'parent_id':
-                    $parent_id = user('id');
-                    if ($parent_id) {
-                        $this->where($alias . $column, $parent_id);
                     }
 
                     break;

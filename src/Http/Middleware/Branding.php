@@ -24,7 +24,7 @@ class Branding
         $domain = $request->getHost();
 
         $row = Models::branding()::where('domain', $domain)
-            ->eventState(false)
+            ->es(false)
             ->first();
 
         if (\is_null($row)) {
