@@ -101,8 +101,10 @@ class FilterRelation implements Filter
     {
         [$relation, $property] = collect(explode($this->separator, $property))
             ->pipe(function (Collection $parts) {
+                $parts->pop();
+
                 return [
-                    $parts->except(count($parts) - 1)->map([Str::class, 'camel'])->implode('.'),
+                    $parts->except($parts->all())->map([Str::class, 'camel'])->implode('.'),
                     $parts->last(),
                 ];
             });
