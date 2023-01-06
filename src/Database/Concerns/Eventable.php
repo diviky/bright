@@ -124,11 +124,11 @@ trait Eventable
     public function insertEvent(array $values): array
     {
         if (!$this->useEvent()) {
-            return $values;
+            return [$values];
         }
 
         if ($this->executed) {
-            return $values;
+            return [$values];
         }
 
         return $this->addInsertEvent($values);
