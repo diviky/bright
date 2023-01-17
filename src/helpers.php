@@ -63,7 +63,7 @@ if (!function_exists('ip')) {
     {
         $request = \request();
 
-        return $request ? $request->ip() : null;
+        return $request->ip();
     }
 }
 
