@@ -268,7 +268,7 @@ trait Filter
                 continue;
             }
 
-            (new FilterRelation($condition))($this->builder, $values, $column);
+            (new FilterRelation($condition, ':'))($this->builder, $values, $column);
         }
 
         return $this;

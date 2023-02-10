@@ -12,13 +12,6 @@
     php artisan bright:setup
 ```
 
-Query builder needs to overwrite with bright
-
-```php
-sed -i '' 's/use Illuminate\\Database\\Query\\Builder/use Diviky\\Bright\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
-
-```
-
 ```php
     php artisan vendor:publish --tag="bright-config"
     php artisan vendor:publish --tag="bright-assets"
@@ -36,11 +29,215 @@ sed -i '' 's/use Illuminate\\Database\\Query\\Builder/use Diviky\\Bright\\Databa
     npm install bootstrap --save
 ```
 
-add in kernal.php route middleware
+##### Filter the query with input values
 
 ```php
-// $middleware
-    \Diviky\Bright\Http\Middleware\PreflightResponse::class,
+
+$filters = [];
+// $query->whereRaw('date(created_at) = ?', ['2019-10-12'])
+$filters[] = ['date[created_at]' => date('Y-m-d')];
+
+// $query->whereDateBetween('created_at between ? and ? ', ['2019-10-12', '2019-10-22'])
+$filters[] = ['range[created_at]' => date('Y-m-d') .' - '. date('Y-m-d')];
+
+// $query->whereBetween('created between ? and ? ', [strtotime('-1 day'), time()])
+$filters[] = ['timestamp[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
+
+//
+$filters[] = ['unixtime[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
+$filters[] = ['between[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
+
+$filters[] = ['filter[name]' => 'bright']; // $query->where('name', '=', 'bright')
+$filters[] = ['filter[first_name|last_name]' => 'bright']; // $query->where('first_name', '=', 'bright')->orWhere()
+$filters[] = ['lfilter[name]' => 'bright']; // $query->where('name', 'like', '%bright%')
+$filters[] = ['rfilter[name]' => 'bright']; // $query->where('name', 'like', 'bright%')
+$filters[] = ['efilter[name]' => 'bright']; // $query->where('name', 'like', '%bright')
+
+$rows = DB::table('users')
+    ->filter($filters)
+    ->get();
+
+```
+
+# Database Filter
+
+`filter` method used to filter the database columns in query builder. it accepts `requets` object as `array`.
+
+Avaliable filters
+
+`filter[]` uses the `$builder->where($column, $value)`. uses array key as column name and value as value. ex: `filter[column]='value'`
+
+`lfilter[]` uses the `$builder->where($column, '%'.$value.'%')` with like match. uses array key as column name and value as value. ex: `lfilter[column]='value'`
+
+use the `|` notation to filter or condition. ex: `filter[comments|title]=xxx`
+use the `:` notation to filter with relation table. ex: `filter[posts:title]=xxx`
+use the `.` notation to filter the table alias in join query. ex: `filter[comments.title]=xxx`
+use the `scope[]` to filter the model scopes. ex: `scope[status]=1` will run `$builder->status(1)`
+use `parse[]` to DSL Parser for a filter query langague.
+Example queries in this language:
+
+-   `price = 100`
+-   `price != 100`
+-   `price > 100`
+-   `price < 100`
+-   `price <= 100`
+-   `price >= 100`
+-   `name =~ "brig%"`
+-   `price > 100 AND active = 1`
+-   `status = "pending" OR status = "approved"`
+-   `product.price > 100 AND category.id = 7`
+-   `product:price > 100 AND category:id = 7`
+-   `name =~ "Foo%"`
+-   `created_at > "2017-01-01" and created_at < "2017-01-31"`
+-   `status = 1 AND (name = "PHP Rocks" or name = "I ♥ PHP")`
+
+## Model Relations
+
+Return single model with merged attributes from relations
+
+## flattern
+
+The `flattern($except, $exlcude)` method merge the key and values of releations into primary model attributes and return the combines attributes. Releation keys will overwrite the primary keys if they are same.
+
+```php
+use App\Models\User;
+
+$rows = Book::with('author')->get();
+
+$rows->transform(function($row) {
+    return $row->flattern();
+});
+
+```
+
+## flat
+
+The `flat($except, $exlcude)` method merge the key and values of releations into primary model attributes and return the combines attributes.
+
+```php
+use App\Models\User;
+
+$rows = Book::with('author')->get();
+
+$rows->transform(function($row) {
+    return $row->flat();
+});
+
+```
+
+## some
+
+The `some($keys)` method get few keys from the relationships and primary model.
+
+```php
+use App\Models\User;
+
+$rows = Book::with('author')->get();
+
+$rows->transform(function($row) {
+    return $row->some(['id', 'author.name']);
+});
+
+```
+
+## except
+
+The `except($keys)` method get few keys from the relationships and primary model.
+
+```php
+use App\Models\User;
+
+$rows = Book::with('author')->get();
+
+$rows->transform(function($row) {
+    return $row->except(['author.id']);
+});
+
+```
+
+## merge
+
+The `merge($keys)` method add additional key value pairs to model attributes.
+
+```php
+use App\Models\User;
+
+$rows = Book::with('author')->get();
+
+$rows->transform(function($row) {
+    return $row->merge(['extra' => 'value']);
+});
+
+```
+
+## concat
+
+The `concat($keys)` method add relations key values to attributes.
+
+```php
+use App\Models\User;
+
+$rows = Book::with('author')->get();
+
+$rows->transform(function($row) {
+    return $row->concat(['author.id','author.name']);
+});
+
+```
+
+## combine
+
+The `combine($keys)` method to merge and contact the releations and attributes.
+
+```php
+use App\Models\User;
+
+$rows = Book::with('author')->get();
+
+$rows->transform(function($row) {
+    return $row->combine(['author.id', 'author.name']);
+});
+
+```
+
+# Eloquent: Collections
+
+## flatterns
+
+The `flatterns($except, $exlcude)` method merge the key and values of releations into primary model attributes and return the combines attributes. Releation keys will overwrite the primary keys if they are same.
+
+```php
+use App\Models\User;
+
+$books = Book::with('author')->get();
+
+$books = $books->flatterns($except, $exclude);
+
+```
+
+## flats
+
+The `flats($except, $exlcude)` method merge the key and values of releations into primary model attributes and return the combines attributes.
+
+```php
+use App\Models\User;
+
+$books = Book::with('author')->get();
+
+$books = $books->flats($except, $exclude);
+
+```
+
+## few
+
+The `few($keys)` method get few keys from the relationships and primary model.
+
+```php
+use App\Models\User;
+
+$books = Book::with('author')->get();
+
+$books = $books->few(['id', 'author.name']);
 
 ```
 
@@ -104,36 +301,6 @@ $rows = DB::table('uses')
 
 $rows = DB::table('uses')
     ->rememberForever($cache_key)
-    ->get();
-
-```
-
-##### Filter the query with input values
-
-```php
-
-$filters = [];
-// $query->whereRaw('date(created_at) = ?', ['2019-10-12'])
-$filters[] = ['date[created_at]' => date('Y-m-d')];
-
-// $query->whereDateBetween('created_at between ? and ? ', ['2019-10-12', '2019-10-22'])
-$filters[] = ['range[created_at]' => date('Y-m-d') .' - '. date('Y-m-d')];
-
-// $query->whereBetween('created between ? and ? ', [strtotime('-1 day'), time()])
-$filters[] = ['timestamp[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
-
-//
-$filters[] = ['unixtime[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
-$filters[] = ['between[created]' => date('Y-m-d') .' - '. date('Y-m-d')];
-
-$filters[] = ['filter[name]' => 'bright']; // $query->where('name', '=', 'bright')
-$filters[] = ['filter[first_name|last_name]' => 'bright']; // $query->where('first_name', '=', 'bright')->orWhere()
-$filters[] = ['lfilter[name]' => 'bright']; // $query->where('name', 'like', '%bright%')
-$filters[] = ['rfilter[name]' => 'bright']; // $query->where('name', 'like', 'bright%')
-$filters[] = ['efilter[name]' => 'bright']; // $query->where('name', 'like', '%bright')
-
-$rows = DB::table('users')
-    ->filter($filters)
     ->get();
 
 ```
@@ -272,37 +439,6 @@ $model = $model->concat(['relation.id']);
 // combination of merge and contact
 $model = $model->combine(['relation.id']);
 ```
-
-# Database Filter
-
-`filter` method used to filter the database columns in query builder. it accepts `requets` object as `array`.
-
-Avaliable filters
-
-`filter[]` uses the `$builder->where($column, $value)`. uses array key as column name and value as value. ex: `filter[column]='value'`
-
-`lfilter[]` uses the `$builder->where($column, '%'.$value.'%')` with like match. uses array key as column name and value as value. ex: `lfilter[column]='value'`
-
-use the `|` notation to filter or condition. ex: `filter[comments|title]=xxx`
-use the `:` notation to filter with relation table. ex: `filter[posts:title]=xxx`
-use the `.` notation to filter the table alias in join query. ex: `filter[comments.title]=xxx`
-use the `scope[]` to filter the model scopes. ex: `scope[status]=1` will run `$builder->status(1)`
-use `parse[]` to DSL Parser for a filter query langague.
-Example queries in this language:
-
--   `price = 100`
--   `price != 100`
--   `price > 100`
--   `price < 100`
--   `price <= 100`
--   `price >= 100`
--   `name =~ "brig%"`
--   `price > 100 AND active = 1`
--   `status = "pending" OR status = "approved"`
--   `product.price > 100 AND category.id = 7`
--   `name =~ "Foo%"`
--   `created_at > "2017-01-01" and created_at < "2017-01-31"`
--   `status = 1 AND (name = "PHP Rocks" or name = "I ♥ PHP")`
 
 ## License
 
