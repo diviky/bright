@@ -12,13 +12,6 @@
     php artisan bright:setup
 ```
 
-Query builder needs to overwrite with bright
-
-```php
-sed -i '' 's/use Illuminate\\Database\\Query\\Builder/use Diviky\\Bright\\Database\\Query\\Builder/g' vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
-
-```
-
 ```php
     php artisan vendor:publish --tag="bright-config"
     php artisan vendor:publish --tag="bright-assets"
@@ -34,78 +27,6 @@ sed -i '' 's/use Illuminate\\Database\\Query\\Builder/use Diviky\\Bright\\Databa
     npm install jquery --save
     npm install popper.js --save
     npm install bootstrap --save
-```
-
-add in kernal.php route middleware
-
-```php
-// $middleware
-    \Diviky\Bright\Http\Middleware\PreflightResponse::class,
-
-```
-
-### Sorting task
-
-```html
-<tbody ajax-content class="table_sortable_body">
-    ...
-    <td sortable>
-        <i class="fa fa-arrows-v fa-lg"></i>
-        <input type="hidden" name="sorting[{{ $row->id }}]" value="{{ $row->ordering }}" />
-    </td>
-</tbody>
-```
-
-```php
-    if ($task == 'sorting') {
-        $sorting = $this->input('sorting');
-        $this->get('resolver')->getHelper('speed')->sorting('table', $sorting, 'id');
-
-        return [];
-    }
-```
-
-### Builder Extended Methods
-
-##### Iterating results
-
-If you like fetch all the rows with chunks and modify using callaback
-
-```php
-
-$rows = DB::table('large_table')->iterate(1000);
-
-$rows = DB::table('large_table')->iterate(1000, function($row) {
-
-    return $row;
-});
-
-```
-
-##### Get results from multiple tables
-
-If you have data in multiple tables, want to retrive table after table with pagination
-
-```php
-
-$rows = DB::tables(['roles', 'roles1', 'roles2'])->complexPaginate();
-
-```
-
-##### Cache the query results
-
-If you want to cache the results
-
-```php
-
-$rows = DB::table('uses')
-    ->remember($minutes, $cache_key)
-    ->get();
-
-$rows = DB::table('uses')
-    ->rememberForever($cache_key)
-    ->get();
-
 ```
 
 ##### Filter the query with input values
@@ -165,6 +86,7 @@ Example queries in this language:
 -   `price > 100 AND active = 1`
 -   `status = "pending" OR status = "approved"`
 -   `product.price > 100 AND category.id = 7`
+-   `product:price > 100 AND category:id = 7`
 -   `name =~ "Foo%"`
 -   `created_at > "2017-01-01" and created_at < "2017-01-31"`
 -   `status = 1 AND (name = "PHP Rocks" or name = "I ♥ PHP")`
@@ -319,6 +241,70 @@ $books = $books->few(['id', 'author.name']);
 
 ```
 
+### Sorting task
+
+```html
+<tbody ajax-content class="table_sortable_body">
+    ...
+    <td sortable>
+        <i class="fa fa-arrows-v fa-lg"></i>
+        <input type="hidden" name="sorting[{{ $row->id }}]" value="{{ $row->ordering }}" />
+    </td>
+</tbody>
+```
+
+```php
+    if ($task == 'sorting') {
+        $sorting = $this->input('sorting');
+        $this->get('resolver')->getHelper('speed')->sorting('table', $sorting, 'id');
+
+        return [];
+    }
+```
+
+### Builder Extended Methods
+
+##### Iterating results
+
+If you like fetch all the rows with chunks and modify using callaback
+
+```php
+
+$rows = DB::table('large_table')->iterate(1000);
+
+$rows = DB::table('large_table')->iterate(1000, function($row) {
+
+    return $row;
+});
+
+```
+
+##### Get results from multiple tables
+
+If you have data in multiple tables, want to retrive table after table with pagination
+
+```php
+
+$rows = DB::tables(['roles', 'roles1', 'roles2'])->complexPaginate();
+
+```
+
+##### Cache the query results
+
+If you want to cache the results
+
+```php
+
+$rows = DB::table('uses')
+    ->remember($minutes, $cache_key)
+    ->get();
+
+$rows = DB::table('uses')
+    ->rememberForever($cache_key)
+    ->get();
+
+```
+
 ##### Delete from select query
 
 ```php
@@ -427,6 +413,31 @@ Set the timestamps 'created_at`and`updated_at`for insert and`updated_at` for upd
         <option value="">Search Employee</option>
     </select>
 </div>
+```
+
+## Flatten Relations
+
+Return single model with merged attributes from relations
+
+```php
+
+// except the relations from merge
+$model = $model->flatten($except);
+
+// Take some keys
+$model = $model->some(['id']);
+
+// Take except
+$model = $model->except(['id']);
+
+// Append keys to attributes
+$model = $model->merge(['id' => 1]);
+
+// Apped relation keys to attributes
+$model = $model->concat(['relation.id']);
+
+// combination of merge and contact
+$model = $model->combine(['relation.id']);
 ```
 
 ## License

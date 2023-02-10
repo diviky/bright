@@ -24,9 +24,9 @@ class FilterRelation implements Filter
     /**
      * @var string
      */
-    protected $separator = ':';
+    protected $separator = '.';
 
-    public function __construct(string $condition = '=', string $separator = ':')
+    public function __construct(string $condition = '=', string $separator = '.')
     {
         $this->condition = $condition;
         $this->separator = $separator;
@@ -101,9 +101,11 @@ class FilterRelation implements Filter
     {
         [$relation, $property] = collect(explode($this->separator, $property))
             ->pipe(function (Collection $parts) {
+                $property = $parts->pop();
+
                 return [
-                    $parts->except(count($parts) - 1)->map([Str::class, 'camel'])->implode('.'),
-                    $parts->last(),
+                    $parts->except($parts->all())->map([Str::class, 'camel'])->implode('.'),
+                    $property,
                 ];
             });
 
