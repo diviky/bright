@@ -16,7 +16,7 @@ function brightJs() {
     selector: '[data-toggle="popover"]'
   });
 
-  $('[data-toggle="tooltip"]').on('remove hide', function(e) {
+  $('[data-toggle="tooltip"]').on('remove hide mouseleave', function(e) {
     $(this).tooltip('hide');
   });
 
