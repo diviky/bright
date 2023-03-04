@@ -124,13 +124,17 @@ class AccessTokenGuard implements Guard
             foreach ($this->inputKeys as $key) {
                 $token = $this->request->query($key);
                 if (empty($token)) {
-                    $token = $this->request->input($key);
+                    $token = $this->request->post($key);
                 }
 
                 if ($token) {
                     return $token;
                 }
             }
+        }
+
+        if (empty($token)) {
+            $token = md5($this->request->ip());
         }
 
         return $token;
