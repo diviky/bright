@@ -69,18 +69,22 @@ trait Themable
         }
 
         if (Str::contains($template, '|')) {
-            list($theme, $layout) = \explode('|', $template);
+            list($themeName, $layout) = \explode('|', $template);
         } else {
             $layout = $template;
-            $theme = '';
+            $themeName = '';
         }
 
-        $themePath = resource_path('themes/' . $theme);
+        $themePaths = config('theme.paths', []);
+
+        $themePath = isset($themePaths[$themeName]) ? $themePaths[$themeName] : null;
+        $themePath = is_array($themePath) ? $themePath[0] : $themePath;
+
         $views = resource_path('views');
-        $location = public_path($theme);
+        $location = public_path($themeName);
 
         $theme = [
-            'name' => $theme,
+            'name' => $themeName,
             'layout' => $layout,
             'path' => $themePath,
             'location' => $location,

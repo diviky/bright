@@ -3,6 +3,10 @@
 declare(strict_types=1);
 
 return [
+    'paths' => [
+        'tabler' => resource_path('themes/tabler'),
+    ],
+
     'device' => 'computer',
     /*
     |----------------------------------------------------------------------------
