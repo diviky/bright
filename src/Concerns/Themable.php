@@ -72,7 +72,7 @@ trait Themable
             list($themeName, $layout) = \explode('|', $template);
         } else {
             $layout = $template;
-            $themeName = '';
+            $themeName = config('theme.name', 'tabler');
         }
 
         $themePaths = config('theme.paths', []);
@@ -100,6 +100,8 @@ trait Themable
         $paths[] = $views . '/' . $component;
         $paths[] = $themePath;
         $paths[] = $themePath . '/views/' . $component;
+
+        $paths = array_filter($paths);
 
         foreach ($paths as $path) {
             $finder->prependLocation($path);

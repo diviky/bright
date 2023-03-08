@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 return [
+    'name' => env('BRIGHT_THEME_NAME', 'tabler'),
+    'device' => env('BRIGHT_THEME_DEVICE', 'computer'),
+
     'paths' => [
         'tabler' => resource_path('themes/tabler'),
     ],
 
-    'device' => 'computer',
     /*
     |----------------------------------------------------------------------------
     | Default theme config all devices
@@ -19,9 +21,9 @@ return [
     | prefix:auth.*  (all methods starting with prefix)
      */
     'default' => [
-        'default' => 'tabler|layouts.index',
-        'auth.login' => 'tabler|layouts.index',
-        'auth.*' => 'tabler|layouts.index',
+        'default' => env('BRIGHT_THEME_NAME', 'tabler') . '|layouts.index',
+        'auth.login' => env('BRIGHT_THEME_NAME', 'tabler') . '|layouts.index',
+        'auth.*' => env('BRIGHT_THEME_NAME', 'tabler') . '|layouts.index',
     ],
     /*
     |----------------------------------------------------------------------------
@@ -43,7 +45,7 @@ return [
         |  members.login (members component and login method)
         |  members.* (members component and all methods)
          */
-        'auth.changepass' => 'tabler|layouts.index',
+        'auth.changepass' => env('BRIGHT_THEME_NAME', 'tabler') . '|layouts.index',
     ],
 
     /*
