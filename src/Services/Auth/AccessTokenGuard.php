@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Diviky\Bright\Services\Auth;
 
 use Illuminate\Auth\GuardHelpers;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\IpUtils;
 
-class AccessTokenGuard implements Guard
+class AccessTokenGuard
 {
     use GuardHelpers;
 
@@ -27,6 +26,13 @@ class AccessTokenGuard implements Guard
      * @var string
      */
     protected $storageKey = '';
+
+    /**
+     * database column.
+     *
+     * @var string
+     */
+    protected $inputKey = '';
 
     /**
      * Guard configuration.
@@ -49,10 +55,13 @@ class AccessTokenGuard implements Guard
         $this->inputKeys = ['access_token', 'api_token'];
         // key to check in database
         $this->storageKey = 'access_token';
+        $this->inputKey = 'access_token';
     }
 
     /**
-     * {@inheritDoc}
+     * Get the currently authenticated user.
+     *
+     * @return null|\Illuminate\Contracts\Auth\Authenticatable
      */
     public function user()
     {
@@ -87,6 +96,10 @@ class AccessTokenGuard implements Guard
             return null;
         }
 
+        if (isset($token->expires_at) && $token->expires_at->isPast()) {
+            return null;
+        }
+
         if (!empty($token->refresh_token) && !$this->validateSignature($token, $signature)) {
             return null;
         }
@@ -106,7 +119,7 @@ class AccessTokenGuard implements Guard
     /**
      * Get the token for the current request.
      *
-     * @return mixed
+     * @return null|array|string
      */
     public function getTokenForRequest()
     {
@@ -138,26 +151,6 @@ class AccessTokenGuard implements Guard
         }
 
         return $token;
-    }
-
-    /**
-     * Validate a user's credentials.
-     *
-     * @return bool
-     */
-    public function validate(array $credentials = [])
-    {
-        if (empty($credentials[$this->inputKey])) {
-            return false;
-        }
-
-        $credentials = [$this->storageKey => $credentials[$this->inputKey]];
-
-        if ($this->provider->retrieveByCredentials($credentials)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -200,11 +193,6 @@ class AccessTokenGuard implements Guard
      */
     protected function validateSignature($token, $signature = null): bool
     {
-        // check is expired
-        if (isset($token->expires_in) && now()->gt($token->expires_in)) {
-            return false;
-        }
-
         $algo = $this->request->header('X-Auth-Method', 'SHA256');
         $nonce = $this->request->header('X-Auth-Nonce');
         $date = $this->request->header('X-Auth-Date');

@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Concerns;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Request variables handle.
@@ -181,95 +178,6 @@ trait HttpTrait
     }
 
     /**
-     * Create a new cookie instance.
-     *
-     * @param string      $name
-     * @param string      $value
-     * @param int         $minutes
-     * @param string      $path
-     * @param string      $domain
-     * @param bool        $secure
-     * @param bool        $httpOnly
-     * @param bool        $raw
-     * @param null|string $sameSite
-     *
-     * @return \Illuminate\Cookie\CookieJar|\Symfony\Component\HttpFoundation\Cookie
-     */
-    public function setCookie($name = null, $value = null, $minutes = 0, $path = null, $domain = null, $secure = false, $httpOnly = true, $raw = false, $sameSite = null)
-    {
-        return cookie($name, $value, $minutes, $path, $domain, $secure, $httpOnly, $raw, $sameSite);
-    }
-
-    /**
-     * Set Session.
-     *
-     * @param string $name  Name of the Session
-     * @param string $value Value of the Session
-     */
-    public function setSession($name, $value = null): void
-    {
-        $this->get('session')->put($name, $value);
-    }
-
-    /**
-     * Get Session.
-     *
-     * @param string $name    Name of the Session
-     * @param mixed  $default The default value if not found
-     *
-     * @return mixed
-     */
-    public function getSession($name, $default = null)
-    {
-        return $this->get('session')->get($name, $default);
-    }
-
-    /**
-     * Delete Session.
-     *
-     * @param string $name Name of the Session
-     *
-     * @return mixed
-     */
-    public function removeSession($name)
-    {
-        return $this->get('session')->remove($name);
-    }
-
-    /**
-     * Generate the URL to a named route.
-     *
-     * @param array|string $name
-     * @param array        $parameters
-     * @param bool         $absolute
-     *
-     * @return string
-     */
-    public function route($name, $parameters = [], $absolute = true)
-    {
-        return $this->get('url')->route($name, $parameters, $absolute);
-    }
-
-    /**
-     * Get an instance of the redirector.
-     *
-     * @param null|string $to
-     * @param int         $status
-     * @param array       $headers
-     * @param bool        $secure
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function redirect($to = null, $status = 302, $headers = [], $secure = null)
-    {
-        if (\is_null($to)) {
-            return $this->get('redirect');
-        }
-
-        return $this->get('redirect')->to($to, $status, $headers, $secure);
-    }
-
-    /**
      * Creates a streaming response.
      *
      * @param mixed $callback A valid PHP callback
@@ -281,35 +189,6 @@ trait HttpTrait
     public function stream($callback = null, array $headers = [], $status = 200)
     {
         return new StreamedResponse($callback, $status, $headers);
-    }
-
-    /**
-     * Escapes a text for HTML.
-     *
-     * @param string $text         The input text to be escaped
-     * @param int    $flags        The flags (@see htmlspecialchars)
-     * @param string $charset      The charset
-     * @param bool   $doubleEncode Whether to try to avoid double escaping or not
-     *
-     * @return string Escaped text
-     */
-    public function escape($text, $flags = ENT_COMPAT, $charset = null, $doubleEncode = true)
-    {
-        return \htmlspecialchars($text, $flags, $charset ?: $this['charset'], $doubleEncode);
-    }
-
-    /**
-     * Convert some data into a JSON response.
-     *
-     * @param mixed $data    The response data
-     * @param int   $status  The response status code
-     * @param array $headers An array of response headers
-     *
-     * @return JsonResponse
-     */
-    public function toJson($data = [], array $headers = [], $status = 200)
-    {
-        return new JsonResponse($data, $status, $headers);
     }
 
     /**
@@ -325,22 +204,6 @@ trait HttpTrait
     public function sendFile($file, array $headers = [], $disposition = null, $status = 200)
     {
         return new BinaryFileResponse($file, $status, $headers, true, $disposition);
-    }
-
-    /**
-     * Aborts the current request by sending a proper HTTP error.
-     *
-     * @param int    $statusCode The HTTP status code
-     * @param string $message    The status message
-     * @param array  $headers    An array of HTTP headers
-     */
-    public function abort($statusCode, $message = '', array $headers = []): void
-    {
-        if (404 == $statusCode) {
-            throw new NotFoundHttpException($message);
-        }
-
-        throw new HttpException($statusCode, $message, null, $headers);
     }
 
     /**

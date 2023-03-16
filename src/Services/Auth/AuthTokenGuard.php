@@ -7,7 +7,9 @@ namespace Diviky\Bright\Services\Auth;
 class AuthTokenGuard extends AccessTokenGuard
 {
     /**
-     * {@inheritDoc}
+     * Get the currently authenticated user.
+     *
+     * @return null|\Illuminate\Contracts\Auth\Authenticatable
      */
     public function user()
     {

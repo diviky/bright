@@ -9,7 +9,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
 
-class CredentialsGuard implements Guard
+class CredentialsGuard
 {
     use GuardHelpers;
 
@@ -33,7 +33,9 @@ class CredentialsGuard implements Guard
     }
 
     /**
-     * {@inheritDoc}
+     * Get the currently authenticated user.
+     *
+     * @return null|\Illuminate\Contracts\Auth\Authenticatable
      */
     public function user()
     {
@@ -76,26 +78,6 @@ class CredentialsGuard implements Guard
         }
 
         return $return;
-    }
-
-    /**
-     * Validate a user's credentials.
-     *
-     * @return bool
-     */
-    public function validate(array $credentials = [])
-    {
-        if (empty($credentials[$this->inputKey])) {
-            return false;
-        }
-
-        $credentials = [$this->storageKey => $credentials[$this->inputKey]];
-
-        if ($this->provider->retrieveByCredentials($credentials)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

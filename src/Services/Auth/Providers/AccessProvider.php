@@ -51,10 +51,26 @@ class AccessProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        return $this->token
-            ->remember(null, 'token:' . $token)
-            ->where($identifier, $token)
-            ->first();
+        if (false === strpos($token, '|')) {
+            if (strlen($token) > 40) {
+                $token = hash('sha256', $token);
+            }
+
+            return $this->token
+                ->remember(null, 'token:' . $token)
+                ->where($identifier, $token)
+                ->first();
+        }
+
+        [$id, $token] = explode('|', $token, 2);
+
+        $instance = $this->token->remember(null, 'token:' . $token)->find($id);
+
+        if ($instance) {
+            return hash_equals($instance->{$identifier}, hash('sha256', $token)) ? $instance : null;
+        }
+
+        return null;
     }
 
     /**

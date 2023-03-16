@@ -23,7 +23,7 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      */
-    public function showLoginForm(): \Illuminate\View\View
+    public function showLoginForm(): \Illuminate\Contracts\View\View
     {
         return view('bright::auth.login');
     }
