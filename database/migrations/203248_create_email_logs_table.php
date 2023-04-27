@@ -5,8 +5,7 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateAddonEmailLogsTable extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -33,4 +32,4 @@ class CreateAddonEmailLogsTable extends Migration
     {
         Schema::drop(config('bright.table.email_logs'));
     }
-}
+};
