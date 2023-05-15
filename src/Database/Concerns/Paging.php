@@ -91,17 +91,20 @@ trait Paging
             $count = 0;
             $skip = 0;
             $limit = $perPage;
+
             foreach ($tables as $table) {
-                $results = $results->merge(
+                $results->merge(
                     $this->skip($skip)
                         ->take($limit)
                         ->from($table)
                         ->get($columns)
+                        ->toArray()
                 );
 
                 $count += $results->count();
                 $limit = $limit - $count;
                 $skip = 0;
+
                 if ($count >= $perPage) {
                     break;
                 }
@@ -157,19 +160,10 @@ trait Paging
     public function paging($perPage = 25, $columns = ['*'], $pageName = 'page', $page = null)
     {
         if (\count($this->tables) > 0) {
-            $rows = $this->complexPaginate($perPage, $columns, $pageName, $page);
-        } else {
-            $rows = $this->paginate($perPage, $columns, $pageName, $page);
+            return $this->complexPaginate($perPage, $columns, $pageName, $page);
         }
 
-        $i = $rows->perPage() * ($rows->currentPage() - 1);
-        $rows->transform(function (object $row) use (&$i) {
-            $row->serial = ++$i;
-
-            return $row;
-        });
-
-        return $rows;
+        return parent::paginate($perPage, $columns, $pageName, $page);
     }
 
     /**

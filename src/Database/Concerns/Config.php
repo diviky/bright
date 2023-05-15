@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
+use Illuminate\Support\Facades\App;
+
 trait Config
 {
     /**
@@ -30,6 +32,17 @@ trait Config
      */
     public function getConfig()
     {
-        return config('bright');
+        $config = App::make('config')->get('bright');
+
+        return [
+            'databases' => $config['databases'],
+            'tables' => $config['tables'],
+            'connections' => $config['connections'],
+            'async' => $config['async'],
+            'sharding' => $config['sharding'],
+            'timestamps' => $config['timestamps'],
+            'db_events' => $config['db_events'],
+            'db_cache' => $config['db_cache'],
+        ];
     }
 }

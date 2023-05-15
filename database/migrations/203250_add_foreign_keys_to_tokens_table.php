@@ -5,8 +5,7 @@ declare(strict_types=1);
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class AddForeignKeysToAuthTokensTable extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -26,4 +25,4 @@ class AddForeignKeysToAuthTokensTable extends Migration
             $table->dropForeign('tokens_user_id_foreign');
         });
     }
-}
+};

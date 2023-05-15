@@ -9,11 +9,9 @@ use Illuminate\Http\UploadedFile as HttpUploadedFile;
 class UploadedFile extends HttpUploadedFile
 {
     /**
-     * Returns whether the file has been uploaded with HTTP and no error occurred.
-     *
-     * @return bool
+     * {@inheritDoc}
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return true;
     }

@@ -6,6 +6,9 @@ namespace Diviky\Bright\Models;
 
 use Diviky\Bright\Concerns\AccessToken;
 use Diviky\Bright\Concerns\Authorizable;
+use Diviky\Bright\Database\Concerns\Connector;
+use Diviky\Bright\Database\Eloquent\Concerns\Connection;
+use Diviky\Bright\Database\Eloquent\Concerns\Eloquent;
 use Diviky\Bright\Http\Controllers\Account\Traits\UserAvatarTrait;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\HasRoles;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UserParent;
@@ -26,6 +29,9 @@ class User extends Authenticatable
     use UsersParent;
     use UserAvatarTrait;
     use Notifiable;
+    use Eloquent;
+    use Connector;
+    use Connection;
 
     /**
      * Guard name.

@@ -11,7 +11,6 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use Symfony\Component\Mime\MimeTypes;
 
 class Controller extends BaseController
@@ -104,19 +103,16 @@ class Controller extends BaseController
 
     public function forS3(Request $request): JsonResponse
     {
-        $disk = config('filesystems.cloud');
+        $config = config('filesystems.disks.s3');
 
         $extension = $request->input('extension');
         $filename = (string) Str::uuid();
         $filename .= '.' . $extension;
 
         $path = $this->path . '/';
+        $client = $this->storageClient();
 
-        $driver = Storage::disk($disk);
-        $adapter = $driver->getAdapter();
-        $client = $adapter->getClient();
-
-        $command = $this->createCommand($request, $client, $adapter, $path . $filename);
+        $command = $this->createCommand($request, $client, $config['bucket'], $path . $filename);
         $signedRequest = $client->createPresignedRequest($command, '+1 minutes');
 
         $uri = $signedRequest->getUri();
@@ -143,24 +139,73 @@ class Controller extends BaseController
     /**
      * Create a command for the PUT operation.
      *
-     * @param string $key
-     *
      * @return \Aws\CommandInterface
      */
-    protected function createCommand(Request $request, S3Client $client, AwsS3Adapter $adapter, $key)
+    protected function createCommand(Request $request, S3Client $client, string $bucket, string $key)
     {
         $extension = $request->input('extension');
         $mimes = MimeTypes::getDefault()->getMimeTypes($extension);
         $content_type = $request->input('content_type') ?: ($mimes ? $mimes[0] : null);
 
         return $client->getCommand('putObject', array_filter([
-            'Bucket' => $adapter->getBucket(),
-            'Key' => $adapter->getPathPrefix() . $key,
+            'Bucket' => $bucket,
+            'Key' => $key,
             'ACL' => $request->input('visibility') ?: $this->defaultVisibility(),
             'ContentType' => $content_type ?: 'application/octet-stream',
             'CacheControl' => $request->input('cache_control') ?: null,
             'Expires' => $request->input('expires') ?: null,
         ]));
+    }
+
+    /**
+     * Get the S3 storage client instance.
+     *
+     * @return \Aws\S3\S3Client
+     */
+    protected function storageClient()
+    {
+        $config = [
+            'region' => config('filesystems.disks.s3.region', $_ENV['AWS_DEFAULT_REGION']),
+            'version' => 'latest',
+            'signature_version' => 'v4',
+            'use_path_style_endpoint' => config('filesystems.disks.s3.use_path_style_endpoint', false),
+        ];
+
+        if (!isset($_ENV['AWS_LAMBDA_FUNCTION_VERSION'])) {
+            $config['credentials'] = array_filter([
+                'key' => $_ENV['AWS_ACCESS_KEY_ID'] ?? null,
+                'secret' => $_ENV['AWS_SECRET_ACCESS_KEY'] ?? null,
+                'token' => $_ENV['AWS_SESSION_TOKEN'] ?? null,
+            ]);
+
+            if (!empty($_ENV['AWS_URL'])) {
+                $config['url'] = $_ENV['AWS_URL'];
+                $config['endpoint'] = $_ENV['AWS_URL'];
+            }
+        }
+
+        return new S3Client($config);
+    }
+
+    /**
+     * Ensure the required environment variables are available.
+     */
+    protected function ensureEnvironmentVariablesAreAvailable(Request $request): void
+    {
+        $missing = array_diff_key(array_flip(array_filter([
+            $request->input('bucket') ? null : 'AWS_BUCKET',
+            'AWS_DEFAULT_REGION',
+            'AWS_ACCESS_KEY_ID',
+            'AWS_SECRET_ACCESS_KEY',
+        ])), $_ENV);
+
+        if (empty($missing)) {
+            return;
+        }
+
+        throw new \InvalidArgumentException(
+            'Unable to issue signed URL. Missing environment variables: ' . implode(', ', array_keys($missing))
+        );
     }
 
     /**
