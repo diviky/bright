@@ -12,6 +12,7 @@ use Diviky\Bright\Database\Eloquent\Concerns\Eventable;
 use Diviky\Bright\Database\Eloquent\Concerns\Filters;
 use Illuminate\Database\Eloquent\Builder as BaseBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Builder extends BaseBuilder
 {
@@ -21,6 +22,15 @@ class Builder extends BaseBuilder
     use Async;
     use Batch;
     use Eventable;
+
+    /**
+     * Create a new Eloquent query builder instance.
+     */
+    public function __construct(QueryBuilder $query)
+    {
+        $this->query = $query;
+        $this->sync();
+    }
 
     /**
      * {@inheritDoc}
