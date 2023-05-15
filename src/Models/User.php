@@ -106,4 +106,14 @@ class User extends Authenticatable
 
         return ($granted) ? true : false;
     }
+
+    /**
+     * Get the user first role.
+     *
+     * @return null|string
+     */
+    public function role()
+    {
+        return $this->getRoleNames()->first();
+    }
 }

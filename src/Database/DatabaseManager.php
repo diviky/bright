@@ -22,7 +22,7 @@ class DatabaseManager extends LaravelDatabaseManager
     public function table($name)
     {
         if ($name instanceof Expression) {
-            $name = $name->getValue();
+            $name = (string) $name->getValue();
         }
 
         $alias = '';

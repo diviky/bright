@@ -16,7 +16,6 @@ class Accept
     public function handle($request, \Closure $next)
     {
         $request->headers->set('Accept', 'application/json');
-        $request->merge(['format' => 'json']);
 
         return $next($request);
     }
