@@ -127,6 +127,13 @@ trait Connection
         return $this;
     }
 
+    public function sync(): self
+    {
+        $this->async = null;
+
+        return $this;
+    }
+
     public function toQueue(string $query, array $bindings): self
     {
         $async = $this->async;
