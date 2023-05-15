@@ -29,6 +29,13 @@ trait Async
         return $this;
     }
 
+    public function sync(): self
+    {
+        $this->connection->sync();
+
+        return $this;
+    }
+
     /**
      * Get the async config.
      *
