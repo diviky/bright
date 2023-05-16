@@ -198,7 +198,7 @@ trait Connection
 
         $config = $this->asyncConfig();
 
-        if (!empty($config['all'])) {
+        if (isset($config['enable']) && !empty($config['all'])) {
             $this->async($config['connection'], $config['queue']);
 
             return true;

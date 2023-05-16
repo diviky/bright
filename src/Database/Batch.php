@@ -126,6 +126,8 @@ class Batch
         }
 
         $result = true;
+        $this->model->async($this->model->getAsync());
+
         foreach (array_chunk($this->attributes, $this->limit) as $attributes) {
             if (!$this->model->es(false)->insert($attributes)) {
                 return false;

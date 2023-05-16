@@ -21,4 +21,16 @@ trait Async
 
         return $this;
     }
+
+    public function getAsync(): ?array
+    {
+        return $this->query->getAsync();
+    }
+
+    public function sync(): self
+    {
+        $this->query->sync();
+
+        return $this;
+    }
 }
