@@ -126,11 +126,19 @@ class Batch
         }
 
         $result = true;
-        $this->model->async($this->model->getAsync());
+        $async = $this->builder->getAsync();
 
-        foreach (array_chunk($this->attributes, $this->limit) as $attributes) {
-            if (!$this->model->es(false)->insert($attributes)) {
-                return false;
+        if ($async) {
+            foreach (array_chunk($this->attributes, $this->limit) as $attributes) {
+                if (!$this->model->async($async)->es(false)->insert($attributes)) {
+                    return false;
+                }
+            }
+        } else {
+            foreach (array_chunk($this->attributes, $this->limit) as $attributes) {
+                if (!$this->model->es(false)->insert($attributes)) {
+                    return false;
+                }
             }
         }
 
