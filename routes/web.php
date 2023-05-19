@@ -24,11 +24,11 @@ return function (string $prefix = '', string $as = ''): void {
     ], function (): void {
         Route::get('account/sniff/{id}', 'Account\Controller@sniff');
         // Authentication Routes...
-        Route::get('login', 'Auth\LoginController@showLoginForm');
+        Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
         Route::post('login', 'Auth\LoginController@login');
 
         // Registration Routes...
-        Route::get('register', 'Auth\RegisterController@showRegistrationForm');
+        Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
         Route::post('register', 'Auth\RegisterController@register');
 
         Route::group(['middleware' => ['throttle:3,5']], function (): void {
@@ -54,7 +54,7 @@ return function (string $prefix = '', string $as = ''): void {
         'as' => $as
     ], function (): void {
         Route::get('activate', 'Auth\ActivationController@activate')->name('user.activate');
-        Route::any('logout', 'Auth\LoginController@logout');
+        Route::any('logout', 'Auth\LoginController@logout')->name('logout');
 
         Route::group(['middleware' => ['throttle:3,5']], function (): void {
             Route::post('resend', 'Auth\ActivationController@resend');
