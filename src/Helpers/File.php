@@ -6,8 +6,8 @@ namespace Diviky\Bright\Helpers;
 
 use Diviky\Bright\Helpers\Iterator\ChunkedIterator;
 use Diviky\Bright\Helpers\Iterator\MapIterator;
-use Illuminate\Container\RewindableGenerator;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Iterator;
@@ -26,16 +26,22 @@ use wapmorgan\UnifiedArchive\UnifiedArchive;
  */
 class File
 {
+    /**
+     * @var array|Arrayable|Collection|JsonResource|\JsonSerializable|LazyCollection|mixed|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|\RewindableGenerator|\Traversable
+     */
     protected $reader;
+
+    /**
+     *@var callable
+     */
     protected $callable;
 
-    protected $path = null;
+    protected string $path;
 
     /**
      * @param array|\Iterator|string|\Traversable $reader
-     * @param array                               $options
      */
-    public function __construct($reader = null, array $options = [])
+    final public function __construct($reader = null, array $options = [])
     {
         if (isset($reader)) {
             $this->reader = $this->getReader($reader, $options);
@@ -49,109 +55,10 @@ class File
         return $this;
     }
 
-    protected function setReader($reader): self
-    {
-        $this->reader = $reader;
-        return $this;
-    }
-
-    /**
-     * Fetch all the values from file.
-     *
-     * @param array|\Iterator|string|\Traversable $reader
-     * @param array                               $options
-     *
-     * @return \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable
-     */
-    protected function getReader($reader, $options = [])
-    {
-        \set_time_limit(0);
-
-        if (!\is_string($reader)) {
-            $ext = isset($options['ext']) ? $options['ext'] : '.array';
-        } else {
-            $reader = $this->unzip($reader, $options);
-            $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
-            $ext = '.' == $ext ? '.xls' : $ext;
-        }
-
-        $ext = \strtolower($ext);
-
-        $special = \in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
-
-        if (!$special) {
-            if (!\is_file($reader) || !\file_exists($reader)) {
-                return new \EmptyIterator();
-            }
-
-            $lines = ('.txt' == $ext) ? 1 : 5;
-            $file = '';
-
-            \ini_set('auto_detect_line_endings', 'on');
-            $file = new \SplFileObject($reader);
-
-            // Auto detect delimiter
-            if (empty($options['delimiter'])) {
-                $options['delimiter'] = $this->detectDelimiter($reader, $lines);
-            }
-
-            switch ($ext) {
-                case '.txt':
-                case '.csv':
-                    if ($options['delimiter']) {
-                        $reader = new CsvReader($file, $options['delimiter']);
-                    } else {
-                        $reader = new CsvReader($file);
-                    }
-                    $reader->setStrict(false);
-
-                    break;
-                case '.xls':
-                case '.xlsx':
-                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
-                    $mime = $finfo->file($file->getRealPath());
-
-                    if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
-                        $reader = new CsvReader($file, $options['delimiter']);
-                    } else {
-                        if (class_exists('Port\Excel\ExcelReader')) {
-                            $reader = new ExcelReader($file, null, 0);
-                        } else {
-                            $reader = new SpreadsheetReader($file, null, 0);
-                        }
-                    }
-
-                    break;
-            }
-        } else {
-            switch ($ext) {
-                case '.array':
-                    if (!\is_array($reader) && isset($reader)) {
-                        $reader = \explode("\n", $reader);
-                    }
-
-                    if (!is_array($reader)) {
-                        $reader = [];
-                    }
-
-                    $reader = new ArrayReader($reader);
-
-                    break;
-                case '.generator':
-                case '.iterator':
-                default:
-                    break;
-            }
-        }
-
-        return $reader;
-    }
-
     /**
      * Modify the iterator using callback closure.
      *
      * @param array $options
-     *
      */
     public function modify($options = []): self
     {
@@ -181,9 +88,9 @@ class File
 
             if (null !== $count && $offset >= $count) {
                 return (new static())->setReader(new \EmptyIterator());
-            } else {
-                return (new static())->setReader(new \LimitIterator($this->reader, intval($options['offset']), intval($options['limit'])));
             }
+
+            return (new static())->setReader(new \LimitIterator($this->reader, intval($options['offset']), intval($options['limit'])));
         }
 
         return $this;
@@ -192,7 +99,7 @@ class File
     /**
      * Fetch the first row from file.
      *
-     * @param array    $options
+     * @param array $options
      *
      * @return array
      */
@@ -205,11 +112,10 @@ class File
         return $columns[0] ?? [];
     }
 
-
     /**
      * Fetch rows from file.
      *
-     * @param array    $options
+     * @param array $options
      *
      * @return array
      */
@@ -220,7 +126,6 @@ class File
 
     /**
      * Count the iterator values.
-     *
      */
     public function count(): int
     {
@@ -253,12 +158,15 @@ class File
         return $this->count() ? true : false;
     }
 
+    /**
+     * @return array|Collection|LazyCollection|\Traversable
+     */
     public function iterator()
     {
         return $this->reader;
     }
 
-    public function getFilePath()
+    public function getFilePath(): string
     {
         return $this->path;
     }
@@ -271,7 +179,6 @@ class File
     public function first()
     {
         $fields = [];
-
         foreach ($this->iterator() as $row) {
             $fields = $row;
 
@@ -284,79 +191,6 @@ class File
     public function chunk(int $size = 100): ChunkedIterator
     {
         return new ChunkedIterator($this->iterator(), $size);
-    }
-
-    /**
-     * Indentify the delimiter from row string.
-     *
-     * @param string $file
-     */
-    protected function detectDelimiter($file, int $sample = 5): ?string
-    {
-        $delimsRegex = ",|;:\t"; // whichever is first in the list will be the default
-        $delims = \str_split($delimsRegex);
-        $delimCount = [];
-        $delimiters = [];
-        foreach ($delims as $delim) {
-            $delimCount[$delim] = 0;
-            $delimiters[] = $delim;
-        }
-
-        $lines = $this->getLines($file, $sample);
-
-        foreach ($lines as $row) {
-            if (!is_string($row)) {
-                continue;
-            }
-
-            $row = \preg_replace('/\r\n/', '', \trim($row)); // clean up .. strip new line and line return chars
-            $row = \preg_replace("/[^{$delimsRegex}]/", '', $row); // clean up .. strip evthg which is not a dilim'r
-            $rowChars = \str_split($row); // break it apart char by char
-
-            if (is_array($rowChars)) {
-                foreach ($rowChars as $char) {
-                    foreach ($delimiters as $delim) {
-                        if (false !== \strpos($char, $delim)) {
-                            // if the char is the delim ...
-                            ++$delimCount[$delim]; // ... increment
-                        }
-                    }
-                }
-            }
-        }
-
-        $max = \max($delimCount);
-
-        if ($max <= 0) {
-            return null;
-        }
-
-        $detected = \array_keys($delimCount, $max);
-
-        return $detected[0];
-    }
-
-    /**
-     * @param string $file
-     * @param int    $total
-     */
-    protected function getLines($file, $total = 5): array
-    {
-        $handle = \fopen($file, 'r');
-
-        $line = 0;
-        $lines = [];
-        while (!\feof($handle)) {
-            $lines[] = \fgets($handle, 1024);
-            ++$line;
-            if ($line >= $total) {
-                break;
-            }
-        }
-
-        \fclose($handle);
-
-        return $lines;
     }
 
     /**
@@ -443,5 +277,180 @@ class File
         }
 
         return \iterator_to_array($this->reader);
+    }
+
+    /**
+     * @param Illuminate\Container\RewindableGenerator|\Iterator|Port\Csv\CsvReader|Port\Reader\ArrayReader|Port\Spreadsheet\SpreadsheetReader|Traversable $reader
+     */
+    protected function setReader($reader): self
+    {
+        $this->reader = $reader;
+
+        return $this;
+    }
+
+    /**
+     * Fetch all the values from file.
+     *
+     * @param array|\Iterator|string|\Traversable $reader
+     * @param array                               $options
+     *
+     * @return null|iterable<array-key|mixed, mixed>|mixed|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|string
+     */
+    protected function getReader($reader, $options = [])
+    {
+        \set_time_limit(0);
+
+        if (!\is_string($reader)) {
+            $ext = isset($options['ext']) ? $options['ext'] : '.array';
+        } else {
+            $reader = $this->unzip($reader, $options);
+            $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
+            $ext = '.' == $ext ? '.xls' : $ext;
+        }
+
+        $ext = \strtolower($ext);
+
+        $special = \in_array($ext, ['.array', '.iterator', '.generator']) ? true : false;
+
+        if (!$special) {
+            if (!\is_file($reader) || !\file_exists($reader)) {
+                return new \EmptyIterator();
+            }
+
+            $lines = ('.txt' == $ext) ? 1 : 5;
+            $file = '';
+
+            \ini_set('auto_detect_line_endings', 'on');
+            $file = new \SplFileObject($reader);
+
+            // Auto detect delimiter
+            if (empty($options['delimiter'])) {
+                $options['delimiter'] = $this->detectDelimiter($reader, $lines);
+            }
+
+            switch ($ext) {
+                case '.txt':
+                case '.csv':
+                    if ($options['delimiter']) {
+                        $reader = new CsvReader($file, $options['delimiter']);
+                    } else {
+                        $reader = new CsvReader($file);
+                    }
+                    $reader->setStrict(false);
+
+                    break;
+                case '.xls':
+                case '.xlsx':
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                    $mime = $finfo->file($file->getRealPath());
+
+                    if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
+                        $reader = new CsvReader($file, $options['delimiter']);
+                    } else {
+                        if (class_exists('Port\Excel\ExcelReader')) {
+                            $reader = new ExcelReader($file, null, 0);
+                        } else {
+                            $reader = new SpreadsheetReader($file, null, 0);
+                        }
+                    }
+
+                    break;
+            }
+        } else {
+            switch ($ext) {
+                case '.array':
+                    if (!\is_array($reader) && isset($reader)) {
+                        $reader = \explode("\n", $reader);
+                    }
+
+                    if (!is_array($reader)) {
+                        $reader = [];
+                    }
+
+                    $reader = new ArrayReader($reader);
+
+                    break;
+                case '.generator':
+                case '.iterator':
+                default:
+                    break;
+            }
+        }
+
+        return $reader;
+    }
+
+    /**
+     * Indentify the delimiter from row string.
+     *
+     * @param string $file
+     */
+    protected function detectDelimiter($file, int $sample = 5): ?string
+    {
+        $delimsRegex = ",|;:\t"; // whichever is first in the list will be the default
+        $delims = \str_split($delimsRegex);
+        $delimCount = [];
+        $delimiters = [];
+        foreach ($delims as $delim) {
+            $delimCount[$delim] = 0;
+            $delimiters[] = $delim;
+        }
+
+        $lines = $this->getLines($file, $sample);
+
+        foreach ($lines as $row) {
+            if (!is_string($row)) {
+                continue;
+            }
+
+            $row = \preg_replace('/\r\n/', '', \trim($row)); // clean up .. strip new line and line return chars
+            $row = \preg_replace("/[^{$delimsRegex}]/", '', $row); // clean up .. strip evthg which is not a dilim'r
+            $rowChars = \str_split($row); // break it apart char by char
+
+            if (is_array($rowChars)) {
+                foreach ($rowChars as $char) {
+                    foreach ($delimiters as $delim) {
+                        if (false !== \strpos($char, $delim)) {
+                            // if the char is the delim ...
+                            ++$delimCount[$delim]; // ... increment
+                        }
+                    }
+                }
+            }
+        }
+
+        $max = \max($delimCount);
+
+        if ($max <= 0) {
+            return null;
+        }
+
+        $detected = \array_keys($delimCount, $max);
+
+        return $detected[0];
+    }
+
+    /**
+     * @param string $file
+     * @param int    $total
+     */
+    protected function getLines($file, $total = 5): array
+    {
+        $handle = \fopen($file, 'r');
+
+        $line = 0;
+        $lines = [];
+        while (!\feof($handle)) {
+            $lines[] = \fgets($handle, 1024);
+            ++$line;
+            if ($line >= $total) {
+                break;
+            }
+        }
+
+        \fclose($handle);
+
+        return $lines;
     }
 }
