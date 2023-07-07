@@ -38,9 +38,6 @@ class BrightServiceProvider extends ServiceProvider
         $this->macros();
         $this->validates();
 
-        $this->loadRoutesFrom($this->path() . '/routes/web.php');
-        $this->loadRoutesFrom($this->path() . '/routes/api.php');
-
         $this->replaceConfigRecursive($this->path() . '/config/auth.php', 'auth');
 
         $this->loadViewsFrom($this->path() . '/resources/views/', 'bright');
@@ -51,6 +48,14 @@ class BrightServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->console($filesystem);
         }
+
+        $this->loadRoutesFrom($this->path() . '/routes/api.php');
+
+        Route::macro('auth', function (string $prefix = ''): void {
+            $as = $prefix ? $prefix . '.' : '';
+            $routes = require __DIR__ . '/../../routes/web.php';
+            $routes($prefix, $as);
+        });
 
         Route::macro('health', function (string $prefix = ''): void {
             Route::prefix($prefix)->group(__DIR__ . '/../../routes/health.php');
@@ -69,6 +74,7 @@ class BrightServiceProvider extends ServiceProvider
 
         Route::health();
         Route::upload();
+        Route::auth();
     }
 
     public function register(): void

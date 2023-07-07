@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database;
 
 use Diviky\Bright\Concerns\CapsuleManager;
+use Diviky\Bright\Models\Options as ModelsOptions;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 class Options
@@ -124,12 +124,10 @@ class Options
             $value = \json_encode($value);
         }
 
-        $time = new Carbon();
-
         $values = [
             'option_value' => $value,
             'option_type' => $type,
-            'updated_at' => $time,
+            'updated_at' => now(),
         ];
 
         $values = \array_merge($values, $this->updates);
@@ -151,8 +149,6 @@ class Options
      */
     public function insert($key, $value, $type = null)
     {
-        $time = new Carbon();
-
         $type = $this->identifyType($value, $type);
 
         if ('json' == $type) {
@@ -163,8 +159,8 @@ class Options
             'option_name' => $key,
             'option_value' => $value,
             'option_type' => $type,
-            'created_at' => $time,
-            'updated_at' => $time,
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
 
         $values = \array_merge($values, $this->values);
@@ -193,7 +189,7 @@ class Options
      */
     public function collect(): Collection
     {
-        return collect($this->first());
+        return collect((array) $this->first());
     }
 
     /**
@@ -292,8 +288,7 @@ class Options
     {
         $name = $name ?: $this->table;
 
-        return $this->db
-            ->table($name)
+        return ModelsOptions::from($name)
             ->where($this->where);
     }
 

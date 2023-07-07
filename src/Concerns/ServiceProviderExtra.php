@@ -83,13 +83,19 @@ trait ServiceProviderExtra
     /**
      * Register factories.
      *
-     * @param string $namespace
+     * @param array|string $namespace
      */
     protected function registerFactoriesFor($namespace): void
     {
-        Factory::guessFactoryNamesUsing(function (string $modelName) use ($namespace) {
-            if (Str::startsWith($modelName, $namespace . '\\')) {
-                return $namespace . '\\Database\\Factories\\' . class_basename($modelName) . 'Factory';
+        $namespaces = !is_array($namespace) ? [$namespace] : $namespace;
+
+        Factory::guessFactoryNamesUsing(function (string $modelName) use ($namespaces) {
+            foreach ($namespaces as $namespace) {
+                if (Str::startsWith($modelName, $namespace . '\\')) {
+                    $namespace = explode('\\', $modelName);
+
+                    return $namespace[0] . '\\' . $namespace[1] . '\\Database\\Factories\\' . class_basename($modelName) . 'Factory';
+                }
             }
 
             return 'Database\\Factories\\' . class_basename($modelName) . 'Factory';

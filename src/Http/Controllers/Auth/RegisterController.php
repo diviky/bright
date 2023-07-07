@@ -44,7 +44,7 @@ class RegisterController extends Controller
     /**
      * Show the application registration form.
      */
-    public function showRegistrationForm(): \Illuminate\View\View
+    public function showRegistrationForm(): \Illuminate\Contracts\View\View
     {
         return view('bright::auth.register');
     }

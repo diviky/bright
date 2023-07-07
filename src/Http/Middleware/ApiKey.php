@@ -15,11 +15,7 @@ class ApiKey
      */
     public function handle($request, \Closure $next)
     {
-        $request->merge(['access_token' => $request->input('api_key')]);
-
-        if (!empty($request->input('format'))) {
-            $request->merge(['format' => 'json']);
-        }
+        $request->mergeIfMissing(['access_token' => $request->input('api_key')]);
 
         return $next($request);
     }

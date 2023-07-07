@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Diviky\Bright\Contracts\UtilInterface as Util;
 use Diviky\Bright\View\View;
 use Illuminate\Support\Str;
-use League\CommonMark\CommonMarkConverter;
 
 if (!function_exists('user')) {
     /**
@@ -48,47 +47,6 @@ if (!function_exists('ago')) {
     function ago($time)
     {
         return app(Util::class)->ago($time);
-    }
-}
-
-if (!function_exists('ip')) {
-    /**
-     * Get the user Ip address.
-     *
-     * @SuppressWarnings(PHPMD)
-     *
-     * @return null|string
-     */
-    function ip()
-    {
-        $request = \request();
-
-        return $request ? $request->ip() : null;
-    }
-}
-
-if (!function_exists('markdown')) {
-    /**
-     * Converts CommonMark to HTML.
-     *
-     * @param null|string $text
-     *
-     * @return null|string
-     *
-     * @throws \RuntimeException
-     */
-    function markdown($text)
-    {
-        if (is_null($text)) {
-            return null;
-        }
-
-        $converter = new CommonMarkConverter([
-            'html_input' => 'strip',
-            'allow_unsafe_links' => false,
-        ]);
-
-        return (string) $converter->convert($text);
     }
 }
 
@@ -172,18 +130,4 @@ function kview($controller, $view, $data = [], $mergeData = [])
 function utcTime($date = null, $timezone = null)
 {
     return app(Util::class)->utcTime($date, $timezone);
-}
-
-/**
- * Respond with json.
- *
- * @param mixed $data
- *
- * @deprecated 2.0
- *
- * @return \Illuminate\Http\JsonResponse
- */
-function json($data)
-{
-    return response()->json($data);
 }

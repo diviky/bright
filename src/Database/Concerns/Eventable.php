@@ -123,6 +123,10 @@ trait Eventable
 
     public function insertEvent(array $values): array
     {
+        if (!\is_array(\reset($values))) {
+            $values = [$values];
+        }
+
         if (!$this->useEvent()) {
             return $values;
         }
@@ -214,10 +218,6 @@ trait Eventable
 
     protected function addInsertEvent(array $values): array
     {
-        if (!\is_array(\reset($values))) {
-            $values = [$values];
-        }
-
         $tables = $this->getEventTables('insert');
 
         foreach ($tables as $column => $field) {

@@ -115,24 +115,33 @@ function load_autocomplete() {
     });
 
     $('[data-selectize-target]').each(function () {
-        var xhr;
-        var source, $source;
-        var target, $target;
+        var xhr, source, $source, target, $target;
 
         var $this = $(this);
+        var selector = $this.data('selectize-target');
         var url = $this.data('url');
-        var select = $this.data('selectize-target');
         var method = $this.data('method') || 'GET';
+
         var options = {
             valueField: 'id',
             labelField: 'text',
             searchField: ['text'],
         };
 
-        $target = $(select);
-        if (!$target[0].selectize) {
+        $target = $(selector);
+        if (!$target || typeof $target == 'undefined') {
+            return false;
+        }
+
+        if (!$target[0] || !$target[0].selectize) {
             $target = $target.selectize(options);
         }
+
+        if (!$target[0] || !$target[0].selectize) {
+            return false;
+        }
+
+        var selected = $target.data('selected');
 
         target = $target[0].selectize;
 
@@ -145,6 +154,7 @@ function load_autocomplete() {
                 target.clearOptions();
                 target.clear();
                 target.disable();
+
                 target.load(function (callback) {
                     xhr && xhr.abort();
                     xhr = $.ajax({
@@ -153,8 +163,15 @@ function load_autocomplete() {
                         dataType: 'json',
                         data: { id: value },
                         success: function (results) {
+                            target.clearOptions();
+                            target.clear();
                             target.enable();
+
                             callback(results.rows);
+
+                            if (selected) {
+                                target.setValue(selected);
+                            }
                         },
                         error: function () {
                             callback();

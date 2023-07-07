@@ -52,7 +52,7 @@ class Responsable implements BaseResponsable
     {
         $response = $this->getResponse();
 
-        if ($request->post('fingerprint')) {
+        if ($request->post('fingerprint') || $request->header('X-Inertia')) {
             return $response;
         }
 

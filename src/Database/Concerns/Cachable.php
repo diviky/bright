@@ -325,7 +325,7 @@ trait Cachable
      *
      * @param array|string $columns
      *
-     * @return \Closure
+     * @return \Closure()
      */
     protected function getCacheCallback($columns)
     {
@@ -342,7 +342,7 @@ trait Cachable
      * @param string $column
      * @param mixed  $key
      *
-     * @return \Closure
+     * @return \Closure()
      */
     protected function pluckCacheCallback($column, $key = null)
     {

@@ -21,9 +21,9 @@ class ActivationController extends Controller
     use ColumnsTrait;
 
     /**
-     * @return \Illuminate\View\View|string[]
+     * @return \Illuminate\Contracts\View\View|string[]
      *
-     * @psalm-return \Illuminate\View\View|array{status: mixed|string, message: string, redirect?: string}
+     * @psalm-return \Illuminate\Contracts\View\View|array{status: mixed|string, message: string, redirect?: string}
      */
     public function activate(Request $request)
     {

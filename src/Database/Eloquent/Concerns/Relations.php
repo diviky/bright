@@ -12,35 +12,39 @@ trait Relations
     /**
      * Merge the relations attributes.
      *
-     * @param array $except
-     *
      * @return static
      */
-    public function flatten($except = [])
+    public function flatten(array $except = [], array $exclude = [])
     {
-        return $this->flattenRelations($this->getRelations(), $except);
+        return $this->flattenRelations($this->getRelations(), $except, $exclude);
     }
 
     /**
      * Merge the relations attributes.
      *
-     * @param array $except
+     * @return static
+     */
+    public function flat(array $except = [], array $exclude = [])
+    {
+        return $this->flatRelations($this->getRelations(), $except, $exclude);
+    }
+
+    /**
+     * Merge the relations attributes.
      *
      * @return static
      */
-    public function collapse($except = [])
+    public function collapse(array $except = [], array $exclude = [])
     {
-        return $this->flatten($except);
+        return $this->flat($except, $exclude);
     }
 
     /**
      * Remove attributes from model attributes.
      *
-     * @param array $keys
-     *
      * @return static
      */
-    public function except($keys)
+    public function except(array $keys)
     {
         $this->attributes = Arr::except($this->attributes, $keys);
 
@@ -54,7 +58,7 @@ trait Relations
      *
      * @return static
      */
-    public function some($keys)
+    public function some(array $keys)
     {
         $this->attributes = Arr::only($this->attributes, $keys);
 
@@ -64,11 +68,9 @@ trait Relations
     /**
      * Merge keys into the attributes.
      *
-     * @param array $keys
-     *
      * @return static
      */
-    public function merge($keys = [])
+    public function merge(array $keys = [])
     {
         if (!Arr::isAssoc($keys)) {
             $keys = array_fill_keys($keys, null);
@@ -92,11 +94,9 @@ trait Relations
     /**
      * Append the relations attributes.
      *
-     * @param array $keys
-     *
      * @return static
      */
-    public function combine($keys = [])
+    public function combine(array $keys = [])
     {
         return $this->merge($keys)->concat($keys);
     }
@@ -145,7 +145,7 @@ trait Relations
     /**
      * @return static
      */
-    protected function flattenRelations(array $relations, array $except = [])
+    protected function flattenRelations(array $relations, array $except = [], array $exclude = [])
     {
         foreach ($relations as $relation_key => $relation) {
             if (isset($relation)) {
@@ -153,10 +153,12 @@ trait Relations
                     $relation = $relation instanceof Collection ? $relation->first() : $relation;
                     if (isset($relation)) {
                         foreach ($relation->attributesToArray() as $key => $value) {
-                            $this->attributes[$key] = $value;
+                            if (!isset($exclude[$relation_key . '.' . $key])) {
+                                $this->attributes[$key] = $value;
+                            }
                         }
 
-                        $this->flattenRelations($relation->getRelations());
+                        $this->flattenRelations($relation->getRelations(), $except, $exclude);
                     }
                 }
 
@@ -165,5 +167,50 @@ trait Relations
         }
 
         return $this;
+    }
+
+    /**
+     * @return static
+     */
+    protected function flatRelations(array $relations, array $except = [], array $exclude = [])
+    {
+        $relations = $this->getAllRelations($relations);
+        $relations = array_reverse($relations, true);
+        $values = [];
+
+        foreach ($relations as $relation_key => $relation) {
+            if (isset($relation)) {
+                if (!in_array($relation_key, $except)) {
+                    $relation = $relation instanceof Collection ? $relation->first() : $relation;
+                    if (isset($relation)) {
+                        foreach ($relation->attributesToArray() as $key => $value) {
+                            if (!isset($exclude[$relation_key . '.' . $key])) {
+                                $values[$key] = $value;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->attributes = array_merge($values, $this->attributes);
+
+        return $this;
+    }
+
+    protected function getAllRelations(array $relations): array
+    {
+        foreach ($relations as $relation_key => $relation) {
+            if (isset($relation)) {
+                $relation = $relation instanceof Collection ? $relation->first() : $relation;
+                if (isset($relation)) {
+                    array_merge($relations, $this->getAllRelations($relation->getRelations()));
+                }
+            }
+
+            $this->unsetRelation($relation_key);
+        }
+
+        return $relations;
     }
 }

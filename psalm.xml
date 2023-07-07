@@ -9,7 +9,6 @@
         <directory name="src"/>
         <ignoreFiles>
             <directory name="vendor"/>
-            <directory name="tests"/>
             <file name="rector.php"/>
         </ignoreFiles>
     </projectFiles>
@@ -32,7 +31,6 @@
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <directory name="src"/>
-                <directory name="tests"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
         <NoInterfaceProperties>
@@ -83,8 +81,10 @@
         <PossiblyInvalidArgument>
             <errorLevel type="suppress">
                 <file name="src/Helpers/Reader.php"/>
+                <file name="src/Helpers/File.php"/>
                 <file name="src/Database/Concerns/Build.php"/>
                 <file name="src/Services/Auth/AccessTokenGuard.php"/>
+                <file name="src/Database/Concerns/Paging.php"/>
             </errorLevel>
         </PossiblyInvalidArgument>
         <InvalidArgument>
@@ -95,6 +95,8 @@
         <ArgumentTypeCoercion>
             <errorLevel type="suppress">
                 <file name="src/Helpers/Reader.php"/>
+                <file name="src/Helpers/File.php"/>
+                <file name="src/Concerns/ServiceProviderExtra.php"/>
             </errorLevel>
         </ArgumentTypeCoercion>
         <MoreSpecificReturnType>
@@ -125,7 +127,6 @@
         <UndefinedInterfaceMethod>
             <errorLevel type="suppress">
                 <directory name="src"/>
-                <directory name="tests"/>
             </errorLevel>
         </UndefinedInterfaceMethod>
         <PossiblyInvalidPropertyAssignmentValue>

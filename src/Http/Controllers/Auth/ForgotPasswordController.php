@@ -22,7 +22,7 @@ class ForgotPasswordController extends Controller
     use ColumnsTrait;
 
     /**
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
      */
     public function reset(Request $request)
     {
@@ -98,7 +98,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
      */
     public function verify(Request $request)
     {

@@ -9,6 +9,8 @@ use Diviky\Bright\Concerns\CapsuleManager;
 use Diviky\Bright\Concerns\HttpTrait;
 use Diviky\Bright\Concerns\Message;
 use Diviky\Bright\Concerns\ViewTrait;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -18,4 +20,6 @@ class Controller extends BaseController
     use Message;
     use Builder;
     use ViewTrait;
+    use AuthorizesRequests;
+    use ValidatesRequests;
 }

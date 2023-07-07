@@ -127,6 +127,13 @@ trait Connection
         return $this;
     }
 
+    public function sync(): self
+    {
+        $this->async = null;
+
+        return $this;
+    }
+
     public function toQueue(string $query, array $bindings): self
     {
         $async = $this->async;
@@ -191,7 +198,7 @@ trait Connection
 
         $config = $this->asyncConfig();
 
-        if (!empty($config['all'])) {
+        if (isset($config['enable']) && !empty($config['all'])) {
             $this->async($config['connection'], $config['queue']);
 
             return true;

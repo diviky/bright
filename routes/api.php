@@ -26,12 +26,6 @@ Route::group([
         Route::post('login', 'Auth\Api@login');
     });
 
-    Route::group([
-        'middleware' => ['rest'],
-    ], function (): void {
-        Route::post('password/change', 'Auth\Api@change');
-        Route::post('account/token/refresh', 'Account\Controller@token');
-    });
     // Password Reset Routes...
     Route::post('password/reset', 'Auth\Api@reset');
     Route::get('password/resend/{id}', 'Auth\Api@resend');
