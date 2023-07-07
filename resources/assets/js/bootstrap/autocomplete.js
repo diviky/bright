@@ -166,4 +166,95 @@ function load_autocomplete() {
 
         source = $source[0].selectize;
     });
+
+    $('[data-selectize-optout]').each(function () {
+        var xhr, source, $source, target, $target;
+
+        var $this = $(this);
+        var selector = $this.data('data-selectize-optout');
+        var url = $this.data('url');
+        var method = $this.data('method') || 'GET';
+
+        var options = {
+            valueField: 'id',
+            labelField: 'text',
+            searchField: ['text'],
+        };
+
+        $target = $(selector);
+        if (!$target || typeof $target == 'undefined') {
+            return false;
+        }
+
+        if (!$target[0] || !$target[0].selectize) {
+            $target = $target.selectize(options);
+        }
+
+        if (!$target[0] || !$target[0].selectize) {
+            return false;
+        }
+
+        var selected = $target.data('selected');
+
+        target = $target[0].selectize;
+
+        $source = $this.selectize({
+            valueField: 'id',
+            labelField: 'text',
+            searchField: ['text'],
+            onChange: function (value) {
+                if (!value.length) return;
+
+                if (value == 'tag' || value == 'sender') {
+                    target.clearOptions();
+                    target.clear();
+                    target.settings.create = true;
+                } else {
+                    target.clearOptions();
+                    target.clear();
+                    target.settings.create = false;
+                }
+
+                target.disable();
+
+                target.load(function (callback) {
+                    xhr && xhr.abort();
+                    xhr = $.ajax({
+                        url: url.replace(':id', value),
+                        method: method,
+                        dataType: 'json',
+                        data: { id: value },
+                        success: function (results) {
+                            target.clearOptions();
+                            target.clear();
+                            
+                            if (value != 'all') {
+                                target.enable();
+                            }                            
+
+                            if (!results.rows.length) {
+                                results.rows  = [
+                                {
+                                    id: '',
+                                    text: '---No results found---'
+                                }
+                                ];
+                            }
+
+                            callback(results.rows);
+
+                            if (selected) {
+                                target.setValue(selected);
+                            }
+                        },
+                        error: function () {
+                            callback();
+                        },
+                    });
+                });
+            },
+        });
+
+        source = $source[0].selectize;
+    });
 }
