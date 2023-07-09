@@ -10,6 +10,7 @@ use Diviky\Bright\Console\Commands\Migrate;
 use Diviky\Bright\Console\Commands\Rollback;
 use Diviky\Bright\Console\Commands\Setup;
 use Diviky\Bright\Contracts\UtilInterface;
+use Diviky\Bright\Models\Token;
 use Diviky\Bright\Routing\ControllerDispatcher;
 use Diviky\Bright\Routing\Redirector;
 use Diviky\Bright\Routing\Resolver;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use Laravel\Sanctum\Sanctum;
 
 /**
  * @SuppressWarnings(PHPMD)
@@ -75,6 +77,8 @@ class BrightServiceProvider extends ServiceProvider
         Route::health();
         Route::upload();
         Route::auth();
+
+        Sanctum::usePersonalAccessTokenModel(Token::class);
     }
 
     public function register(): void
