@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Diviky\Bright\Models;
 
 use Diviky\Bright\Database\Eloquent\Model;
+use Laravel\Sanctum\Contracts\HasAbilities;
 
-class Token extends Model
+class Token extends Model implements HasAbilities
 {
-    /**
-     * {@inheritDoc}
-     */
     protected $fillable = [
         'user_id',
         'name',
@@ -18,12 +16,11 @@ class Token extends Model
         'refresh_token',
         'allowed_ip',
         'expires_at',
+        'abilities',
         'status',
+        'token',
     ];
 
-    /**
-     * {@inheritDoc}
-     */
     protected $casts = [
         'abilities' => 'json',
         'last_used_at' => 'datetime',
@@ -31,19 +28,24 @@ class Token extends Model
         'created_at' => 'datetime',
     ];
 
-    /**
-     * {@inheritDoc}
-     */
     protected $hidden = [
         'access_token',
+        'token',
     ];
 
-    /**
-     * {@inheritDoc}
-     */
     public function getTable()
     {
         return config('bright.table.tokens', 'tokens');
+    }
+
+    /**
+     * Get the tokenable model that the access token belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function tokenable()
+    {
+        return $this->morphTo('tokenable');
     }
 
     /**
