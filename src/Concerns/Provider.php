@@ -22,14 +22,6 @@ trait Provider
 
             return !config('vajax.' . $expression);
         });
-
-        Blade::directive('dispatch', function ($expression) {
-            if (!\is_array($expression)) {
-                $expression = ['url' => $expression, 'method' => 'GET', 'params' => []];
-            }
-
-            return '<?php echo "dispatched"; ?>';
-        });
     }
 
     /**

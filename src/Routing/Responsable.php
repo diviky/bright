@@ -127,7 +127,13 @@ class Responsable implements BaseResponsable
         $theme = $this->setUpThemeFromRequest($request, $component, $paths);
         $layout = 'html' == $format ? 'layouts.html' : $theme['layout'];
 
-        return $this->getView($view, $response, $layout);
+        $view = $this->getView($view, $response, $layout);
+
+        $pjax = $request->pjax() ? true : $request->input('pjax');
+        $fragment = $pjax ? false : $request->ajax();
+        $container = $request->header('X-Pjax-Container', 'content');
+
+        return $view->fragmentIf($fragment, $container);
     }
 
     /**

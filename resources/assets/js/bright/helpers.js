@@ -155,12 +155,12 @@ function notify(message) {
     new Noty({
         text: message.text,
         type: message.type || 'error',
-        layout: 'topRight',
+        layout: 'bottomRight',
         theme: 'nest',
         dismissQueue: false,
-        timeout: 1 * 60 * 1000,
+        timeout: 1 * 30 * 1000,
         progressBar: true,
-        maxVisible: 1,
+        maxVisible: 5,
         killer: true,
     }).show();
 }

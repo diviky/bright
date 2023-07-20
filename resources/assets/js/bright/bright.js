@@ -123,36 +123,30 @@ function brightJs() {
             return ui;
         };
 
-        $('.table_sortable_body')
-            .sortable({
-                connectWith: ['.table_sortable_body'],
-                handle: '[sortable]',
-                placeholder: 'state-highlight',
-                opacity: 0.6,
-                helper: _gridSortHelper,
-                update: _gridSortUpdateHandler,
-            })
-            .disableSelection();
+        $('.table_sortable_body').sortable({
+            connectWith: ['.table_sortable_body'],
+            handle: '[sortable]',
+            placeholder: 'state-highlight',
+            opacity: 0.6,
+            helper: _gridSortHelper,
+            update: _gridSortUpdateHandler,
+        });
 
-        $('[grid-sortable]')
-            .sortable({
-                connectWith: '[grid-sortable]',
-                handle: '[sortable]',
-                placeholder: 'state-highlight',
-                opacity: 0.6,
-                helper: _gridSortHelper,
-                update: _gridSortUpdateHandler,
-            })
-            .disableSelection();
+        $('[grid-sortable]').sortable({
+            connectWith: '[grid-sortable]',
+            handle: '[sortable]',
+            placeholder: 'state-highlight',
+            opacity: 0.6,
+            helper: _gridSortHelper,
+            update: _gridSortUpdateHandler,
+        });
 
-        $('[sortables]')
-            .sortable({
-                connectWith: ['[sortables]'],
-                handle: '[sortable]',
-                placeholder: 'state-highlight',
-                opacity: 0.6,
-            })
-            .disableSelection();
+        $('[sortables]').sortable({
+            connectWith: ['[sortables]'],
+            handle: '[sortable]',
+            placeholder: 'state-highlight',
+            opacity: 0.6,
+        });
     }
 
     if ($.fn.waypoint) {
