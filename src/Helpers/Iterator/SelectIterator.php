@@ -68,34 +68,22 @@ class SelectIterator implements \Iterator
         $this->callback = $callback;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function rewind(): void
     {
         $this->reset();
         $this->query();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function current()
     {
         return $this->results[$this->position];
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function key()
     {
         return $this->totalPosition;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function next(): void
     {
         ++$this->position;
@@ -106,17 +94,11 @@ class SelectIterator implements \Iterator
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function valid(): bool
     {
         return isset($this->results[$this->position]) && $this->next;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function reset(): void
     {
         $this->position = 0;

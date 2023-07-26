@@ -9,7 +9,6 @@
         <directory name="src"/>
         <ignoreFiles>
             <directory name="vendor"/>
-            <file name="rector.php"/>
         </ignoreFiles>
     </projectFiles>
     <plugins>
@@ -58,16 +57,6 @@
                 <file name="src/Database/Eloquent/Builder.php"/>
             </errorLevel>
         </InvalidTemplateParam>
-        <InvalidArrayOffset>
-            <errorLevel type="suppress">
-                <file name="src/Database/Bright.php"/>
-            </errorLevel>
-        </InvalidArrayOffset>
-        <RedundantFunctionCallGivenDocblockType>
-            <errorLevel type="suppress">
-                <file name="src/Database/Bright.php"/>
-            </errorLevel>
-        </RedundantFunctionCallGivenDocblockType>
         <PossiblyNullReference>
             <errorLevel type="suppress">
                 <file name="src/Database/Filters/FiltersScope.php"/>

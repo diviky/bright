@@ -8,14 +8,8 @@ use Illuminate\Console\Command;
 
 class Migrate extends Command
 {
-    /**
-     * {@inheritDoc}
-     */
     protected $signature = 'bright:setup:migrate {--f|force : Force the operation to run when in production.}';
 
-    /**
-     * {@inheritDoc}
-     */
     protected $description = 'Run the database migration files';
 
     /**

@@ -40,7 +40,6 @@ class Statement implements ShouldQueue
      *
      * @param string $sql
      * @param string $bindings
-     * @param mixed  $serialized
      * @param mixed  $version
      */
     public function __construct($sql, $bindings, $version = 1)

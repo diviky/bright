@@ -204,8 +204,7 @@ trait Themable
     /**
      * Identify the theme from route.
      *
-     * @param string $route
-     * @param mixed  $matches
+     * @param mixed $matches
      */
     protected function getMatchingTheme($matches): ?string
     {

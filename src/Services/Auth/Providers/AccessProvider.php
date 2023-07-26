@@ -22,9 +22,6 @@ class AccessProvider implements UserProvider
         $this->token = $token;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function retrieveById($identifier)
     {
         return $this->user
@@ -46,9 +43,6 @@ class AccessProvider implements UserProvider
             ->first();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function retrieveByToken($identifier, $token)
     {
         if (false === strpos($token, '|')) {
@@ -73,17 +67,11 @@ class AccessProvider implements UserProvider
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function updateRememberToken(Authenticatable $user, $token): void
     {
         // update via remember token not necessary
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function retrieveByCredentials(array $credentials)
     {
         $key = null;
@@ -103,9 +91,6 @@ class AccessProvider implements UserProvider
         return $user->first();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
         $plain = $credentials['password'];

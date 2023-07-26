@@ -135,9 +135,6 @@ class Mailable extends BaseMailable implements ShouldQueue
         return $this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setAddress($address, $name = null, $property = 'to')
     {
         $address = $this->format($address, $name);

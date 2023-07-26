@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Concerns;
 
-use Diviky\Bright\Database\Bright;
 use Illuminate\Support\Facades\DB;
 
 trait Builder
@@ -22,8 +21,7 @@ trait Builder
     /**
      * Execute an SQL statement and return the boolean result.
      *
-     * @param string $query
-     * @param mixed  $sql
+     * @param mixed $sql
      *
      * @return bool|int
      */
@@ -35,17 +33,12 @@ trait Builder
         return $this->pdo()->exec($sql);
     }
 
-    public function bright(): Bright
-    {
-        return new Bright();
-    }
-
     /**
      * RAW database query.
      *
      * @param string $column
      */
-    protected function raw($column): \Illuminate\Database\Query\Expression
+    protected function raw($column): \Illuminate\Contracts\Database\Query\Expression
     {
         return DB::raw($column);
     }

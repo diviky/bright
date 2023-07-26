@@ -12,9 +12,6 @@ use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * {@inheritDoc}
-     */
     public function register(): void
     {
         $this->reportable(function (\Throwable $e): void {
@@ -24,9 +21,6 @@ class Handler extends ExceptionHandler
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         $format = $request->input('format');
@@ -42,9 +36,6 @@ class Handler extends ExceptionHandler
         return redirect()->guest(route('login'));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function invalidJson($request, ValidationException $exception)
     {
         return response()->json([
@@ -55,9 +46,6 @@ class Handler extends ExceptionHandler
         ], $exception->status);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function convertExceptionToArray(\Throwable $e)
     {
         if (config('app.debug')) {

@@ -60,9 +60,6 @@ class BroadcastableModelEventOccurred implements ShouldBroadcast
         $this->event = $event;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function broadcastOn()
     {
         $channels = empty($this->channels)

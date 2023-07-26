@@ -6,14 +6,8 @@ namespace Diviky\Bright\Models;
 
 class UserUsers extends Model
 {
-    /**
-     * {@inheritDoc}
-     */
     public $timestamps = false;
 
-    /**
-     * {@inheritDoc}
-     */
     public function getTable()
     {
         return config('bright.table.user_users', 'user_users');

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Query;
 
-use Diviky\Bright\Database\Bright;
 use Diviky\Bright\Database\Concerns\Async;
 use Diviky\Bright\Database\Concerns\Build;
 use Diviky\Bright\Database\Concerns\BuildsQueries;
@@ -20,6 +19,7 @@ use Diviky\Bright\Database\Concerns\Raw;
 use Diviky\Bright\Database\Concerns\Remove;
 use Diviky\Bright\Database\Concerns\SoftDeletes;
 use Diviky\Bright\Database\Concerns\Timestamps;
+use Illuminate\Contracts\Database\Query\Expression as QueryExpression;
 use Illuminate\Database\Query\Builder as LaravelBuilder;
 
 class Builder extends LaravelBuilder
@@ -64,9 +64,6 @@ class Builder extends LaravelBuilder
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function insert(array $values)
     {
         $values = $this->insertEvent($values);
@@ -94,9 +91,6 @@ class Builder extends LaravelBuilder
         return $id;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function delete($id = null)
     {
         $this->atomicEvent('delete');
@@ -104,9 +98,6 @@ class Builder extends LaravelBuilder
         return parent::delete($id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function update(array $values)
     {
         $values = $this->updateEvent($values);
@@ -165,19 +156,6 @@ class Builder extends LaravelBuilder
         return $this->connection->statement($query, $bindings);
     }
 
-    /**
-     * Old cakephp style conditions.
-     *
-     * @param array $where
-     * @param array $bindings
-     */
-    public function whereWith($where = [], $bindings = []): self
-    {
-        $sql = (new Bright())->conditions($where);
-
-        return $this->whereRaw($sql, $bindings);
-    }
-
     public function toQuery(): ?string
     {
         $this->atomicEvent('select');
@@ -190,5 +168,19 @@ class Builder extends LaravelBuilder
         }
 
         return $sql;
+    }
+
+    /**
+     * get the value from expression.
+     *
+     * @param float|\Illuminate\Contracts\Database\Query\Expression|int|string $value
+     */
+    protected function getExpressionValue($value): string
+    {
+        if ($value instanceof QueryExpression) {
+            return (string) $value->getValue($this->connnection->getQueryGrammar());
+        }
+
+        return (string) $value;
     }
 }

@@ -11,9 +11,6 @@ class Model extends BaseModel
 {
     use HasFactory;
 
-    /**
-     * {@inheritDoc}
-     */
     public $guarded = [];
 
     /**
