@@ -5,15 +5,13 @@ function brightJs() {
     jQuery('[role="ksubmit"]').easySubmit();
     jQuery('[tooltip=modal], [role="modal"]').easyModal();
 
-    $(document).tooltip({
-        html: true,
-        selector: '[data-toggle="tooltip"]',
+    $('[data-toggle="tooltip"]').tooltip({
+        html: true
     });
 
-    $(document).popover({
+    $('[data-toggle="popover"]').popover({
         html: true,
-        sanitize: false,
-        selector: '[data-toggle="popover"]',
+        sanitize: false
     });
 
     $('[data-toggle="tooltip"]').on('remove hide mouseleave', function (e) {
