@@ -117,7 +117,7 @@
       }
 
       if (settings.close) {
-        html += '<button type="button" class="close modal-close" data-dismiss="modal"></button>';
+        html += '<button type="button" class="close modal-close" data-dismiss="modal"  data-bs-dismiss="modal"></button>';
       }
 
       if (title) {
@@ -139,10 +139,11 @@
 
     $(self.settings.el + ' .modal-body').html(html);
     $(self.settings.el).modal({
-      show: true,
       keyboard: this.settings.keyboard,
       backdrop: this.settings.backdrop
     });
+
+    $(self.settings.el).modal('show');
 
     $(self.settings.el).on('hidden.bs.modal', function() {
       $(this).data('bs.modal', null);
