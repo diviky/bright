@@ -18,9 +18,6 @@ class Subscribe extends Command
         {topics* : Topics to Subscribe}
         {--connection : Broadcasting connection}';
 
-    /**
-     * {@inheritDoc}
-     */
     protected $description = 'Subscribe to the database broadcast events';
 
     /**

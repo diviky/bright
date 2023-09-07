@@ -9,14 +9,8 @@ use Illuminate\Console\Command;
 
 class GeoipUpdate extends Command
 {
-    /**
-     * {@inheritDoc}
-     */
     protected $signature = 'geoip:update';
 
-    /**
-     * {@inheritDoc}
-     */
     protected $description = 'Update geo ip database';
 
     /**

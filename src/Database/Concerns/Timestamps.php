@@ -28,9 +28,6 @@ trait Timestamps
         return utcTime();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setTimeStamps(array $values, bool $force = false): array
     {
         if ($this->usesTimestamps() || $force) {

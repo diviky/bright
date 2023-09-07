@@ -13,7 +13,7 @@ trait Message
      * @param string $action
      * @param string $name
      *
-     * @return (array|int|mixed|null|string)[]
+     * @return (null|array|int|mixed|string)[]
      */
     public function message($result = true, $action = 'save', $name = 'row'): array
     {
@@ -44,7 +44,7 @@ trait Message
      * @param mixed  $result
      * @param string $name
      *
-     * @return (array|int|mixed|null|string)[]
+     * @return (null|array|int|mixed|string)[]
      */
     public function deleted($result = true, $name = 'row')
     {
@@ -57,7 +57,7 @@ trait Message
      * @param mixed  $result
      * @param string $name
      *
-     * @return (array|int|mixed|null|string)[]
+     * @return (null|array|int|mixed|string)[]
      */
     public function inserted($result = true, $name = 'row')
     {
@@ -70,7 +70,7 @@ trait Message
      * @param mixed  $result
      * @param string $name
      *
-     * @return (array|int|mixed|null|string)[]
+     * @return (null|array|int|mixed|string)[]
      */
     public function created($result = true, $name = 'row')
     {
@@ -83,7 +83,7 @@ trait Message
      * @param mixed  $result
      * @param string $name
      *
-     * @return (array|int|mixed|null|string)[]
+     * @return (null|array|int|mixed|string)[]
      */
     public function updated($result = true, $name = 'row')
     {

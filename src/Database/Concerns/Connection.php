@@ -33,7 +33,6 @@ trait Connection
      *
      * @param string $query
      * @param array  $bindings
-     * @param mixed  $useReadPdo
      *
      * @return array|bool|int
      */

@@ -32,7 +32,7 @@ class File
     protected $reader;
 
     /**
-     *@var callable
+     * @var callable
      */
     protected $callable;
 

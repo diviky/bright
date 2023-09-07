@@ -13,9 +13,6 @@ class RedirectResponse extends BaseRedirectResponse
      */
     protected $with = [];
 
-    /**
-     * {@inheritDoc}
-     */
     public function with($key, $value = null)
     {
         $key = \is_array($key) ? $key : [$key => $value];
@@ -27,9 +24,6 @@ class RedirectResponse extends BaseRedirectResponse
         return parent::with($key, $value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function setTargetUrl(string $url): static
     {
         if ('' === $url) {

@@ -27,7 +27,7 @@ class Models
     }
 
     /**
-     *  @return \Illuminate\Database\Eloquent\Model::class
+     * @return \Illuminate\Database\Eloquent\Model::class
      */
     public static function branding()
     {
@@ -35,7 +35,7 @@ class Models
     }
 
     /**
-     *  @return \Illuminate\Database\Eloquent\Model::class
+     * @return \Illuminate\Database\Eloquent\Model::class
      */
     public static function options(): string
     {
@@ -43,7 +43,7 @@ class Models
     }
 
     /**
-     *  @return \Illuminate\Database\Eloquent\Model::class
+     * @return \Illuminate\Database\Eloquent\Model::class
      */
     public static function meta()
     {
@@ -51,7 +51,7 @@ class Models
     }
 
     /**
-     *  @return \Illuminate\Database\Eloquent\Model::class
+     * @return \Illuminate\Database\Eloquent\Model::class
      */
     public static function metaValues()
     {
@@ -59,7 +59,7 @@ class Models
     }
 
     /**
-     *  @return \Illuminate\Database\Eloquent\Model::class
+     * @return \Illuminate\Database\Eloquent\Model::class
      */
     public static function emailLogs()
     {
@@ -67,7 +67,7 @@ class Models
     }
 
     /**
-     *  @return \Illuminate\Database\Eloquent\Model::class
+     * @return \Illuminate\Database\Eloquent\Model::class
      */
     public static function users()
     {
@@ -77,7 +77,7 @@ class Models
     /**
      * @param mixed $name
      *
-     *  @return \Illuminate\Database\Eloquent\Model::class
+     * @return \Illuminate\Database\Eloquent\Model::class
      */
     public static function table($name)
     {
@@ -97,7 +97,7 @@ class Models
     }
 
     /**
-     *  @return \Illuminate\Database\Eloquent\Model::class
+     * @return \Illuminate\Database\Eloquent\Model::class
      */
     public static function activation()
     {

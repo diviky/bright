@@ -33,18 +33,12 @@ class ChunkedIterator extends \IteratorIterator
         $this->chunkSize = $chunkSize;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function rewind(): void
     {
         parent::rewind();
         $this->next();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function next(): void
     {
         $this->chunk = [];
@@ -54,17 +48,11 @@ class ChunkedIterator extends \IteratorIterator
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function current()
     {
         return $this->chunk;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function valid(): bool
     {
         return (bool) $this->chunk;

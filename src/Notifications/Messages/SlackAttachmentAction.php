@@ -63,8 +63,7 @@ class SlackAttachmentAction
     /**
      * Set the title of the field.
      *
-     * @param string $title
-     * @param mixed  $text
+     * @param mixed $text
      *
      * @return $this
      */

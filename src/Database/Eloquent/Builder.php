@@ -10,6 +10,7 @@ use Diviky\Bright\Database\Eloquent\Concerns\Async;
 use Diviky\Bright\Database\Eloquent\Concerns\Batch;
 use Diviky\Bright\Database\Eloquent\Concerns\Eventable;
 use Diviky\Bright\Database\Eloquent\Concerns\Filters;
+use Illuminate\Contracts\Database\Query\Expression as QueryExpression;
 use Illuminate\Database\Eloquent\Builder as BaseBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -32,9 +33,6 @@ class Builder extends BaseBuilder
         $this->sync();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function setModel(Model $model)
     {
         $this->query->setModel($model)->setBuilder($this);
@@ -42,9 +40,6 @@ class Builder extends BaseBuilder
         return parent::setModel($model);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getRelation($name)
     {
         $relation = parent::getRelation($name);
@@ -56,5 +51,19 @@ class Builder extends BaseBuilder
         }
 
         return $relation;
+    }
+
+    /**
+     * get the value from expression.
+     *
+     * @param float|\Illuminate\Contracts\Database\Query\Expression|int|string $value
+     */
+    protected function getExpressionValue($value): string
+    {
+        if ($value instanceof QueryExpression) {
+            return (string) $value->getValue($this->getGrammar());
+        }
+
+        return (string) $value;
     }
 }

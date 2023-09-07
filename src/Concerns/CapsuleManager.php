@@ -101,8 +101,7 @@ trait CapsuleManager
      * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
      * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
      *
-     * @param string $id  identifier of the entry to look for
-     * @param mixed  $key
+     * @param mixed $key
      *
      * @return bool
      */

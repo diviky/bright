@@ -26,7 +26,7 @@ class ServerRanges implements ShardChooserInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @param mixed $id
      *
      * @throws ShardingException
      */
@@ -41,17 +41,11 @@ class ServerRanges implements ShardChooserInterface
         throw new ShardingException('Your must to set up range for this id!');
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function chooseShard($id)
     {
         return $this->getShardById($id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function setRelation($id, $shard): bool
     {
         return true;

@@ -13,7 +13,6 @@ grumphp:
     style:
       tasks:
         - composer
-        - phpmd
         - phpcsfixer
     static:
       tasks:
@@ -29,7 +28,7 @@ grumphp:
       jobs: 10
       short_open_tag: false
       ignore_patterns: []
-      triggered_by: ['php', 'phtml', 'php3', 'php4', 'php5']
+      triggered_by: ['php']
     phpcs:
       standard:
         - PSR12
@@ -37,23 +36,6 @@ grumphp:
       ignore_patterns: ['*.blade.php']
       metadata: { priority: 400 }
       exclude: ['Generic.Files.LineLength', 'PSR2.ControlStructures.SwitchDeclaration']
-    # phpstan:
-    #   ignore_patterns: ['/^tests(.*)/', '/^database(.*)/', '/^config(.*)/', '/^routes(.*)/']
-    #   configuration: phpstan.neon
-    #   level: 5
-    #   metadata: { priority: 300 }
-    # phpcpd:
-    #   directory: ['src']
-    #   exclude: ['vendor']
-    #   fuzzy: false
-    #   min_lines: 5
-    #   min_tokens: 70
-    #   triggered_by: ['php']
-    phpmd:
-      whitelist_patterns: ['/^src(.*)/', '/^app(.*)/', '/^config(.*)/', '/^recources(.*)/']
-      ruleset: ['ruleset.xml']
-      report_format: ansi
-      metadata: { priority: 200 }
     phpunit:
       metadata: { priority: 100 }
     phpcsfixer:

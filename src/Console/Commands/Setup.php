@@ -9,14 +9,8 @@ use Symfony\Component\Process\Process;
 
 class Setup extends Command
 {
-    /**
-     * {@inheritDoc}
-     */
     protected $signature = 'bright:setup';
 
-    /**
-     * {@inheritDoc}
-     */
     protected $description = 'Setup the bright package';
 
     /**

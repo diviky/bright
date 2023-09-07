@@ -62,17 +62,17 @@ trait Cachable
     }
 
     /**
-     * Get the values of a given key.
+     * Get a collection instance containing the values of a given column.
      *
-     * @param null|string $key
-     * @param string      $column
+     * @param \Illuminate\Contracts\Database\Query\Expression|string $column
+     * @param null|string                                            $key
      *
-     * @return array|\Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function pluck($column, $key = null)
     {
         if ($this->shouldCache()) {
-            return $this->pluckCached($column, $key);
+            return $this->pluckCached($this->getExpressionValue($column), $this->getExpressionValue($key));
         }
 
         $this->atomicEvent('select');
@@ -130,7 +130,7 @@ trait Cachable
      * @param string $column
      * @param mixed  $key
      *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function pluckCached($column, $key = null)
     {

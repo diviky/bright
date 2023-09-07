@@ -32,9 +32,6 @@ class DatabaseCentralTable implements ShardChooserInterface
         $this->relationKey = $relationKey;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getShardById($id)
     {
         return Sharding::where('user_id', $id)
@@ -43,17 +40,11 @@ class DatabaseCentralTable implements ShardChooserInterface
             ->value('connection');
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function chooseShard($id)
     {
         return $this->getShardById($id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function setRelation($id, $shard): bool
     {
         return true;

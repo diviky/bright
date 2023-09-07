@@ -6,7 +6,6 @@ namespace Diviky\Bright\Database;
 
 use Diviky\Bright\Database\Concerns\Connector;
 use Illuminate\Database\DatabaseManager as LaravelDatabaseManager;
-use Illuminate\Database\Query\Expression;
 
 class DatabaseManager extends LaravelDatabaseManager
 {
@@ -15,16 +14,12 @@ class DatabaseManager extends LaravelDatabaseManager
     /**
      * Database table.
      *
-     * @param \Illuminate\Database\Query\Expression|string $name
+     * @param string $name
      *
      * @return \Illuminate\Database\Query\Builder
      */
     public function table($name)
     {
-        if ($name instanceof Expression) {
-            $name = (string) $name->getValue();
-        }
-
         $alias = '';
         if (false !== \stripos($name, ' as ')) {
             $segments = \preg_split('/\s+as\s+/i', $name);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
-use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Str;
 
 trait Eventable
@@ -295,11 +294,7 @@ trait Eventable
         $eventColumns = $this->getEventTables($type);
         $eventColumns = \array_merge($eventColumns, $this->eventColumns);
 
-        if ($this->from instanceof Expression) {
-            $from = \preg_split('/ as /i', $this->from->getValue());
-        } else {
-            $from = \preg_split('/ as /i', $this->from);
-        }
+        $from = \preg_split('/ as /i', $this->getExpressionValue($this->from));
 
         $mainAlias = (\count($from) > 1) ? last($from) . '.' : '';
 
@@ -344,12 +339,6 @@ trait Eventable
      */
     protected function getTableBaseName(): string
     {
-        if ($this->from instanceof Expression) {
-            $from = \preg_split('/ as /i', $this->from->getValue())[0];
-        } else {
-            $from = \preg_split('/ as /i', $this->from)[0];
-        }
-
-        return $from;
+        return $this->getExpressionValue($this->from);
     }
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Rules;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Filesystem\Filesystem;
 
-class FreeEmailValidation implements Rule
+class FreeEmailValidation implements ValidationRule
 {
     /**
      * The filesystem implementation.
@@ -26,15 +26,8 @@ class FreeEmailValidation implements Rule
 
     /**
      * Determine if the validation rule passes.
-     *
-     * @param string $attribute
-     * @param mixed  $value
-     *
-     * @SuppressWarnings(PHPMD)
-     *
-     * @return bool
      */
-    public function passes($attribute, $value)
+    public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $parts = \explode('@', $value);
         $email = $parts[1];
@@ -49,19 +42,7 @@ class FreeEmailValidation implements Rule
         }
 
         if (\preg_match("/{$email}/i", $json)) {
-            return false;
+            $fail('The :attribute must be Business email');
         }
-
-        return true;
-    }
-
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message()
-    {
-        return 'Please use your Business email';
     }
 }

@@ -486,10 +486,10 @@ trait Filter
             list($alias, $column) = explode('.', $string, 2);
             $column = $this->aliases[$column] ?? $column;
 
-            return (string) $this->raw($alias . '.' . $this->wrap($column));
+            return $this->getExpressionValue($this->raw($alias . '.' . $this->wrap($column)));
         }
 
-        return (string) $this->raw($this->wrap($string));
+        return $this->getExpressionValue($this->raw($this->wrap($string)));
     }
 
     /**

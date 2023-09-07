@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Query\Grammars;
 
+use Illuminate\Database\Query\Expression;
+
 trait WrapTrait
 {
     /**
@@ -24,15 +26,13 @@ trait WrapTrait
     /**
      * Wrap a table in keyword identifiers.
      *
-     * @param \Illuminate\Database\Query\Expression|string $table
+     * @param \Illuminate\Contracts\Database\Query\Expression|string $table
      *
      * @return string
      */
     public function wrapTable($table)
     {
-        if (!is_string($table)) {
-            return $this->getValue($table);
-        }
+        $table = $this->getExpressionValue($table);
 
         if (false !== \strpos($table, '.')) {
             list($database, $table) = \explode('.', $table);
@@ -71,5 +71,21 @@ trait WrapTrait
         }
 
         return $this->wrap($this->tablePrefix . $table . $alias, true);
+    }
+
+    /**
+     * get the value from expression.
+     *
+     * @param \Illuminate\Contracts\Database\Query\Expression|string $value
+     *
+     * @return mixed
+     */
+    protected function getExpressionValue($value)
+    {
+        if ($value instanceof Expression) {
+            return (string) $value->getValue($this);
+        }
+
+        return $value;
     }
 }

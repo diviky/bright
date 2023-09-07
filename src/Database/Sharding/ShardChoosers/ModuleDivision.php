@@ -24,25 +24,16 @@ class ModuleDivision implements ShardChooserInterface
         unset($relationKey);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getShardById($id)
     {
         return $this->connections[intval($id) % \count($this->connections)];
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function chooseShard($id)
     {
         return $this->getShardById($id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function setRelation($id, $shard): bool
     {
         return true;

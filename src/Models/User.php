@@ -61,9 +61,6 @@ class User extends Authenticatable
      */
     protected $accessTokenName = 'access_token';
 
-    /**
-     * {@inheritDoc}
-     */
     protected $fillable = [
         'name',
         'username',
@@ -74,25 +71,16 @@ class User extends Authenticatable
         'status',
     ];
 
-    /**
-     * {@inheritDoc}
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'options' => 'array',
     ];
 
-    /**
-     * {@inheritDoc}
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * {@inheritDoc}
-     */
     public function getTable(): string
     {
         return config('bright.table.users', 'users');
