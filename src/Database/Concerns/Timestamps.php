@@ -25,7 +25,7 @@ trait Timestamps
      */
     protected function freshTimestamp()
     {
-        return utcTime();
+        return now();
     }
 
     protected function setTimeStamps(array $values, bool $force = false): array
