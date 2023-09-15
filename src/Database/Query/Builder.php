@@ -178,7 +178,7 @@ class Builder extends LaravelBuilder
     protected function getExpressionValue($value): string
     {
         if ($value instanceof QueryExpression) {
-            return (string) $value->getValue($this->connnection->getQueryGrammar());
+            return (string) $value->getValue($this->grammar);
         }
 
         return (string) $value;
