@@ -274,10 +274,11 @@ trait Authorize
         $action = \explode('@', $action);
         $method = $route->getActionMethod();
         $controller = \explode('\\', $action[0]);
+        $controllersCount = count($controller);
 
-        $component = \strtolower($controller[\count($controller) - 2]);
         $method = \strtolower($method);
-        $namespace = \strtolower($controller[\count($controller) - 5]);
+        $component = \strtolower($controller[$controllersCount - 2] ?? '');
+        $namespace = \strtolower($controller[$controllersCount - 5] ?? '');
 
         $mappings = config('permission.grouping');
 

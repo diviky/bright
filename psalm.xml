@@ -52,6 +52,16 @@
                 <file name="src/Database/Filters/FiltersScope.php"/>
             </errorLevel>
         </UndefinedMethod>
+        <InvalidReturnType>
+            <errorLevel type="suppress">
+                <file name="src/Exceptions/Handler.php"/>
+            </errorLevel>
+        </InvalidReturnType>
+        <InvalidReturnStatement>
+            <errorLevel type="suppress">
+                <file name="src/Exceptions/Handler.php"/>
+            </errorLevel>
+        </InvalidReturnStatement>
         <InvalidTemplateParam>
             <errorLevel type="suppress">
                 <file name="src/Database/Eloquent/Builder.php"/>
