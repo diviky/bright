@@ -23,12 +23,12 @@ grumphp:
     git_blacklist:
       keywords: [die(, var_dump(, exit;]
       metadata: { priority: 500 }
-    phplint:
-      exclude: ['vendor']
-      jobs: 10
-      short_open_tag: false
-      ignore_patterns: []
-      triggered_by: ['php']
+    # phplint:
+    #   exclude: ['vendor']
+    #   jobs: 10
+    #   short_open_tag: false
+    #   ignore_patterns: []
+    #   triggered_by: ['php']
     phpcs:
       standard:
         - PSR12

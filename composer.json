@@ -28,7 +28,7 @@
         "matomo/decompress": "^2.1"
     },
     "require-dev": {
-        "diviky/code-analysis": "^1.1",
+        "diviky/code-analysis": "^2.0",
         "laravel/socialite": "^5.0",
         "league/oauth2-client": "^2.6"
     },
