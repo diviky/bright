@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\View;
 
+use Illuminate\Support\Arr;
 use Illuminate\View\Factory as BaseFactory;
 
 class Factory extends BaseFactory
@@ -31,5 +32,24 @@ class Factory extends BaseFactory
         if (!empty($this->paths)) {
             $this->finder->setPaths($this->paths);
         }
+    }
+
+    /**
+     * Add a piece of shared data to the environment.
+     *
+     * @param array|string $key
+     * @param null|mixed   $value
+     *
+     * @return mixed
+     */
+    public function share($key, $value = null)
+    {
+        $keys = is_array($key) ? $key : [$key => $value];
+
+        foreach ($keys as $key => $value) {
+            Arr::set($this->shared, $key, $value);
+        }
+
+        return $value;
     }
 }
