@@ -32,6 +32,10 @@ trait WrapTrait
      */
     public function wrapTable($table)
     {
+        if ($this->isExpression($table)) {
+            return parent::wrapTable($table);
+        }
+
         $table = $this->getExpressionValue($table);
 
         if (false !== \strpos($table, '.')) {
