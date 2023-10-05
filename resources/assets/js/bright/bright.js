@@ -58,14 +58,26 @@ function brightJs() {
     }
 
     if ($.fn.select2) {
-        $('[data-select]').select2({
-            minimumResultsForSearch: 10,
-        });
+         $('[data-select-ajax]').each(function () {
+            var $this = $(this);
 
-        $('[tokenizer]').select2({
-            tags: true,
-            tokenSeparators: [',', ' '],
-        });
+            $this.select2({
+                dropdownParent: $this.parent(),
+                minimumResultsForSearch: 10,
+            });
+
+         });
+
+         $('[tokenizer]').each(function () {
+            var $this = $(this);
+
+            $this.select2({
+                dropdownParent: $this.parent(),
+                tags: true,
+                tokenSeparators: [',', ' '],
+            });
+
+         });
 
         $('[data-select-ajax]').each(function () {
             var $this = $(this);
@@ -74,6 +86,7 @@ function brightJs() {
             $this.select2({
                 minimumInputLength: 3,
                 maximumInputLength: 20,
+                dropdownParent: $this.parent(),
                 ajax: {
                     url: url,
                     delay: 250,

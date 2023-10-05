@@ -485,6 +485,7 @@ function brightSystemJs() {
                         html: true,
                         sanitize: false,
                         placement: 'bottom',
+                        trigger: 'focus'
                     })
                     .popover('show');
 
