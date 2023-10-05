@@ -52,7 +52,7 @@ return function (string $prefix = '', string $as = ''): void {
         'prefix' => $prefix,
         'as' => $as
     ], function (): void {
-        Route::post('account/sniff', 'Account\Controller@sniff');
+        Route::match(['get', 'post'],'account/sniff/{id?}', 'Account\Controller@sniff');
 
         Route::get('activate', 'Auth\ActivationController@activate')->name('user.activate');
         Route::any('logout', 'Auth\LoginController@logout')->name('logout');
