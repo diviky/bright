@@ -147,9 +147,7 @@ class Controller extends BaseController
         session()->forget('sniffed');
         session()->forget('sniff');
 
-        if($this->isMethod('post')){
-            $key = $this->post("key");
-        }
+        $key = $this->post("key", $key);
         
         try {
             $decrypted = decrypt($key);
