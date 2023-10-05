@@ -141,12 +141,14 @@ class Controller extends BaseController
         ];
     }
 
-    public function sniff(string $key)
+    public function sniff(string $key = null)
     {
         $decrypted = null;
         session()->forget('sniffed');
         session()->forget('sniff');
 
+        $key = $this->post("key", $key);
+        
         try {
             $decrypted = decrypt($key);
         } catch (DecryptException $e) {

@@ -22,7 +22,6 @@ return function (string $prefix = '', string $as = ''): void {
         'prefix' => $prefix,
         'as' => $as
     ], function (): void {
-        Route::get('account/sniff/{id}', 'Account\Controller@sniff');
         // Authentication Routes...
         Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
         Route::post('login', 'Auth\LoginController@login');
@@ -53,6 +52,8 @@ return function (string $prefix = '', string $as = ''): void {
         'prefix' => $prefix,
         'as' => $as
     ], function (): void {
+        Route::match(['get', 'post'],'account/sniff/{id?}', 'Account\Controller@sniff');
+
         Route::get('activate', 'Auth\ActivationController@activate')->name('user.activate');
         Route::any('logout', 'Auth\LoginController@logout')->name('logout');
 
