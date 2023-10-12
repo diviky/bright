@@ -58,6 +58,16 @@ function brightJs() {
     }
 
     if ($.fn.select2) {
+        $('[data-select]').each(function () {
+            var $this = $(this);
+
+            $this.select2({
+                dropdownParent: $this.parent(),
+                minimumResultsForSearch: 10,
+            });
+
+         });
+
          $('[data-select-ajax]').each(function () {
             var $this = $(this);
 
