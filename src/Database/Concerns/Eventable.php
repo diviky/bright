@@ -306,9 +306,9 @@ trait Eventable
             $alias = $mainAlias;
             $column = \key($columns);
             if (false !== \strpos($column, '.')) {
-                list($alias, $column) = \explode('.', $column);
+                [$alias, $column] = \explode('.', $column);
 
-                $alias = $alias . '.';
+                $alias .= '.';
             }
 
             $field = isset($columns[$column]) ? $columns[$column] : null;
@@ -339,6 +339,10 @@ trait Eventable
      */
     protected function getTableBaseName(): string
     {
-        return $this->getExpressionValue($this->from);
+        $table = $this->getExpressionValue($this->from);
+
+        $from = \preg_split('/ as /i', $table);
+
+        return $from[0] ?? $table;
     }
 }
