@@ -5,15 +5,6 @@ function brightJs() {
     jQuery('[role="ksubmit"]').easySubmit();
     jQuery('[tooltip=modal], [role="modal"]').easyModal();
 
-    $('[data-toggle="tooltip"]').tooltip({
-        html: true
-    });
-
-    $('[data-toggle="popover"]').popover({
-        html: true,
-        sanitize: false
-    });
-
     $('[data-toggle="tooltip"]').on('remove hide mouseleave', function (e) {
         $(this).tooltip('hide');
     });
