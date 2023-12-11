@@ -206,7 +206,7 @@ trait Filter
     {
         foreach ($filters as $column => $value) {
             if (isset($value) && '' != $value && !empty($column)) {
-                $value = $value . '%';
+                $value .= '%';
                 $this->addWhere($column, $value, 'like');
             }
         }
@@ -224,7 +224,7 @@ trait Filter
 
                     $this->addWhere(ltrim($column, '%'), $value, 'like');
                 } elseif (Str::endsWith('%', $column)) {
-                    $value = $value . '%';
+                    $value .= '%';
 
                     $this->addWhere(rtrim($column, '%'), $value, 'like');
                 } else {

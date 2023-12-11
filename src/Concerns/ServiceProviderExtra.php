@@ -39,6 +39,43 @@ trait ServiceProviderExtra
      * @param string $key
      * @param bool   $force
      */
+    protected function mergeConfigRecursiveDistinct($path, $key, $force = false): void
+    {
+        if (!($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
+            $config = $this->app['config']->get($key, []);
+
+            if ($force) {
+                $config = static::arrayMergeRecursiveDistinct($config, require $path);
+            } else {
+                $config = static::arrayMergeRecursiveDistinct(require $path, $config);
+            }
+
+            $this->app['config']->set($key, $config);
+        }
+    }
+
+    protected static function arrayMergeRecursiveDistinct(array $array1, array $array2)
+    {
+        $merged = $array1;
+
+        foreach ($array2 as $key => &$value) {
+            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+                $merged[$key] = static::arrayMergeRecursiveDistinct($merged[$key], $value);
+            } else {
+                $merged[$key] = $value;
+            }
+        }
+
+        return $merged;
+    }
+
+    /**
+     * Merge the given configuration with the existing configuration.
+     *
+     * @param string $path
+     * @param string $key
+     * @param bool   $force
+     */
     protected function replaceConfigRecursive($path, $key, $force = false): void
     {
         if (!($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {

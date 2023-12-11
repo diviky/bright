@@ -44,8 +44,6 @@ class RedirectResponse extends BaseRedirectResponse
     /**
      * Is the response a redirect of some form?
      *
-     * @param string $location
-     *
      * @SuppressWarnings(PHPMD)
      */
     public function isRedirect(?string $location = null): bool

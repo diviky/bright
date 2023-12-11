@@ -120,8 +120,7 @@ class Reader
     /**
      * Modify the iterator using callback closure.
      *
-     * @param \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable $reader   Travarsable object
-     * @param callable                                                                                                                    $callable
+     * @param \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable $reader  Travarsable object
      * @param array                                                                                                                       $options
      *
      * @return \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable
@@ -169,9 +168,8 @@ class Reader
     /**
      * Ftech the first row from file.
      *
-     * @param string   $file
-     * @param callable $callable
-     * @param array    $options
+     * @param string $file
+     * @param array  $options
      *
      * @return array
      */
@@ -187,9 +185,8 @@ class Reader
     /**
      * Get the file rows as array.
      *
-     * @param string   $file
-     * @param callable $callable
-     * @param array    $options
+     * @param string $file
+     * @param array  $options
      *
      * @return array
      */
@@ -203,9 +200,8 @@ class Reader
     /**
      * Get the number of rows in file.
      *
-     * @param string   $file
-     * @param callable $callable
-     * @param array    $options
+     * @param string $file
+     * @param array  $options
      *
      * @return int
      */

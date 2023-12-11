@@ -53,7 +53,6 @@ class SelectIterator implements \Iterator
     /**
      * @param \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $builder
      * @param int                                                                      $chunkSize
-     * @param \Closure                                                                 $callback
      *
      * @throws \InvalidArgumentException
      */

@@ -55,7 +55,7 @@ trait Remove
                 unset($this->wheres[$key]);
             }
 
-            $bindkey = $bindkey + $count;
+            $bindkey += $count;
         }
 
         // Update the query Builder variables

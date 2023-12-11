@@ -102,7 +102,7 @@ trait Paging
                 );
 
                 $count += $results->count();
-                $limit = $limit - $count;
+                $limit -= $count;
                 $skip = 0;
 
                 if ($count >= $perPage) {
