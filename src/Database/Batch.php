@@ -14,6 +14,11 @@ class Batch
     /**
      * @var array
      */
+    protected $values = [];
+
+    /**
+     * @var array
+     */
     protected $fields = [];
 
     protected int $count = 0;
@@ -74,20 +79,20 @@ class Batch
         return $this;
     }
 
-    public function add(array $attributes = []): self
+    public function add(array $values = []): self
     {
-        $model = $this->model->make($attributes);
-        if (false === $model->fireEvent('creating')) {
+        $this->values[] = $values;
+
+        return $this;
+    }
+
+    public function format(array $attributes = []): self
+    {
+        $attributes = $this->make($attributes);
+
+        if (empty($attributes)) {
             return $this;
         }
-
-        if ($model->usesTimestamps()) {
-            $model->updateTimestamps();
-        }
-
-        $attributes = $model->getAttributes();
-
-        $model->fireEvent('created', false);
 
         if ($this->bulk && $this->stream) {
             \fwrite($this->stream, \implode('[F]', $attributes) . '[L]');
@@ -104,11 +109,33 @@ class Batch
         return $this;
     }
 
+    public function make(array $attributes = []): array
+    {
+        $model = $this->model->make($attributes);
+        if (false === $model->fireEvent('creating')) {
+            return [];
+        }
+
+        if ($model->usesTimestamps()) {
+            $model->updateTimestamps();
+        }
+
+        $attributes = $model->getAttributes();
+
+        $model->fireEvent('created', false);
+
+        return $attributes;
+    }
+
     /**
      * @return bool
      */
     public function commit()
     {
+        foreach ($this->values as $values) {
+            $this->format($values);
+        }
+
         if ($this->bulk && is_resource($this->stream)) {
             // @psalm-suppress
             fclose($this->stream);
