@@ -15,7 +15,7 @@ function brightJs() {
 
     $(document).on('ajax:modal:loaded', function (e, $this) {
         $('.tooltip').tooltip('hide');
-        $('[data-toggle="tooltip"]').tooltip('hide');
+        // $('[data-toggle="tooltip"]').tooltip('hide');
     });
 
     if ($.fn.lazyload) {
