@@ -65,10 +65,7 @@ class Batch
         $this->attributes = [];
     }
 
-    /**
-     * @param bool $bulk
-     */
-    public function bulk($bulk): self
+    public function bulk(bool $bulk = true): self
     {
         $this->bulk = $bulk;
 
@@ -90,7 +87,7 @@ class Batch
     {
         $attributes = $this->make($attributes);
 
-        if (empty($attributes)) {
+        if (is_null($attributes)) {
             return $this;
         }
 
@@ -109,11 +106,11 @@ class Batch
         return $this;
     }
 
-    public function make(array $attributes = []): array
+    public function make(array $attributes = []): ?array
     {
         $model = $this->model->make($attributes);
         if (false === $model->fireEvent('creating')) {
-            return [];
+            return null;
         }
 
         if ($model->usesTimestamps()) {

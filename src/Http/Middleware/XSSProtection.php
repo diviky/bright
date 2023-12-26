@@ -25,7 +25,7 @@ class XSSProtection
 
         array_walk_recursive($input, function (&$input): void {
             if (isset($input) && is_string($input)) {
-                $input = strip_tags($input);
+                $input = strip_tags($input, '=<><#>');
             }
         });
 
