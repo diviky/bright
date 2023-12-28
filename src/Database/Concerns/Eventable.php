@@ -37,8 +37,7 @@ trait Eventable
     /**
      * Set event state.
      *
-     * @param bool $event
-     *
+     * @param  bool  $event
      * @return static
      */
     public function eventState($event = false)
@@ -49,8 +48,7 @@ trait Eventable
     /**
      * Set event state.
      *
-     * @param bool $event
-     *
+     * @param  bool  $event
      * @return static
      */
     public function es($event = false)
@@ -65,8 +63,7 @@ trait Eventable
      *
      * @deprecated 2.0
      *
-     * @param bool|string $event
-     *
+     * @param  bool|string  $event
      * @return static
      */
     public function setEvent($event)
@@ -81,8 +78,7 @@ trait Eventable
     /**
      * Set the event column.
      *
-     * @param array|string $name
-     *
+     * @param  array|string  $name
      * @return static
      */
     public function eventColumn($name)
@@ -109,8 +105,7 @@ trait Eventable
     /**
      * Run the query in async mode.
      *
-     * @param array|string $events
-     *
+     * @param  array|string  $events
      * @return static
      */
     public function events($events = null)
@@ -148,7 +143,7 @@ trait Eventable
 
         $bright = $this->getConfig();
 
-        if (false !== $bright['timestamps']) {
+        if ($bright['timestamps'] !== false) {
             $values = $this->setTimeStamp($values);
         }
 
@@ -162,7 +157,7 @@ trait Eventable
     {
         $bright = $this->getConfig();
 
-        if (isset($bright['db_events']) && false == $bright['db_events']) {
+        if (isset($bright['db_events']) && $bright['db_events'] == false) {
             return false;
         }
 
@@ -192,7 +187,7 @@ trait Eventable
     /**
      * Get the event tables.
      *
-     * @param string $type
+     * @param  string  $type
      */
     protected function getEventTables($type): array
     {
@@ -248,7 +243,7 @@ trait Eventable
 
                         break;
                     default:
-                        if (false !== strpos($field, 'user.')) {
+                        if (strpos($field, 'user.') !== false) {
                             $value[$column] = user(ltrim($field, 'user.'));
                         } elseif (app()->has($field)) {
                             $value[$column] = app($field);
@@ -263,7 +258,7 @@ trait Eventable
 
         $bright = $this->getConfig();
 
-        if (false !== $bright['timestamps']) {
+        if ($bright['timestamps'] !== false) {
             foreach ($values as &$value) {
                 $value = $this->setTimeStamps($value);
             }
@@ -275,8 +270,7 @@ trait Eventable
     /**
      * Event.
      *
-     * @param string $type
-     *
+     * @param  string  $type
      * @return static
      */
     protected function atomicEvent($type = 'update')
@@ -305,7 +299,7 @@ trait Eventable
 
             $alias = $mainAlias;
             $column = \key($columns);
-            if (false !== \strpos($column, '.')) {
+            if (\strpos($column, '.') !== false) {
                 [$alias, $column] = \explode('.', $column);
 
                 $alias .= '.';

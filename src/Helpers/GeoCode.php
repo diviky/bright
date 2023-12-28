@@ -12,8 +12,7 @@ use Illuminate\Support\Arr;
 class GeoCode
 {
     /**
-     * @param string $address
-     *
+     * @param  string  $address
      * @return string[]
      *
      * @psalm-return array{provider?: string, latitude?: string, longitude?: string, country?: string, country_code?: string, city?: string, region?: string, region_code?: string, zipcode?: string, locality?: string, timezone?: string}

@@ -49,7 +49,7 @@ class CredentialsGuard
 
         $user = $this->provider->retrieveByCredentials($credentials);
 
-        if (\is_null($user) || !\is_null($user->deleted_at) || 1 != $user->status) {
+        if (\is_null($user) || !\is_null($user->deleted_at) || $user->status != 1) {
             return null;
         }
 

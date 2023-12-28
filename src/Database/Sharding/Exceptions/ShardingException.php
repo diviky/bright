@@ -9,7 +9,7 @@ class ShardingException extends \Exception
     /**
      * ShardingException constructor.
      *
-     * @param string $message
+     * @param  string  $message
      */
     public function __construct($message = 'An error occurred')
     {

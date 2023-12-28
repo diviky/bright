@@ -53,10 +53,9 @@ class GeoIpUpdater
     /**
      * Download and update GeoIp database.
      *
-     * @param string      $destinationPath
-     * @param null|string $geoDbUrl
-     * @param null|string $geoDbMd5Url
-     *
+     * @param  string  $destinationPath
+     * @param  null|string  $geoDbUrl
+     * @param  null|string  $geoDbMd5Url
      * @return bool
      */
     public function updateGeoIpFiles($destinationPath, $geoDbUrl = null, $geoDbMd5Url = null)
@@ -80,8 +79,8 @@ class GeoIpUpdater
     /**
      * Check db is up to date or not.
      *
-     * @param string $geoDbMd5Url
-     * @param string $destinationPath
+     * @param  string  $geoDbMd5Url
+     * @param  string  $destinationPath
      */
     protected function databaseIsUpdated($geoDbMd5Url, $destinationPath): bool
     {
@@ -114,9 +113,8 @@ class GeoIpUpdater
     /**
      * Download gzipped database, unzip and check md5.
      *
-     * @param string $destinationPath
-     * @param string $geoDbUrl
-     *
+     * @param  string  $destinationPath
+     * @param  string  $geoDbUrl
      * @return bool
      */
     protected function downloadGzipped($destinationPath, $geoDbUrl)
@@ -135,8 +133,7 @@ class GeoIpUpdater
     /**
      * Make directory.
      *
-     * @param string $destinationPath
-     *
+     * @param  string  $destinationPath
      * @return bool
      */
     protected function makeDir($destinationPath)
@@ -147,9 +144,8 @@ class GeoIpUpdater
     /**
      * Read url to file.
      *
-     * @param string      $uri
-     * @param null|string $fileName
-     *
+     * @param  string  $uri
+     * @param  null|string  $fileName
      * @return bool|string
      */
     protected function getHTTPFile($uri, string $destinationPath, $fileName = null)
@@ -164,7 +160,7 @@ class GeoIpUpdater
         $fileRead = fopen($uri, 'rb');
         $fileWrite = fopen($fileWriteName, 'wb');
 
-        if (false === $fileRead || (false === $fileWrite)) {
+        if ($fileRead === false || ($fileWrite === false)) {
             $this->addMessage("Unable to open {$uri} (read) or {$fileWriteName} (write).");
 
             return false;
@@ -174,7 +170,7 @@ class GeoIpUpdater
             $content = fread($fileRead, 1024 * 16);
             $success = fwrite($fileWrite, $content);
 
-            if (false === $success) {
+            if ($success === false) {
                 $this->addMessage("Error downloading file {$uri} to {$fileWriteName}.");
 
                 return false;
@@ -211,7 +207,7 @@ class GeoIpUpdater
             unlink($zip);
         }
 
-        if (true !== $files) {
+        if ($files !== true) {
             $this->addMessage($archive->errorInfo());
             $this->addMessage("Unable to extract gzip file {$filePath} to {$out}.");
 
@@ -252,7 +248,7 @@ class GeoIpUpdater
     /**
      * get the db file url.
      *
-     * @param null|string $geoDbUrl
+     * @param  null|string  $geoDbUrl
      */
     protected function getDbFileUrl($geoDbUrl): string
     {
@@ -262,7 +258,7 @@ class GeoIpUpdater
     /**
      * Get the db file name.
      *
-     * @param null|string $geoDbMd5Url
+     * @param  null|string  $geoDbMd5Url
      */
     protected function getMd5FileName($geoDbMd5Url): string
     {

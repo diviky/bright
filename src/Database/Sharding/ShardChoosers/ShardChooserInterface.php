@@ -9,8 +9,7 @@ interface ShardChooserInterface
     /**
      * Get the shard.
      *
-     * @param int|string $id
-     *
+     * @param  int|string  $id
      * @return string
      */
     public function getShardById($id);
@@ -18,8 +17,7 @@ interface ShardChooserInterface
     /**
      * Choose the shard.
      *
-     * @param string $id
-     *
+     * @param  string  $id
      * @return string
      */
     public function chooseShard($id);
@@ -27,8 +25,8 @@ interface ShardChooserInterface
     /**
      * Set the sharding relation.
      *
-     * @param string $id
-     * @param string $shard
+     * @param  string  $id
+     * @param  string  $shard
      */
     public function setRelation($id, $shard): bool;
 }

@@ -26,7 +26,10 @@ class Builder extends LaravelBuilder
 {
     use Async;
     use Build;
+    use BuildsQueries;
     use Cachable;
+    use Config;
+    use Eloquent;
     use Eventable;
     use Filter;
     use Ordering;
@@ -36,14 +39,11 @@ class Builder extends LaravelBuilder
     use Remove;
     use SoftDeletes;
     use Timestamps;
-    use BuildsQueries;
-    use Config;
-    use Eloquent;
 
     /**
      * Set the alias for table.
      *
-     * @param string $as
+     * @param  string  $as
      */
     public function alias($as): self
     {
@@ -55,7 +55,7 @@ class Builder extends LaravelBuilder
     /**
      * Set the alias for table.
      *
-     * @param string $as
+     * @param  string  $as
      */
     public function as($as): self
     {
@@ -74,8 +74,7 @@ class Builder extends LaravelBuilder
     /**
      * Insert a new record and get the value of the primary key.
      *
-     * @param null|string $sequence
-     *
+     * @param  null|string  $sequence
      * @return int|string
      */
     public function insertGetId(array $values, $sequence = null)
@@ -173,7 +172,7 @@ class Builder extends LaravelBuilder
     /**
      * get the value from expression.
      *
-     * @param float|\Illuminate\Contracts\Database\Query\Expression|int|string $value
+     * @param  float|\Illuminate\Contracts\Database\Query\Expression|int|string  $value
      */
     protected function getExpressionValue($value): string
     {

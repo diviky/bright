@@ -11,8 +11,7 @@ trait FallbackConnector
     /**
      * Create a new PDO connection.
      *
-     * @param string $dsn
-     *
+     * @param  string  $dsn
      * @return \PDO
      *
      * @throws \Exception
@@ -27,11 +26,10 @@ trait FallbackConnector
     /**
      * Handle an exception that occurred during connect execution.
      *
-     * @param string $dsn
-     * @param string $username
-     * @param string $password
-     * @param array  $options
-     *
+     * @param  string  $dsn
+     * @param  string  $username
+     * @param  string  $password
+     * @param  array  $options
      * @return \PDO
      *
      * @throws \Exception

@@ -75,21 +75,20 @@ class Models
     }
 
     /**
-     * @param mixed $name
-     *
+     * @param  mixed  $name
      * @return \Illuminate\Database\Eloquent\Model::class
      */
     public static function table($name)
     {
-        if ('app_options' == $name) {
+        if ($name == 'app_options') {
             return static::options();
         }
 
-        if ('app_meta' == $name) {
+        if ($name == 'app_meta') {
             return static::meta();
         }
 
-        if ('app_meta_values' == $name) {
+        if ($name == 'app_meta_values') {
             return static::metaValues();
         }
 

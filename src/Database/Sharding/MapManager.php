@@ -51,7 +51,7 @@ class MapManager
     /**
      * MapManager constructor.
      *
-     * @param array $map config
+     * @param  array  $map config
      */
     public function __construct($map)
     {
@@ -61,7 +61,7 @@ class MapManager
     /**
      * Set the sharding service name.
      *
-     * @param string $name
+     * @param  string  $name
      *
      * @throws ShardingException
      */

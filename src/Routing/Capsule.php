@@ -9,6 +9,6 @@ use Diviky\Bright\Concerns\CapsuleManager;
 
 class Capsule
 {
-    use CapsuleManager;
     use Builder;
+    use CapsuleManager;
 }

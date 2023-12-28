@@ -12,8 +12,7 @@ trait UsersParent
     /**
      * Assign user to user.
      *
-     * @param int $parent_id
-     *
+     * @param  int  $parent_id
      * @return Model
      */
     public function assignUserParent($parent_id)

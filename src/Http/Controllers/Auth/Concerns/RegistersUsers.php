@@ -46,7 +46,7 @@ trait RegistersUsers
 
         $this->guard()->login($user);
 
-        $next = (0 == $user->status) ? 'user.activate' : $this->redirectPath();
+        $next = ($user->status == 0) ? 'user.activate' : $this->redirectPath();
 
         return [
             'redirect' => $next,
@@ -92,7 +92,7 @@ trait RegistersUsers
     /**
      * The user has been registered.
      *
-     * @param mixed $user
+     * @param  mixed  $user
      */
     protected function registered($user): void
     {
@@ -106,7 +106,7 @@ trait RegistersUsers
 
         $user->assignParent();
 
-        if (0 == $user->status) {
+        if ($user->status == 0) {
             $token = $this->saveToken($user);
             $user->notify(new SendActivationToken($token));
         }

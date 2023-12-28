@@ -10,6 +10,7 @@ class Result
      * @var PredicateInterface
      */
     public $predicate;
+
     /**
      * @var string
      */
@@ -34,8 +35,7 @@ class Result
     /**
      * Set the value of combinedBy.
      *
-     * @param mixed $combinedBy
-     *
+     * @param  mixed  $combinedBy
      * @return self
      */
     public function setCombinedBy($combinedBy)
@@ -58,8 +58,7 @@ class Result
     /**
      * Set the value of predicate.
      *
-     * @param mixed $predicate
-     *
+     * @param  mixed  $predicate
      * @return self
      */
     public function setPredicate($predicate)

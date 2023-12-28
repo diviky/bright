@@ -12,7 +12,7 @@ trait Factory
     /**
      * Register factories.
      *
-     * @param string $namespace
+     * @param  string  $namespace
      */
     protected function registerFactoriesFor($namespace): void
     {

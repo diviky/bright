@@ -14,7 +14,7 @@ class RedisSequence implements IdGeneratorInterface
     protected $sequenceKey;
 
     /**
-     * @param int $sequenceKey
+     * @param  int  $sequenceKey
      */
     public function __construct($sequenceKey)
     {
@@ -34,7 +34,7 @@ class RedisSequence implements IdGeneratorInterface
     /**
      * Set the last id.
      *
-     * @param int $id
+     * @param  int  $id
      */
     public function setLastId($id): bool
     {

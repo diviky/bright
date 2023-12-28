@@ -15,9 +15,8 @@ class PermissionMiddleware
     /**
      * Check the user for specific permission.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param array|string             $permission
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array|string  $permission
      * @return \Closure
      *
      * @throws UnauthorizedException

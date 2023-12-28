@@ -22,8 +22,8 @@ class Money implements CastsAttributes
     protected int $decimals = 2;
 
     /**
-     * @param null|int    $decimals
-     * @param null|string $currency
+     * @param  null|int  $decimals
+     * @param  null|string  $currency
      */
     public function __construct($decimals = null, $currency = 'INR')
     {
@@ -37,11 +37,10 @@ class Money implements CastsAttributes
     /**
      * Cast the given value.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
-     * @param string                              $key
-     * @param mixed                               $value
-     * @param array                               $attributes
-     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  string  $key
+     * @param  mixed  $value
+     * @param  array  $attributes
      * @return string
      */
     public function get($model, $key, $value, $attributes)
@@ -52,11 +51,10 @@ class Money implements CastsAttributes
     /**
      * Prepare the given value for storage.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
-     * @param string                              $key
-     * @param mixed                               $value
-     * @param array                               $attributes
-     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  string  $key
+     * @param  mixed  $value
+     * @param  array  $attributes
      * @return float|int
      */
     public function set($model, $key, $value, $attributes)
@@ -67,8 +65,7 @@ class Money implements CastsAttributes
     /**
      * Convert to int from decimals.
      *
-     * @param float|int $value
-     *
+     * @param  float|int  $value
      * @return float|int
      */
     public function to($value)
@@ -83,8 +80,7 @@ class Money implements CastsAttributes
     /**
      * Convert to int from decimals.
      *
-     * @param int $value
-     *
+     * @param  int  $value
      * @return string
      */
     public function from($value)
@@ -99,9 +95,8 @@ class Money implements CastsAttributes
     /**
      * Convert to decimal number.
      *
-     * @param float|int $value
-     * @param int       $decimals
-     *
+     * @param  float|int  $value
+     * @param  int  $decimals
      * @return string
      */
     protected function asDecimal($value, $decimals)

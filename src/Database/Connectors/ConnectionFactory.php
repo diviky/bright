@@ -39,12 +39,11 @@ class ConnectionFactory extends LaravelConnectionFactory
     /**
      * Create a new connection instance.
      *
-     * @param string        $driver
-     * @param \Closure|\PDO $connection
-     * @param string        $database
-     * @param string        $prefix
-     *
-     * @return \Illuminate\Database\Connection
+     * @param  string  $driver
+     * @param  \Closure|\PDO  $connection
+     * @param  string  $database
+     * @param  string  $prefix
+     * @return Connection
      *
      * @throws \InvalidArgumentException
      */

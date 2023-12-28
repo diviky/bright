@@ -20,7 +20,7 @@ return function (string $prefix = '', string $as = ''): void {
         'middleware' => ['web', 'guest'],
         'namespace' => '\Diviky\Bright\Http\Controllers',
         'prefix' => $prefix,
-        'as' => $as
+        'as' => $as,
     ], function (): void {
         // Authentication Routes...
         Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -50,9 +50,9 @@ return function (string $prefix = '', string $as = ''): void {
         'middleware' => ['web', 'auth'],
         'namespace' => '\Diviky\Bright\Http\Controllers',
         'prefix' => $prefix,
-        'as' => $as
+        'as' => $as,
     ], function (): void {
-        Route::match(['get', 'post'],'account/sniff/{id?}', 'Account\Controller@sniff');
+        Route::match(['get', 'post'], 'account/sniff/{id?}', 'Account\Controller@sniff');
 
         Route::get('activate', 'Auth\ActivationController@activate')->name('user.activate');
         Route::any('logout', 'Auth\LoginController@logout')->name('logout');

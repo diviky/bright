@@ -14,8 +14,7 @@ class Controller extends BaseController
     /**
      * Redirect user to for login.
      *
-     * @param string $provider
-     *
+     * @param  string  $provider
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function connect($provider)
@@ -25,8 +24,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @param string $provider
-     *
+     * @param  string  $provider
      * @return null|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function callback($provider)

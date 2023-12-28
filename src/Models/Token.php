@@ -51,13 +51,12 @@ class Token extends Model implements HasAbilities
     /**
      * Find the token instance matching the given token.
      *
-     * @param string $token
-     *
+     * @param  string  $token
      * @return null|static
      */
     public static function findToken($token)
     {
-        if (false === strpos($token, '|')) {
+        if (strpos($token, '|') === false) {
             if (strlen($token) > 40) {
                 $token = hash('sha256', $token);
             }
@@ -79,8 +78,7 @@ class Token extends Model implements HasAbilities
     /**
      * Determine if the token has a given ability.
      *
-     * @param string $ability
-     *
+     * @param  string  $ability
      * @return bool
      */
     public function can($ability)
@@ -92,8 +90,7 @@ class Token extends Model implements HasAbilities
     /**
      * Determine if the token is missing a given ability.
      *
-     * @param string $ability
-     *
+     * @param  string  $ability
      * @return bool
      */
     public function cant($ability)

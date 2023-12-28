@@ -89,12 +89,12 @@ class Controller extends BaseController
     /**
      * Create a new signed URL.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function signed(Request $request)
     {
         $disk = config('filesystems.default');
-        if ('local' == $disk) {
+        if ($disk == 'local') {
             return $this->forLocal($request);
         }
 
@@ -160,7 +160,7 @@ class Controller extends BaseController
     /**
      * Get the S3 storage client instance.
      *
-     * @return \Aws\S3\S3Client
+     * @return S3Client
      */
     protected function storageClient()
     {

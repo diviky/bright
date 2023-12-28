@@ -39,7 +39,7 @@ class File
     protected string $path;
 
     /**
-     * @param array|\Iterator|string|\Traversable $reader
+     * @param  array|\Iterator|string|\Traversable  $reader
      */
     final public function __construct($reader = null, array $options = [])
     {
@@ -58,7 +58,7 @@ class File
     /**
      * Modify the iterator using callback closure.
      *
-     * @param array $options
+     * @param  array  $options
      */
     public function modify($options = []): self
     {
@@ -86,7 +86,7 @@ class File
 
             $count = isset($options['total']) ? $options['total'] : null;
 
-            if (null !== $count && $offset >= $count) {
+            if ($count !== null && $offset >= $count) {
                 return (new static())->setReader(new \EmptyIterator());
             }
 
@@ -99,8 +99,7 @@ class File
     /**
      * Fetch the first row from file.
      *
-     * @param array $options
-     *
+     * @param  array  $options
      * @return array
      */
     public function header($options = [])
@@ -115,8 +114,7 @@ class File
     /**
      * Fetch rows from file.
      *
-     * @param array $options
-     *
+     * @param  array  $options
      * @return array
      */
     public function all($options = [])
@@ -196,9 +194,8 @@ class File
     /**
      * Unzip the zip file.
      *
-     * @param null|string $zip
-     * @param array       $options
-     *
+     * @param  null|string  $zip
+     * @param  array  $options
      * @return null|string
      */
     public function unzip($zip, $options = [])
@@ -280,7 +277,7 @@ class File
     }
 
     /**
-     * @param Illuminate\Container\RewindableGenerator|\Iterator|Port\Csv\CsvReader|Port\Reader\ArrayReader|Port\Spreadsheet\SpreadsheetReader|Traversable $reader
+     * @param  Illuminate\Container\RewindableGenerator|\Iterator|Port\Csv\CsvReader|Port\Reader\ArrayReader|Port\Spreadsheet\SpreadsheetReader|Traversable  $reader
      */
     protected function setReader($reader): self
     {
@@ -292,9 +289,8 @@ class File
     /**
      * Fetch all the values from file.
      *
-     * @param array|\Iterator|string|\Traversable $reader
-     * @param array                               $options
-     *
+     * @param  array|\Iterator|string|\Traversable  $reader
+     * @param  array  $options
      * @return null|iterable<array-key|mixed, mixed>|mixed|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|string
      */
     protected function getReader($reader, $options = [])
@@ -306,7 +302,7 @@ class File
         } else {
             $reader = $this->unzip($reader, $options);
             $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
-            $ext = '.' == $ext ? '.xls' : $ext;
+            $ext = $ext == '.' ? '.xls' : $ext;
         }
 
         $ext = \strtolower($ext);
@@ -318,7 +314,7 @@ class File
                 return new \EmptyIterator();
             }
 
-            $lines = ('.txt' == $ext) ? 1 : 5;
+            $lines = ($ext == '.txt') ? 1 : 5;
             $file = '';
 
             \ini_set('auto_detect_line_endings', 'on');
@@ -345,7 +341,7 @@ class File
                     $finfo = new \finfo(FILEINFO_MIME_TYPE);
                     $mime = $finfo->file($file->getRealPath());
 
-                    if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
+                    if ($options['delimiter'] === "\t" && $ext == '.xls' && $mime != 'application/vnd.ms-excel') {
                         $reader = new CsvReader($file, $options['delimiter']);
                     } else {
                         if (class_exists('Port\Excel\ExcelReader')) {
@@ -384,7 +380,7 @@ class File
     /**
      * Indentify the delimiter from row string.
      *
-     * @param string $file
+     * @param  string  $file
      */
     protected function detectDelimiter($file, int $sample = 5): ?string
     {
@@ -411,9 +407,9 @@ class File
             if (is_array($rowChars)) {
                 foreach ($rowChars as $char) {
                     foreach ($delimiters as $delim) {
-                        if (false !== \strpos($char, $delim)) {
+                        if (\strpos($char, $delim) !== false) {
                             // if the char is the delim ...
-                            ++$delimCount[$delim]; // ... increment
+                            $delimCount[$delim]++; // ... increment
                         }
                     }
                 }
@@ -432,8 +428,8 @@ class File
     }
 
     /**
-     * @param string $file
-     * @param int    $total
+     * @param  string  $file
+     * @param  int  $total
      */
     protected function getLines($file, $total = 5): array
     {
@@ -443,7 +439,7 @@ class File
         $lines = [];
         while (!\feof($handle)) {
             $lines[] = \fgets($handle, 1024);
-            ++$line;
+            $line++;
             if ($line >= $total) {
                 break;
             }

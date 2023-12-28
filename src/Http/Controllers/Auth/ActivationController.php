@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ActivationController extends Controller
 {
+    use ColumnsTrait;
     use Notifiable;
     use Token;
-    use ColumnsTrait;
 
     /**
      * @return \Illuminate\Contracts\View\View|string[]
@@ -38,7 +38,7 @@ class ActivationController extends Controller
         $token = $request->input('token');
         $user = user();
 
-        if (1 == $user->status) {
+        if ($user->status == 1) {
             return [
                 'status' => 'OK',
                 'message' => 'Your account is already activated',

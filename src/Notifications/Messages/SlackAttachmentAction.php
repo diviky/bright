@@ -63,8 +63,7 @@ class SlackAttachmentAction
     /**
      * Set the title of the field.
      *
-     * @param mixed $text
-     *
+     * @param  mixed  $text
      * @return $this
      */
     public function text($text)
@@ -77,7 +76,7 @@ class SlackAttachmentAction
     /**
      * Action name.
      *
-     * @param string $name
+     * @param  string  $name
      */
     public function name($name): self
     {
@@ -89,7 +88,7 @@ class SlackAttachmentAction
     /**
      * Action value.
      *
-     * @param string $value
+     * @param  string  $value
      */
     public function value($value): self
     {
@@ -101,7 +100,7 @@ class SlackAttachmentAction
     /**
      * Action.
      *
-     * @param array $action
+     * @param  array  $action
      */
     public function action($action = []): self
     {
@@ -113,7 +112,7 @@ class SlackAttachmentAction
     /**
      * Action url.
      *
-     * @param string $url
+     * @param  string  $url
      */
     public function url($url): self
     {
@@ -125,7 +124,7 @@ class SlackAttachmentAction
     /**
      * Action confirm button.
      *
-     * @param array $confirm
+     * @param  array  $confirm
      */
     public function confirm($confirm = []): self
     {
@@ -137,7 +136,7 @@ class SlackAttachmentAction
     /**
      * Action type.
      *
-     * @param string $type
+     * @param  string  $type
      */
     public function type($type): self
     {
@@ -149,7 +148,7 @@ class SlackAttachmentAction
     /**
      * Action style.
      *
-     * @param string $style
+     * @param  string  $style
      */
     public function style($style): self
     {

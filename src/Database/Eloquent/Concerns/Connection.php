@@ -13,7 +13,7 @@ trait Connection
 
     protected function guessModelConnection(string $table): void
     {
-        list($connection, $config) = $this->getConnectionDetails($table);
+        [$connection, $config] = $this->getConnectionDetails($table);
 
         if (!isset($connection)) {
             $connection = $this->getConnection()->getName();

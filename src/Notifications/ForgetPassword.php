@@ -33,8 +33,8 @@ class ForgetPassword extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      *
-     * @param mixed $token
-     * @param mixed $channels
+     * @param  mixed  $token
+     * @param  mixed  $channels
      */
     public function __construct($token, $channels = [])
     {
@@ -45,8 +45,7 @@ class ForgetPassword extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @param mixed $notifiable
-     *
+     * @param  mixed  $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -67,9 +66,8 @@ class ForgetPassword extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param mixed $notifiable
-     *
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @param  mixed  $notifiable
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
@@ -84,8 +82,7 @@ class ForgetPassword extends Notification implements ShouldQueue
     /**
      * Get the array representation of the notification.
      *
-     * @param mixed $notifiable
-     *
+     * @param  mixed  $notifiable
      * @return array
      */
     public function toArray($notifiable)

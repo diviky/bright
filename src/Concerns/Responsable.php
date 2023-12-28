@@ -12,10 +12,9 @@ trait Responsable
     /**
      * Get the view.
      *
-     * @param string $route
-     * @param mixed  $data
-     * @param string $layout
-     *
+     * @param  string  $route
+     * @param  mixed  $data
+     * @param  string  $layout
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     protected function getView($route, $data = [], $layout = null)
@@ -31,7 +30,7 @@ trait Responsable
     /**
      * Get the route name from action.
      *
-     * @param string $action
+     * @param  string  $action
      */
     protected function getRouteFromAction($action): string
     {
@@ -44,7 +43,7 @@ trait Responsable
     /**
      * Get the method name of the route action.
      *
-     * @param mixed $action
+     * @param  mixed  $action
      */
     protected function getMethod($action): string
     {
@@ -54,11 +53,11 @@ trait Responsable
     /**
      * Get the namespace of the action.
      *
-     * @param string $action
+     * @param  string  $action
      */
     protected function getNamespace($action): ?string
     {
-        if (false === \strpos($action, '@')) {
+        if (\strpos($action, '@') === false) {
             return null;
         }
 
@@ -72,11 +71,11 @@ trait Responsable
     /**
      * Get the view path.
      *
-     * @param string $action
+     * @param  string  $action
      */
     protected function getViewPath($action): ?string
     {
-        if (false === \strpos($action, '@')) {
+        if (\strpos($action, '@') === false) {
             return null;
         }
 
@@ -92,9 +91,8 @@ trait Responsable
     /**
      * Get redirect route from response.
      *
-     * @param array  $response
-     * @param string $keyword
-     *
+     * @param  array  $response
+     * @param  string  $keyword
      * @return null|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     protected function getNextRedirect($response = [], $keyword = 'next')
@@ -108,11 +106,11 @@ trait Responsable
 
         $redirect = null;
         if (\is_string($next)) {
-            if ('/' == \substr($next, 0, 1)) {
+            if (\substr($next, 0, 1) == '/') {
                 $redirect = redirect($next);
-            } elseif ('back' == $next) {
+            } elseif ($next == 'back') {
                 $redirect = redirect()->back();
-            } elseif ('intended' == $next) {
+            } elseif ($next == 'intended') {
                 $redirect = redirect()->intended('/');
             } else {
                 $redirect = redirect()->route($next);
@@ -143,12 +141,11 @@ trait Responsable
     /**
      * Get the view locations from controller.
      *
-     * @param mixed       $controller
-     * @param null|string $action
-     *
+     * @param  mixed  $controller
+     * @param  null|string  $action
      * @return array
      */
-    protected function getViewsFrom($controller, $action = null)
+    protected function getViewPathsFrom($controller, $action = null)
     {
         if (\method_exists($controller, 'getViewsFrom')) {
             $paths = $controller->getViewsFrom();

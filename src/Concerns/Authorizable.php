@@ -11,13 +11,12 @@ trait Authorizable
     /**
      * Check user as right permission.
      *
-     * @param string $ability
-     *
+     * @param  string  $ability
      * @return null|mixed
      */
     public function isPermissionRevoked($ability)
     {
-        list($option, $view) = \array_pad(\explode('.', $ability), 2, null);
+        [$option, $view] = \array_pad(\explode('.', $ability), 2, null);
 
         $matches = [
             '*',
@@ -58,13 +57,12 @@ trait Authorizable
     /**
      * Check user as right permission.
      *
-     * @param string $ability
-     *
+     * @param  string  $ability
      * @return null|mixed
      */
     protected function isMatched($ability)
     {
-        list($option, $view) = \array_pad(\explode('.', $ability), 2, null);
+        [$option, $view] = \array_pad(\explode('.', $ability), 2, null);
 
         $matches = [
             '*',

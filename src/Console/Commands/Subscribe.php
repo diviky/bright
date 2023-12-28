@@ -36,6 +36,7 @@ class Subscribe extends Command
         }
 
         $topics = is_null($topics) ? ['model.*'] : $topics;
+        $topics = !is_array($topics) ? [$topics] : $topics;
 
         // general is the name of channel to subscribe to
         Redis::connection($connection)->psubscribe($topics, function (string $message, string $channel): void {
@@ -46,13 +47,13 @@ class Subscribe extends Command
 
             if ($event && preg_match('/model.([\w]+).(.*)/', $event, $matches)) {
                 $action = $matches[1] ?? null;
-                if ('created' == $action) {
+                if ($action == 'created') {
                     $this->created($event, $payload['model']);
-                } elseif ('updated' == $action) {
+                } elseif ($action == 'updated') {
                     $this->updated($event, $payload['model']);
-                } elseif ('deleted' == $action) {
+                } elseif ($action == 'deleted') {
                     $this->deleted($event, $payload['model']);
-                } elseif ('trashed' == $action) {
+                } elseif ($action == 'trashed') {
                     $this->trashed($event, $payload['model']);
                 }
             }

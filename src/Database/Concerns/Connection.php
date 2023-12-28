@@ -31,9 +31,8 @@ trait Connection
     /**
      * Execute an SQL statement and return the boolean result.
      *
-     * @param string $query
-     * @param array  $bindings
-     *
+     * @param  string  $query
+     * @param  array  $bindings
      * @return array|bool|int
      */
     public function statement($query, $bindings = [])
@@ -92,9 +91,8 @@ trait Connection
     /**
      * Run an SQL statement and get the number of rows affected.
      *
-     * @param string $query
-     * @param array  $bindings
-     *
+     * @param  string  $query
+     * @param  array  $bindings
      * @return int
      */
     public function affectingStatement($query, $bindings = [])
@@ -115,9 +113,9 @@ trait Connection
     /**
      * Run the query in async mode.
      *
-     * @param null|string $connection
-     * @param string      $queue
-     * @param null|string $name
+     * @param  null|string  $connection
+     * @param  string  $queue
+     * @param  null|string  $name
      */
     public function async($connection = null, $queue = null, $name = null): self
     {
@@ -147,7 +145,7 @@ trait Connection
     /**
      * Run the query events mode.
      *
-     * @param array|string $events
+     * @param  array|string  $events
      */
     public function events($events = null): self
     {
@@ -163,18 +161,17 @@ trait Connection
     /**
      * Run a SQL statement.
      *
-     * @param string $query
-     * @param array  $bindings
-     *
+     * @param  string  $query
+     * @param  array  $bindings
      * @return mixed
      *
-     * @throws \Illuminate\Database\QueryException
+     * @throws QueryException
      */
     protected function runQueryCallback($query, $bindings, \Closure $callback)
     {
         $attempts_count = $this->attempts_count;
 
-        for ($attempt = 1; $attempt <= $attempts_count; ++$attempt) {
+        for ($attempt = 1; $attempt <= $attempts_count; $attempt++) {
             try {
                 return parent::runQueryCallback($query, $bindings, $callback);
             } catch (QueryException $e) {
@@ -230,8 +227,8 @@ trait Connection
     /**
      * Fire the query events.
      *
-     * @param string $query
-     * @param array  $bindings
+     * @param  string  $query
+     * @param  array  $bindings
      */
     protected function fireEvents($query, $bindings): self
     {

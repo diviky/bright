@@ -61,10 +61,9 @@ class ViewServiceProvider extends BaseServiceProvider
     /**
      * Create a new Factory Instance.
      *
-     * @param \Illuminate\View\Engines\EngineResolver $resolver
-     * @param \Illuminate\View\ViewFinderInterface    $finder
-     * @param \Illuminate\Contracts\Events\Dispatcher $events
-     *
+     * @param  \Illuminate\View\Engines\EngineResolver  $resolver
+     * @param  \Illuminate\View\ViewFinderInterface  $finder
+     * @param  \Illuminate\Contracts\Events\Dispatcher  $events
      * @return \Illuminate\View\Factory
      */
     protected function createFactory($resolver, $finder, $events)

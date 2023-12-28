@@ -12,9 +12,9 @@ trait UserAvatarTrait
     /**
      * Set the avatar image for user.
      *
-     * @param mixed  $file
-     * @param int    $size
-     * @param string $disk
+     * @param  mixed  $file
+     * @param  int  $size
+     * @param  string  $disk
      */
     public function setAvatar($file, $size = 400, $disk = 's3'): void
     {
@@ -26,7 +26,7 @@ trait UserAvatarTrait
             $resource = $img->stream()->detach();
 
             $disk = $disk ?: config('filesystems.default');
-            $disk = ('local' == $disk) ? 'public' : $disk;
+            $disk = ($disk == 'local') ? 'public' : $disk;
 
             Storage::disk($disk)->put($avatar, $resource);
 

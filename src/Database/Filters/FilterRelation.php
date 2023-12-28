@@ -33,7 +33,7 @@ class FilterRelation implements Filter
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function __invoke(Builder $query, $value, string $property): void
     {
@@ -95,7 +95,7 @@ class FilterRelation implements Filter
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      */
     protected function withRelationConstraint(Builder $query, $value, string $property): void
     {

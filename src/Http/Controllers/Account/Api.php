@@ -22,8 +22,7 @@ class Api extends BaseController
     /**
      * Get the user details.
      *
-     * @param int $user_id
-     *
+     * @param  int  $user_id
      * @return array
      */
     public function person($user_id)

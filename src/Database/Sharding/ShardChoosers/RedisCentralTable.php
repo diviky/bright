@@ -24,8 +24,8 @@ class RedisCentralTable implements ShardChooserInterface
     protected $relationKey = '';
 
     /**
-     * @param array  $connections
-     * @param string $relationKey
+     * @param  array  $connections
+     * @param  string  $relationKey
      */
     public function __construct($connections, $relationKey)
     {

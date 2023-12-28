@@ -26,8 +26,7 @@ trait Token
     /**
      * Save token to database.
      *
-     * @param object $user
-     *
+     * @param  object  $user
      * @return string
      */
     public function saveToken($user)

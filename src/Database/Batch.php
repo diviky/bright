@@ -56,7 +56,7 @@ class Batch
     protected $builder;
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param  \Illuminate\Database\Eloquent\Builder  $builder
      */
     public function __construct($builder)
     {
@@ -97,11 +97,11 @@ class Batch
             $this->attributes[] = $attributes;
         }
 
-        if (0 == $this->count) {
+        if ($this->count == 0) {
             $this->fields = array_keys($attributes);
         }
 
-        ++$this->count;
+        $this->count++;
 
         return $this;
     }
@@ -109,7 +109,7 @@ class Batch
     public function make(array $attributes = []): ?array
     {
         $model = $this->model->make($attributes);
-        if (false === $model->fireEvent('creating')) {
+        if ($model->fireEvent('creating') === false) {
             return null;
         }
 

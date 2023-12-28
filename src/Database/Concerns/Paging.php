@@ -33,10 +33,10 @@ trait Paging
     /**
      * Create a new length-aware paginator instance.
      *
-     * @param int      $perPage
-     * @param array    $columns
-     * @param string   $pageName
-     * @param null|int $page
+     * @param  int  $perPage
+     * @param  array  $columns
+     * @param  string  $pageName
+     * @param  null|int  $page
      */
     public function complexPaginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null): \Illuminate\Pagination\LengthAwarePaginator
     {
@@ -54,7 +54,7 @@ trait Paging
         }
 
         $tables = [];
-        if (1 == $page) {
+        if ($page == 1) {
             $tables[] = $this->from;
             $tables = \array_merge($tables, $this->tables);
             $skip = ($page - 1) * $perPage;
@@ -64,7 +64,7 @@ trait Paging
             $offsets = 0;
 
             foreach ($this->tableTotals as $table => $count) {
-                if (0 == $count) {
+                if ($count == 0) {
                     unset($this->tableTotals[$table]);
 
                     continue;
@@ -120,9 +120,8 @@ trait Paging
     /**
      * Get the count of the total records for the paginator.
      *
-     * @param array  $columns
-     * @param string $table
-     *
+     * @param  array  $columns
+     * @param  string  $table
      * @return int
      */
     public function getCountForTablePagination($table, $columns = ['*'])
@@ -150,11 +149,10 @@ trait Paging
     /**
      * Paginate the given query into a simple paginator.
      *
-     * @param int      $perPage
-     * @param array    $columns
-     * @param string   $pageName
-     * @param null|int $page
-     *
+     * @param  int  $perPage
+     * @param  array  $columns
+     * @param  string  $pageName
+     * @param  null|int  $page
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function paging($perPage = 25, $columns = ['*'], $pageName = 'page', $page = null)
@@ -169,9 +167,8 @@ trait Paging
     /**
      * Run a pagination count query.
      *
-     * @param array $columns
-     * @param mixed $table
-     *
+     * @param  array  $columns
+     * @param  mixed  $table
      * @return array
      */
     protected function runPaginationTableCountQuery($table, $columns = ['*'])

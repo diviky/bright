@@ -12,7 +12,7 @@ trait Connector
     /**
      * Get a database connection instance from shard.
      *
-     * @param null|string $shard_key
+     * @param  null|string  $shard_key
      */
     protected function shard($shard_key = null, array $config = []): array
     {

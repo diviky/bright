@@ -42,8 +42,7 @@ class Mailable extends BaseMailable implements ShouldQueue
     /**
      * Set the view and view data for the message.
      *
-     * @param string $view
-     *
+     * @param  string  $view
      * @return $this
      */
     public function view($view, array $data = [])
@@ -57,8 +56,7 @@ class Mailable extends BaseMailable implements ShouldQueue
     /**
      * Set the plain text view for the message.
      *
-     * @param string $textView
-     *
+     * @param  string  $textView
      * @return $this
      */
     public function text($textView, array $data = [])
@@ -72,8 +70,7 @@ class Mailable extends BaseMailable implements ShouldQueue
     /**
      * Set the Markdown template for the message.
      *
-     * @param string $view
-     *
+     * @param  string  $view
      * @return $this
      */
     public function markdown($view, array $data = [])
@@ -87,7 +84,7 @@ class Mailable extends BaseMailable implements ShouldQueue
     /**
      * Set the view theme.
      *
-     * @param string $name
+     * @param  string  $name
      */
     public function theme($name): self
     {
@@ -99,8 +96,8 @@ class Mailable extends BaseMailable implements ShouldQueue
     /**
      * Send email.
      *
-     * @param mixed $to
-     * @param bool  $exception
+     * @param  mixed  $to
+     * @param  bool  $exception
      */
     public function deliver($to = null, $exception = false): bool
     {
@@ -124,8 +121,7 @@ class Mailable extends BaseMailable implements ShouldQueue
     /**
      * Set the value of prefix.
      *
-     * @param mixed $prefix
-     *
+     * @param  mixed  $prefix
      * @return self
      */
     public function prefix($prefix)
@@ -145,8 +141,7 @@ class Mailable extends BaseMailable implements ShouldQueue
     /**
      * Format the given email to proper name and address.
      *
-     * @param mixed $address
-     *
+     * @param  mixed  $address
      * @return array
      */
     protected function format($address, ?string $from = null)

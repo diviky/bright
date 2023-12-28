@@ -28,8 +28,8 @@ class LaravelCacheBridge implements Cache
     /**
      * LaravelCacheBridge constructor.
      *
-     * @param \Illuminate\Contracts\Cache\Repository $cache  the cache repository from Laravel
-     * @param mixed                                  $prefix
+     * @param  \Illuminate\Contracts\Cache\Repository  $cache  the cache repository from Laravel
+     * @param  mixed  $prefix
      */
     public function __construct(\Illuminate\Contracts\Cache\Repository $cache, $prefix = 'dd')
     {
@@ -40,8 +40,7 @@ class LaravelCacheBridge implements Cache
     /**
      * Returns an item from the cache.
      *
-     * @param string $id the id to fetch from the cache
-     *
+     * @param  string  $id the id to fetch from the cache
      * @return mixed
      */
     public function fetch($id)
@@ -52,8 +51,7 @@ class LaravelCacheBridge implements Cache
     /**
      * Returns if a cached item exists or not.
      *
-     * @param string $id the id to fetch from the cache
-     *
+     * @param  string  $id the id to fetch from the cache
      * @return bool
      */
     public function contains($id)
@@ -64,9 +62,9 @@ class LaravelCacheBridge implements Cache
     /**
      * Stores data into the cache.
      *
-     * @param string $id       the id to save into the cache
-     * @param mixed  $data     the data to save into the cache
-     * @param int    $lifeTime the TTL for the data to remain in the cache
+     * @param  string  $id       the id to save into the cache
+     * @param  mixed  $data     the data to save into the cache
+     * @param  int  $lifeTime the TTL for the data to remain in the cache
      */
     public function save($id, $data, $lifeTime = 0): void
     {
@@ -80,8 +78,7 @@ class LaravelCacheBridge implements Cache
     /**
      * Deletes a specific item from the cache.
      *
-     * @param string $id the id to delete from the cache
-     *
+     * @param  string  $id the id to delete from the cache
      * @return bool
      */
     public function delete($id)
@@ -102,7 +99,7 @@ class LaravelCacheBridge implements Cache
     /**
      * Hashes a given key into a format for DeviceDetector safe storage.
      *
-     * @param string $key the key to be hashed into DeviceDetector format
+     * @param  string  $key the key to be hashed into DeviceDetector format
      */
     private function hashKey($key): string
     {

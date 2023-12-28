@@ -12,9 +12,8 @@ trait Notifyable
     /**
      * Helper method to send emails.
      *
-     * @param array    $data
-     * @param null|int $user_id
-     *
+     * @param  array  $data
+     * @param  null|int  $user_id
      * @return bool
      */
     public function sendAnEmail($data = [], $user_id = null)
@@ -79,8 +78,7 @@ trait Notifyable
     /**
      * Get the mail to address from user id.
      *
-     * @param null|int $user_id
-     *
+     * @param  null|int  $user_id
      * @return null|object
      */
     protected function getMailTo($user_id = null)
@@ -96,8 +94,7 @@ trait Notifyable
     /**
      * Get the user branding details.
      *
-     * @param null|int $user_id
-     *
+     * @param  null|int  $user_id
      * @return null|object
      */
     protected function getBranding($user_id = null)
@@ -120,8 +117,7 @@ trait Notifyable
     /**
      * Get the mail from details from user id.
      *
-     * @param null|int $user_id
-     *
+     * @param  null|int  $user_id
      * @return null|string
      */
     protected function getMailFrom($user_id = null)
@@ -144,7 +140,7 @@ trait Notifyable
     /**
      * print info.
      *
-     * @param null|string $message
+     * @param  null|string  $message
      */
     protected function notify($message): void
     {

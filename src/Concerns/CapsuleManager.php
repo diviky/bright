@@ -28,8 +28,7 @@ trait CapsuleManager
     /**
      * magic method to get property.
      *
-     * @param string $key value to get
-     *
+     * @param  string  $key value to get
      * @return bool
      */
     public function __get($key)
@@ -40,9 +39,8 @@ trait CapsuleManager
     /**
      * magic method to get property.
      *
-     * @param string $key   value to get
-     * @param mixed  $value
-     *
+     * @param  string  $key   value to get
+     * @param  mixed  $value
      * @return self
      */
     public function __set($key, $value)
@@ -73,7 +71,7 @@ trait CapsuleManager
     /**
      * Set the IoC container instance.
      *
-     * @param \Illuminate\Contracts\Container\Container $app
+     * @param  \Illuminate\Contracts\Container\Container  $app
      */
     public function setContainer($app): self
     {
@@ -85,8 +83,7 @@ trait CapsuleManager
     /**
      * get the key from stored data value.
      *
-     * @param string $key The name of the variable to access
-     *
+     * @param  string  $key The name of the variable to access
      * @return mixed returns your stored value
      */
     public function get($key)
@@ -101,8 +98,7 @@ trait CapsuleManager
      * `has($id)` returning true does not mean that `get($id)` will not throw an exception.
      * It does however mean that `get($id)` will not throw a `NotFoundExceptionInterface`.
      *
-     * @param mixed $key
-     *
+     * @param  mixed  $key
      * @return bool
      */
     public function has($key)
@@ -113,8 +109,8 @@ trait CapsuleManager
     /**
      * store key value pair in registry.
      *
-     * @param string $key   name of the variable
-     * @param mixed  $value value to store in registry
+     * @param  string  $key   name of the variable
+     * @param  mixed  $value value to store in registry
      */
     public function set($key, $value): self
     {
@@ -126,9 +122,8 @@ trait CapsuleManager
     /**
      * Get the value from stored data set, return default on null.
      *
-     * @param string $key
-     * @param mixed  $default
-     *
+     * @param  string  $key
+     * @param  mixed  $default
      * @return mixed
      */
     public function take($key, $default = null)
@@ -145,9 +140,8 @@ trait CapsuleManager
      *
      * If an array is passed as the key, we will assume you want to set an array of values.
      *
-     * @param array|string $key
-     * @param mixed        $default
-     *
+     * @param  array|string  $key
+     * @param  mixed  $default
      * @return \Illuminate\Config\Repository|mixed
      */
     public function config($key = null, $default = null)

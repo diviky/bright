@@ -54,8 +54,7 @@ trait Relations
     /**
      * Returns only the models from the collection with the specified keys.
      *
-     * @param mixed $keys
-     *
+     * @param  mixed  $keys
      * @return static
      */
     public function some(array $keys)

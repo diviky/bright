@@ -9,8 +9,8 @@ trait Ordering
     /**
      * Add Ordering to query.
      *
-     * @param array &$data
-     * @param mixed $ordering
+     * @param  array  &$data
+     * @param  mixed  $ordering
      */
     public function ordering($data = [], $ordering = []): self
     {
@@ -37,8 +37,8 @@ trait Ordering
     /**
      * Add Ordering to query.
      *
-     * @param array &$data
-     * @param mixed $ordering
+     * @param  array  &$data
+     * @param  mixed  $ordering
      */
     public function sorting($data = [], $ordering = []): self
     {

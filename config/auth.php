@@ -18,19 +18,19 @@ return [
     |
      */
 
-    'guards'       => [
+    'guards' => [
         'access_token' => [
-            'driver'   => 'access_token',
+            'driver' => 'access_token',
             'provider' => 'access_token',
         ],
 
-        'auth_token'   => [
-            'driver'   => 'auth_token',
+        'auth_token' => [
+            'driver' => 'auth_token',
             'provider' => 'auth_token',
         ],
 
-        'credentials'  => [
-            'driver'   => 'credentials',
+        'credentials' => [
+            'driver' => 'credentials',
             'provider' => 'credentials',
         ],
     ],
@@ -49,12 +49,12 @@ return [
     'throttle_key' => 'ip',
 
     // Set columns for username and other
-    'columns'      => [
+    'columns' => [
         'username' => 'email',
-        'address'  => 'email',
+        'address' => 'email',
     ],
 
-    'user'         => [
+    'user' => [
         'role' => 'customer',
         // Default user status if 0 user should verify email address
         'status' => 0,

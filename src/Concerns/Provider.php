@@ -40,5 +40,7 @@ trait Provider
         });
     }
 
-    public function macros(): void {}
+    public function macros(): void
+    {
+    }
 }

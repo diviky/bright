@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Routing;
 
+use Diviky\Bright\Attributes\Resource;
+use Diviky\Bright\Attributes\View as AttributesView;
+use Diviky\Bright\Attributes\ViewNamespace;
+use Diviky\Bright\Attributes\ViewPaths;
 use Diviky\Bright\Concerns\Themable;
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
 use Illuminate\Contracts\View\View;
@@ -30,27 +34,36 @@ class Responsable implements BaseResponsable
     protected $controller;
 
     /**
-     * @param mixed  $response
-     * @param string $action
-     * @param mixed  $controller
+     * @var string
      */
-    public function __construct($response, $action, $controller)
+    protected $method;
+
+    /**
+     * @param  mixed  $response
+     * @param  string  $action
+     * @param  mixed  $controller
+     * @param  string  $method
+     */
+    public function __construct($response, $action, $controller, $method)
     {
         $this->response = $response;
         $this->action = $action;
         $this->controller = $controller;
+        $this->method = $method;
     }
 
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed|\Symfony\Component\HttpFoundation\Response
      */
     public function toResponse($request)
     {
         $response = $this->getResponse();
+
+        $reflection = new \ReflectionClass($this->controller);
+        $method = $reflection->getMethod($this->method);
 
         if ($request->post('fingerprint') || $request->hasHeader('X-Inertia') || $request->hasHeader('X-Livewire')) {
             return $response;
@@ -59,6 +72,14 @@ class Responsable implements BaseResponsable
         $format = $request->input('_request') ?: $request->input('format');
 
         if (!$format && $request->expectsJson()) {
+            $attributes = $method->getAttributes(Resource::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+            foreach ($attributes as $attribute) {
+                $instance = $attribute->newInstance();
+
+                $response = $instance->toResource($response);
+            }
+
             return $response;
         }
 
@@ -73,7 +94,7 @@ class Responsable implements BaseResponsable
         }
 
         $requestType = $request->input('_request');
-        if ('iframe' == $requestType) {
+        if ($requestType == 'iframe') {
             $html = '<textarea>';
             $html .= \json_encode($response);
             $html .= '</textarea>';
@@ -89,8 +110,8 @@ class Responsable implements BaseResponsable
 
         if ($ajax && isset($response['redirect'])) {
             if (
-                '/' !== \substr($response['redirect'], 0, 1)
-                && 'http' !== \substr($response['redirect'], 0, 4)
+                \substr($response['redirect'], 0, 1) !== '/'
+                && \substr($response['redirect'], 0, 4) !== 'http'
             ) {
                 $redirect = $this->getNextRedirect($response, 'redirect');
                 if (isset($redirect)) {
@@ -106,12 +127,16 @@ class Responsable implements BaseResponsable
             }
         }
 
-        if ('json' == $format) {
-            return $response;
-        }
-
-        if (isset($response['_format']) && 'json' == $response['_format']) {
+        if ($format == 'json' || (isset($response['_format']) && $response['_format'] == 'json')) {
             unset($response['_format']);
+
+            $attributes = $method->getAttributes(Resource::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+            foreach ($attributes as $attribute) {
+                $instance = $attribute->newInstance();
+
+                $response = $instance->toResource($response);
+            }
 
             return $response;
         }
@@ -121,11 +146,34 @@ class Responsable implements BaseResponsable
         }
 
         $route = $this->getRouteFromAction($this->action);
-        list($component, $view) = \explode('.', $route);
+        $paths = $this->getViewPathsFrom($this->controller, $this->action);
 
-        $paths = $this->getViewsFrom($this->controller, $this->action);
+        [$component, $view] = \explode('.', $route, 2);
+
+        $attributes = $reflection->getAttributes(ViewPaths::class);
+
+        foreach ($attributes as $attribute) {
+            $instance = $attribute->newInstance();
+            $paths = array_merge($paths, $instance->getPaths());
+        }
+
         $theme = $this->setUpThemeFromRequest($request, $component, $paths);
-        $layout = 'html' == $format ? 'layouts.html' : $theme['layout'];
+        $layout = $format == 'html' ? 'layouts.html' : $theme['layout'];
+
+        $attributes = $method->getAttributes(AttributesView::class);
+
+        foreach ($attributes as $attribute) {
+            $instance = $attribute->newInstance();
+            $view = $instance->getName();
+            $layout = $instance->getLayout() ?? $layout;
+        }
+
+        $attributes = $reflection->getAttributes(ViewNamespace::class);
+
+        foreach ($attributes as $attribute) {
+            $instance = $attribute->newInstance();
+            $view = $instance->getViewName($view);
+        }
 
         $view = $this->getView($view, $response, $layout);
 

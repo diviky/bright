@@ -13,11 +13,10 @@ class ThrottleRequests extends BaseRequest
     /**
      * Create a 'too many attempts' exception.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $key
-     * @param int                      $maxAttempts
-     * @param null|callable            $responseCallback
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $key
+     * @param  int  $maxAttempts
+     * @param  null|callable  $responseCallback
      * @return \Illuminate\Http\Exceptions\HttpResponseException|\Illuminate\Http\Exceptions\ThrottleRequestsException
      */
     protected function buildException($request, $key, $maxAttempts, $responseCallback = null)
@@ -44,8 +43,7 @@ class ThrottleRequests extends BaseRequest
     /**
      * Resolve request signature.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return string
      *
      * @throws \RuntimeException

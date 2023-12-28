@@ -16,8 +16,8 @@ class ServerRanges implements ShardChooserInterface
     protected $connections = [];
 
     /**
-     * @param array  $connections
-     * @param string $relationKey
+     * @param  array  $connections
+     * @param  string  $relationKey
      */
     public function __construct($connections, $relationKey = null)
     {
@@ -26,7 +26,7 @@ class ServerRanges implements ShardChooserInterface
     }
 
     /**
-     * @param mixed $id
+     * @param  mixed  $id
      *
      * @throws ShardingException
      */

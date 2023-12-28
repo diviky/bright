@@ -9,10 +9,9 @@ trait Async
     /**
      * Run the query in async mode.
      *
-     * @param null|string $queue
-     * @param null|string $connection
-     * @param null|string $name
-     *
+     * @param  null|string  $queue
+     * @param  null|string  $connection
+     * @param  null|string  $name
      * @return static
      */
     public function async($name = null, $queue = null, $connection = null)

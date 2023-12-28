@@ -38,9 +38,9 @@ class Statement implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param string $sql
-     * @param string $bindings
-     * @param mixed  $version
+     * @param  string  $sql
+     * @param  string  $bindings
+     * @param  mixed  $version
      */
     public function __construct($sql, $bindings, $version = 1)
     {
@@ -54,7 +54,7 @@ class Statement implements ShouldQueue
      */
     public function handle(): void
     {
-        if (2 == $this->version) {
+        if ($this->version == 2) {
             DB::statement($this->sql, (array) unserialize(base64_decode($this->bindings)));
 
             return;

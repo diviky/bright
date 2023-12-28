@@ -88,7 +88,7 @@ class Setup extends Command
     /**
      * Execute the command.
      *
-     * @param string $command
+     * @param  string  $command
      */
     protected function shell($command): void
     {
@@ -99,7 +99,7 @@ class Setup extends Command
 
         $process->setTimeout(10 * 60);
         $process->run(function ($type, $buffer): void {
-            if (Process::ERR === $type) {
+            if ($type === Process::ERR) {
                 echo 'ERR > ' . $buffer;
             } else {
                 echo 'OUT > ' . $buffer;

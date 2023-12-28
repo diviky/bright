@@ -16,7 +16,7 @@ trait Remove
     /**
      * Remove keys from where.
      *
-     * @param mixed $keys
+     * @param  mixed  $keys
      */
     public function removeWhere($keys = null): self
     {
@@ -49,7 +49,7 @@ trait Remove
 
             // If the column is part of the autofilter routine
             if (\in_array($value['column'], $keys)) {
-                for ($i = 0; $i < $count; ++$i) {
+                for ($i = 0; $i < $count; $i++) {
                     unset($bindings[$bindkey + $i]);
                 }
                 unset($this->wheres[$key]);

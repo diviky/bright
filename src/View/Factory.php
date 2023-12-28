@@ -37,9 +37,8 @@ class Factory extends BaseFactory
     /**
      * Add a piece of shared data to the environment.
      *
-     * @param array|string $key
-     * @param null|mixed   $value
-     *
+     * @param  array|string  $key
+     * @param  null|mixed  $value
      * @return mixed
      */
     public function share($key, $value = null)

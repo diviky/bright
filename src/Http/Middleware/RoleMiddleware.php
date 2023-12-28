@@ -15,9 +15,8 @@ class RoleMiddleware
     /**
      * Check the user for specific roles.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param array|string             $role
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array|string  $role
      * @return \Closure
      *
      * @throws UnauthorizedException

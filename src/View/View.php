@@ -14,11 +14,10 @@ class View
     /**
      * Make the view.
      *
-     * @param Controller|string $controller
-     * @param string            $view
-     * @param array             $data
-     * @param array             $mergeData
-     *
+     * @param  Controller|string  $controller
+     * @param  string  $view
+     * @param  array  $data
+     * @param  array  $mergeData
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function make($controller, $view, $data = [], $mergeData = [])
@@ -32,7 +31,7 @@ class View
 
         $component = \explode('.', $route, 2)[0];
 
-        $paths = $this->getViewsFrom($controller, $action);
+        $paths = $this->getViewPathsFrom($controller, $action);
         $this->setUpThemeFromRoute($route, $component, $paths);
 
         return view($view, $data, $mergeData);

@@ -13,9 +13,8 @@ class ControllerDispatcher extends BaseControllerDispatcher
     /**
      * Dispatch a request to a given controller and method.
      *
-     * @param mixed  $controller
-     * @param string $method
-     *
+     * @param  mixed  $controller
+     * @param  string  $method
      * @return mixed
      */
     public function dispatch(Route $route, $controller, $method)
@@ -28,6 +27,6 @@ class ControllerDispatcher extends BaseControllerDispatcher
 
         $action = $route->getActionName();
 
-        return new Responsable($response, $action, $controller);
+        return new Responsable($response, $action, $controller, $method);
     }
 }

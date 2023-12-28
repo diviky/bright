@@ -12,11 +12,11 @@ trait UserParent
     /**
      * Add parent id.
      *
-     * @param null|int $parent_id
+     * @param  null|int  $parent_id
      */
     public function assignParent($parent_id = null): bool
     {
-        if (null === $parent_id) {
+        if ($parent_id === null) {
             if (app()->has('owner')) {
                 $parent_id = app()->get('owner');
             } else {

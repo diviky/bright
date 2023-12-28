@@ -18,8 +18,8 @@ use Illuminate\Support\Str;
 
 class ForgotPasswordController extends Controller
 {
-    use Token;
     use ColumnsTrait;
+    use Token;
 
     /**
      * @return \Illuminate\Contracts\View\View|\Illuminate\Http\JsonResponse
@@ -191,8 +191,8 @@ class ForgotPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
-     * @param \Illuminate\Contracts\Auth\Authenticatable $user
-     * @param string                                     $password
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  string  $password
      */
     protected function resetPassword($user, $password): bool
     {
@@ -215,8 +215,8 @@ class ForgotPasswordController extends Controller
     /**
      * Notify the user about forgot password.
      *
-     * @param \Illuminate\Database\Eloquent\Model $user
-     * @param string                              $token
+     * @param  \Illuminate\Database\Eloquent\Model  $user
+     * @param  string  $token
      */
     protected function notifyForgotPassword($user, $token): void
     {

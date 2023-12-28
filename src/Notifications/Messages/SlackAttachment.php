@@ -23,8 +23,7 @@ class SlackAttachment extends BaseSlackAttachment
     /**
      * Set callback id.
      *
-     * @param id|string $callback_id
-     *
+     * @param  id|string  $callback_id
      * @return $this
      */
     public function callbackId($callback_id)
@@ -37,9 +36,8 @@ class SlackAttachment extends BaseSlackAttachment
     /**
      * Add a field to the attachment.
      *
-     * @param \Closure|string $title
-     * @param string          $content
-     *
+     * @param  \Closure|string  $title
+     * @param  string  $content
      * @return $this
      */
     public function actions($title, $content = '')

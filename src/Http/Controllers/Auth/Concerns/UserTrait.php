@@ -60,7 +60,7 @@ trait UserTrait
             $id = $row->id;
             $role = $row->role;
 
-            if ('agent' == $role) {
+            if ($role == 'agent') {
                 continue;
             }
 
@@ -73,7 +73,7 @@ trait UserTrait
 
             $results[$role][$id]['user'] = $this->getUserById($id);
 
-            if ('resellers' == $role) {
+            if ($role == 'resellers') {
                 $users = $this->getChildUsers($id, $users);
 
                 $results[$role][$id]['customers'] = $users;

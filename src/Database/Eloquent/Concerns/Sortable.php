@@ -26,7 +26,7 @@ trait Sortable
     public static function bootSortable(): void
     {
         static::creating(function ($model): void {
-            if (true === $model->sorting && $model->shouldSortWhenCreating()) {
+            if ($model->sorting === true && $model->shouldSortWhenCreating()) {
                 $model->setHighestOrderNumber();
             }
         });
@@ -58,9 +58,9 @@ trait Sortable
     }
 
     /**
-     * @param array|\ArrayAccess $ids
+     * @param  array|\ArrayAccess  $ids
      */
-    public static function setNewOrder($ids, int $startOrder = 1, string $primaryKeyColumn = null): void
+    public static function setNewOrder($ids, int $startOrder = 1, ?string $primaryKeyColumn = null): void
     {
         if (!is_array($ids) && !$ids instanceof \ArrayAccess) {
             throw new \InvalidArgumentException('You must pass an array or ArrayAccess object to setNewOrder');
@@ -82,7 +82,7 @@ trait Sortable
     }
 
     /**
-     * @param array|\ArrayAccess $ids
+     * @param  array|\ArrayAccess  $ids
      */
     public static function setNewOrderByCustomColumn(string $primaryKeyColumn, $ids, int $startOrder = 1): void
     {

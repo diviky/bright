@@ -9,11 +9,10 @@ trait Build
     /**
      * Add a where between statement to the query.
      *
-     * @param \Illuminate\Contracts\Database\Query\Expression|string $column
-     * @param array|string                                           $values
-     * @param string                                                 $boolean
-     * @param bool                                                   $not
-     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @param  array|string  $values
+     * @param  string  $boolean
+     * @param  bool  $not
      * @return static
      */
     public function whereDateBetween($column, $values, $boolean = 'and', $not = false)
@@ -30,16 +29,15 @@ trait Build
     /**
      * Add a basic where clause to the query.
      *
-     * @param array|\Closure|\Illuminate\Contracts\Database\Query\Expression|string $column
-     * @param mixed                                                                 $operator
-     * @param mixed                                                                 $value
-     * @param string                                                                $boolean
-     *
+     * @param  array|\Closure|\Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     * @param  string  $boolean
      * @return $this
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
-        $val = 2 === \func_num_args() ? $operator : $value;
+        $val = \func_num_args() === 2 ? $operator : $value;
         if (\is_array($val)) {
             return parent::whereIn($column, $val);
         }

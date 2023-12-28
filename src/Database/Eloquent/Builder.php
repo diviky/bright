@@ -17,12 +17,12 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class Builder extends BaseBuilder
 {
-    use BuildsQueries;
-    use Paging;
-    use Filters;
     use Async;
     use Batch;
+    use BuildsQueries;
     use Eventable;
+    use Filters;
+    use Paging;
 
     /**
      * Create a new Eloquent query builder instance.
@@ -56,7 +56,7 @@ class Builder extends BaseBuilder
     /**
      * get the value from expression.
      *
-     * @param float|\Illuminate\Contracts\Database\Query\Expression|int|string $value
+     * @param  float|\Illuminate\Contracts\Database\Query\Expression|int|string  $value
      */
     protected function getExpressionValue($value): string
     {

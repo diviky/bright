@@ -9,7 +9,7 @@ trait Raw
     /**
      * Add a "group by" clause to the query.
      *
-     * @param array|string $sql
+     * @param  array|string  $sql
      */
     public function groupByRaw($sql, array $bindings = [])
     {
@@ -18,8 +18,8 @@ trait Raw
         }
 
         foreach ($sql as &$exp) {
-            if (\is_string($exp) && false !== \strpos($exp, '.')) {
-                if (false !== \strpos($exp, '(')) {
+            if (\is_string($exp) && \strpos($exp, '.') !== false) {
+                if (\strpos($exp, '(') !== false) {
                     $exp = $this->wrap($exp);
                 } else {
                     $exp = $this->grammar->wrap($exp);
@@ -35,15 +35,14 @@ trait Raw
     /**
      * Add a raw where clause to the query.
      *
-     * @param string $sql
-     * @param mixed  $bindings
-     * @param string $boolean
-     *
+     * @param  string  $sql
+     * @param  mixed  $bindings
+     * @param  string  $boolean
      * @return $this
      */
     public function whereRaw($sql, $bindings = [], $boolean = 'and')
     {
-        if (false !== \strpos($sql, '(')) {
+        if (\strpos($sql, '(') !== false) {
             $sql = $this->wrap(\trim($sql));
         }
 
@@ -53,16 +52,15 @@ trait Raw
     /**
      * Add a new "raw" select expression to the query.
      *
-     * @param array|string $expression
-     *
+     * @param  array|string  $expression
      * @return $this
      */
     public function selectRaw($expression, array $bindings = [])
     {
         if (\is_array($expression)) {
             foreach ($expression as &$exp) {
-                if (\is_string($exp) && false !== \strpos($exp, '.')) {
-                    if (false !== \strpos($exp, '(')) {
+                if (\is_string($exp) && \strpos($exp, '.') !== false) {
+                    if (\strpos($exp, '(') !== false) {
                         $exp = $this->wrap(\trim($exp));
                     } else {
                         $exp = $this->grammar->wrap(\trim($exp));
@@ -79,10 +77,9 @@ trait Raw
     /**
      * Add a where between statement to the query.
      *
-     * @param string $column
-     * @param string $boolean
-     * @param bool   $not
-     *
+     * @param  string  $column
+     * @param  string  $boolean
+     * @param  bool  $not
      * @return $this
      */
     public function whereBetweenRaw($column, array $values, $boolean = 'and', $not = false): self
@@ -98,7 +95,7 @@ trait Raw
     public function updateRaw(array $values): int
     {
         foreach ($values as $key => $value) {
-            if (is_string($value) && ':' == \substr($value, 0, 1)) {
+            if (is_string($value) && \substr($value, 0, 1) == ':') {
                 $values[$key] = $this->raw(\substr($value, 1));
             }
         }
@@ -109,8 +106,7 @@ trait Raw
     /**
      * Wrap the query string.
      *
-     * @param string $value
-     *
+     * @param  string  $value
      * @return string
      */
     protected function wrap($value)
@@ -128,8 +124,7 @@ trait Raw
     /**
      * Wrap the query string.
      *
-     * @param string $value
-     *
+     * @param  string  $value
      * @return string
      */
     protected function wrapColumn($value)
@@ -137,12 +132,12 @@ trait Raw
         if (\preg_match('/\((.+)\)/', $value, $matches)) {
             if ($matches[1]) {
                 $column = $matches[1];
-                if (false !== \strpos($column, '(')) {
+                if (\strpos($column, '(') !== false) {
                     $column = $this->wrapColumn($column);
                 } else {
                     $exps = \explode(', ', $column);
                     foreach ($exps as &$exp) {
-                        if ("'" != \substr($exp, 0, 1)) {
+                        if (\substr($exp, 0, 1) != "'") {
                             $exp = $this->grammar->wrap(\trim($exp));
                         } else {
                             $exp = \str_replace('`', '', $exp);

@@ -12,14 +12,14 @@ class FreeEmailValidation implements ValidationRule
     /**
      * The filesystem implementation.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $files;
 
     /**
      * Create a new rule instance.
      */
-    public function __construct(Filesystem $files = null)
+    public function __construct(?Filesystem $files = null)
     {
         $this->files = $files ?? new Filesystem();
     }

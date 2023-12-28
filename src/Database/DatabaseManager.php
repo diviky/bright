@@ -14,14 +14,13 @@ class DatabaseManager extends LaravelDatabaseManager
     /**
      * Database table.
      *
-     * @param string $name
-     *
+     * @param  string  $name
      * @return \Illuminate\Database\Query\Builder
      */
     public function table($name)
     {
         $alias = '';
-        if (false !== \stripos($name, ' as ')) {
+        if (\stripos($name, ' as ') !== false) {
             $segments = \preg_split('/\s+as\s+/i', $name);
             $alias = ' as ' . $segments[1];
             $name = $segments[0];
@@ -37,7 +36,7 @@ class DatabaseManager extends LaravelDatabaseManager
      */
     protected function getConnectionByTable(string $name)
     {
-        list($connection, $config) = $this->getConnectionDetails($name);
+        [$connection, $config] = $this->getConnectionDetails($name);
 
         $connection = $this->connection($connection);
         $connection->getQueryGrammar()->setConfig($config);
@@ -48,8 +47,7 @@ class DatabaseManager extends LaravelDatabaseManager
     /**
      * Get the configuration for a connection.
      *
-     * @param string $name
-     *
+     * @param  string  $name
      * @return array
      *
      * @throws \InvalidArgumentException

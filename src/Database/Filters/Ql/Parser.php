@@ -7,12 +7,19 @@ namespace Diviky\Bright\Database\Filters\Ql;
 class Parser
 {
     public const T_WHITESPACE = 0;
+
     public const T_GENERIC_SYMBOL = 1;
+
     public const T_IDENTIFIER = 2;
+
     public const T_IDENTIFIER_SEPARATOR = 3;
+
     public const T_VALUE = 4;
+
     public const T_COMPARISON_OPERATOR = 5;
+
     public const T_PRECEDENCE_OPERATOR = 6;
+
     public const T_LOGIC_OPERATOR = 7;
 
     /**
@@ -26,8 +33,7 @@ class Parser
     protected $tokenIndex = 0;
 
     /**
-     * @param string $input
-     *
+     * @param  string  $input
      * @return null|\Diviky\Bright\Database\Filters\Ql\ParseTree
      */
     public function parse($input)
@@ -64,7 +70,7 @@ class Parser
 
         while (!empty($token) && isset($parseTree)) {
             switch (true) {
-                case self::T_LOGIC_OPERATOR == $token['type']:
+                case $token['type'] == self::T_LOGIC_OPERATOR:
                     if (in_array(strtolower($token['value']), ['or', '||'])) {
                         $logic = ParseTree::COMBINED_BY_OR;
                     } elseif (in_array(strtolower($token['value']), ['in'])) {
@@ -74,15 +80,15 @@ class Parser
                     }
 
                     break;
-                case self::T_PRECEDENCE_OPERATOR == $token['type'] && '(' == $token['value']:
+                case $token['type'] == self::T_PRECEDENCE_OPERATOR && $token['value'] == '(':
                     $parseTree = $parseTree->nest();
 
                     break;
-                case self::T_PRECEDENCE_OPERATOR == $token['type'] && ')' == $token['value']:
+                case $token['type'] == self::T_PRECEDENCE_OPERATOR && $token['value'] == ')':
                     $parseTree = $parseTree->unnest();
 
                     break;
-                case self::T_IDENTIFIER == $token['type']:
+                case $token['type'] == self::T_IDENTIFIER:
                     $parseTree->addPredicate($this->parsePredicate(), $logic);
 
                     break;
@@ -97,8 +103,7 @@ class Parser
     }
 
     /**
-     * @param string $value
-     *
+     * @param  string  $value
      * @return int
      */
     protected function getTokenType(&$value)
@@ -106,21 +111,21 @@ class Parser
         $type = self::T_GENERIC_SYMBOL;
 
         switch (true) {
-            case '' === trim($value):
+            case trim($value) === '':
                 return self::T_WHITESPACE;
-            case '.' == $value:
+            case $value == '.':
                 return self::T_IDENTIFIER_SEPARATOR;
             case is_numeric($value) || is_numeric($value[0]):
                 return self::T_VALUE;
-            case "'" === $value[0]:
+            case $value[0] === "'":
                 $value = str_replace("''", "'", substr($value, 1, strlen($value) - 2));
 
                 return self::T_VALUE;
-            case '"' === $value[0]:
+            case $value[0] === '"':
                 $value = str_replace('""', '"', substr($value, 1, strlen($value) - 2));
 
                 return self::T_VALUE;
-            case '(' == $value || ')' == $value:
+            case $value == '(' || $value == ')':
                 return self::T_PRECEDENCE_OPERATOR;
             case in_array($value[0], ['=', '>', '<', '!', ':']):
                 return self::T_COMPARISON_OPERATOR;
@@ -157,7 +162,7 @@ class Parser
             return [];
         }
 
-        if (self::T_WHITESPACE === $this->tokens[$this->tokenIndex]['type']) {
+        if ($this->tokens[$this->tokenIndex]['type'] === self::T_WHITESPACE) {
             goto INCREMENT_TOKEN;
         }
 
@@ -165,8 +170,7 @@ class Parser
     }
 
     /**
-     * @param int $increment
-     *
+     * @param  int  $increment
      * @return array|bool
      */
     protected function peekToken($increment = 1)
@@ -188,26 +192,26 @@ class Parser
         $identifier = new Identifier();
         $identifier->field = $this->currentToken()['value'];
         $token = $this->nextToken();
-        if (isset($token['type']) && self::T_IDENTIFIER_SEPARATOR == $token['type']) {
+        if (isset($token['type']) && $token['type'] == self::T_IDENTIFIER_SEPARATOR) {
             $identifier->name = $identifier->field;
             $token = $this->nextToken();
-            if (self::T_IDENTIFIER !== $token['type']) {
+            if ($token['type'] !== self::T_IDENTIFIER) {
                 throw new ParserException('Parser error: predicate expects an identifier (unquoted string) after an identifier separator (dot)');
             }
             $identifier->field = $token['value'];
             $token = $this->nextToken();
         }
 
-        if (!isset($token['type']) || self::T_COMPARISON_OPERATOR !== $token['type']) {
+        if (!isset($token['type']) || $token['type'] !== self::T_COMPARISON_OPERATOR) {
             throw new ParserException('A function name or comparison operator must follow an identifer');
         }
 
-        if (isset($token['type']) && self::T_COMPARISON_OPERATOR == $token['type']) {
+        if (isset($token['type']) && $token['type'] == self::T_COMPARISON_OPERATOR) {
             $operator = $token['value'];
             $token = $this->nextToken();
             $peekToken = $this->peekToken();
 
-            if (self::T_IDENTIFIER !== $token['type'] && self::T_VALUE !== $token['type']) {
+            if ($token['type'] !== self::T_IDENTIFIER && $token['type'] !== self::T_VALUE) {
                 throw new ParserException('Comparisons must have an identifier or value on the right side');
             }
 
@@ -216,11 +220,11 @@ class Parser
             $predicate->left = $identifier;
             $predicate->op = $operator;
 
-            if (self::T_IDENTIFIER == $token['type']) {
+            if ($token['type'] == self::T_IDENTIFIER) {
                 $predicate->rightType = Comparison::TYPE_IDENTIFIER;
                 $predicate->right = new Identifier();
 
-                if ($peekToken && isset($peekToken['type']) && self::T_IDENTIFIER_SEPARATOR === $peekToken['type']) {
+                if ($peekToken && isset($peekToken['type']) && $peekToken['type'] === self::T_IDENTIFIER_SEPARATOR) {
                     $predicate->right->name = $token['value'];
 
                     $this->nextToken(); // separator token
@@ -237,7 +241,7 @@ class Parser
             }
 
             if ($peekToken && isset($peekToken['type']) && !in_array($peekToken['type'], [self::T_WHITESPACE, self::T_PRECEDENCE_OPERATOR])) {
-                $type = (self::T_IDENTIFIER === $token['type']) ? 'identifier' : 'value';
+                $type = ($token['type'] === self::T_IDENTIFIER) ? 'identifier' : 'value';
 
                 throw new ParserException("Expected the *{$type}* {$token['value']} to be followed by whitespace or a ), was followed by {$peekToken['value']}");
             }

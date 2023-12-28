@@ -30,12 +30,11 @@ class Reader
     /**
      * Fetch all the values form file.
      *
-     * @param array|\Iterator|string|\Traversable $reader
-     * @param array                               $options
-     *
+     * @param  array|\Iterator|string|\Traversable  $reader
+     * @param  array  $options
      * @return \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable
      */
-    public function fetchAll($reader, callable $callable = null, $options = [])
+    public function fetchAll($reader, ?callable $callable = null, $options = [])
     {
         \set_time_limit(0);
 
@@ -44,7 +43,7 @@ class Reader
         } else {
             $reader = $this->unzip($reader, $options);
             $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
-            $ext = '.' == $ext ? '.xls' : $ext;
+            $ext = $ext == '.' ? '.xls' : $ext;
         }
 
         $ext = \strtolower($ext);
@@ -55,7 +54,7 @@ class Reader
                 return new \EmptyIterator();
             }
 
-            $lines = ('.txt' == $ext) ? 1 : 5;
+            $lines = ($ext == '.txt') ? 1 : 5;
             $file = '';
 
             \ini_set('auto_detect_line_endings', 'on');
@@ -81,7 +80,7 @@ class Reader
                     $finfo = new \finfo(FILEINFO_MIME_TYPE);
                     $mime = $finfo->file($file->getRealPath());
 
-                    if ("\t" === $options['delimiter'] && '.xls' == $ext && 'application/vnd.ms-excel' != $mime) {
+                    if ($options['delimiter'] === "\t" && $ext == '.xls' && $mime != 'application/vnd.ms-excel') {
                         $reader = new CsvReader($file, $options['delimiter']);
                     } else {
                         if (class_exists('Port\Excel\ExcelReader')) {
@@ -120,12 +119,11 @@ class Reader
     /**
      * Modify the iterator using callback closure.
      *
-     * @param \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable $reader  Travarsable object
-     * @param array                                                                                                                       $options
-     *
+     * @param  \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable  $reader  Travarsable object
+     * @param  array  $options
      * @return \Iterator|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable
      */
-    public function modify($reader, callable $callable = null, $options = [])
+    public function modify($reader, ?callable $callable = null, $options = [])
     {
         if (isset($options['limit']) && \is_numeric($options['limit'])) {
             $offset = 0;
@@ -151,7 +149,7 @@ class Reader
 
             $count = isset($options['total']) ? $options['total'] : null;
 
-            if (null !== $count && $offset >= $count) {
+            if ($count !== null && $offset >= $count) {
                 $reader = new \EmptyIterator();
             } else {
                 $reader = new \LimitIterator($reader, intval($options['offset']), intval($options['limit']));
@@ -168,12 +166,11 @@ class Reader
     /**
      * Ftech the first row from file.
      *
-     * @param string $file
-     * @param array  $options
-     *
+     * @param  string  $file
+     * @param  array  $options
      * @return array
      */
-    public function fetchHeader($file, callable $callable = null, $options = [])
+    public function fetchHeader($file, ?callable $callable = null, $options = [])
     {
         $options['limit'] = 1;
 
@@ -185,12 +182,11 @@ class Reader
     /**
      * Get the file rows as array.
      *
-     * @param string $file
-     * @param array  $options
-     *
+     * @param  string  $file
+     * @param  array  $options
      * @return array
      */
-    public function fetchArray($file, callable $callable = null, $options = [])
+    public function fetchArray($file, ?callable $callable = null, $options = [])
     {
         $rows = $this->fetchAll($file, $callable, $options);
 
@@ -200,12 +196,11 @@ class Reader
     /**
      * Get the number of rows in file.
      *
-     * @param string $file
-     * @param array  $options
-     *
+     * @param  string  $file
+     * @param  array  $options
      * @return int
      */
-    public function fetchCount($file, callable $callable = null, $options = [])
+    public function fetchCount($file, ?callable $callable = null, $options = [])
     {
         $rows = $this->fetchAll($file, $callable, $options);
 
@@ -215,7 +210,7 @@ class Reader
     /**
      * Count the interator values.
      *
-     * @param Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable $iterator Travarsable object
+     * @param  Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable  $iterator Travarsable object
      */
     public function count($iterator): int
     {
@@ -241,8 +236,7 @@ class Reader
     /**
      * check the next row from iterator.
      *
-     * @param Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable $iterator Travarsable object
-     *
+     * @param  Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable  $iterator Travarsable object
      * @return bool
      */
     public function hasNext($iterator)
@@ -275,7 +269,7 @@ class Reader
     /**
      * Indentify the delimiter from row string.
      *
-     * @param string $file
+     * @param  string  $file
      */
     public function detectDelimiter($file, int $sample = 5): ?string
     {
@@ -302,9 +296,9 @@ class Reader
             if (is_array($rowChars)) {
                 foreach ($rowChars as $char) {
                     foreach ($delimiters as $delim) {
-                        if (false !== \strpos($char, $delim)) {
+                        if (\strpos($char, $delim) !== false) {
                             // if the char is the delim ...
-                            ++$delimCount[$delim]; // ... increment
+                            $delimCount[$delim]++; // ... increment
                         }
                     }
                 }
@@ -323,8 +317,8 @@ class Reader
     }
 
     /**
-     * @param string $file
-     * @param int    $total
+     * @param  string  $file
+     * @param  int  $total
      */
     public function getLines($file, $total = 5): array
     {
@@ -334,7 +328,7 @@ class Reader
         $lines = [];
         while (!\feof($handle)) {
             $lines[] = \fgets($handle, 1024);
-            ++$line;
+            $line++;
             if ($line >= $total) {
                 break;
             }
@@ -348,9 +342,8 @@ class Reader
     /**
      * Unzip the zip file.
      *
-     * @param null|string $zip
-     * @param array       $options
-     *
+     * @param  null|string  $zip
+     * @param  array  $options
      * @return null|string
      */
     public function unzip($zip, $options = [])
@@ -405,8 +398,7 @@ class Reader
     /**
      * Convert rows to array.
      *
-     * @param array|Arrayable|Collection|JsonResource|\JsonSerializable|LazyCollection|mixed|\Traversable $rows
-     *
+     * @param  array|Arrayable|Collection|JsonResource|\JsonSerializable|LazyCollection|mixed|\Traversable  $rows
      * @return array
      */
     public function toArray($rows)

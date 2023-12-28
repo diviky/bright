@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 interface Filter
 {
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function __invoke(Builder $query, $value, string $property): void;
 }

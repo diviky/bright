@@ -17,9 +17,8 @@ use Illuminate\Support\Arr;
 class Geo
 {
     /**
-     * @param string $address
-     * @param string $db
-     *
+     * @param  string  $address
+     * @param  string  $db
      * @return string[]
      */
     public function geocode($address, $db = 'GeoLite2-City.mmdb'): array
@@ -54,7 +53,7 @@ class Geo
         }
 
         $result = [];
-        if (false !== $results) {
+        if ($results !== false) {
             foreach ($results as $value) {
                 try {
                     $region = $value->getAdminLevels()->get(1);

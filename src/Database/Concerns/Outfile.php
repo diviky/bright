@@ -14,10 +14,10 @@ trait Outfile
     /**
      * Write the data to outfile.
      *
-     * @param null|string $path
-     * @param bool        $local
-     * @param int         $count
-     * @param array       $options
+     * @param  null|string  $path
+     * @param  bool  $local
+     * @param  int  $count
+     * @param  array  $options
      */
     public function out($path = null, $local = true, $count = 10000, $options = []): string
     {
@@ -39,11 +39,10 @@ trait Outfile
     /**
      * Load data into sql using the file.
      *
-     * @param string      $table
-     * @param null|string $path
-     * @param array       $options
-     * @param bool        $ignore
-     *
+     * @param  string  $table
+     * @param  null|string  $path
+     * @param  array  $options
+     * @param  bool  $ignore
      * @return array|bool|int
      */
     public function into($table, $path = null, $options = [], $ignore = false)
@@ -74,9 +73,9 @@ trait Outfile
     /**
      * write the sql rows to file.
      *
-     * @param null|string $file
-     * @param int         $count
-     * @param array       $options
+     * @param  null|string  $file
+     * @param  int  $count
+     * @param  array  $options
      */
     protected function outLoop($file = null, $count = 10000, $options = []): string
     {
@@ -104,8 +103,8 @@ trait Outfile
     /**
      * Write outfile.
      *
-     * @param null|string $file
-     * @param array       $options
+     * @param  null|string  $file
+     * @param  array  $options
      */
     protected function outFile($file = null, $options = []): string
     {
@@ -143,7 +142,7 @@ trait Outfile
     /**
      * Generate the filename.
      *
-     * @param null|string $file
+     * @param  null|string  $file
      */
     protected function generateFilePath($file = null): string
     {

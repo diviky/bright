@@ -9,13 +9,12 @@ class Ajax
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
     public function handle($request, \Closure $next)
     {
-        if ('iframe' == $request->input('_request')) {
+        if ($request->input('_request') == 'iframe') {
             $request->headers->add(['Accept' => 'application/json']);
         }
 

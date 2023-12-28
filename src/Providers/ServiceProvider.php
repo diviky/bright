@@ -11,7 +11,9 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * Register the application services.
      */
-    public function boot(): void {}
+    public function boot(): void
+    {
+    }
 
     protected function path(): string
     {

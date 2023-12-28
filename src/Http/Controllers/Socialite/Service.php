@@ -13,9 +13,8 @@ class Service
     /**
      * Check accont is linked and return details.
      *
-     * @param string $provider
-     * @param int    $socialite_id
-     *
+     * @param  string  $provider
+     * @param  int  $socialite_id
      * @return null|\Illuminate\Database\Eloquent\Model
      */
     public function linked($provider, $socialite_id)
@@ -28,10 +27,9 @@ class Service
     /**
      * Link user with social account.
      *
-     * @param string $provider
-     * @param object $user
-     * @param object $socialite
-     *
+     * @param  string  $provider
+     * @param  object  $user
+     * @param  object  $socialite
      * @return null|\Illuminate\Database\Eloquent\Model
      */
     public function linkAccount($provider, $user, $socialite)
@@ -53,8 +51,7 @@ class Service
     /**
      * Check the user exists with email address.
      *
-     * @param object $social
-     *
+     * @param  object  $social
      * @return null|\Illuminate\Database\Eloquent\Model
      */
     public function userFound($social)
@@ -63,9 +60,8 @@ class Service
     }
 
     /**
-     * @param int    $user_id
-     * @param string $redirect
-     *
+     * @param  int  $user_id
+     * @param  string  $redirect
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException

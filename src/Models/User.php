@@ -20,18 +20,18 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    use AccessToken;
+    use Authorizable;
+    use Connection;
+    use Connector;
+    use Eloquent;
     use HasFactory;
     use HasRoles;
-    use Authorizable;
-    use AccessToken;
+    use Notifiable;
+    use UserAvatarTrait;
     use UserParent;
     use UserRole;
     use UsersParent;
-    use UserAvatarTrait;
-    use Notifiable;
-    use Eloquent;
-    use Connector;
-    use Connection;
 
     /**
      * Guard name.
@@ -89,8 +89,8 @@ class User extends Authenticatable
     /**
      * Check the user has permission.
      *
-     * @param string      $permission
-     * @param null|string $guardName
+     * @param  string  $permission
+     * @param  null|string  $guardName
      *
      * @SuppressWarnings(PHPMD)
      */

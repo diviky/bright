@@ -30,9 +30,9 @@ class QueryQueued
     /**
      * Create a new event instance.
      *
-     * @param string $sql
-     * @param array  $bindings
-     * @param array  $async
+     * @param  string  $sql
+     * @param  array  $bindings
+     * @param  array  $async
      */
     public function __construct($sql, $bindings, $async)
     {

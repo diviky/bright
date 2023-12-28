@@ -26,8 +26,7 @@ trait WrapTrait
     /**
      * Wrap a table in keyword identifiers.
      *
-     * @param \Illuminate\Contracts\Database\Query\Expression|string $table
-     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $table
      * @return string
      */
     public function wrapTable($table)
@@ -38,15 +37,15 @@ trait WrapTrait
 
         $table = $this->getExpressionValue($table);
 
-        if (false !== \strpos($table, '.')) {
-            list($database, $table) = \explode('.', $table);
+        if (\strpos($table, '.') !== false) {
+            [$database, $table] = \explode('.', $table);
             $table = preg_replace('/^' . $this->tablePrefix . '/', '', $table);
 
             return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $table, true);
         }
 
         $alias = '';
-        if (false !== \stripos($table, ' as ')) {
+        if (\stripos($table, ' as ') !== false) {
             $segments = \preg_split('/\s+as\s+/i', $table);
             $alias = ' as ' . $segments[1];
             $table = $segments[0];
@@ -80,8 +79,7 @@ trait WrapTrait
     /**
      * get the value from expression.
      *
-     * @param \Illuminate\Contracts\Database\Query\Expression|string $value
-     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $value
      * @return mixed
      */
     protected function getExpressionValue($value)

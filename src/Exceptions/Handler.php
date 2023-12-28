@@ -25,7 +25,7 @@ class Handler extends ExceptionHandler
     {
         $format = $request->input('format');
 
-        if ('json' == $format || $this->shouldReturnJson($request, $exception)) {
+        if ($format == 'json' || $this->shouldReturnJson($request, $exception)) {
             return response()->json([
                 'status' => 'ERROR',
                 'code' => 401,

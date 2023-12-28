@@ -12,6 +12,9 @@ use Illuminate\Notifications\Notifiable;
 
 class RegisterController extends Controller
 {
+    use ColumnsTrait;
+    use Notifiable;
+
     /*
     |--------------------------------------------------------------------------
     | Register Controller
@@ -23,9 +26,7 @@ class RegisterController extends Controller
     |
      */
     use RegistersUsers;
-    use Notifiable;
     use Token;
-    use ColumnsTrait;
 
     /**
      * Default user role.

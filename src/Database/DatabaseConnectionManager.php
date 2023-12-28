@@ -11,8 +11,7 @@ class DatabaseConnectionManager extends LaravelDatabaseManager
     /**
      * Get the configuration for a connection.
      *
-     * @param string $name
-     *
+     * @param  string  $name
      * @return array
      *
      * @throws \InvalidArgumentException

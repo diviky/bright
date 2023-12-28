@@ -16,12 +16,12 @@ use Illuminate\Database\Eloquent\Model as BaseModel;
 
 class Model extends BaseModel
 {
-    use Eloquent;
     use Cachable;
+    use Connection;
+    use Connector;
+    use Eloquent;
+    use Eventable;
+    use HasEvents;
     use HasTimestamps;
     use Relations;
-    use HasEvents;
-    use Eventable;
-    use Connector;
-    use Connection;
 }

@@ -16,8 +16,7 @@ class Model extends BaseModel
     /**
      * Scope active column.
      *
-     * @param \Illuminate\Database\Query\Builder $query
-     *
+     * @param  \Illuminate\Database\Query\Builder  $query
      * @return \Illuminate\Database\Query\Builder
      */
     public function scopeActive($query)
@@ -28,9 +27,8 @@ class Model extends BaseModel
     /**
      * Scope active column.
      *
-     * @param \Illuminate\Database\Query\Builder $query
-     * @param null|int                           $user_id
-     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  null|int  $user_id
      * @return \Illuminate\Database\Query\Builder
      */
     public function scopeMe($query, $user_id = null)

@@ -51,12 +51,12 @@ class SelectIterator implements \Iterator
     protected $chunk;
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder $builder
-     * @param int                                                                      $chunkSize
+     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder  $builder
+     * @param  int  $chunkSize
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($builder, $chunkSize, \Closure $callback = null)
+    public function __construct($builder, $chunkSize, ?\Closure $callback = null)
     {
         if ($chunkSize < 0) {
             throw new \InvalidArgumentException("The chunk size must be equal or greater than zero; {$chunkSize} given");
@@ -85,8 +85,8 @@ class SelectIterator implements \Iterator
 
     public function next(): void
     {
-        ++$this->position;
-        ++$this->totalPosition;
+        $this->position++;
+        $this->totalPosition++;
 
         if (!isset($this->results[$this->position]) && $this->next) {
             $this->query();
@@ -119,7 +119,7 @@ class SelectIterator implements \Iterator
                 $rows->transform($this->callback);
             }
 
-            ++$this->page;
+            $this->page++;
             $this->position = 0;
             $this->results = $rows->toArray();
         } else {

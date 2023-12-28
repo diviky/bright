@@ -11,8 +11,7 @@ class XSSProtection
      * the request. This to ensure that users are unable to set ANY HTML within the form
      * submissions, but also cleans up input.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
     public function handle($request, \Closure $next)

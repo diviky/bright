@@ -11,14 +11,13 @@ use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class AuthorizeMiddleware
 {
-    use Themable;
     use Authorize;
+    use Themable;
 
     /**
      * Check the user is authorized.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Closure
      *
      * @throws UnauthorizedException

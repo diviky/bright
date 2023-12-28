@@ -14,9 +14,9 @@ class AppendIterator extends \AppendIterator
     /**
      * Works around the bug in which PHP calls rewind() and next() when appending.
      *
-     * @param \Iterator $iterator Iterator to append
+     * @param  \Iterator  $iterator Iterator to append
      */
-    public function append(\Iterator $iterator): void
+    public function append(Iterator $iterator): void
     {
         $this->getArrayIterator()->append($iterator);
     }

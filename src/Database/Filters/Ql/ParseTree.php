@@ -7,7 +7,9 @@ namespace Diviky\Bright\Database\Filters\Ql;
 class ParseTree
 {
     public const COMBINED_BY_AND = 'AND';
+
     public const COMBINED_BY_OR = 'OR';
+
     public const COMBINED_BY_IN = 'IN';
 
     /**
@@ -20,7 +22,9 @@ class ParseTree
      */
     protected $nestParent;
 
-    final public function __construct() {}
+    final public function __construct()
+    {
+    }
 
     /**
      * @return array

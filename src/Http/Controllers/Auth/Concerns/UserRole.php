@@ -9,7 +9,7 @@ trait UserRole
     /**
      * Assign a role to user.
      *
-     * @param string $role
+     * @param  string  $role
      */
     public function assignOwnRole($role): bool
     {

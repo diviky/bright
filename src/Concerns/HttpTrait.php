@@ -17,7 +17,7 @@ trait HttpTrait
     /**
      * Request object.
      *
-     * @return \Illuminate\Http\Request
+     * @return Request
      */
     public function request()
     {
@@ -27,9 +27,8 @@ trait HttpTrait
     /**
      * Retrieve an input item from the request.
      *
-     * @param string                     $key
-     * @param null|array|bool|int|string $default
-     *
+     * @param  string  $key
+     * @param  null|array|bool|int|string  $default
      * @return mixed
      */
     public function input($key = null, $default = null)
@@ -50,9 +49,8 @@ trait HttpTrait
     /**
      * Retrieve a query string item from the request.
      *
-     * @param string            $key
-     * @param null|array|string $default
-     *
+     * @param  string  $key
+     * @param  null|array|string  $default
      * @return null|array|string
      */
     public function query($key = null, $default = null)
@@ -63,9 +61,8 @@ trait HttpTrait
     /**
      * Retrieve a cookie from the request.
      *
-     * @param string            $key
-     * @param null|array|string $default
-     *
+     * @param  string  $key
+     * @param  null|array|string  $default
      * @return null|array|string
      */
     public function cookie($key = null, $default = null)
@@ -76,9 +73,8 @@ trait HttpTrait
     /**
      * Retrieve a file from the request.
      *
-     * @param null|string $key
-     * @param mixed       $default
-     *
+     * @param  null|string  $key
+     * @param  mixed  $default
      * @return null|array|\Illuminate\Http\UploadedFile|\Illuminate\Http\UploadedFile[]
      */
     public function files($key = null, $default = null)
@@ -89,9 +85,8 @@ trait HttpTrait
     /**
      * Retrieve a request payload item from the request.
      *
-     * @param null|string       $key
-     * @param null|array|string $default
-     *
+     * @param  null|string  $key
+     * @param  null|array|string  $default
      * @return null|array|string
      */
     public function post($key = null, $default = null)
@@ -102,9 +97,8 @@ trait HttpTrait
     /**
      * Retrieve a header from the request.
      *
-     * @param null|string       $key
-     * @param null|array|string $default
-     *
+     * @param  null|string  $key
+     * @param  null|array|string  $default
      * @return null|array|string
      */
     public function header($key = null, $default = null)
@@ -115,9 +109,8 @@ trait HttpTrait
     /**
      * Retrieve a server variable from the request.
      *
-     * @param null|string       $key
-     * @param null|array|string $default
-     *
+     * @param  null|string  $key
+     * @param  null|array|string  $default
      * @return null|array|string
      */
     public function server($key = null, $default = null)
@@ -128,8 +121,7 @@ trait HttpTrait
     /**
      * Get the input method.
      *
-     * @param string $type
-     *
+     * @param  string  $type
      * @return bool|string
      */
     public function method($type = null)
@@ -146,8 +138,7 @@ trait HttpTrait
     /**
      * Checks if the request method is of specified type.
      *
-     * @param string $method Uppercase request method (GET, POST etc)
-     *
+     * @param  string  $method Uppercase request method (GET, POST etc)
      * @return bool
      */
     public function isMethod($method)
@@ -158,9 +149,9 @@ trait HttpTrait
     /**
      * Sets a header by name.
      *
-     * @param array|string $key     The key
-     * @param array|string $values  The value or an array of values
-     * @param bool         $replace Whether to replace the actual value or not (true by default)
+     * @param  array|string  $key     The key
+     * @param  array|string  $values  The value or an array of values
+     * @param  bool  $replace Whether to replace the actual value or not (true by default)
      */
     public function setHeader($key, $values = null, $replace = true): self
     {
@@ -178,7 +169,7 @@ trait HttpTrait
     /**
      * Run the validator's rules against its data.
      *
-     * @param null|array|Request $data
+     * @param  null|array|Request  $data
      *
      * @throws \Illuminate\Validation\ValidationException
      */

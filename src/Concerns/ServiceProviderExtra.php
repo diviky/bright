@@ -13,9 +13,9 @@ trait ServiceProviderExtra
     /**
      * Merge the given configuration with the existing configuration.
      *
-     * @param string $path
-     * @param string $key
-     * @param bool   $force
+     * @param  string  $path
+     * @param  string  $key
+     * @param  bool  $force
      */
     protected function mergeConfigRecursive($path, $key, $force = false): void
     {
@@ -35,9 +35,9 @@ trait ServiceProviderExtra
     /**
      * Merge the given configuration with the existing configuration.
      *
-     * @param string $path
-     * @param string $key
-     * @param bool   $force
+     * @param  string  $path
+     * @param  string  $key
+     * @param  bool  $force
      */
     protected function mergeConfigRecursiveDistinct($path, $key, $force = false): void
     {
@@ -54,7 +54,7 @@ trait ServiceProviderExtra
         }
     }
 
-    protected static function arrayMergeRecursiveDistinct(array $array1, array $array2)
+    protected static function arrayMergeRecursiveDistinct(array $array1, array $array2): array
     {
         $merged = $array1;
 
@@ -72,9 +72,9 @@ trait ServiceProviderExtra
     /**
      * Merge the given configuration with the existing configuration.
      *
-     * @param string $path
-     * @param string $key
-     * @param bool   $force
+     * @param  string  $path
+     * @param  string  $key
+     * @param  bool  $force
      */
     protected function replaceConfigRecursive($path, $key, $force = false): void
     {
@@ -94,9 +94,9 @@ trait ServiceProviderExtra
     /**
      * Merge the given configuration with the existing configuration.
      *
-     * @param string $path
-     * @param string $key
-     * @param bool   $force
+     * @param  string  $path
+     * @param  string  $key
+     * @param  bool  $force
      */
     protected function mergeConfigFrom($path, $key, $force = false): void
     {
@@ -120,7 +120,7 @@ trait ServiceProviderExtra
     /**
      * Register factories.
      *
-     * @param array|string $namespace
+     * @param  array|string  $namespace
      */
     protected function registerFactoriesFor($namespace): void
     {

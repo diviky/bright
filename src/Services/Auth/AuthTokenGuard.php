@@ -34,7 +34,7 @@ class AuthTokenGuard extends AccessTokenGuard
             return;
         }
 
-        if (1 != $user->status) {
+        if ($user->status != 1) {
             return;
         }
 

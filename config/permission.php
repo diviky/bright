@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'models'                          => [
+    'models' => [
         /*
          * When using the "HasRoles" trait from this package, we need to know which
          * Eloquent model should be used to retrieve your permissions. Of course, it
@@ -22,17 +22,17 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        'role'       => \Diviky\Bright\Models\Role::class,
+        'role' => \Diviky\Bright\Models\Role::class,
     ],
 
-    'table_names'                     => [
+    'table_names' => [
         /*
          * When using the "HasRoles" trait from this package, we need to know which
          * table should be used to retrieve your roles. We have chosen a basic
          * default value but you may easily change it to any table you like.
          */
 
-        'roles'                 => config('bright.table.roles', 'roles'),
+        'roles' => config('bright.table.roles', 'roles'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -40,7 +40,7 @@ return [
          * default value but you may easily change it to any table you like.
          */
 
-        'permissions'           => config('bright.table.permissions', 'permissions'),
+        'permissions' => config('bright.table.permissions', 'permissions'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -56,7 +56,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'model_has_roles'       => config('bright.table.user_roles', 'user_roles'),
+        'model_has_roles' => config('bright.table.user_roles', 'user_roles'),
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -64,9 +64,9 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'role_has_permissions'  => config('bright.table.role_permissions', 'role_permissions'),
+        'role_has_permissions' => config('bright.table.role_permissions', 'role_permissions'),
     ],
 
-    'grouping'  => [],
-    'public'    => [],
+    'grouping' => [],
+    'public' => [],
 ];

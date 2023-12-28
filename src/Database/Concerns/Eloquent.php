@@ -10,19 +10,19 @@ use Illuminate\Database\Eloquent\Model;
 trait Eloquent
 {
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     protected $model;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Builder
+     * @var Builder
      */
     protected $builder;
 
     /**
      * Get the value of eloquent.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getModel()
     {

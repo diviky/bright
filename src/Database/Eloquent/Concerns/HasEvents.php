@@ -9,9 +9,8 @@ trait HasEvents
     /**
      * Fire the given event for the model.
      *
-     * @param string $event
-     * @param bool   $halt
-     *
+     * @param  string  $event
+     * @param  bool  $halt
      * @return mixed
      */
     public function fireEvent($event, $halt = true)

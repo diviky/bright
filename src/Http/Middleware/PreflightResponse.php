@@ -9,13 +9,12 @@ class PreflightResponse
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Closure|\Illuminate\Http\Response
      */
     public function handle($request, \Closure $next)
     {
-        if ('OPTIONS' === $request->getMethod()) {
+        if ($request->getMethod() === 'OPTIONS') {
             $response = response('');
 
             return $this->addCorsHeaders($response);

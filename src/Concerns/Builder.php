@@ -21,8 +21,7 @@ trait Builder
     /**
      * Execute an SQL statement and return the boolean result.
      *
-     * @param mixed $sql
-     *
+     * @param  mixed  $sql
      * @return bool|int
      */
     public function statement($sql)
@@ -36,7 +35,7 @@ trait Builder
     /**
      * RAW database query.
      *
-     * @param string $column
+     * @param  string  $column
      */
     protected function raw($column): \Illuminate\Contracts\Database\Query\Expression
     {

@@ -16,7 +16,7 @@ class SQLiteConnection extends LaravelSQLiteConnection
     /**
      * Get a new query builder instance.
      *
-     * @return \Diviky\Bright\Database\Query\Builder
+     * @return QueryBuilder
      */
     public function query()
     {

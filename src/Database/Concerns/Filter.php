@@ -36,8 +36,7 @@ trait Filter
     /**
      * Add Filters to database query builder.
      *
-     * @param array $data
-     *
+     * @param  array  $data
      * @return $this
      */
     public function filter($data = []): self
@@ -84,9 +83,9 @@ trait Filter
     /**
      * Add where condition for filters.
      *
-     * @param string       $column
-     * @param array|string $value
-     * @param string       $condition
+     * @param  string  $column
+     * @param  array|string  $value
+     * @param  string  $condition
      */
     public function addWhere($column, $value, $condition = '='): self
     {
@@ -117,8 +116,7 @@ trait Filter
     /**
      * Clean the filters.
      *
-     * @param mixed $filters
-     *
+     * @param  mixed  $filters
      * @return array
      */
     protected function cleanUpFilters($filters)
@@ -132,14 +130,14 @@ trait Filter
         }
 
         return array_filter($filters, function ($value) {
-            return null !== $value && false !== $value && '' !== $value;
+            return $value !== null && $value !== false && $value !== '';
         });
     }
 
     protected function filterExact(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && '' != $value[0]) {
+            if (isset($value) && $value[0] != '') {
                 $type = $this->types[$column] ?? null;
 
                 if (is_null($type)) {
@@ -148,25 +146,25 @@ trait Filter
                     continue;
                 }
 
-                if ('scope' == $type) {
+                if ($type == 'scope') {
                     $this->filterScopes([$column => $value]);
-                } elseif ('like' == $type) {
+                } elseif ($type == 'like') {
                     $this->filterLike([$column => $value]);
-                } elseif ('left' == $type) {
+                } elseif ($type == 'left') {
                     $this->filterLeft([$column => $value]);
-                } elseif ('right' == $type) {
+                } elseif ($type == 'right') {
                     $this->filterRight([$column => $value]);
-                } elseif ('between' == $type) {
+                } elseif ($type == 'between') {
                     $this->filterBetween([$column => $value]);
-                } elseif ('range' == $type) {
+                } elseif ($type == 'range') {
                     $this->filterRange([$column => $value]);
-                } elseif ('unixtime' == $type || 'unix' == $type) {
+                } elseif ($type == 'unixtime' || $type == 'unix') {
                     $this->filterUnixTimes([$column => $value]);
-                } elseif ('datetime' == $type || 'timestamp' == $type) {
+                } elseif ($type == 'datetime' || $type == 'timestamp') {
                     $this->filterDatetimes([$column => $value]);
-                } elseif ('date' == $type) {
+                } elseif ($type == 'date') {
                     $this->filterDateRanges([$column => $value]);
-                } elseif ('parser' == $type) {
+                } elseif ($type == 'parser') {
                     $this->filterParse([$column => $value]);
                 } else {
                     $this->addWhere($column, $value);
@@ -180,7 +178,7 @@ trait Filter
     protected function filterLike(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && '' != $value && !empty($column)) {
+            if (isset($value) && $value != '' && !empty($column)) {
                 $value = '%' . $value . '%';
 
                 $this->addWhere($column, $value, 'like');
@@ -193,7 +191,7 @@ trait Filter
     protected function filterLeft(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && '' != $value && !empty($column)) {
+            if (isset($value) && $value != '' && !empty($column)) {
                 $value = '%' . $value;
                 $this->addWhere($column, $value, 'like');
             }
@@ -205,7 +203,7 @@ trait Filter
     protected function filterRight(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && '' != $value && !empty($column)) {
+            if (isset($value) && $value != '' && !empty($column)) {
                 $value .= '%';
                 $this->addWhere($column, $value, 'like');
             }
@@ -218,7 +216,7 @@ trait Filter
     {
         foreach ($filters as $value => $column) {
             $value = $data[$value];
-            if (isset($value) && '' != $value && !empty($column)) {
+            if (isset($value) && $value != '' && !empty($column)) {
                 if (Str::startsWith('%', $column)) {
                     $value = '%' . $value;
 
@@ -451,16 +449,16 @@ trait Filter
                     $combinedBy = $result->getCombinedBy();
                     $predicate = $result->getPredicate();
 
-                    $op = ('=~' == $predicate->op) ? 'like' : $predicate->op;
+                    $op = ($predicate->op == '=~') ? 'like' : $predicate->op;
 
-                    if (':' == $op) {
+                    if ($op == ':') {
                         $this->filterScopes([(string) $predicate->left => $predicate->right]);
-                    } elseif (':' == substr($op, 0, 1)) {
+                    } elseif (substr($op, 0, 1) == ':') {
                         if ($this->hasModel()) {
                             (new FilterRelation(substr($op, 1), '.'))($this->builder, $predicate->right, (string) $predicate->left);
                         }
                     } else {
-                        if ('OR' === $combinedBy) {
+                        if ($combinedBy === 'OR') {
                             $query->orWhere($this->cleanField((string) $predicate->left), $op, $predicate->right);
                         } else {
                             $query->where($this->cleanField((string) $predicate->left), $op, $predicate->right);
@@ -476,14 +474,13 @@ trait Filter
     /**
      * Cleanup the give column.
      *
-     * @param string $string Database column
-     *
+     * @param  string  $string Database column
      * @return string Cleaned String
      */
     protected function cleanField($string)
     {
         if (Str::contains($string, '.')) {
-            list($alias, $column) = explode('.', $string, 2);
+            [$alias, $column] = explode('.', $string, 2);
             $column = $this->aliases[$column] ?? $column;
 
             return $this->getExpressionValue($this->raw($alias . '.' . $this->wrap($column)));
@@ -495,10 +492,9 @@ trait Filter
     /**
      * Convert time to proper format.
      *
-     * @param string     $time
-     * @param string     $format
-     * @param null|mixed $prefix
-     *
+     * @param  string  $time
+     * @param  string  $format
+     * @param  null|mixed  $prefix
      * @return null|\Illuminate\Support\Carbon|string
      */
     protected function toTime($time, $format = null, $prefix = null)
@@ -511,7 +507,7 @@ trait Filter
             $time = Str::contains($time, ':') ? $time : $time . ' ' . $prefix;
         }
 
-        if (false === \strtotime($time)) {
+        if (\strtotime($time) === false) {
             $time = now()->toDateTimeString();
         }
 

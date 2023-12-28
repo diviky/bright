@@ -12,8 +12,7 @@ class Branding
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed
      *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
@@ -48,7 +47,7 @@ class Branding
         if (isset($route) && !is_string($route)) {
             $route = $route->getName();
 
-            if ('register' == $route && 1 != $row->options['register']) {
+            if ($route == 'register' && $row->options['register'] != 1) {
                 abort(401, 'Registrations are disabled');
             }
         }
@@ -59,8 +58,7 @@ class Branding
     /**
      * Format the branding details.
      *
-     * @param object $row
-     *
+     * @param  object  $row
      * @return object
      */
     protected function format($row)

@@ -26,7 +26,7 @@ class RedirectResponse extends BaseRedirectResponse
 
     public function setTargetUrl(string $url): static
     {
-        if ('' === $url) {
+        if ($url === '') {
             throw new \InvalidArgumentException('Cannot redirect to an empty URL.');
         }
 

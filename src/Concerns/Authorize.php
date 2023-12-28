@@ -13,7 +13,7 @@ trait Authorize
     /**
      * Check given permission name is allowed.
      *
-     * @param null|array $names
+     * @param  null|array  $names
      */
     public function isAuthorizationRevoked($names): bool
     {
@@ -37,7 +37,7 @@ trait Authorize
     /**
      * Check given permission name is allowed.
      *
-     * @param null|array $names
+     * @param  null|array  $names
      */
     public function isAuthorized($names): bool
     {
@@ -76,7 +76,7 @@ trait Authorize
     /**
      * Check authorization view action class.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isActionAuthorized($route): bool
     {
@@ -89,7 +89,7 @@ trait Authorize
      * Check authorization via route names
      * should prefix permission with name:.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isRouteAuthorized($route): bool
     {
@@ -105,7 +105,7 @@ trait Authorize
     /**
      * Check authorization via route prefix.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isPrefixAuthorized($route): bool
     {
@@ -121,7 +121,7 @@ trait Authorize
     /**
      * Check authorization via route uri.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isUriAuthorized($route): bool
     {
@@ -141,7 +141,7 @@ trait Authorize
     /**
      * Check authorization view action class.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isActionAuthorizeRevoked($route): bool
     {
@@ -154,7 +154,7 @@ trait Authorize
      * Check authorization via route names
      * should prefix permission with name:.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isRouteAuthorizeRevoked($route): bool
     {
@@ -170,7 +170,7 @@ trait Authorize
     /**
      * Check authorization via route prefix.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isPrefixAuthorizeRevoked($route): bool
     {
@@ -186,7 +186,7 @@ trait Authorize
     /**
      * Check authorization via route uri.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isUriAuthorizeRevoked($route): bool
     {
@@ -206,7 +206,7 @@ trait Authorize
     /**
      * Check authorization via route.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isAuthorizedAny($route): bool
     {
@@ -236,7 +236,7 @@ trait Authorize
     /**
      * Check authorization via route.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     public function isAuthorizeRevokedAny($route): bool
     {
@@ -262,12 +262,12 @@ trait Authorize
     /**
      * Get the route from action.
      *
-     * @param Route $route
+     * @param  Route  $route
      */
     protected function getRoutesFromRoute($route): array
     {
         $action = $route->getActionName();
-        if (false === \strpos($action, '@')) {
+        if (\strpos($action, '@') === false) {
             return [];
         }
 

@@ -22,9 +22,8 @@ class Api
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param bool                     $keep_code
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  bool  $keep_code
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     public function handle($request, \Closure $next, $keep_code = true)
@@ -40,9 +39,8 @@ class Api
     /**
      * Add cors headers.
      *
-     * @param mixed $response
-     *
-     * @return \Illuminate\Http\Response
+     * @param  mixed  $response
+     * @return Response
      */
     public function addCorsHeaders($response)
     {
@@ -57,8 +55,7 @@ class Api
     /**
      * Add cors headers.
      *
-     * @param mixed $response
-     *
+     * @param  mixed  $response
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
      */
     protected function respond($response)
@@ -83,7 +80,7 @@ class Api
                 }
 
                 if ($code && \is_numeric($code)) {
-                    if (200 == $code) {
+                    if ($code == 200) {
                         $response->setStatusCode((int) $code, 'OK');
                     } else {
                         $response->setStatusCode((int) $code, $original['message'] ?? 'OK');

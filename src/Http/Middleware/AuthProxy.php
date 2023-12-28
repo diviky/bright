@@ -13,9 +13,8 @@ class AuthProxy
     /**
      * Handle the incoming requests.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param callable                 $next
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  callable  $next
      * @return \Illuminate\Http\Response
      */
     public function handle($request, $next)
@@ -28,7 +27,7 @@ class AuthProxy
     /**
      * Determine if the given request has JWT token.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      */
     public static function middlewares($request): array
     {
@@ -54,8 +53,7 @@ class AuthProxy
     /**
      * Determine if the given request has JWT token.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return null|mixed|string
      */
     public static function getAccessToken($request)

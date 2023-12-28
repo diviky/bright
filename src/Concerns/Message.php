@@ -9,10 +9,9 @@ trait Message
     /**
      * @psalm-return array{status: string, code: 200|500, message: array|null|string, data?: mixed}
      *
-     * @param mixed  $result
-     * @param string $action
-     * @param string $name
-     *
+     * @param  mixed  $result
+     * @param  string  $action
+     * @param  string  $name
      * @return (null|array|int|mixed|string)[]
      */
     public function message($result = true, $action = 'save', $name = 'row'): array
@@ -41,9 +40,8 @@ trait Message
     /**
      * Delete message.
      *
-     * @param mixed  $result
-     * @param string $name
-     *
+     * @param  mixed  $result
+     * @param  string  $name
      * @return (null|array|int|mixed|string)[]
      */
     public function deleted($result = true, $name = 'row')
@@ -54,9 +52,8 @@ trait Message
     /**
      * Insert message.
      *
-     * @param mixed  $result
-     * @param string $name
-     *
+     * @param  mixed  $result
+     * @param  string  $name
      * @return (null|array|int|mixed|string)[]
      */
     public function inserted($result = true, $name = 'row')
@@ -67,9 +64,8 @@ trait Message
     /**
      * Insert message.
      *
-     * @param mixed  $result
-     * @param string $name
-     *
+     * @param  mixed  $result
+     * @param  string  $name
      * @return (null|array|int|mixed|string)[]
      */
     public function created($result = true, $name = 'row')
@@ -80,9 +76,8 @@ trait Message
     /**
      * Updated message.
      *
-     * @param mixed  $result
-     * @param string $name
-     *
+     * @param  mixed  $result
+     * @param  string  $name
      * @return (null|array|int|mixed|string)[]
      */
     public function updated($result = true, $name = 'row')

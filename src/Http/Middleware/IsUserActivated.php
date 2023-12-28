@@ -11,9 +11,8 @@ class IsUserActivated
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param null|string              $guard
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  null|string  $guard
      * @return mixed
      *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
@@ -31,7 +30,7 @@ class IsUserActivated
             return $next($request);
         }
 
-        if (0 == $user->status) {
+        if ($user->status == 0) {
             return redirect()->route('user.activate');
         }
 
@@ -41,7 +40,7 @@ class IsUserActivated
             abort(401, 'Account Deleted');
         }
 
-        if (1 != $user->status) {
+        if ($user->status != 1) {
             Auth::logout();
 
             abort(401, 'Account Suspended');

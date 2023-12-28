@@ -19,10 +19,9 @@ class Resolver
     /**
      * Load helper class.
      *
-     * @param \Closure|string $name       Helper name
-     * @param null|string     $namespace
-     * @param bool            $singletone
-     *
+     * @param  \Closure|string  $name       Helper name
+     * @param  null|string  $namespace
+     * @param  bool  $singletone
      * @return object
      *
      * @throws \Exception
@@ -43,12 +42,12 @@ class Resolver
         $group = null;
         $option = null;
 
-        if (false !== \strpos($name, ':')) {
-            list($name, $group) = \explode(':', $name);
+        if (\strpos($name, ':') !== false) {
+            [$name, $group] = \explode(':', $name);
         }
 
-        if (false !== \strpos($name, '.')) {
-            list($helper, $option) = \explode('.', $name);
+        if (\strpos($name, '.') !== false) {
+            [$helper, $option] = \explode('.', $name);
         }
 
         $paths = [];
@@ -108,8 +107,7 @@ class Resolver
     /**
      * Convert the option to CamelCase.
      *
-     * @param string $option
-     *
+     * @param  string  $option
      * @return string Converted string
      */
     protected function sanitize($option)
@@ -120,9 +118,8 @@ class Resolver
     /**
      * Get the view paths and namespace for option.
      *
-     * @param string $option
-     * @param string $type   Type of option
-     *
+     * @param  string  $option
+     * @param  string  $type   Type of option
      * @return array View paths and namespace
      */
     protected function getPath($option, $type = 'controllers')
@@ -138,9 +135,8 @@ class Resolver
     /**
      * Get the namespace for option.
      *
-     * @param string $option
-     * @param string $type
-     *
+     * @param  string  $option
+     * @param  string  $type
      * @return string Namespace
      */
     protected function getNameSpace($option, $type = 'controllers')

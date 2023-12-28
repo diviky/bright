@@ -39,7 +39,7 @@ class ShardManager
     /**
      * Set the sharding namr.
      *
-     * @param string $name
+     * @param  string  $name
      */
     public function setService($name = 'default'): self
     {
@@ -63,8 +63,7 @@ class ShardManager
     /**
      * Get the shard.
      *
-     * @param int|string $id
-     *
+     * @param  int|string  $id
      * @return string
      */
     public function getShardById($id)
@@ -90,7 +89,7 @@ class ShardManager
     /**
      * Choose the shard.
      *
-     * @param string $id
+     * @param  string  $id
      */
     public function chooseShard($id): string
     {
@@ -100,9 +99,8 @@ class ShardManager
     /**
      * Set the sharding relation.
      *
-     * @param string $id
-     * @param string $shard
-     *
+     * @param  string  $id
+     * @param  string  $shard
      * @return bool
      */
     public function setRelation($id, $shard)

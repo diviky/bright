@@ -61,9 +61,8 @@ class Stream
     /**
      * Start the stream.
      *
-     * @param string $filename
-     * @param bool   $write
-     *
+     * @param  string  $filename
+     * @param  bool  $write
      * @return $this
      */
     public function start($filename, $write = false): self
@@ -72,7 +71,7 @@ class Stream
 
         $ext = \strtolower(\strrchr($filename, '.'));
 
-        if ('.csv' == $ext) {
+        if ($ext == '.csv') {
             $this->separator = ',';
         }
 
@@ -88,7 +87,7 @@ class Stream
     /**
      * Set the headers file.
      *
-     * @param array|Collection|\Iterator $fields
+     * @param  array|Collection|\Iterator  $fields
      */
     public function setHeader($fields): self
     {
@@ -98,7 +97,7 @@ class Stream
         $out = [];
         foreach ($fields as $field) {
             $field = \strtoupper((string) $field);
-            if (false !== \strpos($field, ' AS ')) {
+            if (\strpos($field, ' AS ') !== false) {
                 $field = \explode(' AS ', $field);
                 $field = \trim($field[1]);
             }
@@ -113,7 +112,7 @@ class Stream
     /**
      * Set the seperator.
      *
-     * @param string $string
+     * @param  string  $string
      */
     public function setSeparator($string): self
     {
@@ -125,10 +124,9 @@ class Stream
     /**
      * Export as excel.
      *
-     * @param array|Collection|\Iterator $rows
-     * @param array|Collection|\Iterator $fields
-     * @param mixed                      $disposition
-     *
+     * @param  array|Collection|\Iterator  $rows
+     * @param  array|Collection|\Iterator  $fields
+     * @param  mixed  $disposition
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function excel($rows, $fields, array $headers = [], $disposition = 'attachment')
@@ -144,10 +142,9 @@ class Stream
     /**
      * Out put the file.
      *
-     * @param array|Collection|\Iterator $rows
-     * @param array                      $fields
-     * @param string                     $disposition
-     *
+     * @param  array|Collection|\Iterator  $rows
+     * @param  array  $fields
+     * @param  string  $disposition
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function stream($rows, $fields = [], array $headers = [], $disposition = 'attachment')
@@ -162,8 +159,8 @@ class Stream
     /**
      * Out put the file.
      *
-     * @param array|Collection|\Iterator $rows
-     * @param array                      $fields
+     * @param  array|Collection|\Iterator  $rows
+     * @param  array  $fields
      */
     public function output($rows, $fields = []): self
     {
@@ -185,7 +182,7 @@ class Stream
     /**
      * Function to read local and remote file.
      *
-     * @param string $filename
+     * @param  string  $filename
      */
     public function readFile($filename): bool
     {
@@ -194,7 +191,7 @@ class Stream
 
         $stream = \fopen($filename, 'rb');
 
-        if (false === $stream) {
+        if ($stream === false) {
             return false;
         }
 
@@ -211,13 +208,13 @@ class Stream
     /**
      * Close the file writing stream.
      *
-     * @param string $filepath
+     * @param  string  $filepath
      */
     public function write($filepath): self
     {
         $ext = \strtolower(\strrchr($filepath, '.'));
 
-        if ('.csv' == $ext) {
+        if ($ext == '.csv') {
             $this->separator = ',';
         }
 
@@ -255,7 +252,7 @@ class Stream
     /**
      * Clean the values.
      *
-     * @param mixed $input
+     * @param  mixed  $input
      */
     protected function clean($input): string
     {
@@ -271,7 +268,7 @@ class Stream
     /**
      * Write the details.
      *
-     * @param array|object $row
+     * @param  array|object  $row
      *
      * @SuppressWarnings(PHPMD)
      */
@@ -292,7 +289,7 @@ class Stream
     /**
      * Write multiple rows to file.
      *
-     * @param array|Collection|\Iterator $rows
+     * @param  array|Collection|\Iterator  $rows
      */
     protected function flushRows($rows): self
     {
@@ -306,7 +303,7 @@ class Stream
     }
 
     /**
-     * @param array|object $row
+     * @param  array|object  $row
      */
     protected function implode($row = [], bool $clean = false): self
     {
@@ -333,8 +330,7 @@ class Stream
     /**
      * Convert rows to array.
      *
-     * @param array|Arrayable|Collection|\Iterator|JsonResource|\JsonSerializable|LazyCollection|mixed $rows
-     *
+     * @param  array|Arrayable|Collection|\Iterator|JsonResource|\JsonSerializable|LazyCollection|mixed  $rows
      * @return array
      */
     protected function toArray($rows)

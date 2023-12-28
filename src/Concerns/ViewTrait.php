@@ -12,10 +12,10 @@ trait ViewTrait
     /**
      * set the required data for ajax request.
      *
-     * @param null|array|string $url
-     * @param null|array        $params
-     * @param null|string       $method
-     * @param null|array        $attributes
+     * @param  null|array|string  $url
+     * @param  null|array  $params
+     * @param  null|string  $method
+     * @param  null|array  $attributes
      */
     public function ajax($url = null, $params = [], $method = 'post', $attributes = []): self
     {
@@ -34,7 +34,7 @@ trait ViewTrait
             $action = $url;
 
             if (is_string($url)) {
-                if ('/' !== \substr($url, 0, 1)) {
+                if (\substr($url, 0, 1) !== '/') {
                     $action = route($url, $parameters);
                 } else {
                     $url = str_replace(['"', "'"], ['%22', '%27'], $url);
@@ -84,8 +84,8 @@ trait ViewTrait
     /**
      * Share the variables to view.
      *
-     * @param array|string $key
-     * @param mixed        $value
+     * @param  array|string  $key
+     * @param  mixed  $value
      */
     public function share($key, $value = null): self
     {

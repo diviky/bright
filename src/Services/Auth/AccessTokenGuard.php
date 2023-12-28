@@ -77,8 +77,8 @@ class AccessTokenGuard
 
         $token = null;
         $signature = null;
-        if (false !== \strpos($access_key, ':')) {
-            list($access_key, $signature) = \explode(':', $access_key, 2);
+        if (\strpos($access_key, ':') !== false) {
+            [$access_key, $signature] = \explode(':', $access_key, 2);
         }
 
         // the token was found, how do you want to pass?
@@ -88,7 +88,7 @@ class AccessTokenGuard
             return null;
         }
 
-        if (1 != $token->status || !\is_null($token->deleted_at)) {
+        if ($token->status != 1 || !\is_null($token->deleted_at)) {
             return null;
         }
 
@@ -106,7 +106,7 @@ class AccessTokenGuard
 
         $user = $this->provider->retrieveById($token->user_id);
 
-        if (is_null($user) || !\is_null($user->deleted_at) || 1 != $user->status) {
+        if (is_null($user) || !\is_null($user->deleted_at) || $user->status != 1) {
             return null;
         }
 
@@ -156,7 +156,7 @@ class AccessTokenGuard
     /**
      * Validate ip adress with given list.
      *
-     * @param null|string $allowed_ips
+     * @param  null|string  $allowed_ips
      */
     protected function validateIp($allowed_ips = null): bool
     {
@@ -188,8 +188,8 @@ class AccessTokenGuard
     /**
      * Validate request signature.
      *
-     * @param object      $token
-     * @param null|string $signature
+     * @param  object  $token
+     * @param  null|string  $signature
      */
     protected function validateSignature($token, $signature = null): bool
     {

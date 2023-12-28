@@ -46,8 +46,7 @@ trait Cachable
     /**
      * Execute the query as a "select" statement.
      *
-     * @param array|string $columns
-     *
+     * @param  array|string  $columns
      * @return array|\Illuminate\Support\Collection
      */
     public function get($columns = ['*'])
@@ -64,9 +63,8 @@ trait Cachable
     /**
      * Get a collection instance containing the values of a given column.
      *
-     * @param \Illuminate\Contracts\Database\Query\Expression|string $column
-     * @param null|string                                            $key
-     *
+     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @param  null|string  $key
      * @return \Illuminate\Support\Collection
      */
     public function pluck($column, $key = null)
@@ -95,8 +93,7 @@ trait Cachable
     /**
      * Execute the query as a cached "select" statement.
      *
-     * @param array|string $columns
-     *
+     * @param  array|string  $columns
      * @return array
      */
     public function getCached($columns = ['*'])
@@ -127,9 +124,8 @@ trait Cachable
     /**
      * Execute the cached pluck query statement.
      *
-     * @param string $column
-     * @param mixed  $key
-     *
+     * @param  string  $column
+     * @param  mixed  $key
      * @return \Illuminate\Support\Collection
      */
     public function pluckCached($column, $key = null)
@@ -152,9 +148,8 @@ trait Cachable
     /**
      * Indicate that the query results should be cached.
      *
-     * @param null|\DateTime|int $seconds
-     * @param string             $key
-     *
+     * @param  null|\DateTime|int  $seconds
+     * @param  string  $key
      * @return $this
      */
     public function remember($seconds = null, $key = null)
@@ -163,7 +158,7 @@ trait Cachable
             $seconds = 10 * 60;
         }
 
-        list($this->cacheSeconds, $this->cacheKey) = [$seconds, $key];
+        [$this->cacheSeconds, $this->cacheKey] = [$seconds, $key];
 
         return $this;
     }
@@ -179,8 +174,7 @@ trait Cachable
     /**
      * Indicate that the query results should be cached forever.
      *
-     * @param null|string $key
-     *
+     * @param  null|string  $key
      * @return \Illuminate\Database\Query\Builder|static
      */
     public function rememberForever($key = null)
@@ -213,8 +207,7 @@ trait Cachable
     /**
      * Indicate that the results, if cached, should use the given cache tags.
      *
-     * @param array|mixed $cacheTags
-     *
+     * @param  array|mixed  $cacheTags
      * @return $this
      */
     public function cacheTags($cacheTags)
@@ -227,8 +220,7 @@ trait Cachable
     /**
      * Indicate that the results, if cached, should use the given cache driver.
      *
-     * @param string $cacheDriver
-     *
+     * @param  string  $cacheDriver
      * @return $this
      */
     public function cacheDriver($cacheDriver)
@@ -241,8 +233,7 @@ trait Cachable
     /**
      * Get a unique cache key for the complete query.
      *
-     * @param mixed $appends
-     *
+     * @param  mixed  $appends
      * @return string
      */
     public function getCacheKey($appends = null)
@@ -255,8 +246,7 @@ trait Cachable
     /**
      * Generate the unique cache key for the query.
      *
-     * @param mixed $appends
-     *
+     * @param  mixed  $appends
      * @return string
      */
     public function generateCacheKey($appends = null)
@@ -269,8 +259,7 @@ trait Cachable
     /**
      * Flush the cache for the current model or a given tag name.
      *
-     * @param mixed $cacheTags
-     *
+     * @param  mixed  $cacheTags
      * @return bool
      */
     public function flushCache($cacheTags = null)
@@ -289,8 +278,7 @@ trait Cachable
     /**
      * Set the cache prefix.
      *
-     * @param string $prefix
-     *
+     * @param  string  $prefix
      * @return $this
      */
     public function cachePrefix($prefix)
@@ -323,8 +311,7 @@ trait Cachable
     /**
      * Get the Closure callback used when caching queries.
      *
-     * @param array|string $columns
-     *
+     * @param  array|string  $columns
      * @return \Closure()
      */
     protected function getCacheCallback($columns)
@@ -339,9 +326,8 @@ trait Cachable
     /**
      * Get the callback for pluck queries.
      *
-     * @param string $column
-     * @param mixed  $key
-     *
+     * @param  string  $column
+     * @param  mixed  $key
      * @return \Closure()
      */
     protected function pluckCacheCallback($column, $key = null)

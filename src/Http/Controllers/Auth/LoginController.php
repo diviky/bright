@@ -43,7 +43,7 @@ class LoginController extends Controller
      */
     protected function throttleKey(Request $request): ?string
     {
-        if ('ip' == config('auth.throttle_key')) {
+        if (config('auth.throttle_key') == 'ip') {
             return $request->ip();
         }
 

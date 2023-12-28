@@ -15,11 +15,11 @@ use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
+    use AuthorizesRequests;
+    use Builder;
     use CapsuleManager;
     use HttpTrait;
     use Message;
-    use Builder;
-    use ViewTrait;
-    use AuthorizesRequests;
     use ValidatesRequests;
+    use ViewTrait;
 }

@@ -22,7 +22,7 @@ trait Broadcasts
     /**
      * The event's broadcast name.
      *
-     * @param string $event
+     * @param  string  $event
      */
     public function broadcastAs($event): string
     {
@@ -32,8 +32,7 @@ trait Broadcasts
     /**
      * Get the data to broadcast for the model.
      *
-     * @param string $event
-     *
+     * @param  string  $event
      * @return array
      */
     public function broadcastWith($event)
@@ -67,8 +66,7 @@ trait Broadcasts
     /**
      * Get the channels that model events should broadcast on.
      *
-     * @param string $event
-     *
+     * @param  string  $event
      * @return array|\Illuminate\Broadcasting\Channel
      */
     public function broadcastOn($event)
@@ -82,9 +80,8 @@ trait Broadcasts
     /**
      * Create a new broadcastable model event for the model.
      *
-     * @param string $event
-     *
-     * @return \Diviky\Bright\Database\Eloquent\BroadcastableModelEventOccurred
+     * @param  string  $event
+     * @return BroadcastableModelEventOccurred
      */
     protected function newBroadcastableEvent($event)
     {

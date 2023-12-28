@@ -9,8 +9,7 @@ trait Eventable
     /**
      * Set event state.
      *
-     * @param bool $event
-     *
+     * @param  bool  $event
      * @return static
      */
     public function eventState($event = false)
@@ -21,8 +20,7 @@ trait Eventable
     /**
      * Set event state.
      *
-     * @param bool $event
-     *
+     * @param  bool  $event
      * @return static
      */
     public function es($event = false)
@@ -35,8 +33,7 @@ trait Eventable
     /**
      * Set the event column.
      *
-     * @param array|string $name
-     *
+     * @param  array|string  $name
      * @return static
      */
     public function eventColumn($name)
@@ -49,8 +46,7 @@ trait Eventable
     /**
      * Run the query in async mode.
      *
-     * @param array|string $events
-     *
+     * @param  array|string  $events
      * @return static
      */
     public function events($events = null)

@@ -49,8 +49,8 @@ class Options
     protected $where = [];
 
     /**
-     * @param string $table
-     * @param string $group
+     * @param  string  $table
+     * @param  string  $group
      */
     public function __construct($table = null, $group = null)
     {
@@ -67,7 +67,7 @@ class Options
     /**
      * Instance.
      *
-     * @param string $table
+     * @param  string  $table
      */
     public static function instance($table = null): self
     {
@@ -77,10 +77,9 @@ class Options
     /**
      * Update the record exists else insert.
      *
-     * @param mixed  $key
-     * @param mixed  $value
-     * @param string $type
-     *
+     * @param  mixed  $key
+     * @param  mixed  $value
+     * @param  string  $type
      * @return bool|int
      */
     public function updateOrInsert($key, $value = null, $type = null)
@@ -103,9 +102,8 @@ class Options
     /**
      * Update the records.
      *
-     * @param mixed $key
-     * @param mixed $value
-     *
+     * @param  mixed  $key
+     * @param  mixed  $value
      * @return bool|int
      */
     public function update($key, $value = null)
@@ -120,7 +118,7 @@ class Options
 
         $type = $this->identifyType($value);
 
-        if ('json' == $type) {
+        if ($type == 'json') {
             $value = \json_encode($value);
         }
 
@@ -141,17 +139,16 @@ class Options
     /**
      * Insert data into table.
      *
-     * @param string      $key
-     * @param mixed       $value
-     * @param null|string $type
-     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @param  null|string  $type
      * @return bool|int
      */
     public function insert($key, $value, $type = null)
     {
         $type = $this->identifyType($value, $type);
 
-        if ('json' == $type) {
+        if ($type == 'json') {
             $value = \json_encode($value);
         }
 
@@ -195,8 +192,8 @@ class Options
     /**
      * Add where condition.
      *
-     * @param mixed $key
-     * @param mixed $value
+     * @param  mixed  $key
+     * @param  mixed  $value
      */
     public function where($key, $value = null): self
     {
@@ -230,8 +227,7 @@ class Options
     /**
      * Get the values and group by name.
      *
-     * @param string $name
-     *
+     * @param  string  $name
      * @return Collection
      */
     public function keyBy($name = 'option_name')
@@ -244,9 +240,8 @@ class Options
     /**
      * Get the value from store.
      *
-     * @param string $key
-     * @param mixed  $default
-     *
+     * @param  string  $key
+     * @param  mixed  $default
      * @return mixed
      */
     public function value($key, $default = null)
@@ -266,8 +261,7 @@ class Options
     /**
      * Check the values exists.
      *
-     * @param string $key
-     *
+     * @param  string  $key
      * @return bool
      */
     public function exists($key)
@@ -280,8 +274,7 @@ class Options
     /**
      * Get the table.
      *
-     * @param string $name
-     *
+     * @param  string  $name
      * @return Builder
      */
     public function table($name = null)
@@ -295,8 +288,7 @@ class Options
     /**
      * Set the value of table.
      *
-     * @param mixed $table
-     *
+     * @param  mixed  $table
      * @return self
      */
     public function setTable($table)
@@ -309,8 +301,7 @@ class Options
     /**
      * Set the value of values.
      *
-     * @param array $values
-     *
+     * @param  array  $values
      * @return self
      */
     public function values($values)
@@ -323,8 +314,7 @@ class Options
     /**
      * Set the value of values.
      *
-     * @param array $values
-     *
+     * @param  array  $values
      * @return self
      */
     public function updates($values)
@@ -337,8 +327,7 @@ class Options
     /**
      * Set the value of values.
      *
-     * @param array $values
-     *
+     * @param  array  $values
      * @return self
      */
     public function extra($values)
@@ -351,9 +340,8 @@ class Options
     /**
      * Identify the column type.
      *
-     * @param mixed       $value
-     * @param null|string $type
-     *
+     * @param  mixed  $value
+     * @param  null|string  $type
      * @return mixed
      */
     protected function identifyType($value, $type = null)
@@ -381,18 +369,17 @@ class Options
     /**
      * Format the values.
      *
-     * @param mixed  $value
-     * @param string $type
-     *
+     * @param  mixed  $value
+     * @param  string  $type
      * @return mixed
      */
     protected function formatValue($value, $type = 'string')
     {
-        if ('json' == $type) {
+        if ($type == 'json') {
             $value = \json_decode($value, true);
         }
 
-        if ('number' == $type) {
+        if ($type == 'number') {
             $value = (int) $value;
         }
 

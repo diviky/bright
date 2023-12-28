@@ -13,9 +13,8 @@ use Illuminate\Support\Facades\DB;
 class Speed extends Capsule
 {
     /**
-     * @param array       $save
-     * @param null|string $required
-     *
+     * @param  array  $save
+     * @param  null|string  $required
      * @return array[]
      *
      * @psalm-return list<array>
@@ -37,14 +36,14 @@ class Speed extends Capsule
             }
         }
 
-        if (true !== $pass) {
+        if ($pass !== true) {
             return [];
         }
 
         $total = \count($save[$fields[0]]);
         $data = [];
 
-        for ($i = 0; $i < $total; ++$i) {
+        for ($i = 0; $i < $total; $i++) {
             $row = [];
             $add = true;
             foreach ($fields as $field) {
@@ -75,9 +74,8 @@ class Speed extends Capsule
     /**
      * Get the next ordering value.
      *
-     * @param string $tbl
-     * @param array  $where
-     *
+     * @param  string  $tbl
+     * @param  array  $where
      * @return int
      */
     public function nextOrder($tbl, $where = [])
@@ -92,9 +90,9 @@ class Speed extends Capsule
     /**
      * Re-order the database ordering column.
      *
-     * @param string $table
-     * @param array  $where
-     * @param string $field
+     * @param  string  $table
+     * @param  array  $where
+     * @param  string  $field
      */
     public function reOrder($table, $where = [], $field = 'id'): self
     {
@@ -106,7 +104,7 @@ class Speed extends Capsule
         // compact the ordering numbers
         $i = 0;
         foreach ($rows as $row) {
-            ++$i;
+            $i++;
             if ($row->ordering != $i) {
                 DB::table($table)
                     ->where($field, $row->{$field})
@@ -121,8 +119,8 @@ class Speed extends Capsule
     /**
      * Sort and re-order the ordering column.
      *
-     * @param string $table
-     * @param string $field
+     * @param  string  $table
+     * @param  string  $field
      */
     public function sorting($table, array $values = [], $field = 'id'): self
     {
@@ -135,7 +133,7 @@ class Speed extends Capsule
             if (\is_array($value)) {
                 $this->sorting($table, $value, $field);
             } else {
-                ++$i;
+                $i++;
                 if ($value != $i) {
                     $update = ['ordering' => $i];
                     DB::table($table)

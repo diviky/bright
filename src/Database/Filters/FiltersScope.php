@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 class FiltersScope implements Filter
 {
     /**
-     * @param mixed $values
+     * @param  mixed  $values
      */
     public function __invoke(Builder $query, $values, string $property): void
     {
@@ -41,7 +41,7 @@ class FiltersScope implements Filter
     }
 
     /**
-     * @param mixed $values
+     * @param  mixed  $values
      */
     protected function resolveParameters(Builder $query, $values, string $scope): array
     {
@@ -64,7 +64,7 @@ class FiltersScope implements Filter
 
             $result = $model->resolveRouteBinding($value);
 
-            if (null === $result) {
+            if ($result === null) {
                 throw InvalidFilterValue::make($value);
             }
 
@@ -94,7 +94,7 @@ class FiltersScope implements Filter
             return null;
         }
 
-        if ('self' === $type->getName()) {
+        if ($type->getName() === 'self') {
             return $parameter->getDeclaringClass();
         }
 

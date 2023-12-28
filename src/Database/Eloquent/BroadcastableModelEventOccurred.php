@@ -16,7 +16,7 @@ class BroadcastableModelEventOccurred implements ShouldBroadcast
     /**
      * The model instance corresponding to the event.
      *
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     public $model;
 
@@ -51,8 +51,8 @@ class BroadcastableModelEventOccurred implements ShouldBroadcast
     /**
      * Create a new event instance.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
-     * @param string                              $event
+     * @param  Model  $model
+     * @param  string  $event
      */
     public function __construct($model, $event)
     {
@@ -116,7 +116,7 @@ class BroadcastableModelEventOccurred implements ShouldBroadcast
      */
     public function shouldBroadcastNow()
     {
-        return 'deleted' === $this->event
+        return $this->event === 'deleted'
                && !method_exists($this->model, 'bootSoftDeletes');
     }
 

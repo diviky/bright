@@ -69,8 +69,7 @@ class Chart extends BaseChart
     }
 
     /**
-     * @param null|int $index
-     *
+     * @param  null|int  $index
      * @return array|string
      */
     public function colors($index = null)

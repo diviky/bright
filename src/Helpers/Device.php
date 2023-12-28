@@ -73,14 +73,14 @@ class Device
         // advanced params
         if (isset($system['short_name'])) {
             $osFamily = OperatingSystem::getOsFamily($system['short_name']);
-            $return['os_family'] = (false !== $osFamily) ? $osFamily : 'Unknown';
+            $return['os_family'] = ($osFamily !== false) ? $osFamily : 'Unknown';
         }
 
         $return['model'] = $detector->getModel();
 
         if (isset($client['short_name'])) {
             $browserFamily = Browser::getBrowserFamily($client['short_name']);
-            $return['browser_family'] = (false !== $browserFamily) ? $browserFamily : 'Unknown';
+            $return['browser_family'] = ($browserFamily !== false) ? $browserFamily : 'Unknown';
         }
 
         $return['touch'] = $detector->isTouchEnabled();

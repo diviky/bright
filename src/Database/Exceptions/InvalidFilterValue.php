@@ -7,8 +7,7 @@ namespace Diviky\Bright\Database\Exceptions;
 class InvalidFilterValue extends \Exception
 {
     /**
-     * @param string $value
-     *
+     * @param  string  $value
      * @return mixed
      */
     public static function make($value)

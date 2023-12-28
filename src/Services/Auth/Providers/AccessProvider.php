@@ -32,8 +32,7 @@ class AccessProvider implements UserProvider
     /**
      * Retrieve a user by their unique identifier.
      *
-     * @param string $token
-     *
+     * @param  string  $token
      * @return null|\Illuminate\Contracts\Auth\Authenticatable
      */
     public function retrieveByAccessToken($token)
@@ -45,7 +44,7 @@ class AccessProvider implements UserProvider
 
     public function retrieveByToken($identifier, $token)
     {
-        if (false === strpos($token, '|')) {
+        if (strpos($token, '|') === false) {
             if (strlen($token) > 40) {
                 $token = hash('sha256', $token);
             }

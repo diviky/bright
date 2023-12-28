@@ -48,9 +48,8 @@ trait Analytics
     /**
      * Get the sql group and date formats.
      *
-     * @param string $column
-     * @param string $time
-     *
+     * @param  string  $column
+     * @param  string  $time
      * @return array
      */
     public function getFormats($column, $time = 'daily')
@@ -82,7 +81,7 @@ trait Analytics
 
                 break;
             default:
-                list($start, $end, $day) = \array_pad(\explode(' - ', $time ?? ''), 3, null);
+                [$start, $end, $day] = \array_pad(\explode(' - ', $time ?? ''), 3, null);
 
                 if ($day) {
                     return $this->getFormats($column, $day);
@@ -120,14 +119,13 @@ trait Analytics
     /**
      * Get the sql group and date formats.
      *
-     * @param string $time
-     * @param string $interval
-     *
+     * @param  string  $time
+     * @param  string  $interval
      * @return array
      */
     public function getRange($interval = 'auto', $time = '1d')
     {
-        list($start, $end) = $this->getTimeRange($time);
+        [$start, $end] = $this->getTimeRange($time);
         $minutes = 0;
 
         switch ($interval) {
@@ -199,8 +197,7 @@ trait Analytics
     /**
      * @psalm-pure
      *
-     * @param float|int|string $num
-     *
+     * @param  float|int|string  $num
      * @return int|string
      */
     public function shortFormat($num)
@@ -237,8 +234,8 @@ trait Analytics
     }
 
     /**
-     * @param int    $diff
-     * @param string $time
+     * @param  int  $diff
+     * @param  string  $time
      */
     protected function getCustomRange($diff, $time): array
     {
@@ -286,54 +283,53 @@ trait Analytics
     }
 
     /**
-     * @param string $time
-     *
+     * @param  string  $time
      * @return array
      */
     protected function getTimeRange($time = '1d')
     {
         $now = now();
-        if ('1h' == $time) {
+        if ($time == '1h') {
             return [$now->copy()->subHours(1), $now];
         }
 
-        if ('3h' == $time) {
+        if ($time == '3h') {
             return [$now->copy()->subHours(3), $now];
         }
 
-        if ('6h' == $time) {
+        if ($time == '6h') {
             return [$now->copy()->subHours(6), $now];
         }
 
-        if ('12h' == $time) {
+        if ($time == '12h') {
             return [$now->copy()->subHours(12), $now];
         }
 
-        if ('1d' == $time) {
+        if ($time == '1d') {
             return [$now->copy()->subDays(1), $now];
         }
 
-        if ('3d' == $time) {
+        if ($time == '3d') {
             return [$now->copy()->subDays(3), $now];
         }
 
-        if ('1w' == $time) {
+        if ($time == '1w') {
             return [$now->copy()->subWeeks(1), $now];
         }
 
-        if ('1m' == $time) {
+        if ($time == '1m') {
             return [$now->copy()->subMonths(1), $now];
         }
 
-        if ('3m' == $time) {
+        if ($time == '3m') {
             return [$now->copy()->subMonths(3), $now];
         }
 
-        if ('6m' == $time) {
+        if ($time == '6m') {
             return [$now->copy()->subMonths(6), $now];
         }
 
-        list($start, $end) = \array_pad(\explode(' - ', $time ?? ''), 3, null);
+        [$start, $end] = \array_pad(\explode(' - ', $time ?? ''), 3, null);
         $start = carbon($start);
         $end = $end ? carbon($end) : $start;
 
@@ -343,10 +339,10 @@ trait Analytics
     /**
      * Generate the time ranges.
      *
-     * @param \Illuminate\Support\Carbon $start
-     * @param \Illuminate\Support\Carbon $end
-     * @param int                        $interval
-     * @param string                     $format
+     * @param  \Illuminate\Support\Carbon  $start
+     * @param  \Illuminate\Support\Carbon  $end
+     * @param  int  $interval
+     * @param  string  $format
      */
     protected function getDateLables($start, $end, $interval = 15, $format = 'h:i A'): array
     {
@@ -363,7 +359,7 @@ trait Analytics
             $lables[] = date($format, $timestamp);
 
             $start->addMinutes($interval);
-            ++$i;
+            $i++;
         } while ($next);
 
         return $lables;

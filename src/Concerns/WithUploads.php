@@ -16,7 +16,7 @@ trait WithUploads
         $local = Storage::disk('local');
         $file = 'tmp/' . $name;
 
-        if ('local' != $disk && !$local->exists($file)) {
+        if ($disk != 'local' && !$local->exists($file)) {
             $stream = $from->readStream($file);
             if ($stream) {
                 $local->writeStream($file, $stream);

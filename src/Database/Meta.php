@@ -35,9 +35,8 @@ class Meta
     /**
      * Update the record exists else insert.
      *
-     * @param mixed $key
-     * @param mixed $value
-     *
+     * @param  mixed  $key
+     * @param  mixed  $value
      * @return bool|int
      */
     public function updateOrInsert($key, $value = null)
@@ -65,9 +64,8 @@ class Meta
     /**
      * Update the records.
      *
-     * @param mixed $key
-     * @param mixed $value
-     *
+     * @param  mixed  $key
+     * @param  mixed  $value
      * @return bool|int
      */
     public function update($key, $value = null)
@@ -102,9 +100,8 @@ class Meta
     /**
      * Insert data into table.
      *
-     * @param string $key
-     * @param mixed  $value
-     *
+     * @param  string  $key
+     * @param  mixed  $value
      * @return bool
      */
     public function insert($key, $value)
@@ -132,9 +129,8 @@ class Meta
     /**
      * Get the value from store.
      *
-     * @param string $key
-     * @param mixed  $default
-     *
+     * @param  string  $key
+     * @param  mixed  $default
      * @return mixed
      */
     public function value($key, $default = null)
@@ -160,8 +156,7 @@ class Meta
     /**
      * Check the values exists.
      *
-     * @param string $key
-     *
+     * @param  string  $key
      * @return bool
      */
     public function exists($key)
@@ -176,8 +171,7 @@ class Meta
     /**
      * Set the value of table.
      *
-     * @param mixed $table
-     *
+     * @param  mixed  $table
      * @return self
      */
     public function setTable($table)
@@ -190,8 +184,7 @@ class Meta
     /**
      * Set the value of relation.
      *
-     * @param mixed $relation
-     *
+     * @param  mixed  $relation
      * @return self
      */
     public function setRelation($relation)
@@ -204,8 +197,7 @@ class Meta
     /**
      * Get value from field.
      *
-     * @param string $key
-     *
+     * @param  string  $key
      * @return mixed
      */
     protected function getField($key)

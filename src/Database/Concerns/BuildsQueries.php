@@ -11,13 +11,12 @@ trait BuildsQueries
     /**
      * Query lazily, by chunks of the given size.
      *
-     * @param int $chunkSize
-     *
+     * @param  int  $chunkSize
      * @return \Illuminate\Support\LazyCollection
      *
      * @throws \InvalidArgumentException
      */
-    public function lazyMap($chunkSize = 1000, callable $callback = null)
+    public function lazyMap($chunkSize = 1000, ?callable $callback = null)
     {
         if (isset($callback)) {
             return $this->lazy($chunkSize)->map(function ($item, $key) use ($callback) {
@@ -31,13 +30,12 @@ trait BuildsQueries
     /**
      * Query lazily, by chunks of the given size.
      *
-     * @param int $chunkSize
-     *
+     * @param  int  $chunkSize
      * @return \Illuminate\Support\LazyCollection
      *
      * @throws \InvalidArgumentException
      */
-    public function flatChunk($chunkSize = 1000, callable $callback = null)
+    public function flatChunk($chunkSize = 1000, ?callable $callback = null)
     {
         return $this->lazyMap($chunkSize, $callback);
     }
@@ -45,9 +43,8 @@ trait BuildsQueries
     /**
      * Query lazily, by chunks of the given size.
      *
-     * @param int        $chunkSize
-     * @param null|mixed $callback
-     *
+     * @param  int  $chunkSize
+     * @param  null|mixed  $callback
      * @return \Iterator
      *
      * @throws \InvalidArgumentException
@@ -64,15 +61,14 @@ trait BuildsQueries
     /**
      * Query lazily, by chunks of the given size.
      *
-     * @param int $chunkSize
-     *
+     * @param  int  $chunkSize
      * @return \Iterator
      *
      * @throws \InvalidArgumentException
      *
      * @deprecated 2.0
      */
-    public function iterator($chunkSize = 10000, callable $callback = null)
+    public function iterator($chunkSize = 10000, ?callable $callback = null)
     {
         return $this->iterate($chunkSize, $callback);
     }
