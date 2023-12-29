@@ -9,11 +9,11 @@ class Resource
 {
     private string $name;
 
-    private string $index;
+    private ?string $index;
 
     private ?string $type;
 
-    public function __construct(string $name, string $index, ?string $type = null)
+    public function __construct(string $name, ?string $index = null, ?string $type = null)
     {
         $this->name = $name;
         $this->index = $index;
@@ -25,9 +25,17 @@ class Resource
         $instance = $this->name;
 
         if ($this->type == 'collection') {
-            $response[$this->index] = $instance::collection($response[$this->index])->response()->getData(true);
+            if ($this->index) {
+                $response[$this->index] = $instance::collection($response[$this->index])->response()->getData(true);
+            } else {
+                $response = $instance::collection($response)->response()->getData(true);
+            }
         } else {
-            $response[$this->index] = new $instance($response[$this->index]);
+            if ($this->index) {
+                $response[$this->index] = new $instance($response[$this->index]);
+            } else {
+                $response = new $instance($response);
+            }
         }
 
         return $response;
