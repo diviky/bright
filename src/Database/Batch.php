@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database;
 
+use Illuminate\Database\Eloquent\Model;
+
 class Batch
 {
-    /**
-     * @var array
-     */
-    protected $attributes = [];
-
     /**
      * @var array
      */
@@ -62,7 +59,6 @@ class Batch
     {
         $this->model = $builder->getModel();
         $this->builder = $builder->getQuery();
-        $this->attributes = [];
     }
 
     public function bulk(bool $bulk = true): self
@@ -83,30 +79,7 @@ class Batch
         return $this;
     }
 
-    public function format(array $attributes = []): self
-    {
-        $attributes = $this->make($attributes);
-
-        if (is_null($attributes)) {
-            return $this;
-        }
-
-        if ($this->bulk && $this->stream) {
-            \fwrite($this->stream, \implode('[F]', $attributes) . '[L]');
-        } else {
-            $this->attributes[] = $attributes;
-        }
-
-        if ($this->count == 0) {
-            $this->fields = array_keys($attributes);
-        }
-
-        $this->count++;
-
-        return $this;
-    }
-
-    public function make(array $attributes = []): ?array
+    public function make(array $attributes = []): ?Model
     {
         $model = $this->model->make($attributes);
         if ($model->fireEvent('creating') === false) {
@@ -117,56 +90,89 @@ class Batch
             $model->updateTimestamps();
         }
 
-        $attributes = $model->getAttributes();
-
-        $model->fireEvent('created', false);
-
-        return $attributes;
+        return $model;
     }
 
-    /**
-     * @return bool
-     */
-    public function commit()
+    public function commit(): bool
     {
-        foreach ($this->values as $values) {
-            $this->format($values);
-        }
-
         if ($this->bulk && is_resource($this->stream)) {
-            // @psalm-suppress
-            fclose($this->stream);
-
-            $sql = "LOAD DATA LOCAL INFILE '" . $this->path . "'";
-            $sql .= ' INTO TABLE #from#';
-            $sql .= " FIELDS TERMINATED  BY '[F]' LINES TERMINATED BY '[L]'";
-            $sql .= ' (' . \implode(',', $this->fields) . ') ';
-
-            if ($this->builder->statement($sql)) {
-                return true;
-            }
-
-            return false;
+            return $this->processBulk();
         }
 
         $result = true;
         $async = $this->builder->getAsync();
+        $models = [];
+        $attributes = [];
 
-        if ($async) {
-            foreach (array_chunk($this->attributes, $this->limit) as $attributes) {
-                if (!$this->model->async($async)->es(false)->insert($attributes)) {
-                    return false;
-                }
+        foreach ($this->values as $values) {
+            $model = $this->make($values);
+
+            if (is_null($model)) {
+                continue;
             }
-        } else {
-            foreach (array_chunk($this->attributes, $this->limit) as $attributes) {
-                if (!$this->model->es(false)->insert($attributes)) {
-                    return false;
-                }
+
+            $attributes[] = $model->getAttributes();
+            $models[] = $model;
+        }
+
+        foreach (array_chunk($attributes, $this->limit) as $values) {
+            if (!$this->model->async($async)->es(false)->insert($values)) {
+                return false;
             }
         }
 
+        $this->executeModelEvent($models);
+        unset($models, $attributes);
+
         return $result;
+    }
+
+    public function processBulk(): bool
+    {
+        $models = [];
+        foreach ($this->values as $attributes) {
+            $model = $this->make($attributes);
+
+            if (is_null($model)) {
+                continue;
+            }
+
+            $attributes = $model->getAttributes();
+
+            \fwrite($this->stream, \implode('[F]', $attributes) . '[L]');
+
+            if ($this->count == 0) {
+                $this->fields = array_keys($attributes);
+            }
+
+            $this->count++;
+
+            $models[] = $model;
+        }
+
+        // @psalm-suppress
+        fclose($this->stream);
+
+        $sql = "LOAD DATA LOCAL INFILE '" . $this->path . "'";
+        $sql .= ' INTO TABLE #from#';
+        $sql .= " FIELDS TERMINATED  BY '[F]' LINES TERMINATED BY '[L]'";
+        $sql .= ' (' . \implode(',', $this->fields) . ') ';
+
+        if ($this->builder->statement($sql)) {
+            $this->executeModelEvent($models);
+            unset($models);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function executeModelEvent(array $models): void
+    {
+        foreach ($models as $model) {
+            $model->fireEvent('created', false);
+        }
     }
 
     /**
