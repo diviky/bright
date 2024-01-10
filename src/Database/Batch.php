@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
 class Batch
 {
@@ -21,7 +22,7 @@ class Batch
     protected int $count = 0;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     protected $model;
 
@@ -48,7 +49,7 @@ class Batch
     protected $path;
 
     /**
-     * @var \Illuminate\Database\Query\Builder
+     * @var Builder
      */
     protected $builder;
 
@@ -96,38 +97,43 @@ class Batch
     public function commit(): bool
     {
         if ($this->bulk && is_resource($this->stream)) {
-            return $this->processBulk();
+            return $this->commitBulk();
         }
 
+        return $this->commitInsert();
+    }
+
+    public function commitInsert(): bool
+    {
         $result = true;
         $async = $this->builder->getAsync();
-        $models = [];
-        $attributes = [];
+        foreach (array_chunk($this->values, $this->limit) as $values) {
+            $models = [];
+            $attributes = [];
 
-        foreach ($this->values as $values) {
-            $model = $this->make($values);
+            foreach ($values as $value) {
+                $model = $this->make($value);
 
-            if (is_null($model)) {
-                continue;
+                if (is_null($model)) {
+                    continue;
+                }
+
+                $attributes[] = $model->getAttributes();
+                $models[] = $model;
             }
 
-            $attributes[] = $model->getAttributes();
-            $models[] = $model;
-        }
-
-        foreach (array_chunk($attributes, $this->limit) as $values) {
-            if (!$this->model->async($async)->es(false)->insert($values)) {
+            if (!$this->model->async($async)->es(false)->insert($attributes)) {
                 return false;
             }
-        }
 
-        $this->executeModelEvent($models);
-        unset($models, $attributes);
+            $this->executeModelEvent($models);
+            unset($models, $attributes);
+        }
 
         return $result;
     }
 
-    public function processBulk(): bool
+    public function commitBulk(): bool
     {
         $models = [];
         foreach ($this->values as $attributes) {
