@@ -165,7 +165,7 @@ class Controller extends BaseController
     protected function storageClient()
     {
         $config = [
-            'region' => config('filesystems.disks.s3.region', $_ENV['AWS_DEFAULT_REGION']),
+            'region' => config('filesystems.disks.s3.region', $_ENV['AWS_DEFAULT_REGION'] ?? null),
             'version' => 'latest',
             'signature_version' => 'v4',
             'use_path_style_endpoint' => config('filesystems.disks.s3.use_path_style_endpoint', false),
@@ -173,9 +173,9 @@ class Controller extends BaseController
 
         if (!isset($_ENV['AWS_LAMBDA_FUNCTION_VERSION'])) {
             $config['credentials'] = array_filter([
-                'key' => $_ENV['AWS_ACCESS_KEY_ID'] ?? null,
-                'secret' => $_ENV['AWS_SECRET_ACCESS_KEY'] ?? null,
-                'token' => $_ENV['AWS_SESSION_TOKEN'] ?? null,
+                'key' => config('filesystems.disks.s3.key', $_ENV['AWS_ACCESS_KEY_ID'] ?? null),
+                'secret' => config('filesystems.disks.s3.secret', $_ENV['AWS_SECRET_ACCESS_KEY'] ?? null),
+                'token' => config('filesystems.disks.s3.token', $_ENV['AWS_SESSION_TOKEN'] ?? null),
             ]);
 
             if (!empty($_ENV['AWS_URL'])) {
