@@ -6,6 +6,7 @@ namespace Diviky\Bright\Concerns;
 
 use Illuminate\Contracts\Foundation\CachesConfiguration;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 trait ServiceProviderExtra
