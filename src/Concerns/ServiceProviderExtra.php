@@ -6,6 +6,7 @@ namespace Diviky\Bright\Concerns;
 
 use Illuminate\Contracts\Foundation\CachesConfiguration;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 trait ServiceProviderExtra
@@ -60,7 +61,11 @@ trait ServiceProviderExtra
 
         foreach ($array2 as $key => &$value) {
             if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = static::arrayMergeRecursiveDistinct($merged[$key], $value);
+                if (!Arr::isAssoc($value)) {
+                    $merged[$key] = array_merge_recursive($merged[$key], $value);
+                } else {
+                    $merged[$key] = static::arrayMergeRecursiveDistinct($merged[$key], $value);
+                }
             } else {
                 $merged[$key] = $value;
             }
