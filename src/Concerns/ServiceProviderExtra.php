@@ -62,7 +62,7 @@ trait ServiceProviderExtra
         foreach ($array2 as $key => &$value) {
             if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
                 if (!Arr::isAssoc($value)) {
-                    $merged[$key] = array_unique(array_merge_recursive($merged[$key], $value));
+                    $merged[$key] = array_unique(array_merge($merged[$key], $value));
                 } else {
                     $merged[$key] = static::arrayMergeRecursiveDistinct($merged[$key], $value);
                 }
