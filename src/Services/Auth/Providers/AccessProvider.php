@@ -57,7 +57,11 @@ class AccessProvider implements UserProvider
 
         [$id, $token] = explode('|', $token, 2);
 
-        $instance = $this->token->remember(null, 'token:' . $token)->find($id);
+        if (!empty($id)) {
+            $id = last(explode(' ', $id));
+        }
+
+        $instance = $this->token->remember(null, 'token:' . $id . $token)->find($id);
 
         if ($instance) {
             return hash_equals($instance->{$identifier}, hash('sha256', $token)) ? $instance : null;
