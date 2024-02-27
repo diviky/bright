@@ -8,6 +8,7 @@ use App\Models\User;
 use Diviky\Bright\Models\Token;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class AccessProvider implements UserProvider
@@ -58,7 +59,7 @@ class AccessProvider implements UserProvider
         [$id, $token] = explode('|', $token, 2);
 
         if (!empty($id)) {
-            $id = last(explode(' ', $id));
+            $id = Arr::last(explode(' ', $id));
         }
 
         $instance = $this->token->remember(null, 'token:' . $id . $token)->find($id);
