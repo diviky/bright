@@ -7,7 +7,7 @@
     <div class="card-title">{{ __('Reset Password') }}</div>
 
         <x-bright::flash />
-        <p class="text-muted">Enter your username and your password reset token will be messaged to you.</p>
+        <p class="text-muted">Enter your username and your password reset token will be emailed to you.</p>
 
         <form method="POST" action="{{ url('password/reset') }}" role="ksubmit">
             @csrf
