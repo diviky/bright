@@ -7,16 +7,16 @@
     <div class="card-title">{{ __('Reset Password') }}</div>
 
         <x-bright::flash />
-        <p class="text-muted">Enter your email address and your password reset token will be emailed to you.</p>
+        <p class="text-muted">Enter your username and your password reset token will be messaged to you.</p>
 
         <form method="POST" action="{{ url('password/reset') }}" role="ksubmit">
             @csrf
 
             <div class="form-group">
-                <label for="username" class="form-label">{{ __('Email Address') }}</label>
+                <label for="username" class="form-label">{{ __('Username') }}</label>
 
-                <input name="email" id="username" type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" required>
-                <span class="invalid-feedback">{{ $errors->first('email') }}</span>
+                <input name="username" id="username" type="text" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" value="{{ old('username') }}" required>
+                <span class="invalid-feedback">{{ $errors->first('username') }}</span>
             </div>
 
             <div class="form-footer">
