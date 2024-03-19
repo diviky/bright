@@ -22,15 +22,23 @@ class Branding
     {
         $domain = $request->getHost();
 
+        if ($request->secure()) {
+            config(['security-headers.enable' => true]);
+            config(['session.secure' => true]);
+        }
+
         $row = Models::branding()::where('domain', $domain)
+            ->remember(10 * 60, 'domain:' . $domain)
             ->es(false)
             ->first();
+
+        View::share('branding', $row);
 
         if (\is_null($row)) {
             return $next($request);
         }
 
-        if (isset(optional($row)->is_ssl) && $row->is_ssl && !$request->secure()) {
+        if (isset($row, optional($row)->is_ssl) && $row->is_ssl && !$request->secure()) {
             return redirect()->secure($request->getRequestUri());
         }
 
@@ -63,19 +71,30 @@ class Branding
      */
     protected function format($row)
     {
-        $row->logo = disk($row->logo, 's3');
-        $row->favico = disk($row->favico, 's3');
-        $row->icon = $row->icon ? disk($row->icon, 's3') : $row->logo;
-
-        if (!is_array($row->options)) {
+        if (!isset($row->options)) {
+            $row->options = [];
+        } elseif (!is_array($row->options)) {
             $row->options = \json_decode($row->options, true);
         }
+
+        $disk = isset($row->options['disk']) ? $row->options['disk'] : 's3';
+        $row->logo = disk($row->logo, $disk, 60);
+        $row->favico = disk($row->favico, $disk, 60);
+        $row->icon = $row->icon ? disk($row->icon, $disk, 60) : $row->logo;
 
         $row->style = isset($row->options['style']) ? $row->options['style'] : 'app';
 
         if ($row->name) {
             config(['mail.from.name' => $row->name]);
             config(['app.name' => $row->name]);
+        }
+
+        $configs = $row->options['config'] ?? [];
+
+        if (is_array($configs)) {
+            foreach ($configs as $key => $value) {
+                config([$key => $value]);
+            }
         }
 
         return $row;

@@ -474,7 +474,7 @@ trait Filter
     /**
      * Cleanup the give column.
      *
-     * @param  string  $string Database column
+     * @param  string  $string  Database column
      * @return string Cleaned String
      */
     protected function cleanField($string)

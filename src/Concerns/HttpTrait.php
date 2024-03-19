@@ -138,7 +138,7 @@ trait HttpTrait
     /**
      * Checks if the request method is of specified type.
      *
-     * @param  string  $method Uppercase request method (GET, POST etc)
+     * @param  string  $method  Uppercase request method (GET, POST etc)
      * @return bool
      */
     public function isMethod($method)
@@ -149,9 +149,9 @@ trait HttpTrait
     /**
      * Sets a header by name.
      *
-     * @param  array|string  $key     The key
+     * @param  array|string  $key  The key
      * @param  array|string  $values  The value or an array of values
-     * @param  bool  $replace Whether to replace the actual value or not (true by default)
+     * @param  bool  $replace  Whether to replace the actual value or not (true by default)
      */
     public function setHeader($key, $values = null, $replace = true): self
     {

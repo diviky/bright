@@ -25,6 +25,7 @@
         "schuppo/password-strength": "^2.6",
         "spatie/laravel-permission": "^5.5",
         "laravel/sanctum": "^3.0",
+        "spatie/laravel-schemaless-attributes": "^2.3",
         "matomo/decompress": "^2.1"
     },
     "require-dev": {

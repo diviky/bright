@@ -51,7 +51,7 @@ class MapManager
     /**
      * MapManager constructor.
      *
-     * @param  array  $map config
+     * @param  array  $map  config
      */
     public function __construct($map)
     {

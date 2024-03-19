@@ -19,7 +19,7 @@ class Resolver
     /**
      * Load helper class.
      *
-     * @param  \Closure|string  $name       Helper name
+     * @param  \Closure|string  $name  Helper name
      * @param  null|string  $namespace
      * @param  bool  $singletone
      * @return object
@@ -119,7 +119,7 @@ class Resolver
      * Get the view paths and namespace for option.
      *
      * @param  string  $option
-     * @param  string  $type   Type of option
+     * @param  string  $type  Type of option
      * @return array View paths and namespace
      */
     protected function getPath($option, $type = 'controllers')

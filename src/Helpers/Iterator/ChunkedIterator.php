@@ -19,7 +19,7 @@ class ChunkedIterator extends \IteratorIterator
 
     /**
      * @param  \Traversable  $iterator  Traversable iterator
-     * @param  int  $chunkSize Size to make each chunk
+     * @param  int  $chunkSize  Size to make each chunk
      *
      * @throws \InvalidArgumentException
      */

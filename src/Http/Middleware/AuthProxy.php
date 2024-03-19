@@ -38,7 +38,7 @@ class AuthProxy
                 return [EnsureFrontendRequestsAreStateful::class, Authenticate::class . ':web'];
             }
 
-            return [Authenticate::class . ':token'];
+            return [Authenticate::class . ':web'];
         }
 
         $re = '/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_\.+=]*$/m';

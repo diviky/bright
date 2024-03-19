@@ -210,7 +210,7 @@ class Reader
     /**
      * Count the interator values.
      *
-     * @param  Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable  $iterator Travarsable object
+     * @param  Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable  $iterator  Travarsable object
      */
     public function count($iterator): int
     {
@@ -236,7 +236,7 @@ class Reader
     /**
      * check the next row from iterator.
      *
-     * @param  Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable  $iterator Travarsable object
+     * @param  Arrayable|Collection|\Iterator|\JsonSerializable|LazyCollection|\Port\Csv\CsvReader|\Port\Reader\ArrayReader|\Port\Spreadsheet\SpreadsheetReader|RewindableGenerator|\Traversable  $iterator  Travarsable object
      * @return bool
      */
     public function hasNext($iterator)

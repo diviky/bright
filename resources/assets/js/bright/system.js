@@ -66,7 +66,7 @@ function brightSystemJs() {
                 var tag = $this.data('tag') || 'tr';
                 var parent = $this.parents(tag + ':eq(0)');
                 var link = $(this).attr('href') || $this.data('delete');
-                var method = $this.data('method') || 'GET';
+                var method = $this.data('method') || 'DELETE';
 
                 $.ajax({
                     url: link,
@@ -485,7 +485,7 @@ function brightSystemJs() {
                         html: true,
                         sanitize: false,
                         placement: 'bottom',
-                        trigger: 'focus'
+                        trigger: 'focus',
                     })
                     .popover('show');
 

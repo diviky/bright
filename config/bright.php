@@ -90,10 +90,17 @@ return [
         'branding' => \Diviky\Bright\Http\Middleware\Branding::class,
         'preflight' => \Diviky\Bright\Http\Middleware\PreflightResponse::class,
         'xss' => \Diviky\Bright\Http\Middleware\XSSProtection::class,
+        'auth.proxy' => \Diviky\Bright\Http\Middleware\AuthProxy::class,
+        'branding' => \Diviky\Bright\Http\Middleware\Branding::class,
+        'apikey' => \Diviky\Bright\Http\Middleware\ApiKey::class,
+    ],
+
+    'priority_middleware' => [
+        \Diviky\Bright\Http\Middleware\ApiKey::class,
     ],
 
     'models' => [
-        'user' => \App\Models\User::class,
+        'user' => \Diviky\Bright\Models\User::class,
     ],
 
     'table' => [

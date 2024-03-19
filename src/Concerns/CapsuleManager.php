@@ -28,7 +28,7 @@ trait CapsuleManager
     /**
      * magic method to get property.
      *
-     * @param  string  $key value to get
+     * @param  string  $key  value to get
      * @return bool
      */
     public function __get($key)
@@ -39,7 +39,7 @@ trait CapsuleManager
     /**
      * magic method to get property.
      *
-     * @param  string  $key   value to get
+     * @param  string  $key  value to get
      * @param  mixed  $value
      * @return self
      */
@@ -83,7 +83,7 @@ trait CapsuleManager
     /**
      * get the key from stored data value.
      *
-     * @param  string  $key The name of the variable to access
+     * @param  string  $key  The name of the variable to access
      * @return mixed returns your stored value
      */
     public function get($key)
@@ -109,8 +109,8 @@ trait CapsuleManager
     /**
      * store key value pair in registry.
      *
-     * @param  string  $key   name of the variable
-     * @param  mixed  $value value to store in registry
+     * @param  string  $key  name of the variable
+     * @param  mixed  $value  value to store in registry
      */
     public function set($key, $value): self
     {

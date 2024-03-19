@@ -20,6 +20,7 @@ use Diviky\Bright\Services\Auth\CredentialsGuard;
 use Diviky\Bright\Services\Auth\Providers\AccessProvider;
 use Diviky\Bright\Support\ServiceProvider;
 use Diviky\Bright\Util\Util;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
@@ -216,6 +217,15 @@ class BrightServiceProvider extends ServiceProvider
         if (\is_array($middlewares)) {
             foreach ($middlewares as $name => $value) {
                 $router->aliasMiddleware($name, $value);
+            }
+        }
+
+        $kernel = app()->make(Kernel::class);
+
+        $middlewares = $this->app['config']->get('bright.priority_middleware');
+        if (\is_array($middlewares)) {
+            foreach ($middlewares as $value) {
+                $kernel->prependToMiddlewarePriority($value);
             }
         }
     }
