@@ -11,6 +11,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 
 class Controller extends BaseController
 {
@@ -86,7 +87,7 @@ class Controller extends BaseController
         if ($this->isMethod('post')) {
             $this->rules([
                 'oldpassword' => 'required',
-                'password' => 'required|min:6',
+                'password' => ['required', 'string', 'max:20', Password::min(12)->mixedCase()->numbers()->symbols()->uncompromised()],
                 'password_confirm' => 'required|same:password',
             ]);
 
