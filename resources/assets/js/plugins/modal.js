@@ -170,6 +170,7 @@
   $.fn.easyModalHide = function() {
     setTimeout(function() {
       $('.modal').modal('hide');
+      $('body').css({ 'overflow': '', 'padding-right': '' }); //global fix for freezed screen
       $('.modal-backdrop').remove();
     }, 500);
   };
