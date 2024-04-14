@@ -1,4 +1,3 @@
-function appJs() { }
 function bootstrapJs() {
     load_dates();
     load_password();
@@ -14,7 +13,6 @@ function bootstrapOnce() {
 }
 
 $(document).ready(function () {
-    appJs();
     bootstrapJs();
     bootstrapOnce();
 

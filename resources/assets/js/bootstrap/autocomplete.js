@@ -98,7 +98,7 @@ function load_autocomplete() {
                 if (!query.length) return callback();
 
                 $.ajax({
-                    url: url,
+                    url: url.replace(':id', query),
                     type: method,
                     dataType: 'json',
                     delay: 250,

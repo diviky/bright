@@ -24,7 +24,7 @@ trait ViewTrait
         $form['pjax'] = $form['pjax'] ?: $this->get('request')->input('pjax');
         $form['ajax'] = $form['pjax'] ? false : $this->get('request')->ajax();
 
-        if (!$form['ajax']) {
+        if (!empty($form['ajax'])) {
             $parameters = [];
             if (is_array($url)) {
                 $parameters = $url[1] ?? [];

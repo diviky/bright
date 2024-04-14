@@ -241,6 +241,32 @@ $books = $books->few(['id', 'author.name']);
 
 ```
 
+## Flatten Relations
+
+Return single model with merged attributes from relations
+
+```php
+
+// except the relations from merge
+$model = $model->flatten($except);
+
+// Take some keys
+$model = $model->some(['id']);
+
+// Take except
+$model = $model->except(['id']);
+
+// Append keys to attributes
+$model = $model->merge(['id' => 1]);
+
+// Apped relation keys to attributes
+$model = $model->concat(['relation.id']);
+
+// combination of merge and contact
+$model = $model->combine(['relation.id']);
+```
+
+
 ### Sorting task
 
 ```html
@@ -413,31 +439,6 @@ Set the timestamps 'created_at`and`updated_at`for insert and`updated_at` for upd
         <option value="">Search Employee</option>
     </select>
 </div>
-```
-
-## Flatten Relations
-
-Return single model with merged attributes from relations
-
-```php
-
-// except the relations from merge
-$model = $model->flatten($except);
-
-// Take some keys
-$model = $model->some(['id']);
-
-// Take except
-$model = $model->except(['id']);
-
-// Append keys to attributes
-$model = $model->merge(['id' => 1]);
-
-// Apped relation keys to attributes
-$model = $model->concat(['relation.id']);
-
-// combination of merge and contact
-$model = $model->combine(['relation.id']);
 ```
 
 ## License
