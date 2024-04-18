@@ -15,9 +15,10 @@ class FileValidationRequest extends FormRequest
         ];
     }
 
-    public function messages(){
+    public function messages(): array
+    {
         return [
-            'file.mimetypes' => 'The file is not of the expected type.'
+            'file.mimetypes' => 'The file is not of the expected type.',
         ];
     }
 
