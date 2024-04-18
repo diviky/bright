@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Http\Controllers\Upload;
 
 use Aws\S3\S3Client;
+use Diviky\Bright\Rules\FileValidationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -41,12 +42,13 @@ class Controller extends BaseController
                 'action' => $url,
                 'name' => $filename,
                 'extension' => $request->input('extension'),
+                'accept' => $request->input('accept'),
             ],
             'inputs' => $request->input(),
         ], 201);
     }
 
-    public function upload(Request $request): JsonResponse
+    public function upload(FileValidationRequest $request): JsonResponse
     {
         abort_unless($request->hasValidSignature(), 401);
 

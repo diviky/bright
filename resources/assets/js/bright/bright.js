@@ -58,20 +58,18 @@ function brightJs() {
                 dropdownParent: $this.parent(),
                 minimumResultsForSearch: 10,
             });
+        });
 
-         });
-
-         $('[data-select-ajax]').each(function () {
+        $('[data-select-ajax]').each(function () {
             var $this = $(this);
 
             $this.select2({
                 dropdownParent: $this.parent(),
                 minimumResultsForSearch: 10,
             });
+        });
 
-         });
-
-         $('[tokenizer]').each(function () {
+        $('[tokenizer]').each(function () {
             var $this = $(this);
 
             $this.select2({
@@ -79,8 +77,7 @@ function brightJs() {
                 tags: true,
                 tokenSeparators: [',', ' '],
             });
-
-         });
+        });
 
         $('[data-select-ajax]').each(function () {
             var $this = $(this);

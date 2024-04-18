@@ -207,7 +207,7 @@ trait Eventable
             $tables = $bright[$type];
         }
 
-        return isset($tables[$from]) ? array_unique($tables[$from]) : [];
+        return isset($tables[$from]) ? $tables[$from] : [];
     }
 
     protected function addInsertEvent(array $values): array
