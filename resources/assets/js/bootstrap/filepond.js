@@ -1,9 +1,10 @@
 function load_app_filepond() {
     window.pond = function (selector) {
-        FilePond.registerPlugin(FilePondPluginFileValidateSize);
+        FilePond.registerPlugin(FilePondPluginFileValidateSize, FilePondPluginFileValidateType);
 
         var form = selector.parents('form:eq(0)');
         var prefix = selector.attr('data-upload-prefix') || '';
+        var accept = selector.attr('accept') || '';
 
         if (prefix && typeof prefix === 'undefined') {
             prefix = '';
@@ -16,6 +17,7 @@ function load_app_filepond() {
         var options = {
             credits: false,
             maxFileSize: '500MB',
+            allowFileTypeValidation:true,
             server: {
                 timeout: 99999999,
                 revert: (uniqueFileId, load, error) => {
@@ -66,6 +68,7 @@ function load_app_filepond() {
                             extension: metadata.fileInfo.fileExtension,
                             prefix: prefix,
                             metadata: metadata,
+                            accept: accept,
                         }),
                     })
                         .then(function (response) {
@@ -136,6 +139,16 @@ function load_app_filepond() {
                                     type: 'error',
                                     text: 'unable to upload the file',
                                 });
+                            };
+
+                            filepondRequest.onreadystatechange = function (response) {
+                                if (filepondRequest.status === 422) {
+                                  var jsonResponse = JSON.parse(filepondRequest.responseText);
+                                  notify({
+                                    type: 'error',
+                                    text: jsonResponse.message
+                                  });
+                                }
                             };
 
                             filepondRequest.send(filepondFormData);
