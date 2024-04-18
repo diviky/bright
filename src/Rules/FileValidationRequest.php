@@ -15,6 +15,12 @@ class FileValidationRequest extends FormRequest
         ];
     }
 
+    public function messages(){
+        return [
+            'file.mimetypes' => 'The file is not of the expected type.'
+        ];
+    }
+
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
