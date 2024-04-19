@@ -17,7 +17,7 @@ function load_app_filepond() {
         var options = {
             credits: false,
             maxFileSize: '500MB',
-            allowFileTypeValidation:true,
+            allowFileTypeValidation: true,
             server: {
                 timeout: 99999999,
                 revert: (uniqueFileId, load, error) => {
@@ -54,27 +54,34 @@ function load_app_filepond() {
                 process: function (fieldName, file, metadata, load, error, progress, abort) {
                     var filepondRequest = new XMLHttpRequest();
                     var filepondFormData = new FormData();
+
+                    var formData = new FormData();
+                    formData.append('filename', metadata.fileInfo.filenameWithoutExtension)
+                    formData.append('extension', metadata.fileInfo.fileExtension) 
+                    formData.append('prefix', prefix)
+                    formData.append('accept', accept)
+                    formData.append('file', file)
+
                     fetch(prefix + '/upload/signed', {
                         headers: {
-                            'Content-Type': 'application/json',
-                            Accept: 'application/json',
                             'X-Requested-With': 'XMLHttpRequest',
                             'X-CSRF-Token': $('input[name="_token"]').val(),
                         },
                         method: 'post',
                         credentials: 'same-origin',
-                        body: JSON.stringify({
-                            filename: metadata.fileInfo.filenameWithoutExtension,
-                            extension: metadata.fileInfo.fileExtension,
-                            prefix: prefix,
-                            metadata: metadata,
-                            accept: accept,
-                        }),
+                        body: formData,
                     })
                         .then(function (response) {
                             return response.json();
                         })
                         .then(function (json) {
+
+                            if (json.code && json.code == 422){
+                                filepondRequest.abort();
+                                abort();
+                                return notify({type: 'error', text: json.message });
+                            }
+
                             if (json.disk == 'local') {
                                 file.inputs = json.inputs;
                                 // append the FormData() in the order below. Changing the order

@@ -48,7 +48,7 @@ class Controller extends BaseController
         ], 201);
     }
 
-    public function upload(FileValidationRequest $request): JsonResponse
+    public function upload(Request $request): JsonResponse
     {
         abort_unless($request->hasValidSignature(), 401);
 
@@ -93,7 +93,7 @@ class Controller extends BaseController
      *
      * @return JsonResponse
      */
-    public function signed(Request $request)
+    public function signed(FileValidationRequest $request)
     {
         $disk = config('filesystems.default');
         if ($disk == 'local') {
