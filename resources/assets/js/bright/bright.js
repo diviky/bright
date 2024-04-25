@@ -50,57 +50,6 @@ function brightJs() {
         });
     }
 
-    if ($.fn.select2) {
-        $('[data-select]').each(function () {
-            var $this = $(this);
-
-            $this.select2({
-                dropdownParent: $this.parent(),
-                minimumResultsForSearch: 10,
-            });
-        });
-
-        $('[data-select-ajax]').each(function () {
-            var $this = $(this);
-
-            $this.select2({
-                dropdownParent: $this.parent(),
-                minimumResultsForSearch: 10,
-            });
-        });
-
-        $('[tokenizer]').each(function () {
-            var $this = $(this);
-
-            $this.select2({
-                dropdownParent: $this.parent(),
-                tags: true,
-                tokenSeparators: [',', ' '],
-            });
-        });
-
-        $('[data-select-ajax]').each(function () {
-            var $this = $(this);
-            var url = $this.data('select-ajax');
-
-            $this.select2({
-                minimumInputLength: 3,
-                maximumInputLength: 20,
-                dropdownParent: $this.parent(),
-                ajax: {
-                    url: url,
-                    delay: 250,
-                    processResults: function (data) {
-                        // Tranforms the top-level key of the response object from 'items' to 'results'
-                        return {
-                            results: data.rows,
-                        };
-                    },
-                },
-            });
-        });
-    }
-
     // Drag and drop sortable
     if ($.fn.sortable) {
         var _gridSortHelper = function (e, ui) {
