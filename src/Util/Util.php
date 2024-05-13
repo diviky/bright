@@ -92,7 +92,7 @@ class Util implements UtilInterface
             try {
                 return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
             } catch (\Exception $e) {
-                report($e);
+                return Storage::disk($disk)->url($path);
             }
         }
 

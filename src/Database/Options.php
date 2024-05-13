@@ -99,6 +99,11 @@ class Options
         return $this->insert($key, $value, $type);
     }
 
+    public function updateOrCreate($key, $value = null, $type = null)
+    {
+        return $this->updateOrInsert($key, $value, $type);
+    }
+
     /**
      * Update the records.
      *

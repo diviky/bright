@@ -5,6 +5,7 @@ function load_app_filepond() {
         var form = selector.parents('form:eq(0)');
         var prefix = selector.attr('data-upload-prefix') || '';
         var accept = selector.attr('accept') || '';
+        var size = selector.attr('size') || '500MB';
 
         if (prefix && typeof prefix === 'undefined') {
             prefix = '';
@@ -16,8 +17,8 @@ function load_app_filepond() {
 
         var options = {
             credits: false,
-            maxFileSize: '500MB',
-            allowFileTypeValidation:true,
+            maxFileSize: size,
+            allowFileTypeValidation: true,
             server: {
                 timeout: 99999999,
                 revert: (uniqueFileId, load, error) => {
@@ -75,7 +76,7 @@ function load_app_filepond() {
                             return response.json();
                         })
                         .then(function (json) {
-                            if (json.disk == 'local') {
+                            if (json.disk != 's3') {
                                 file.inputs = json.inputs;
                                 // append the FormData() in the order below. Changing the order
                                 // would result in 403 bad request error response from S3.
@@ -143,11 +144,11 @@ function load_app_filepond() {
 
                             filepondRequest.onreadystatechange = function (response) {
                                 if (filepondRequest.status === 422) {
-                                  var jsonResponse = JSON.parse(filepondRequest.responseText);
-                                  notify({
-                                    type: 'error',
-                                    text: jsonResponse.message
-                                  });
+                                    var jsonResponse = JSON.parse(filepondRequest.responseText);
+                                    notify({
+                                        type: 'error',
+                                        text: jsonResponse.message,
+                                    });
                                 }
                             };
 

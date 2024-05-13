@@ -20,17 +20,17 @@ class Controller extends BaseController
 
     public function forLocal(Request $request): JsonResponse
     {
-        $extension = $request->input('extension');
+        $extension = $request->post('extension');
         $filename = (string) Str::uuid();
         $filename .= '.' . $extension;
 
-        $prefix = $request->input('prefix');
+        $prefix = $request->post('prefix');
         $route = $prefix ? ltrim($prefix, '/') . '.upload.files' : 'upload.files';
 
         $url = URL::temporarySignedRoute($route, now()->addMinutes(1), ['file' => $filename]);
 
         $mimes = MimeTypes::getDefault()->getMimeTypes($extension);
-        $content_type = $request->input('content_type') ?: ($mimes ? $mimes[0] : null);
+        $content_type = $request->post('content_type') ?: ($mimes ? $mimes[0] : null);
 
         return response()->json([
             'key' => $filename,
@@ -41,10 +41,10 @@ class Controller extends BaseController
             'attributes' => [
                 'action' => $url,
                 'name' => $filename,
-                'extension' => $request->input('extension'),
-                'accept' => $request->input('accept'),
+                'extension' => $request->post('extension'),
+                'accept' => $request->post('accept'),
             ],
-            'inputs' => $request->input(),
+            'inputs' => $request->all(),
         ], 201);
     }
 
@@ -96,7 +96,7 @@ class Controller extends BaseController
     public function signed(Request $request)
     {
         $disk = config('filesystems.default');
-        if ($disk == 'local') {
+        if ($disk == 'local' || $disk == 'public') {
             return $this->forLocal($request);
         }
 
@@ -107,7 +107,7 @@ class Controller extends BaseController
     {
         $config = config('filesystems.disks.s3');
 
-        $extension = $request->input('extension');
+        $extension = $request->post('extension');
         $filename = (string) Str::uuid();
         $filename .= '.' . $extension;
 
@@ -119,9 +119,9 @@ class Controller extends BaseController
 
         $uri = $signedRequest->getUri();
 
-        $extension = $request->input('extension');
+        $extension = $request->post('extension');
         $mimes = MimeTypes::getDefault()->getMimeTypes($extension);
-        $content_type = $request->input('content_type') ?: ($mimes ? $mimes[0] : null);
+        $content_type = $request->post('content_type') ?: ($mimes ? $mimes[0] : null);
 
         return response()->json([
             'key' => $filename,
@@ -132,7 +132,7 @@ class Controller extends BaseController
             'attributes' => [
                 'action' => (string) $uri,
                 'name' => $filename,
-                'extension' => $request->input('extension'),
+                'extension' => $request->post('extension'),
             ],
             'inputs' => [],
         ], 201);
