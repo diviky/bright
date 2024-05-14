@@ -16,6 +16,7 @@ function load_autocomplete() {
 
             var labelField = $this.data('label-field') || 'text';
             var valueField = $this.data('value-field') || 'id';
+            var data = $this.data('post-data') || {};
 
             if (url && selector && selector.length > 0) {
                 selector.prop('disabled', true);
@@ -23,6 +24,7 @@ function load_autocomplete() {
                 xhr && xhr.abort();
                 xhr = $.ajax({
                     url: url,
+                    data: data,
                     method: method,
                     dataType: 'json',
                     success: function (results) {
@@ -75,6 +77,7 @@ function load_autocomplete() {
 
             var labelField = $this.data('label-field') || 'text';
             var valueField = $this.data('value-field') || 'id';
+            var data = $this.data('post-data') || {};
 
             if (url && selector && selector.length > 0) {
                 selector.prop('disabled', true);
@@ -82,6 +85,7 @@ function load_autocomplete() {
                 xhr && xhr.abort();
                 xhr = $.ajax({
                     url: url,
+                    data: data,
                     method: method,
                     dataType: 'json',
                     success: function (results) {
@@ -112,6 +116,7 @@ function load_autocomplete() {
 
             var labelField = $this.data('label-field') || 'text';
             var valueField = $this.data('value-field') || 'id';
+            var data = $this.data('post-data') || {};
 
             let selector = $this.select2({
                 minimumInputLength: 3,
@@ -119,6 +124,7 @@ function load_autocomplete() {
                 dropdownParent: $this.parent(),
                 ajax: {
                     url: url,
+                    data: data,
                     delay: 250,
                     processResults: function (data) {
                         var rows = $.map(data.rows, function (obj) {
@@ -139,6 +145,8 @@ function load_autocomplete() {
             var url = $this.data('select-fetch');
             var method = $this.data('fetch-method') || 'GET';
             var selected = $this.data('selected');
+            var data = $this.data('post-data') || {};
+
             selected = selected ? selected.toString().split(',') : [];
 
             if (url && selector && selector.length > 0) {
@@ -147,6 +155,7 @@ function load_autocomplete() {
                 xhr && xhr.abort();
                 xhr = $.ajax({
                     url: url,
+                    data: data,
                     method: method,
                     dataType: 'json',
                     success: function (results) {
@@ -173,6 +182,9 @@ function load_autocomplete() {
         $('[data-select-image]').each(function () {
             var $this = $(this);
             var url = $this.data('select-image');
+            var data = $this.data('post-data') || {};
+            var method = $this.data('method') || 'GET';
+
             var xhr;
 
             var labelField = $this.data('label-field') || 'text';
@@ -183,6 +195,8 @@ function load_autocomplete() {
                 maximumInputLength: 20,
                 ajax: {
                     url: url,
+                    data: data,
+                    method: method,
                     delay: 250,
                     processResults: function (data) {
                         var rows = $.map(data.rows, function (obj) {
@@ -222,6 +236,7 @@ function load_autocomplete() {
             var method = $this.data('fetch-method') || 'GET';
             var selected = $this.data('selected');
             selected = selected ? selected.toString().split(',') : [];
+            var data = $this.data('post-data') || {};
 
             if (url && selector && selector.length > 0) {
                 selector.prop('disabled', true);
@@ -229,6 +244,7 @@ function load_autocomplete() {
                 xhr && xhr.abort();
                 xhr = $.ajax({
                     url: url,
+                    data: data,
                     method: method,
                     dataType: 'json',
                     success: function (results) {
@@ -272,6 +288,7 @@ function load_autocomplete() {
 
             var labelField = $this.data('label-field') || 'text';
             var valueField = $this.data('value-field') || 'id';
+            var data = $this.data('post-data') || {};
 
             if (url && selector && selector.length > 0) {
                 selector.prop('disabled', true);
@@ -280,6 +297,7 @@ function load_autocomplete() {
                 xhr = $.ajax({
                     url: url,
                     method: method,
+                    data: data,
                     dataType: 'json',
                     success: function (results) {
                         selector.val(null).empty();
@@ -314,26 +332,39 @@ function load_autocomplete() {
             next = $(selector);
             var url = $this.data('url');
             var method = $this.data('method') || 'GET';
+            var data = $this.data('post-data') || {};
 
             var selected = next.data('selected');
             selected = selected ? selected.toString().split(',') : [];
 
             var labelField = next.data('label-field') || 'text';
             var valueField = next.data('value-field') || 'id';
+            var nameField = $this.data('name-field') || 'name';
+            var placeholder = next.attr('placeholder') || null;
 
+            var nextdata = next.data('post-data') || {};
+            nextdata[nameField] = value;
+
+            next.attr('data-post-data', JSON.stringify(nextdata));
             next.prop('disabled', true);
 
             xhr && xhr.abort();
             xhr = $.ajax({
                 url: url.replace(':id', value),
                 method: method,
+                data: data,
                 dataType: 'json',
                 success: function (results) {
                     next.val(null).empty();
                     next.prop('disabled', false);
 
+                    if (placeholder) {
+                        var option = new Option(placeholder, '');
+                        next.append(option);
+                    }
+
                     $.map(results.rows, function (data) {
-                        let value = data[valueField].toString();
+                        let value = data[valueField]?.toString();
                         let isSelected = jQuery.inArray(value, selected) !== -1 ? true : false;
                         var option = new Option(data[labelField], value, isSelected, isSelected);
                         next.append(option);
@@ -368,6 +399,7 @@ function load_autocomplete() {
             var url = $this.data('selectize-fetch');
             var method = $this.data('fetch-method') || 'GET';
             var selected = $this.data('selected');
+            var data = $this.data('post-data') || {};
 
             if (url && selector[0] && selector[0].selectize) {
                 var control = selector[0].selectize;
@@ -379,6 +411,7 @@ function load_autocomplete() {
                     xhr = $.ajax({
                         url: url,
                         method: method,
+                        data: data,
                         dataType: 'json',
                         success: function (results) {
                             control.clearOptions();
@@ -451,6 +484,7 @@ function load_autocomplete() {
             var url = $this.data('selectize-fetch');
             var method = $this.data('fetch-method') || 'GET';
             var selected = $this.data('selected');
+            var data = $this.data('post-data') || {};
 
             if (url && selector[0] && selector[0].selectize) {
                 var control = selector[0].selectize;
@@ -461,6 +495,7 @@ function load_autocomplete() {
                     xhr && xhr.abort();
                     xhr = $.ajax({
                         url: url,
+                        data: data,
                         method: method,
                         dataType: 'json',
                         success: function (results) {
@@ -505,6 +540,7 @@ function load_autocomplete() {
             var labelField = $this.data('label-field') || 'text';
             var valueField = $this.data('value-field') || 'id';
             var searchField = $this.data('search-field') || ['text'];
+            var data = $this.data('post-data') || {};
 
             let selector = $this.selectize({
                 valueField: valueField,
@@ -517,12 +553,14 @@ function load_autocomplete() {
                 load: function (query, callback) {
                     if (!query.length) return callback();
 
+                    data[term] = query;
+
                     $.ajax({
                         url: url,
                         type: method,
                         dataType: 'json',
                         delay: 250,
-                        data: { term: query },
+                        data: data,
                         error: function () {
                             callback();
                         },
@@ -547,6 +585,7 @@ function load_autocomplete() {
                     xhr = $.ajax({
                         url: url,
                         method: method,
+                        data: data,
                         dataType: 'json',
                         success: function (results) {
                             control.clearOptions();
@@ -591,6 +630,7 @@ function load_autocomplete() {
                 var url = $this.data('selectize-fetch');
                 var method = $this.data('fetch-method') || 'GET';
                 var selected = $this.data('selected');
+                var data = $this.data('post-data') || {};
 
                 if (url && selector[0] && selector[0].selectize) {
                     var control = selector[0].selectize;
@@ -602,6 +642,7 @@ function load_autocomplete() {
                         xhr = $.ajax({
                             url: url,
                             method: method,
+                            data: data,
                             dataType: 'json',
                             success: function (results) {
                                 control.clearOptions();
@@ -637,6 +678,7 @@ function load_autocomplete() {
                 var labelField = selector.data('label-field') || 'text';
                 var valueField = selector.data('value-field') || 'id';
                 var searchField = selector.data('search-field') || ['text'];
+
                 var newTarget = getTargetNextSelectize(selector);
 
                 var options = {
@@ -678,6 +720,14 @@ function load_autocomplete() {
             var method = $this.data('method') || 'GET';
             var selected = $target.data('selected');
 
+            var nameField = $this.data('name-field') || 'name';
+            var nextdata = $target.data('post-data') || {};
+            nextdata[nameField] = value;
+
+            $target.attr('data-post-data', JSON.stringify(nextdata));
+
+            var data = $this.data('post-data') || {};
+            data[nameField] = value;
             control.disable();
 
             control.load(function (callback) {
@@ -686,7 +736,7 @@ function load_autocomplete() {
                     url: url.replace(':id', value),
                     method: method,
                     dataType: 'json',
-                    data: { id: value },
+                    data: data,
                     success: function (results) {
                         control.clearOptions();
                         control.clear();
