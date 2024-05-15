@@ -12,4 +12,15 @@ class UploadedFile extends HttpUploadedFile
     {
         return true;
     }
+
+    /**
+     * Check that the given file is a valid file instance.
+     *
+     * @param  mixed  $file
+     * @return bool
+     */
+    protected function isValidFile($file)
+    {
+        return $file instanceof \SplFileInfo && $file->getPath() !== '';
+    }
 }

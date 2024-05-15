@@ -127,6 +127,7 @@ function load_app_filepond() {
                                     if (auto && auto !== undefined) {
                                         setTimeout(function () {
                                             form.submit();
+                                            $(document.getElementById(json.key)).remove();
                                         }, 2000);
                                     }
                                 } else {
@@ -140,6 +141,8 @@ function load_app_filepond() {
                                     type: 'error',
                                     text: 'unable to upload the file',
                                 });
+
+                                error('unable to upload the file');
                             };
 
                             filepondRequest.onreadystatechange = function (response) {
@@ -149,6 +152,8 @@ function load_app_filepond() {
                                         type: 'error',
                                         text: jsonResponse.message,
                                     });
+
+                                    error(jsonResponse.message);
                                 }
                             };
 

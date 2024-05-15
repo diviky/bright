@@ -6,6 +6,7 @@ namespace Diviky\Bright\Database;
 
 use Diviky\Bright\Concerns\CapsuleManager;
 use Diviky\Bright\Models\Options as ModelsOptions;
+use Diviky\Bright\Util\StdClass;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
@@ -183,7 +184,7 @@ class Options
             $values[$row->option_name] = $this->formatValue($row->option_value, $row->option_type);
         }
 
-        return (object) $values;
+        return new StdClass($values);
     }
 
     /**
@@ -191,7 +192,7 @@ class Options
      */
     public function collect(): Collection
     {
-        return collect((array) $this->first());
+        return collect($this->first()->toArray());
     }
 
     /**

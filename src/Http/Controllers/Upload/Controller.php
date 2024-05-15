@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Controllers\Upload;
 
+use Aws\CommandInterface;
 use Aws\S3\S3Client;
 use Diviky\Bright\Rules\FileValidationRequest;
 use Illuminate\Http\JsonResponse;
@@ -44,7 +45,10 @@ class Controller extends BaseController
                 'extension' => $request->post('extension'),
                 'accept' => $request->post('accept'),
             ],
-            'inputs' => $request->all(),
+            'inputs' => [
+                'accept' => $request->post('accept'),
+                'extension' => $request->post('extension'),
+            ],
         ], 201);
     }
 
@@ -141,7 +145,7 @@ class Controller extends BaseController
     /**
      * Create a command for the PUT operation.
      *
-     * @return \Aws\CommandInterface
+     * @return CommandInterface
      */
     protected function createCommand(Request $request, S3Client $client, string $bucket, string $key)
     {
