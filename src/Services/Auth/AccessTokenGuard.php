@@ -72,7 +72,7 @@ class AccessTokenGuard
 
         $access_key = $this->getTokenForRequest();
 
-        if (empty($access_key)) {
+        if (!isset($access_key)) {
             throw new AuthenticationException('Missing Authorization');
 
             return null;
@@ -140,28 +140,28 @@ class AccessTokenGuard
     {
         $token = $this->request->bearerToken();
 
-        if (empty($token)) {
+        if (!isset($token)) {
             $token = $this->request->header('Authorization');
         }
 
-        if (empty($token)) {
+        if (!isset($token)) {
             $token = $this->request->getPassword();
         }
 
-        if (empty($token)) {
+        if (!isset($token)) {
             foreach ($this->inputKeys as $key) {
                 $token = $this->request->query($key);
-                if (empty($token)) {
+                if (!isset($token)) {
                     $token = $this->request->post($key);
                 }
 
-                if ($token) {
+                if (isset($token)) {
                     return $token;
                 }
             }
         }
 
-        if (empty($token)) {
+        if (!isset($token)) {
             $token = md5($this->request->ip());
         }
 

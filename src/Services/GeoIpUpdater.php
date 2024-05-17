@@ -252,7 +252,7 @@ class GeoIpUpdater
      */
     protected function getDbFileUrl($geoDbUrl): string
     {
-        return $geoDbUrl ?: self::GEOLITE2_URL_BASE;
+        return $geoDbUrl ?? self::GEOLITE2_URL_BASE;
     }
 
     /**
@@ -262,6 +262,6 @@ class GeoIpUpdater
      */
     protected function getMd5FileName($geoDbMd5Url): string
     {
-        return $geoDbMd5Url ?: $this->geoDbUrl . '.sha256';
+        return $geoDbMd5Url ?? $this->geoDbUrl . '.sha256';
     }
 }

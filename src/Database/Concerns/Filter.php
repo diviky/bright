@@ -89,12 +89,14 @@ trait Filter
      */
     public function addWhere($column, $value, $condition = '='): self
     {
-        if (Str::startsWith($column, ':') && $this->hasModel()) {
-            return $this->filterScopes([substr($column, 1) => $value]);
-        }
+        if ($this->hasModel()) {
+            if (Str::startsWith($column, ':')) {
+                return $this->filterScopes([substr($column, 1) => $value]);
+            }
 
-        if (Str::contains($column, ':') && $this->hasModel()) {
-            return $this->filterRelations([$column => $value], $condition);
+            if (Str::contains($column, '.')) {
+                return $this->filterRelations([$column => $value], $condition);
+            }
         }
 
         if (Str::contains($column, '|')) {
@@ -238,10 +240,6 @@ trait Filter
 
     protected function filterScopes(array $scopes): self
     {
-        if (!$this->hasModel()) {
-            return $this;
-        }
-
         foreach ($scopes as $scope => $values) {
             if (empty($scope)) {
                 continue;
@@ -257,16 +255,12 @@ trait Filter
 
     protected function filterRelations(array $relations, string $condition = '='): self
     {
-        if (!$this->hasModel()) {
-            return $this;
-        }
-
         foreach ($relations as $column => $values) {
             if (empty($column)) {
                 continue;
             }
 
-            (new FilterRelation($condition, ':'))($this->builder, $values, $column);
+            (new FilterRelation($condition))($this->builder, $values, $column);
         }
 
         return $this;

@@ -26,7 +26,7 @@ class Util implements UtilInterface
             $timezone = user('timezone') ?: config('app.timezone');
         }
 
-        if (empty($time) && empty($format)) {
+        if (!isset($time) && !isset($format)) {
             return (new Carbon())->setTimezone($timezone);
         }
 
@@ -45,7 +45,7 @@ class Util implements UtilInterface
 
         $carbon = $carbon->setTimezone($timezone);
 
-        if ($format) {
+        if (isset($format)) {
             return $carbon->format($format);
         }
 
@@ -70,14 +70,14 @@ class Util implements UtilInterface
     /**
      * Convert given string to Storage url.
      *
-     * @param  null|string  $path
+     * @param  string  $path
      * @param  null|string  $disk
      * @param  null|int  $time
      * @return null|string
      */
     public function disk($path, $disk = null, $time = null)
     {
-        if (empty($path)) {
+        if (!isset($path)) {
             return null;
         }
 
@@ -85,10 +85,10 @@ class Util implements UtilInterface
             return $path;
         }
 
-        $disk = $disk ?: config('filesystems.default');
+        $disk = $disk ?? config('filesystems.default');
         $disk = ($disk == 'local') ? 'public' : $disk;
 
-        if ($time && $disk == 's3') {
+        if (isset($time) && $disk == 's3') {
             try {
                 return Storage::disk($disk)->temporaryUrl($path, Carbon::now()->addMinutes($time));
             } catch (\Exception $e) {
@@ -128,7 +128,7 @@ class Util implements UtilInterface
      */
     public function datetime($time, $format = 'M d, Y h:i A')
     {
-        if (empty($time)) {
+        if (!isset($time)) {
             return null;
         }
 
@@ -144,7 +144,7 @@ class Util implements UtilInterface
      */
     public function toTime($time, $format = 'h:i A')
     {
-        if ($time) {
+        if (isset($time)) {
             return carbon($time, $format);
         }
 

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Arr;
+
 trait Build
 {
     /**
@@ -55,5 +58,32 @@ trait Build
         $query = $this->toQuery();
 
         return $this->statement('DELETE ' . \substr($query, 6));
+    }
+
+    /**
+     * @param  string|array  $attributes
+     * @return self
+     */
+    public function whereLike($attributes, string $searchTerm)
+    {
+        $this->where(function (Builder $query) use ($attributes, $searchTerm) {
+            foreach (Arr::wrap($attributes) as $attribute) {
+                $query->when(
+                    str_contains($attribute, '.'),
+                    function (Builder $query) use ($attribute, $searchTerm) {
+                        [$relationName, $relationAttribute] = explode('.', $attribute);
+
+                        $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm) {
+                            $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
+                        });
+                    },
+                    function (Builder $query) use ($attribute, $searchTerm) {
+                        $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
+                    }
+                );
+            }
+        });
+
+        return $this;
     }
 }

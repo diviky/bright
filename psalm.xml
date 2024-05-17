@@ -128,6 +128,31 @@
                 <directory name="src"/>
             </errorLevel>
         </UndefinedInterfaceMethod>
+        <UndefinedMagicMethod>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </UndefinedMagicMethod>
+        <RiskyTruthyFalsyComparison>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </RiskyTruthyFalsyComparison>
+        <MissingTemplateParam>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </MissingTemplateParam>
+         <PossiblyInvalidArgument>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </PossiblyInvalidArgument>
+         <PossiblyInvalidOperand>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </PossiblyInvalidOperand>
         <PossiblyInvalidPropertyAssignmentValue>
             <errorLevel type="suppress">
                 <directory name="src"/>

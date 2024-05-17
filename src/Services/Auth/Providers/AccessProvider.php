@@ -88,7 +88,7 @@ class AccessProvider implements UserProvider
             }
         }
 
-        if ($key) {
+        if (isset($key)) {
             $user = $user->remember(null, 'cre:' . $key);
         }
 

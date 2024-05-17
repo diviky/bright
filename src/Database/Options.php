@@ -100,6 +100,14 @@ class Options
         return $this->insert($key, $value, $type);
     }
 
+     /**
+     * Update the record exists else insert.
+     *
+     * @param  mixed  $key
+     * @param  mixed  $value
+     * @param  string  $type
+     * @return bool|int
+     */
     public function updateOrCreate($key, $value = null, $type = null)
     {
         return $this->updateOrInsert($key, $value, $type);

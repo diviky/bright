@@ -290,6 +290,12 @@ $model = $model->combine(['relation.id']);
 
 ### Builder Extended Methods
 
+#### Search multiple columns and relations
+
+```php
+Post::whereLike(['name', 'text', 'author.name', 'tags.name'], $searchTerm)->get();
+```
+
 ##### Iterating results
 
 If you like fetch all the rows with chunks and modify using callaback
