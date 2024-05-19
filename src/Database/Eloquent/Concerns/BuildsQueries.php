@@ -4,15 +4,56 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Eloquent\Concerns;
 
+use Illuminate\Support\Arr;
+
 trait BuildsQueries
 {
     /**
-     * @param  string|array  $attributes
+     * @param  array|string  $attributes
      * @return self
      */
     public function whereLike($attributes, string $searchTerm)
     {
-        $this->query->whereLike($attributes, $searchTerm);
+        $this->where(function ($query) use ($attributes, $searchTerm) {
+            foreach (Arr::wrap($attributes) as $attribute) {
+                $query->when(
+                    str_contains($attribute, '.'),
+                    function ($query) use ($attribute, $searchTerm) {
+                        [$relationName, $relationAttribute] = explode('.', $attribute);
+
+                        $query->orWhereHas($relationName, function ($query) use ($relationAttribute, $searchTerm) {
+                            $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
+                        });
+                    },
+                    function ($query) use ($attribute, $searchTerm) {
+                        $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
+                    }
+                );
+            }
+        });
+
+        return $this;
+    }
+
+    public function whereFilter(mixed $attributes, mixed $searchTerm, $condition = '=')
+    {
+        $this->where(function ($query) use ($attributes, $searchTerm, $condition) {
+            foreach (Arr::wrap($attributes) as $attribute) {
+                $query->when(
+                    str_contains($attribute, '.'),
+                    function ($query) use ($attribute, $searchTerm, $condition) {
+                        [$relationName, $relationAttribute] = explode('.', $attribute);
+
+                        $query->orWhereHas($relationName, function ($query) use ($relationAttribute, $searchTerm, $condition) {
+                            $query->where($relationAttribute, $condition, $searchTerm);
+                        });
+                    },
+                    function ($query) use ($attribute, $searchTerm, $condition) {
+                        $query->orWhere($attribute, $condition, $searchTerm);
+                    }
+                );
+            }
+        });
 
         return $this;
     }

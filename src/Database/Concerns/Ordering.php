@@ -29,7 +29,9 @@ trait Ordering
             }
 
             if (Str::contains($data['sort'], '.')) {
-                return $this->orderByPowerJoins($data['sort'], \strtolower($data['order']));
+                $this->builder->orderByPowerJoins($data['sort'], \strtolower($data['order']));
+
+                return $this;
             } else {
                 return $this->orderBy($data['sort'], \strtolower($data['order']));
             }

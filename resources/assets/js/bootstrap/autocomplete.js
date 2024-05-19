@@ -124,7 +124,11 @@ function load_autocomplete() {
                 dropdownParent: $this.parent(),
                 ajax: {
                     url: url,
-                    data: data,
+                    data: function (params) {
+                        data['q'] = params.term;
+                        data['term'] = params.term;
+                        return data;
+                    },
                     delay: 250,
                     processResults: function (data) {
                         var rows = $.map(data.rows, function (obj) {
@@ -139,6 +143,33 @@ function load_autocomplete() {
                             results: rows,
                         };
                     },
+                },
+                templateResult: function (data) {
+                    if (!data.id) {
+                        return data.text;
+                    }
+
+                    var template = '<div class="item">';
+
+                    if (data.html) {
+                        template += '<span class="item-text">' + data.html + '</span>';
+                    }
+
+                    if (data.image) {
+                        template += '<span class="item-image">' + data.image + '</span>';
+                    }
+
+                    if (data.icon) {
+                        template +=
+                            '<span class="avatar avatar-xs item-icon" style="background-image: url(' +
+                            data.icon +
+                            ')" alt=""/></span>';
+                    }
+
+                    template += '<span class="item-title">' + data.text + '</span>';
+                    template += '</div>';
+
+                    return $(template);
                 },
             });
 
@@ -217,16 +248,25 @@ function load_autocomplete() {
                         return data.text;
                     }
 
-                    var template = '';
-                    if (data.icon) {
-                        template += '<span class="image"><img src="' + data.icon + '" alt=""/></span>';
+                    var template = '<div class="item">';
+
+                    if (data.html) {
+                        template += '<span class="item-text">' + data.html + '</span>';
                     }
 
                     if (data.image) {
-                        template += '<span class="image">' + data.image + '</span>';
+                        template += '<span class="item-image">' + data.image + '</span>';
                     }
 
-                    template += '<span class="title">' + data.text + '</span>';
+                    if (data.icon) {
+                        template +=
+                            '<span class="avatar avatar-xs item-icon" style="background-image: url(' +
+                            data.icon +
+                            ')" alt=""/></span>';
+                    }
+
+                    template += '<span class="item-title">' + data.text + '</span>';
+                    template += '</div>';
 
                     return $(template);
                 },
@@ -447,33 +487,47 @@ function load_autocomplete() {
                 searchField: searchField,
                 render: {
                     option: function (data, escape) {
-                        var template = '<div>';
+                        var template = '<div class="item">';
+
+                        if (data.html) {
+                            template += '<span class="item-text">' + data.html + '</span>';
+                        }
 
                         if (data.image) {
-                            template += '<span class="image">' + data.image + '</span>';
+                            template += '<span class="item-image">' + data.image + '</span>';
                         }
 
                         if (data.icon) {
-                            template += '<span class="image"><img src="' + data.icon + '" alt=""/></span>';
+                            template +=
+                                '<span class="avatar avatar-xs item-icon" style="background-image: url(' +
+                                data.icon +
+                                '" alt=""/></span>';
                         }
 
-                        template += '<span class="title">' + escape(data.text) + '</span>';
+                        template += '<span class="item-title">' + escape(data.text) + '</span>';
                         template += '</div>';
 
                         return template;
                     },
                     item: function (data, escape) {
-                        var template = '<div>';
+                        var template = '<div class="item">';
+
+                        if (data.html) {
+                            template += '<span class="item-text">' + data.html + '</span>';
+                        }
 
                         if (data.image) {
-                            template += '<span class="image">' + data.image + '</span>';
+                            template += '<span class="item-image">' + data.image + '</span>';
                         }
 
                         if (data.icon) {
-                            template += '<span class="image"><img src="' + data.icon + '" alt=""/></span>';
+                            template +=
+                                '<span class="avatar avatar-xs item-icon" style="background-image: url(' +
+                                data.icon +
+                                '" alt=""/></span>';
                         }
 
-                        template += '<span class="title">' + escape(data.text) + '</span>';
+                        template += '<span class="item-title">' + escape(data.text) + '</span>';
                         template += '</div>';
 
                         return template;

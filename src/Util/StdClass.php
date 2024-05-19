@@ -8,9 +8,12 @@ class StdClass extends \stdClass
 {
     protected array $attributes = [];
 
-    public function __construct(array $attributes)
+    protected mixed $defaultValue = 0;
+
+    public function __construct(array $attributes = [], $defaultValue = 0)
     {
         $this->attributes = $attributes;
+        $this->defaultValue = $defaultValue;
     }
 
     public function __set(string $name, mixed $value): void
@@ -24,7 +27,7 @@ class StdClass extends \stdClass
             return $this->attributes[$name];
         }
 
-        return 0;
+        return $this->defaultValue;
     }
 
     public function toArray(): array

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
-use Illuminate\Database\Query\Builder;
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Support\Arr;
 
 trait Build
@@ -12,7 +12,7 @@ trait Build
     /**
      * Add a where between statement to the query.
      *
-     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @param  Expression|string  $column
      * @param  array|string  $values
      * @param  string  $boolean
      * @param  bool  $not
@@ -32,7 +32,7 @@ trait Build
     /**
      * Add a basic where clause to the query.
      *
-     * @param  array|\Closure|\Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @param  array|\Closure|Expression|string  $column
      * @param  mixed  $operator
      * @param  mixed  $value
      * @param  string  $boolean
@@ -61,26 +61,25 @@ trait Build
     }
 
     /**
-     * @param  string|array  $attributes
+     * @param  array|string  $attributes
      * @return self
      */
     public function whereLike($attributes, string $searchTerm)
     {
-        $this->where(function (Builder $query) use ($attributes, $searchTerm) {
+        $this->where(function ($query) use ($attributes, $searchTerm) {
             foreach (Arr::wrap($attributes) as $attribute) {
-                $query->when(
-                    str_contains($attribute, '.'),
-                    function (Builder $query) use ($attribute, $searchTerm) {
-                        [$relationName, $relationAttribute] = explode('.', $attribute);
+                $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
+            }
+        });
 
-                        $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm) {
-                            $query->where($relationAttribute, 'LIKE', "%{$searchTerm}%");
-                        });
-                    },
-                    function (Builder $query) use ($attribute, $searchTerm) {
-                        $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
-                    }
-                );
+        return $this;
+    }
+
+    public function whereFilter(mixed $attributes, mixed $searchTerm, $condition = '=')
+    {
+        $this->where(function ($query) use ($attributes, $searchTerm, $condition) {
+            foreach (Arr::wrap($attributes) as $attribute) {
+                $query->orWhere($attribute, $condition, $searchTerm);
             }
         });
 

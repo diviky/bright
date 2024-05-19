@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database\Concerns;
 
 use Diviky\Bright\Helpers\Iterator\SelectIterator;
+use Illuminate\Support\LazyCollection;
 
 trait BuildsQueries
 {
@@ -12,7 +13,7 @@ trait BuildsQueries
      * Query lazily, by chunks of the given size.
      *
      * @param  int  $chunkSize
-     * @return \Illuminate\Support\LazyCollection
+     * @return LazyCollection
      *
      * @throws \InvalidArgumentException
      */
@@ -31,7 +32,7 @@ trait BuildsQueries
      * Query lazily, by chunks of the given size.
      *
      * @param  int  $chunkSize
-     * @return \Illuminate\Support\LazyCollection
+     * @return LazyCollection
      *
      * @throws \InvalidArgumentException
      */

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Providers;
 
 use Diviky\Bright\View\Components\Flash;
+use Diviky\Bright\View\Components\Form;
 use Diviky\Bright\View\Components\Link;
 use Diviky\Bright\View\Factory;
 use Illuminate\Support\Facades\Blade;
@@ -19,6 +20,7 @@ class ViewServiceProvider extends BaseServiceProvider
     {
         Blade::component('flash', Flash::class);
         Blade::component('link', Link::class);
+        Blade::component('bright-form', Form::class);
         Blade::componentNamespace('Diviky\\Bright\\View\\Components', 'bright');
 
         Blade::directive('datetime', function ($expression) {

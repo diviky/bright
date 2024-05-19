@@ -290,7 +290,7 @@ trait Eventable
 
         $from = \preg_split('/ as /i', $this->getExpressionValue($this->from));
 
-        $mainAlias = (\count($from) > 1) ? last($from) . '.' : '';
+        $mainAlias = (\count($from) > 1) ? last($from) . '.' : $this->from . '.';
 
         foreach ($eventColumns as $columns) {
             if (!\is_array($columns)) {

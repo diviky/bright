@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
-use Diviky\Bright\Database\Filters\FilterRelation;
 use Diviky\Bright\Database\Filters\FiltersScope;
 use Diviky\Bright\Database\Filters\Ql\Parser;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 trait Filter
@@ -95,17 +96,16 @@ trait Filter
             }
 
             if (Str::contains($column, '.')) {
-                return $this->filterRelations([$column => $value], $condition);
+                return $this->filterRelations(explode('|', $column), $value, $condition);
             }
         }
 
         if (Str::contains($column, '|')) {
             $columns = \explode('|', $column);
-            $this->where(function ($query) use ($columns, $value, $condition): void {
-                foreach ($columns as $column) {
-                    $query->orWhere($this->cleanField($column), $condition, $value);
-                }
-            });
+
+            $this->whereFilter(array_map(function ($column) {
+                return $this->cleanField($column);
+            }, $columns), $value, $condition);
         } elseif (is_array($value)) {
             $this->whereIn($this->cleanField($column), $value);
         } else {
@@ -253,15 +253,25 @@ trait Filter
         return $this;
     }
 
-    protected function filterRelations(array $relations, string $condition = '='): self
+    protected function filterRelations($attributes, $searchTerm, string $condition = '='): self
     {
-        foreach ($relations as $column => $values) {
-            if (empty($column)) {
-                continue;
-            }
+        $this->builder->where(function (Builder $query) use ($attributes, $searchTerm, $condition) {
+            foreach (Arr::wrap($attributes) as $attribute) {
+                $query->when(
+                    str_contains($attribute, '.'),
+                    function (Builder $query) use ($attribute, $searchTerm, $condition) {
+                        [$relationName, $relationAttribute] = explode('.', $attribute);
 
-            (new FilterRelation($condition))($this->builder, $values, $column);
-        }
+                        $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm, $condition) {
+                            $query->where($relationAttribute, $condition, $searchTerm);
+                        });
+                    },
+                    function (Builder $query) use ($attribute, $searchTerm, $condition) {
+                        $query->orWhere($attribute, $condition, $searchTerm);
+                    }
+                );
+            }
+        });
 
         return $this;
     }
@@ -380,7 +390,7 @@ trait Filter
             if ($from && $to) {
                 $this->whereBetween($column, [$from, $to]);
             } elseif ($from) {
-                $this->where($column, $from);
+                $this->addWhere($column, $from);
             }
         }
 
@@ -409,7 +419,7 @@ trait Filter
             if ($from && $to) {
                 $this->whereBetween($column, [$from, $to]);
             } elseif ($from) {
-                $this->where($column, $from);
+                $this->addWhere($column, $from);
             }
         }
 
@@ -447,10 +457,8 @@ trait Filter
 
                     if ($op == ':') {
                         $this->filterScopes([(string) $predicate->left => $predicate->right]);
-                    } elseif (substr($op, 0, 1) == ':') {
-                        if ($this->hasModel()) {
-                            (new FilterRelation(substr($op, 1), '.'))($this->builder, $predicate->right, (string) $predicate->left);
-                        }
+                    } elseif (substr($op, 0, 1) == '.') {
+                        $this->filterRelations([$predicate->left], $predicate->right, substr($op, 1));
                     } else {
                         if ($combinedBy === 'OR') {
                             $query->orWhere($this->cleanField((string) $predicate->left), $op, $predicate->right);

@@ -100,7 +100,7 @@ class Options
         return $this->insert($key, $value, $type);
     }
 
-     /**
+    /**
      * Update the record exists else insert.
      *
      * @param  mixed  $key

@@ -13,6 +13,7 @@ use Diviky\Bright\Database\Eloquent\Concerns\HasTimestamps;
 use Diviky\Bright\Database\Eloquent\Concerns\Relations;
 use Diviky\Bright\Models\Concerns\Eventable;
 use Illuminate\Database\Eloquent\Model as BaseModel;
+use Kirschbaum\PowerJoins\PowerJoins;
 
 class Model extends BaseModel
 {
@@ -23,5 +24,6 @@ class Model extends BaseModel
     use Eventable;
     use HasEvents;
     use HasTimestamps;
+    use PowerJoins;
     use Relations;
 }
