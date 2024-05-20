@@ -3,9 +3,9 @@ function load_app_filepond() {
         FilePond.registerPlugin(FilePondPluginFileValidateSize, FilePondPluginFileValidateType);
 
         var form = selector.parents('form:eq(0)');
-        var prefix = selector.attr('data-upload-prefix') || '';
+        var prefix = selector.data('upload-prefix') || '';
         var accept = selector.attr('accept') || '';
-        var size = selector.attr('size') || '500MB';
+        var size = selector.data('size') || '500MB';
 
         if (prefix && typeof prefix === 'undefined') {
             prefix = '';
