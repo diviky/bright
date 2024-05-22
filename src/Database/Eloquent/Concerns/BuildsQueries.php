@@ -35,7 +35,10 @@ trait BuildsQueries
         return $this;
     }
 
-    public function whereFilter(mixed $attributes, mixed $searchTerm, $condition = '=')
+    /**
+     * @param  array|string  $attributes
+     */
+    public function whereFilter(mixed $attributes, ?string $searchTerm, string $condition = '='): self
     {
         $this->where(function ($query) use ($attributes, $searchTerm, $condition) {
             foreach (Arr::wrap($attributes) as $attribute) {

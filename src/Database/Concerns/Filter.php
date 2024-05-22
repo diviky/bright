@@ -253,7 +253,7 @@ trait Filter
         return $this;
     }
 
-    protected function filterRelations($attributes, $searchTerm, string $condition = '='): self
+    protected function filterRelations(string|array $attributes, ?string $searchTerm, string $condition = '='): self
     {
         $this->builder->where(function (Builder $query) use ($attributes, $searchTerm, $condition) {
             foreach (Arr::wrap($attributes) as $attribute) {

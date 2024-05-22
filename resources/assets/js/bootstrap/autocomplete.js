@@ -444,6 +444,8 @@ function load_autocomplete() {
             if (url && selector[0] && selector[0].selectize) {
                 var control = selector[0].selectize;
 
+                control.clearOptions();
+                control.clear();
                 control.disable();
 
                 control.load(function (callback) {
@@ -454,8 +456,6 @@ function load_autocomplete() {
                         data: data,
                         dataType: 'json',
                         success: function (results) {
-                            control.clearOptions();
-                            control.clear();
                             control.enable();
 
                             callback(results.rows);
@@ -543,6 +543,8 @@ function load_autocomplete() {
             if (url && selector[0] && selector[0].selectize) {
                 var control = selector[0].selectize;
 
+                control.clearOptions();
+                control.clear();
                 control.disable();
 
                 control.load(function (callback) {
@@ -553,8 +555,6 @@ function load_autocomplete() {
                         method: method,
                         dataType: 'json',
                         success: function (results) {
-                            control.clearOptions();
-                            control.clear();
                             control.enable();
 
                             callback(results.rows);
@@ -632,6 +632,8 @@ function load_autocomplete() {
             if (url && selector[0] && selector[0].selectize) {
                 var control = selector[0].selectize;
 
+                control.clearOptions();
+                control.clear();
                 control.disable();
 
                 control.load(function (callback) {
@@ -642,8 +644,6 @@ function load_autocomplete() {
                         data: data,
                         dataType: 'json',
                         success: function (results) {
-                            control.clearOptions();
-                            control.clear();
                             control.enable();
 
                             callback(results.rows);
@@ -689,6 +689,8 @@ function load_autocomplete() {
                 if (url && selector[0] && selector[0].selectize) {
                     var control = selector[0].selectize;
 
+                    control.clearOptions();
+                    control.clear();
                     control.disable();
 
                     control.load(function (callback) {
@@ -699,8 +701,6 @@ function load_autocomplete() {
                             data: data,
                             dataType: 'json',
                             success: function (results) {
-                                control.clearOptions();
-                                control.clear();
                                 control.enable();
 
                                 callback(results.rows);
@@ -782,6 +782,9 @@ function load_autocomplete() {
 
             var data = $this.data('post-data') || {};
             data[nameField] = value;
+
+            control.clearOptions();
+            control.clear();
             control.disable();
 
             control.load(function (callback) {
@@ -792,8 +795,6 @@ function load_autocomplete() {
                     dataType: 'json',
                     data: data,
                     success: function (results) {
-                        control.clearOptions();
-                        control.clear();
                         control.enable();
 
                         callback(results.rows);

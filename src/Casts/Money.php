@@ -65,8 +65,8 @@ class Money implements CastsAttributes
     /**
      * Convert to int from decimals.
      *
-     * @param  float|int  $value
-     * @return float|int
+     * @param  float|int|string  $value
+     * @return float|int|string
      */
     public function to($value)
     {
@@ -80,8 +80,8 @@ class Money implements CastsAttributes
     /**
      * Convert to int from decimals.
      *
-     * @param  int  $value
-     * @return string
+     * @param  int|string  $value
+     * @return int|string
      */
     public function from($value)
     {
