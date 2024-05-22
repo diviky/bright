@@ -676,7 +676,6 @@ function load_autocomplete() {
                     labelField: labelField,
                     searchField: searchField,
                     onChange: function (value) {
-                        if (!value.length) return;
                         loadSelectizeTargetValues($this, target, value);
                     },
                 });
@@ -740,7 +739,6 @@ function load_autocomplete() {
                     labelField: labelField,
                     searchField: searchField,
                     onChange: function (value) {
-                        if (!value.length) return;
                         loadSelectizeTargetValues(selector, newTarget, value);
                     },
                 };
@@ -768,6 +766,12 @@ function load_autocomplete() {
 
             if (!control) {
                 return false;
+            }
+
+            if (value.length <= 0) {
+                control.clearOptions();
+                control.clear();
+                return true;
             }
 
             var url = $this.data('url');
