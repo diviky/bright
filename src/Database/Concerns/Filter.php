@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
+use Diviky\Bright\Database\Filters\FilterRelation;
 use Diviky\Bright\Database\Filters\FiltersScope;
 use Diviky\Bright\Database\Filters\Ql\Parser;
 use Illuminate\Database\Eloquent\Builder;
@@ -258,13 +259,9 @@ trait Filter
         $this->builder->where(function (Builder $query) use ($attributes, $searchTerm, $condition) {
             foreach (Arr::wrap($attributes) as $attribute) {
                 $query->when(
-                    str_contains($attribute, '.'),
+                    Str::contains($attribute, '.'),
                     function (Builder $query) use ($attribute, $searchTerm, $condition) {
-                        [$relationName, $relationAttribute] = explode('.', $attribute);
-
-                        $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm, $condition) {
-                            $query->where($relationAttribute, $condition, $searchTerm);
-                        });
+                        (new FilterRelation($condition))($query, $searchTerm, $attribute);
                     },
                     function (Builder $query) use ($attribute, $searchTerm, $condition) {
                         $query->orWhere($attribute, $condition, $searchTerm);
