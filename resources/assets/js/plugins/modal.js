@@ -195,7 +195,7 @@
         animation: 'bounceInRight',
         content: null,
         url: null,
-        history: true,
+        history: false,
         data: {},
         container: 'body',
     };
