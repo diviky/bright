@@ -1,8 +1,8 @@
 function brightJs() {
     jQuery('[role="validate"]').validate();
     jQuery('[role="validator"]').validator();
-    jQuery('[role="krender"]').easyRender();
-    jQuery('[role="ksubmit"]').easySubmit();
+    jQuery('[role="krender"], [easyrender]').easyRender();
+    jQuery('[role="ksubmit"], [easysubmit]').easySubmit();
     jQuery('[tooltip=modal], [role="modal"]').easyModal();
 
     $('[data-toggle="tooltip"]').on('remove hide mouseleave', function (e) {

@@ -28,7 +28,7 @@ class Controller extends BaseController
         $prefix = $request->post('prefix');
         $route = $prefix ? ltrim($prefix, '/') . '.upload.files' : 'upload.files';
 
-        $url = URL::temporarySignedRoute($route, now()->addMinutes(1), ['file' => $filename]);
+        $url = URL::temporarySignedRoute($route, now()->addMinutes(30), ['file' => $filename]);
 
         $mimes = MimeTypes::getDefault()->getMimeTypes($extension);
         $content_type = $request->post('content_type') ?: ($mimes ? $mimes[0] : null);
@@ -119,7 +119,7 @@ class Controller extends BaseController
         $client = $this->storageClient();
 
         $command = $this->createCommand($request, $client, $config['bucket'], $path . $filename);
-        $signedRequest = $client->createPresignedRequest($command, '+1 minutes');
+        $signedRequest = $client->createPresignedRequest($command, '+30 minutes');
 
         $uri = $signedRequest->getUri();
 

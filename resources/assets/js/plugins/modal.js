@@ -1,29 +1,10 @@
 (function ($, window, undefined) {
     'use strict';
-    var options = {};
-
-    var defaults = {
-        title: function (api, el) {
-            return el && el.data('title');
-        },
-        event: 'click',
-        backdrop: 'static', //'false|true|static',
-        close: true,
-        keyboard: false,
-        id: 'bmodel',
-        styles: '',
-        clean: false,
-        animation: 'bounceInRight',
-        content: null,
-        url: null,
-        data: {},
-        container: 'body',
-    };
 
     var easyModal = function (el, options) {
         var self = this;
         this.el = el;
-        this.settings = $.extend({}, defaults, options);
+        this.settings = $.extend({}, $.fn.easyModal.defaults, options);
 
         if ($.metadata && el) {
             this.settings = $.extend({}, this.settings, el.metadata({ type: 'html5' }));
@@ -61,6 +42,7 @@
         if (typeof content === 'function') {
             content = content(self, self.el);
         }
+
         self.content(content);
 
         return this;
@@ -73,18 +55,22 @@
     };
 
     easyModal.prototype.ajaxContent = function (self, el) {
-        var target = self.settings.url || (el && el.attr('href'));
+        var url = self.settings.url || (el && el.attr('href'));
 
-        if (target == '' || target == undefined) {
+        if (url == '' || url == undefined) {
             return false;
         }
 
         var data = self.settings.data || {};
         data = Object.assign({ format: 'html' }, data);
 
+        if (self.settings.history) {
+            window.history.pushState({ id: url }, url, url);
+        }
+
         //add loading
         $.ajax({
-            url: target,
+            url: url,
             data: data,
             cache: false,
         }).then(
@@ -150,15 +136,21 @@
 
         $(self.settings.el).modal('show');
 
-        $(self.settings.el).on('hidden.bs.modal', function () {
-            $(this).data('bs.modal', null);
-            $('.modal-backdrop').remove();
-            $('.is-invalid-feedback').remove();
+        $(self.settings.el)
+            .off('hidden.bs.modal')
+            .on('hidden.bs.modal', function () {
+                $(this).data('bs.modal', null);
+                $('.modal-backdrop').remove();
+                $('.is-invalid-feedback').remove();
 
-            if (self.settings.clean) {
-                $(self.settings.el).remove();
-            }
-        });
+                if (self.settings.history) {
+                    window.history.back();
+                }
+
+                if (self.settings.clean) {
+                    $(self.settings.el).remove();
+                }
+            });
 
         $(document).trigger('ajax:loaded');
         $(document).trigger('ajax:modal:loaded');
@@ -167,7 +159,7 @@
     };
 
     $.fn.easyModalShow = function (options) {
-        if (!$.data(this, 'easymodals')) {
+        if (!$.data(this, 'easymodal')) {
             return new easyModal(null, options);
         }
     };
@@ -182,9 +174,29 @@
 
     $.fn.easyModal = function (options) {
         return this.each(function () {
-            if (!$.data(this, 'easymodal')) {
-                return new easyModal($(this), options);
+            var self = $(this);
+            if (!self.data('easyModal')) {
+                self.data('easyModal', new easyModal(self, options));
             }
         });
+    };
+
+    $.fn.easyModal.defaults = {
+        title: function (api, el) {
+            return el && el.data('title');
+        },
+        event: 'click',
+        backdrop: 'static', //'false|true|static',
+        close: true,
+        keyboard: false,
+        id: 'bmodel',
+        styles: '',
+        clean: false,
+        animation: 'bounceInRight',
+        content: null,
+        url: null,
+        history: true,
+        data: {},
+        container: 'body',
     };
 })(jQuery, this);

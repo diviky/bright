@@ -676,7 +676,7 @@
     // callbacks
     $.each('onBeforeValidate,onBeforeFail,onFail,onSuccess'.split(','), function(i, name) {
       // configuration
-      if ($.isFunction(conf[name])) {
+      if (typeof conf[name] === "function") {
         $(self).on(name, conf[name]);
       }
 
