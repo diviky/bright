@@ -31,13 +31,6 @@ grumphp:
     #   short_open_tag: false
     #   ignore_patterns: []
     #   triggered_by: ['php']
-    phpcs:
-      standard:
-        - PSR12
-      whitelist_patterns: ['/^src(.*)/', '/^app(.*)/', '/^config(.*)/', '/^test(.*)/']
-      ignore_patterns: ['*.blade.php']
-      metadata: { priority: 400 }
-      exclude: ['Generic.Files.LineLength', 'PSR2.ControlStructures.SwitchDeclaration']
     phpunit:
       metadata: { priority: 100 }
     laravel_pint:

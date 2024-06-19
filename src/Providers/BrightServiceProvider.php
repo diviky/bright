@@ -68,9 +68,9 @@ class BrightServiceProvider extends ServiceProvider
             $as = $prefix ? $prefix . '.' : '';
             Route::prefix($prefix)->as($as)->group(
                 function (): void {
-                    Route::post('upload/signed', '\Diviky\Bright\Http\Controllers\Upload\Controller@signed');
+                    Route::post('upload/signed', '\Diviky\Bright\Http\Controllers\Upload\Controller@signed')->name('upload.signed');
                     Route::match(['post', 'put'], 'upload/files', '\Diviky\Bright\Http\Controllers\Upload\Controller@upload')->name('upload.files');
-                    Route::delete('upload/revert', '\Diviky\Bright\Http\Controllers\Upload\Controller@revert');
+                    Route::delete('upload/revert', '\Diviky\Bright\Http\Controllers\Upload\Controller@revert')->name('upload.revert');
                 }
             );
         });
@@ -160,6 +160,10 @@ class BrightServiceProvider extends ServiceProvider
         $this->publishes([
             $this->path() . '/database/seeders' => database_path('seeders'),
         ], 'bright-seeders');
+
+        if (config('bright.migrations', false)) {
+            $this->loadMigrationsFrom($this->path() . '/database/migrations');
+        }
 
         $this->commands([
             Setup::class,

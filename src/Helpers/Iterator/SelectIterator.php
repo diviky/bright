@@ -73,6 +73,9 @@ class SelectIterator implements \Iterator
         $this->query();
     }
 
+    /**
+     * @return array
+     */
     public function current()
     {
         return $this->results[$this->position];

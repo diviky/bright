@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Karle\Helpers\Iterator;
+namespace Diviky\Bright\Helpers\Iterator;
 
 use Iterator;
 

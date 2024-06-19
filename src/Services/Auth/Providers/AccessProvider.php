@@ -9,6 +9,7 @@ use Diviky\Bright\Models\Token;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class AccessProvider implements UserProvider
@@ -99,6 +100,6 @@ class AccessProvider implements UserProvider
     {
         $plain = $credentials['password'];
 
-        return app('hash')->check($plain, $user->getAuthPassword());
+        return Hash::check($plain, $user->getAuthPassword());
     }
 }

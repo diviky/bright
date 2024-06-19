@@ -48,6 +48,9 @@ class ChunkedIterator extends \IteratorIterator
         }
     }
 
+    /**
+     * @return array
+     */
     public function current()
     {
         return $this->chunk;

@@ -32,17 +32,21 @@ class IsUserActivated
 
         $sniffed = session('sniffed');
 
-        if ($user->status == 0 && !$sniffed) {
-            return redirect('auth/activate');
+        if ($sniffed) {
+            return $next($request);
         }
 
-        if ($user->status != 1 && !$sniffed) {
+        if ($user->status == 0) {
+            return redirect()->route('activate');
+        }
+
+        if ($user->status != 1) {
             Auth::logout();
 
             abort(401, 'Account Suspended');
         }
 
-        if (!empty($user->deleted_at) && !$sniffed) {
+        if (!empty($user->deleted_at)) {
             Auth::logout();
 
             abort(401, 'Account Deleted');

@@ -55,7 +55,9 @@ class Link extends Component
 
     private function isAuthorized(): bool
     {
-        return (empty($this->action) || !Auth::user()->isPermissionRevoked($this->allowedAction[$this->action])) ? true : false;
+        $user = Auth::user();
+
+        return (empty($this->action) || empty($user) || !$user->isPermissionRevoked($this->allowedAction[$this->action])) ? true : false;
     }
 
     private function validateActions(): void

@@ -29,14 +29,6 @@ class Models
     /**
      * @return \Illuminate\Database\Eloquent\Model::class
      */
-    public static function branding()
-    {
-        return config('bright.models.branding', Branding::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Model::class
-     */
     public static function options(): string
     {
         return config('bright.models.options', Options::class);

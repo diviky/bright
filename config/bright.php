@@ -82,17 +82,16 @@ return [
         'role' => \Diviky\Bright\Http\Middleware\RoleMiddleware::class,
         'roleorpermission' => \Diviky\Bright\Http\Middleware\RoleOrPermissionMiddleware::class,
         'authorize' => \Diviky\Bright\Http\Middleware\AuthorizeMiddleware::class,
-        'auth.verified' => \Diviky\Bright\Http\Middleware\IsUserActivated::class,
+        'auth.activated' => \Diviky\Bright\Http\Middleware\IsUserActivated::class,
         'accept' => \Diviky\Bright\Http\Middleware\Accept::class,
         'api.response' => \Diviky\Bright\Http\Middleware\Api::class,
         'ajax' => \Diviky\Bright\Http\Middleware\Ajax::class,
         'theme' => \Diviky\Bright\Http\Middleware\ThemeMiddleware::class,
-        'branding' => \Diviky\Bright\Http\Middleware\Branding::class,
         'preflight' => \Diviky\Bright\Http\Middleware\PreflightResponse::class,
         'xss' => \Diviky\Bright\Http\Middleware\XSSProtection::class,
         'auth.proxy' => \Diviky\Bright\Http\Middleware\AuthProxy::class,
-        'branding' => \Diviky\Bright\Http\Middleware\Branding::class,
         'apikey' => \Diviky\Bright\Http\Middleware\ApiKey::class,
+        'filepond' => \Diviky\Bright\Http\Middleware\Pond::class,
     ],
 
     'priority_middleware' => [
@@ -117,6 +116,7 @@ return [
         'tokens' => 'auth_tokens',
         'user_domains' => 'auth_user_domains',
         'socialite_users' => 'auth_socialite_users',
+        'branding' => 'auth_socialite_users',
     ],
 
     'geoip' => [
@@ -128,4 +128,9 @@ return [
         'decimals' => env('BRIGHT_MONEY_DECIMALS', 2),
         'currency' => env('BRIGHT_MONEY_CURRENCY', 'USD'),
     ],
+
+    /**
+     * Load the migration file automatically
+     */
+    'migrations' => false,
 ];

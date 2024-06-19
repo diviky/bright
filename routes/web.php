@@ -24,26 +24,30 @@ return function (string $prefix = '', string $as = ''): void {
     ], function (): void {
         // Authentication Routes...
         Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-        Route::post('login', 'Auth\LoginController@login');
+        Route::post('login', 'Auth\LoginController@login')->name('login.post');
 
         // Registration Routes...
         Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-        Route::post('register', 'Auth\RegisterController@register');
+        Route::post('register', 'Auth\RegisterController@register')->name('register.post');
 
-        Route::group(['middleware' => ['throttle:3,5']], function (): void {
-            Route::post('password/resend', 'Auth\ForgotPasswordController@resend');
-            Route::post('password/reset', 'Auth\ForgotPasswordController@reset');
+        Route::group(['prefix' => 'password', 'as' => 'password.'], function (): void {
+            Route::group(['middleware' => ['throttle:3,5']], function (): void {
+                Route::post('resend', 'Auth\ForgotPasswordController@resend')->name('resend');
+                Route::post('reset', 'Auth\ForgotPasswordController@reset')->name('reset.post');
+            });
+
+            // Password Reset Routes...
+            Route::get('reset', 'Auth\ForgotPasswordController@reset')->name('reset');
+            Route::get('verify', 'Auth\ForgotPasswordController@verify')->name('verify');
+            Route::post('verify', 'Auth\ForgotPasswordController@verify')->name('verify.post');
+            Route::get('change', 'Auth\ForgotPasswordController@change')->name('change');
+            Route::post('change', 'Auth\ForgotPasswordController@change')->name('change.post');
         });
 
-        // Password Reset Routes...
-        Route::get('password/reset', 'Auth\ForgotPasswordController@reset');
-        Route::get('password/verify', 'Auth\ForgotPasswordController@verify');
-        Route::post('password/verify', 'Auth\ForgotPasswordController@verify');
-        Route::get('password/change', 'Auth\ForgotPasswordController@change');
-        Route::post('password/change', 'Auth\ForgotPasswordController@change');
-
-        Route::get('social/connect/{provider}', 'Socialite\Controller@connect');
-        Route::get('social/connect/{provider}/callback', 'Socialite\Controller@callback');
+        Route::group(['prefix' => 'social/connect', 'as' => 'social.'], function (): void {
+            Route::get('{provider}', 'Socialite\Controller@connect')->name('connect');
+            Route::get('{provider}/callback', 'Socialite\Controller@callback')->name('callback');
+        });
     });
 
     Route::group([
@@ -52,19 +56,21 @@ return function (string $prefix = '', string $as = ''): void {
         'prefix' => $prefix,
         'as' => $as,
     ], function (): void {
-        Route::match(['get', 'post'], 'account/sniff/{id?}', 'Account\Controller@sniff');
+        Route::match(['get', 'post'], 'account/sniff/{id?}', 'Account\Controller@sniff')->name('sniff');
 
-        Route::get('activate', 'Auth\ActivationController@activate')->name('user.activate');
+        Route::get('activate', 'Auth\ActivationController@activate')->name('activate');
         Route::any('logout', 'Auth\LoginController@logout')->name('logout');
 
-        Route::group(['middleware' => ['throttle:3,5']], function (): void {
-            Route::post('resend', 'Auth\ActivationController@resend');
-            Route::post('activate', 'Auth\ActivationController@activate');
+        Route::group(['middleware' => ['throttle:3,5'], 'as' => 'activation.'], function (): void {
+            Route::post('resend', 'Auth\ActivationController@resend')->name('resend');
+            Route::post('activate', 'Auth\ActivationController@activate')->name('activate');
         });
 
-        Route::any('account', 'Account\Controller@index');
-        Route::any('account/password', 'Account\Controller@password');
-        Route::get('account/search', 'Account\Controller@search');
-        Route::post('account/token/refresh', 'Account\Controller@token');
+        Route::group(['prefix' => 'account', 'as' => 'account.'], function (): void {
+            Route::any('/', 'Account\Controller@index')->name('index');
+            Route::any('password', 'Account\Controller@password')->name('password');
+            Route::get('search', 'Account\Controller@search')->name('search');
+            Route::post('token/refresh', 'Account\Controller@token')->name('refresh');
+        });
     });
 };

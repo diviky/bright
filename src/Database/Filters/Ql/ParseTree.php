@@ -22,9 +22,7 @@ class ParseTree
      */
     protected $nestParent;
 
-    final public function __construct()
-    {
-    }
+    final public function __construct() {}
 
     /**
      * @return array

@@ -59,7 +59,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Diviky\\Bright\\Tests\\": "tests"
+            "Diviky\\Bright\\Tests\\": "tests",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "scripts": {

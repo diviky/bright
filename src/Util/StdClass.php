@@ -10,7 +10,7 @@ class StdClass extends \stdClass
 
     protected mixed $defaultValue = 0;
 
-    public function __construct(array $attributes = [], $defaultValue = 0)
+    public function __construct(array $attributes = [], mixed $defaultValue = 0)
     {
         $this->attributes = $attributes;
         $this->defaultValue = $defaultValue;
@@ -21,7 +21,7 @@ class StdClass extends \stdClass
         $this->attributes[$name] = $value;
     }
 
-    public function __get($name): mixed
+    public function __get(string $name): mixed
     {
         if (array_key_exists($name, $this->attributes)) {
             return $this->attributes[$name];

@@ -29,6 +29,9 @@ class MapIterator extends \IteratorIterator
         $this->callback = $callback;
     }
 
+    /**
+     * @return array
+     */
     public function current()
     {
         $callback = $this->callback;
