@@ -161,7 +161,7 @@ trait Themable
             'default',
         ];
 
-        return $this->getMatchingTheme($matches) ?? 'tabler';
+        return $this->getMatchingTheme($matches) ?? 'bootstrap';
     }
 
     /**

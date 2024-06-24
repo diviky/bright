@@ -516,15 +516,21 @@
     $.fn.easySubmit = function (options) {
         return this.each(function () {
             var self = $(this);
-            if (!self.data('easySubmit')) {
-                var instance = new easySubmit(self, options);
 
-                if (typeof options === 'string' && typeof instance[options] === 'function') {
-                    instance[options]();
-                }
+            var instance = self.data('easySubmit');
 
-                self.data('easySubmit', instance);
+            // destroy existing instance
+            if (instance) {
+              self.removeData('easySubmit');
             }
+
+            var instance = new easySubmit(self, options);
+
+            if (typeof options === 'string' && typeof instance[options] === 'function') {
+                instance[options]();
+            }
+
+            self.data('easySubmit', instance);
 
             return this;
         });

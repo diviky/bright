@@ -11,6 +11,7 @@ use Diviky\Bright\Attributes\ViewPaths;
 use Diviky\Bright\Concerns\Themable;
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Str;
 
 class Responsable implements BaseResponsable
 {
@@ -157,15 +158,13 @@ class Responsable implements BaseResponsable
             $paths = array_merge($paths, $instance->getPaths());
         }
 
-        $theme = $this->setUpThemeFromRequest($request, $component, $paths);
-        $layout = $format == 'html' ? 'layouts.html' : $theme['layout'];
-
+        $layout = null;
         $attributes = $method->getAttributes(AttributesView::class);
 
         foreach ($attributes as $attribute) {
             $instance = $attribute->newInstance();
             $view = $instance->getName();
-            $layout = $instance->getLayout() ?? $layout;
+            $layout = $instance->getLayout();
         }
 
         $attributes = $reflection->getAttributes(ViewNamespace::class);
@@ -173,6 +172,19 @@ class Responsable implements BaseResponsable
         foreach ($attributes as $attribute) {
             $instance = $attribute->newInstance();
             $view = $instance->getViewName($view);
+        }
+
+        if (empty($layout)) {
+            $theme = $this->setUpThemeFromRequest($request, $component, $paths);
+            //$layout = $format == 'html' ? 'layouts.html' : $theme['layout'];
+
+            if ($request->pjax() && Str::endsWith($theme['layout'], ':html')) {
+                $layout = Str::replaceLast('.', '.html.', Str::replaceLast(':html', '', $theme['layout']));
+            } elseif ($format == 'html') {
+                $layout = 'layouts.html';
+            } else {
+                $layout = Str::replaceLast(':html', '', $theme['layout']);
+            }
         }
 
         $view = $this->getView($view, $response, $layout);
