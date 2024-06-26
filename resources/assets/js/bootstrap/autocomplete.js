@@ -767,10 +767,11 @@ function load_autocomplete() {
             if (!control) {
                 return false;
             }
-
+            
+            // Clear previous options and selection
+            control.clearOptions();
+            control.clear();
             if (value.length <= 0) {
-                control.clearOptions();
-                control.clear();
                 return true;
             }
 
