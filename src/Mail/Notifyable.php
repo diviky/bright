@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Diviky\Bright\Mail;
 
 use App\Models\User;
-use Diviky\Bright\Models\Models;
 
 trait Notifyable
 {
@@ -99,18 +98,6 @@ trait Notifyable
      */
     protected function getBranding($user_id = null)
     {
-        if (empty($user_id)) {
-            return null;
-        }
-
-        $parent_id = User::where('id', $user_id)
-            ->value('parent_id');
-
-        if ($parent_id) {
-            return Models::branding()::where('user_id', $parent_id)
-                ->first();
-        }
-
         return null;
     }
 
@@ -122,17 +109,6 @@ trait Notifyable
      */
     protected function getMailFrom($user_id = null)
     {
-        if (empty($user_id)) {
-            return null;
-        }
-
-        $parent_id = User::where('id', $user_id)
-            ->value('parent_id');
-
-        if ($parent_id) {
-            return Models::branding()::where('user_id', $parent_id)
-                ->value('name');
-        }
 
         return null;
     }
