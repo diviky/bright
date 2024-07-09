@@ -93,7 +93,7 @@ trait Paging
             $limit = $perPage;
 
             foreach ($tables as $table) {
-                $results->merge(
+                $results = $results->merge(
                     $this->skip($skip)
                         ->take($limit)
                         ->from($table)
