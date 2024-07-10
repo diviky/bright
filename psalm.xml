@@ -133,6 +133,16 @@
                 <directory name="src"/>
             </errorLevel>
         </UndefinedMagicMethod>
+        <PossiblyUndefinedArrayOffset>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </PossiblyUndefinedArrayOffset>
+        <InvalidArrayOffset>
+            <errorLevel type="suppress">
+                <directory name="src"/>
+            </errorLevel>
+        </InvalidArrayOffset>
         <RiskyTruthyFalsyComparison>
             <errorLevel type="suppress">
                 <directory name="src"/>

@@ -70,7 +70,7 @@ trait Themable
             [$themeName, $layout] = \explode('|', $template);
         } else {
             $layout = $template;
-            $themeName = config('theme.name', 'tabler');
+            $themeName = config('theme.active', 'boostrap');
         }
 
         $themePaths = config('theme.paths', []);
@@ -129,13 +129,11 @@ trait Themable
             $deviceType = 'computer';
         }
 
-        $theme = $themes[$deviceType];
+        $layout = $themes['layout'] ?? 'default';
+        $layouts = $themes['layouts'] ?? [];
+        $theme = $layouts[$layout] ?? [];
 
-        if (!is_array($theme)) {
-            $theme = [];
-        }
-
-        return array_merge($themes['default'], $theme);
+        return array_merge($themes['default'], $themes[$deviceType] ?? [], $theme['default'], $theme[$deviceType] ?? []);
     }
 
     /**
