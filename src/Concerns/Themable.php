@@ -133,7 +133,7 @@ trait Themable
         $layouts = $themes['layouts'] ?? [];
         $theme = $layouts[$layout] ?? [];
 
-        return array_merge($themes['default'], $themes[$deviceType] ?? [], $theme['default'], $theme[$deviceType] ?? []);
+        return array_merge($theme['default'], $theme[$deviceType] ?? []);
     }
 
     /**

@@ -10,7 +10,7 @@
  * Date: @DATE
  */
 /*jslint evil: true */
-(function($) {
+(function ($) {
   $.tools = $.tools || { version: '@VERSION' };
 
   // globals
@@ -40,22 +40,22 @@
       offset: [-5, 40],
       position: 'top left',
       singleError: false, // validate all inputs at once
-      speed: 'normal' // message's fade-in speed
+      speed: 'normal', // message's fade-in speed
     },
 
     /* The Error Messages */
     messages: {
-      '*': { en: 'This field should not be left blank.' }
+      '*': { en: 'This field should not be left blank.' },
     },
 
-    localize: function(lang, messages) {
-      $.each(messages, function(key, msg) {
+    localize: function (lang, messages) {
+      $.each(messages, function (key, msg) {
         v.messages[key] = v.messages[key] || {};
         v.messages[key][lang] = msg;
       });
     },
 
-    localizeFn: function(key, messages) {
+    localizeFn: function (key, messages) {
       v.messages[key] = v.messages[key] || {};
       $.extend(v.messages[key], messages);
     },
@@ -63,7 +63,7 @@
     /**
      * Adds a new validator
      */
-    fn: function(matcher, msg, fn) {
+    fn: function (matcher, msg, fn) {
       // no message supplied
       if ($.isFunction(msg)) {
         fn = msg;
@@ -87,9 +87,9 @@
     },
 
     /* Add new show/hide effect */
-    addEffect: function(name, showFn, closeFn) {
+    addEffect: function (name, showFn, closeFn) {
       effects[name] = [showFn, closeFn];
-    }
+    },
   };
 
   function bytesToMB(bytes) {
@@ -153,11 +153,11 @@
     effects = {
       default: [
         // show errors function
-        function(errs) {
+        function (errs) {
           var conf = this.getConf();
 
           // loop errors
-          $.each(errs, function(i, err) {
+          $.each(errs, function (i, err) {
             // add error class
             var input = err.input;
             input.addClass(conf.errorClass);
@@ -167,13 +167,11 @@
 
             // create it if not present
             if (!msg) {
-              msg = $(conf.message)
-                .addClass(conf.messageClass)
-                .appendTo(document.body);
+              msg = $(conf.message).addClass(conf.messageClass).appendTo(document.body);
               input.data('msg.el', msg);
             }
 
-            input.on('remove hide', function(e) {
+            input.on('remove hide', function (e) {
               var el = $(this).data('msg.el');
               if (el) {
                 el.fadeOut();
@@ -181,16 +179,11 @@
             });
 
             // clear the container
-            msg
-              .css({ visibility: 'hidden' })
-              .find('p')
-              .remove();
+            msg.css({ visibility: 'hidden' }).find('p').remove();
 
             // populate messages
-            $.each(err.messages, function(i, m) {
-              $('<p/>')
-                .html(m)
-                .appendTo(msg);
+            $.each(err.messages, function (i, m) {
+              $('<p/>').html(m).appendTo(msg);
             });
 
             // make sure the width is not full body width so it can be positioned correctly
@@ -206,21 +199,21 @@
 
           // hide errors function
         },
-        function(inputs) {
+        function (inputs) {
           var conf = this.getConf();
-          inputs.removeClass(conf.errorClass).each(function() {
+          inputs.removeClass(conf.errorClass).each(function () {
             var msg = $(this).data('msg.el');
             if (msg) {
               msg.css({ visibility: 'hidden' });
             }
           });
-        }
-      ]
+        },
+      ],
     };
 
   /* sperial selectors */
-  $.each('email,url,number'.split(','), function(i, key) {
-    $.expr[':'][key] = function(el) {
+  $.each('email,url,number'.split(','), function (i, key) {
+    $.expr[':'][key] = function (el) {
       return el.getAttribute('type') === key;
     };
   });
@@ -229,29 +222,29 @@
         oninvalid() jQuery plugin.
         Usage: $("input:eq(2)").oninvalid(function() { ... });
     */
-  $.fn.oninvalid = function(fn) {
+  $.fn.oninvalid = function (fn) {
     return this[fn ? 'on' : 'trigger']('OI', fn);
   };
 
   /******* built-in HTML5 standard validators *********/
 
-  v.fn(':email,[data-type=email]', 'Please enter a valid email address', function(el, v) {
+  v.fn(':email,[data-type=email]', 'Please enter a valid email address', function (el, v) {
     return !v || emailRe.test(v);
   });
 
-  v.fn(':url,[data-type=url]', 'Please enter a valid URL', function(el, v) {
+  v.fn(':url,[data-type=url]', 'Please enter a valid URL', function (el, v) {
     return !v || urlRe.test(v);
   });
 
-  v.fn(':number,[data-type=number]', 'Please enter a numeric value.', function(el, v) {
+  v.fn(':number,[data-type=number]', 'Please enter a numeric value.', function (el, v) {
     return !v || numRe.test(v);
   });
 
-  v.fn("[data-type='mobile'], [type=mobile]", 'Please enter a valid 10 digits mobile number.', function(el, v) {
+  v.fn("[data-type='mobile'], [type=mobile]", 'Please enter a valid 10 digits mobile number.', function (el, v) {
     return !v || mobRe.test(v);
   });
 
-  v.fn('[max]', e('Please enter a value no larger than $1'), function(el, v) {
+  v.fn('[max]', e('Please enter a value no larger than $1'), function (el, v) {
     // skip empty values and dateinputs
     if (v === '' || (dateInput && el.is(':date'))) {
       return true;
@@ -261,7 +254,7 @@
     return parseFloat(v) <= parseFloat(max) ? true : [max];
   });
 
-  v.fn('[min]', e('Please enter a value of at least $1'), function(el, v) {
+  v.fn('[min]', e('Please enter a value of at least $1'), function (el, v) {
     // skip empty values and dateinputs
     if (v === '' || (dateInput && el.is(':date'))) {
       return true;
@@ -271,22 +264,22 @@
     return parseFloat(v) >= parseFloat(min) ? true : [min];
   });
 
-  v.fn('[length]', e('Please provide $1 character(s)'), function(el, v) {
+  v.fn('[length]', e('Please provide $1 character(s)'), function (el, v) {
     var min = el.attr('length');
     return !v || (v.length >= min ? true : [min]);
   });
 
-  v.fn('[minlength]', e('Please provide at least $1 character(s)'), function(el, v) {
+  v.fn('[minlength]', e('Please provide at least $1 character(s)'), function (el, v) {
     var min = el.attr('minlength');
     return !v || (v.length >= min ? true : [min]);
   });
 
-  v.fn('[maxlength]', e('Maximum $1 character allowed'), function(el, v) {
+  v.fn('[maxlength]', e('Maximum $1 character allowed'), function (el, v) {
     var max = el.attr('maxlength');
     return !v || (v.length <= max ? true : [max]);
   });
 
-  v.fn('[minwords]', e('Please provide at least $1 word(s)'), function(el, v) {
+  v.fn('[minwords]', e('Please provide at least $1 word(s)'), function (el, v) {
     if (v === '') {
       return true;
     }
@@ -296,7 +289,7 @@
     return wordcount >= min ? true : [min];
   });
 
-  v.fn('[maxwords]', e('Maximum $1 word(s) allowed'), function(el, v) {
+  v.fn('[maxwords]', e('Maximum $1 word(s) allowed'), function (el, v) {
     if (v === '') {
       return true;
     }
@@ -306,7 +299,7 @@
     return wordcount <= max ? true : [max];
   });
 
-  v.fn('[required]', 'Please complete this mandatory field.', function(el, v) {
+  v.fn('[required]', 'Please complete this mandatory field.', function (el, v) {
     v = $.trim(v);
     if (el.attr('placeholder') != '' && el.attr('placeholder') != undefined) {
       if (el.attr('placeholder') == v) {
@@ -329,7 +322,7 @@
     return !!v;
   });
 
-  v.fn('[pattern]', function(el, v) {
+  v.fn('[pattern]', function (el, v) {
     if (v === '') {
       return true;
     }
@@ -350,9 +343,9 @@
     }
   });
 
-  v.fn(':radio[required]', 'Please select an option.', function(el) {
+  v.fn(':radio[required]', 'Please select an option.', function (el) {
     var checked = false;
-    var els = $("[name='" + el.attr('name') + "']").each(function(i, el) {
+    var els = $("[name='" + el.attr('name') + "']").each(function (i, el) {
       if ($(el).is(':checked')) {
         checked = true;
       }
@@ -361,11 +354,11 @@
   });
 
   // Regular Expression to test whether the value is valid
-  v.fn('[type=time]', 'Please supply a valid time', function(el, v) {
+  v.fn('[type=time]', 'Please supply a valid time', function (el, v) {
     return !v || /^\d\d:\d\d$/.test(v);
   });
 
-  v.fn('[data-equals]', e('Value not equal with the $1 field'), function(el, v) {
+  v.fn('[data-equals]', e('Value not equal with the $1 field'), function (el, v) {
     if (v === '') {
       return true;
     }
@@ -374,7 +367,7 @@
     return el.val() == field.val() ? true : [name];
   });
 
-  v.fn('[data-notequals]', e('Value should not be equal to the $1 field'), function(el, v) {
+  v.fn('[data-notequals]', e('Value should not be equal to the $1 field'), function (el, v) {
     if (v === '') {
       return true;
     }
@@ -383,15 +376,11 @@
     return el.val() != field.val() ? true : [name];
   });
 
-  v.fn('[data-type=file],[type=file]', function(el, v) {
+  v.fn('[data-type=file],[type=file]', function (el, v) {
     if (v === '') {
       return true;
     }
-    var ext = el
-      .val()
-      .split('.')
-      .pop()
-      .toLowerCase();
+    var ext = el.val().split('.').pop().toLowerCase();
 
     var allowed = el.data('accept');
     if (!allowed || allowed == undefined) return true;
@@ -413,7 +402,7 @@
     return true;
   });
 
-  v.fn('[data-type=group]', function(el, v) {
+  v.fn('[data-type=group]', function (el, v) {
     if (el.is(':checkbox')) {
       var name = el.attr('name'),
         field = this.getInputs().filter('[name=' + name + ']:checked');
@@ -471,7 +460,7 @@
         var matches = msg.match(/\$\d/g);
 
         if (matches && $.isArray(returnValue)) {
-          $.each(matches, function(i) {
+          $.each(matches, function (i) {
             msg = msg.replace(this, returnValue[i]);
           });
         }
@@ -486,20 +475,20 @@
 
     // API methods
     $.extend(self, {
-      getConf: function() {
+      getConf: function () {
         return conf;
       },
 
-      getForm: function() {
+      getForm: function () {
         return form;
       },
 
-      getInputs: function() {
+      getInputs: function () {
         return inputs;
       },
 
-      reflow: function() {
-        inputs.each(function() {
+      reflow: function () {
+        inputs.each(function () {
           var input = $(this),
             msg = input.data('msg.el');
 
@@ -512,11 +501,11 @@
       },
 
       /* @param e - for internal use only */
-      invalidate: function(errs, e) {
+      invalidate: function (errs, e) {
         // errors are given manually: { fieldName1: 'message1', fieldName2: 'message2' }
         if (!e) {
           var errors = [];
-          $.each(errs, function(key, val) {
+          $.each(errs, function (key, val) {
             var input = inputs.filter("[name='" + key + "']");
             if (input.length) {
               // trigger HTML5 ininvalid event
@@ -541,11 +530,11 @@
         return self;
       },
 
-      reset: function(els) {
+      reset: function (els) {
         els = els || inputs;
         els
           .removeClass(conf.errorClass)
-          .each(function() {
+          .each(function () {
             var msg = $(this).data('msg.el');
             if (msg) {
               msg.remove();
@@ -553,10 +542,14 @@
             }
           })
           .off(conf.errorInputEvent + '.v' || '');
+
+        var eff = effects[conf.effect];
+        eff[1].call(self, els, e);
+
         return self;
       },
 
-      destroy: function() {
+      destroy: function () {
         form.off(conf.formEvent + '.V reset.V');
         inputs.off(conf.inputEvent + '.V change.V');
         return self.reset();
@@ -565,7 +558,7 @@
       //{{{  checkValidity() - flesh and bone of this tool
 
       /* @returns boolean */
-      checkValidity: function(els, e) {
+      checkValidity: function (els, e) {
         els = els || inputs;
         els = els.not(':disabled');
 
@@ -586,7 +579,7 @@
         var errs = [];
 
         // loop trough the inputs
-        els.each(function() {
+        els.each(function () {
           // field and it's error message container
           var msgs = [],
             el = $(this).data('messages', msgs),
@@ -596,7 +589,7 @@
           el.off(event);
 
           // loop all validator functions
-          $.each(fns, function() {
+          $.each(fns, function () {
             var fn = this,
               match = fn[0];
 
@@ -634,7 +627,7 @@
 
             // begin validating upon error event type (such as keyup)
             if (conf.errorInputEvent) {
-              el.on(event, function(e) {
+              el.on(event, function (e) {
                 self.checkValidity(el, e);
               });
             }
@@ -669,19 +662,19 @@
         }
 
         return true;
-      }
+      },
       //}}}
     });
 
     // callbacks
-    $.each('onBeforeValidate,onBeforeFail,onFail,onSuccess'.split(','), function(i, name) {
+    $.each('onBeforeValidate,onBeforeFail,onFail,onSuccess'.split(','), function (i, name) {
       // configuration
-      if (typeof conf[name] === "function") {
+      if (typeof conf[name] === 'function') {
         $(self).on(name, conf[name]);
       }
 
       // API methods
-      self[name] = function(fn) {
+      self[name] = function (fn) {
         if (fn) {
           $(self).on(name, fn);
         }
@@ -691,7 +684,7 @@
 
     // form validation
     if (conf.formEvent) {
-      form.on(conf.formEvent + '.V', function(e) {
+      form.on(conf.formEvent + '.V', function (e) {
         if (!self.checkValidity(null, e)) {
           return e.preventDefault();
         }
@@ -702,14 +695,14 @@
     }
 
     // form reset
-    form.on('reset.V', function() {
+    form.on('reset.V', function () {
       self.reset();
     });
 
     // disable browser's default validation mechanism
     if (inputs[0] && inputs[0].validity) {
-      inputs.each(function() {
-        this.oninvalid = function() {
+      inputs.each(function () {
+        this.oninvalid = function () {
           return false;
         };
       });
@@ -722,7 +715,7 @@
 
     // input validation
     if (conf.inputEvent) {
-      inputs.on(conf.inputEvent + '.V', function(e) {
+      inputs.on(conf.inputEvent + '.V', function (e) {
         self.checkValidity($(this), e);
       });
     }
@@ -731,7 +724,7 @@
     inputs
       .filter(':checkbox, select')
       .filter('[required]')
-      .on('change.V', function(e) {
+      .on('change.V', function (e) {
         var el = $(this);
         if (this.checked || (el.is('select') && $(this).val())) {
           effects[conf.effect][1].call(self, el, e);
@@ -739,7 +732,7 @@
       });
 
     // get radio groups by name
-    inputs.filter(':radio[required]').on('change.V', function(e) {
+    inputs.filter(':radio[required]').on('change.V', function (e) {
       var els = $("[name='" + $(e.srcElement).attr('name') + "']");
       if (els != null && els.length != 0) {
         self.checkValidity(els, e);
@@ -747,13 +740,13 @@
     });
 
     // reposition tooltips when window is resized
-    $(window).resize(function() {
+    $(window).resize(function () {
       self.reflow();
     });
   }
 
   // jQuery plugin initialization
-  $.fn.validator = function(conf) {
+  $.fn.validator = function (conf) {
     var instance = this.data('validator');
 
     // destroy existing instance
@@ -767,7 +760,7 @@
 
     // selector is a form
     if (this.is('form')) {
-      return this.each(function() {
+      return this.each(function () {
         var form = $(this);
         instance = new Validator(form.find(':input'), form, conf);
         form.data('validator', instance);

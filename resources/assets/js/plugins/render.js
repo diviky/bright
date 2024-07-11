@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
   var pluginName = 'easyRender';
 
   var defaults = {
@@ -9,10 +9,10 @@
     append: false,
     json: false,
     state: false,
-    data: {}
+    data: {},
   };
 
-  var easyRender = function(element, options) {
+  var easyRender = function (element, options) {
     this.element = element;
     this.settings = $.extend({}, defaults, options);
     if ($.metadata) {
@@ -33,18 +33,16 @@
     this.submit();
   };
 
-  easyRender.prototype.init = function() {
+  easyRender.prototype.init = function () {
     var self = this;
     var form = self.form;
     var ps_loaded = false,
       oldtop = 0;
 
-    $(form).on('click', '.ac-ajax-pagination li', function(e) {
+    $(form).on('click', '.ac-ajax-pagination li', function (e) {
       e.preventDefault();
       var page = $(this).data('page');
-      let link = $(this)
-        .find('a:first')
-        .attr('href');
+      let link = $(this).find('a:first').attr('href');
 
       if (!page) {
         return false;
@@ -61,7 +59,7 @@
       return false;
     });
 
-    $(form).on('click', self.settings.loadmore, function(e) {
+    $(form).on('click', self.settings.loadmore, function (e) {
       e.preventDefault();
       var page = $(this).data('page');
       form.find('input[name=page]').val(page);
@@ -70,7 +68,7 @@
       return false;
     });
 
-    $(form).on('click', '[type=submit]', function(e) {
+    $(form).on('click', '[type=submit]', function (e) {
       e.preventDefault();
       form.find('input[name=page]').val(1);
       self.settings.append = false;
@@ -78,7 +76,7 @@
       return false;
     });
 
-    $(window).on('scroll', function() {
+    $(window).on('scroll', function () {
       var offset = form.find(self.settings.loadmore).offset();
       var tops = offset ? offset.top : 0;
       if (isNaN(tops) || tops == 0) {
@@ -98,17 +96,17 @@
     });
   };
 
-  easyRender.prototype.submit = function() {
+  easyRender.prototype.submit = function () {
     var self = this;
 
-    self.form.submit(function(e) {
+    self.form.submit(function (e) {
       e.preventDefault();
       self.formSubmit();
       return false;
     });
   };
 
-  easyRender.prototype.formSubmit = function() {
+  easyRender.prototype.formSubmit = function () {
     var self = this;
     var data = self.settings.data;
     data.format = 'html';
@@ -116,13 +114,13 @@
     self.form.se;
 
     var fromOptions = {
-      beforeSubmit: function() {
+      beforeSubmit: function () {
         self.beforeSubmit();
       },
-      success: function(response) {
+      success: function (response) {
         self.onSuccess(response);
       },
-      data: data
+      data: data,
     };
 
     var options = $.extend({}, this.settings, fromOptions);
@@ -132,7 +130,7 @@
       let params = self.form.formToArray();
 
       let url = self.form.attr('action');
-      params = params.filter(function(el) {
+      params = params.filter(function (el) {
         let attr = el.el.attributes;
         return el.name != '_token' && el.name != 'total' && !attr.history;
       });
@@ -145,21 +143,18 @@
     }
   };
 
-  easyRender.prototype.beforeSubmit = function() {
+  easyRender.prototype.beforeSubmit = function () {
     var self = this;
 
     var target = self.form.find(self.settings.response_target);
 
     target.addClass(self.settings.backdrop);
-    self.form
-      .find(self.settings.loadmore)
-      .next('.ac-load-more-loading')
-      .show();
+    self.form.find(self.settings.loadmore).next('.ac-load-more-loading').show();
     self.form.find(self.settings.loadmore).remove();
     return true;
   };
 
-  easyRender.prototype.onSuccess = function(response) {
+  easyRender.prototype.onSuccess = function (response) {
     var self = this;
 
     if (self.settings.json && isJson(response)) {
@@ -192,7 +187,7 @@
     self.callback('onComplete', response);
   };
 
-  easyRender.prototype.callback = function(name, res) {
+  easyRender.prototype.callback = function (name, res) {
     $(document).trigger('ajax:loaded');
 
     var self = this;
@@ -229,8 +224,8 @@
     }
   };
 
-  $.fn.easyRender = function(options) {
-    return this.each(function() {
+  $.fn.easyRender = function (options) {
+    return this.each(function () {
       if (!$.data(this, pluginName)) {
         $.data(this, pluginName, new easyRender($(this), options));
       }

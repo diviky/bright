@@ -1,12 +1,11 @@
-; (function ($) {
-
+(function ($) {
   $.extend({
     metadata: {
       defaults: {
         type: 'class',
         name: 'metadata',
         cre: /({.*})/,
-        single: 'metadata'
+        single: 'metadata',
       },
       setType: function (type, name) {
         this.defaults.type = type;
@@ -17,49 +16,46 @@
         // check for empty string in single property
         if (!settings.single.length) settings.single = 'metadata';
 
-        var data = "{}";
+        var data = '{}';
 
         var getData = function (data) {
-          if (typeof data != "string") return data;
+          if (typeof data != 'string') return data;
 
           if (data.indexOf('{') < 0) {
-            data = eval("(" + data + ")");
+            data = eval('(' + data + ')');
           }
-        }
+        };
 
         var getObject = function (data) {
-          if (typeof data != "string") return data;
+          if (typeof data != 'string') return data;
 
           if (data.indexOf('{') < 0) {
-            data = "{" + data + "}";
+            data = '{' + data + '}';
           }
-          data = eval("(" + data + ")");
+          data = eval('(' + data + ')');
           return data;
-        }
+        };
 
-        if (settings.type == "html5") {
+        if (settings.type == 'html5') {
           return $(elem).data();
         } else {
-          if (settings.type == "class") {
+          if (settings.type == 'class') {
             var m = settings.cre.exec(elem.className);
-            if (m)
-              data = m[1];
-          } else if (settings.type == "elem") {
+            if (m) data = m[1];
+          } else if (settings.type == 'elem') {
             if (!elem.getElementsByTagName) return;
             var e = elem.getElementsByTagName(settings.name);
-            if (e.length)
-              data = $.trim(e[0].innerHTML);
+            if (e.length) data = $.trim(e[0].innerHTML);
           } else if (elem.getAttribute != undefined) {
             var attr = elem.getAttribute(settings.name);
-            if (attr)
-              data = attr;
+            if (attr) data = attr;
           }
-          var object = getObject(data.indexOf("{") < 0 ? "{" + data + "}" : data);
+          var object = getObject(data.indexOf('{') < 0 ? '{' + data + '}' : data);
         }
 
         return object;
-      }
-    }
+      },
+    },
   });
 
   /**
@@ -74,5 +70,4 @@
   $.fn.metadata = function (opts) {
     return $.metadata.get(this[0], opts);
   };
-
 })(jQuery);

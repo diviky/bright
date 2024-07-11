@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Concerns;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Validator;
 
@@ -40,5 +41,16 @@ trait Provider
         });
     }
 
-    public function macros(): void {}
+    public function macros(): void
+    {
+        Collection::macro('recursive', function () {
+            return $this->map(function ($value) {
+                if (is_array($value)) {
+                    return collect($value)->recursive();
+                }
+
+                return $value;
+            });
+        });
+    }
 }
