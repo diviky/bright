@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'teams' => true,
+    'teams' => env('ENABLE_TEAM_PERMISSIONS', false),
 
     'models' => [
         /*
