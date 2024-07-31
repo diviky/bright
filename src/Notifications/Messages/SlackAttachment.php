@@ -45,7 +45,7 @@ class SlackAttachment extends BaseSlackAttachment
         if (\is_callable($title)) {
             $callback = $title;
 
-            $callback($attachmentAction = new SlackAttachmentAction());
+            $callback($attachmentAction = new SlackAttachmentAction);
 
             $this->actions[] = $attachmentAction;
 

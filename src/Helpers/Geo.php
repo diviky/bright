@@ -33,7 +33,7 @@ class Geo
 
         // http://ipinfo.io/119.63.142.37/json
 
-        $geocoder = new ProviderAggregator();
+        $geocoder = new ProviderAggregator;
 
         $reader = new Reader($db);
         $geoIP2Adapter = new GeoIP2Adapter($reader);

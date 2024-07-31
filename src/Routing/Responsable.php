@@ -94,8 +94,7 @@ class Responsable implements BaseResponsable
             return $response;
         }
 
-        $requestType = $request->input('_request');
-        if ($requestType == 'iframe') {
+        if ($format == 'iframe') {
             $html = '<textarea>';
             $html .= \json_encode($response);
             $html .= '</textarea>';

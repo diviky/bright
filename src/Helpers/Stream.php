@@ -89,7 +89,7 @@ class Stream
      *
      * @param  array|Collection|\Iterator  $fields
      */
-    public function setHeader($fields): self
+    protected function setHeader($fields): self
     {
         $fields = $this->toArray($fields);
         $fields = \array_keys($fields);
@@ -162,7 +162,7 @@ class Stream
      * @param  array|Collection|\Iterator  $rows
      * @param  array  $fields
      */
-    public function output($rows, $fields = []): self
+    protected function output($rows, $fields = []): self
     {
         $rows = $this->toArray($rows);
 
@@ -198,8 +198,6 @@ class Stream
         while (!\feof($stream)) {
             $buffer = \fread($stream, $chunksize);
             echo $buffer;
-            \ob_flush();
-            \flush();
         }
 
         return \fclose($stream);
@@ -210,7 +208,7 @@ class Stream
      *
      * @param  string  $filepath
      */
-    public function write($filepath): self
+    protected function write($filepath): self
     {
         $ext = \strtolower(\strrchr($filepath, '.'));
 
@@ -228,7 +226,7 @@ class Stream
     /**
      * Write content to file.
      */
-    public function writeFile(string $content): self
+    protected function writeFile(string $content): self
     {
         if ($this->stream) {
             \fwrite($this->stream, $content);
@@ -240,7 +238,7 @@ class Stream
     /**
      * Close the file writing stream.
      */
-    public function stopFile(): self
+    protected function stopFile(): self
     {
         if (is_resource($this->stream)) {
             \fclose($this->stream);
@@ -320,9 +318,6 @@ class Stream
         }
 
         echo \implode($this->separator, $row) . $this->lineEnd;
-
-        \flush();
-        \ob_flush();
 
         return $this;
     }

@@ -87,10 +87,10 @@ class File
             $count = isset($options['total']) ? $options['total'] : null;
 
             if ($count !== null && $offset >= $count) {
-                return (new static())->setReader(new \EmptyIterator());
+                return (new static)->setReader(new \EmptyIterator);
             }
 
-            return (new static())->setReader(new \LimitIterator($this->reader, intval($options['offset']), intval($options['limit'])));
+            return (new static)->setReader(new \LimitIterator($this->reader, intval($options['offset']), intval($options['limit'])));
         }
 
         return $this;
@@ -311,7 +311,7 @@ class File
 
         if (!$special) {
             if (!\is_file($reader) || !\file_exists($reader)) {
-                return new \EmptyIterator();
+                return new \EmptyIterator;
             }
 
             $lines = ($ext == '.txt') ? 1 : 5;

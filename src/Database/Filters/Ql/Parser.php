@@ -64,7 +64,7 @@ class Parser
             ];
         }
 
-        $parseTree = new ParseTree();
+        $parseTree = new ParseTree;
         $token = $this->currentToken();
         $logic = ParseTree::COMBINED_BY_AND;
 
@@ -189,7 +189,7 @@ class Parser
      */
     protected function parsePredicate()
     {
-        $identifier = new Identifier();
+        $identifier = new Identifier;
         $identifier->field = $this->currentToken()['value'];
         $token = $this->nextToken();
         if (isset($token['type']) && $token['type'] == self::T_IDENTIFIER_SEPARATOR) {
@@ -215,14 +215,14 @@ class Parser
                 throw new ParserException('Comparisons must have an identifier or value on the right side');
             }
 
-            $predicate = new Comparison();
+            $predicate = new Comparison;
             $predicate->leftType = Comparison::TYPE_IDENTIFIER;
             $predicate->left = $identifier;
             $predicate->op = $operator;
 
             if ($token['type'] == self::T_IDENTIFIER) {
                 $predicate->rightType = Comparison::TYPE_IDENTIFIER;
-                $predicate->right = new Identifier();
+                $predicate->right = new Identifier;
 
                 if ($peekToken && isset($peekToken['type']) && $peekToken['type'] === self::T_IDENTIFIER_SEPARATOR) {
                     $predicate->right->name = $token['value'];

@@ -29,10 +29,7 @@ class MapIterator extends \IteratorIterator
         $this->callback = $callback;
     }
 
-    /**
-     * @return array
-     */
-    public function current()
+    public function current(): mixed
     {
         $callback = $this->callback;
 

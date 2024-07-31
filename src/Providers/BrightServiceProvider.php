@@ -102,7 +102,7 @@ class BrightServiceProvider extends ServiceProvider
     public function registerModelBindings(): void
     {
         $this->app->bind(UtilInterface::class, function ($app) {
-            return new Util();
+            return new Util;
         });
 
         $this->app->bind('Illuminate\Routing\Contracts\ControllerDispatcher', ControllerDispatcher::class);

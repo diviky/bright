@@ -71,7 +71,7 @@ class ForgetPassword extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage())
+        return (new MailMessage)
             ->subject('Password change request from ' . config('app.name'))
             ->markdown('bright::emails.auth.password', [
                 'token' => $this->token,

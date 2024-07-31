@@ -51,7 +51,7 @@ class Reader
 
         if (!$special) {
             if (!\is_file($reader) || !\file_exists($reader)) {
-                return new \EmptyIterator();
+                return new \EmptyIterator;
             }
 
             $lines = ($ext == '.txt') ? 1 : 5;
@@ -150,7 +150,7 @@ class Reader
             $count = isset($options['total']) ? $options['total'] : null;
 
             if ($count !== null && $offset >= $count) {
-                $reader = new \EmptyIterator();
+                $reader = new \EmptyIterator;
             } else {
                 $reader = new \LimitIterator($reader, intval($options['offset']), intval($options['limit']));
             }

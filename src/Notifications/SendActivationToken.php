@@ -71,7 +71,7 @@ class SendActivationToken extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage())
+        return (new MailMessage)
             ->subject('Welcome to ' . config('app.name'))
             ->markdown('bright::emails.auth.activation', [
                 'token' => $this->token,

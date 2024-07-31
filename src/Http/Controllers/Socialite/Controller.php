@@ -49,7 +49,7 @@ class Controller extends BaseController
                 ]);
         }
 
-        $service = new Service();
+        $service = new Service;
         $linked = $service->linked($provider, $socialite->getId());
 
         if ($linked) {

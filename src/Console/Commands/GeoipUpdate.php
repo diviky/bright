@@ -18,7 +18,7 @@ class GeoipUpdate extends Command
      */
     public function handle(): int
     {
-        $updater = new GeoIpUpdater();
+        $updater = new GeoIpUpdater;
 
         $config = config('bright.geoip');
 

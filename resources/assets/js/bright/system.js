@@ -411,6 +411,7 @@ function brightSystemJs() {
         var clone = target.find('tfoot:first tr').clone();
         target.find('tbody:first').append(clone);
 
+        $(document).trigger('ajax:loaded');
         e.preventDefault();
     });
 

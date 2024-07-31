@@ -16,7 +16,7 @@ $finder = Symfony\Component\Finder\Finder::create()
     ->ignoreDotFiles(true)
     ->ignoreVCS(true);
 
-$config = new PhpCsFixer\Config();
+$config = new PhpCsFixer\Config;
 
 return $config->setRules([
     '@PSR12' => true,

@@ -21,7 +21,7 @@ class FreeEmailValidation implements ValidationRule
      */
     public function __construct(?Filesystem $files = null)
     {
-        $this->files = $files ?? new Filesystem();
+        $this->files = $files ?? new Filesystem;
     }
 
     /**

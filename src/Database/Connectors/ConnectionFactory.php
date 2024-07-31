@@ -26,14 +26,11 @@ class ConnectionFactory extends LaravelConnectionFactory
             return $this->container->make($key);
         }
 
-        switch ($config['driver']) {
-            case 'mysql':
-                return new MySqlConnector();
-            case 'pgsql':
-                return new PostgresConnector();
-        }
-
-        return parent::createConnector($config);
+        return match ($config['driver']) {
+            'mysql' => new MySqlConnector,
+            'pgsql' => new PostgresConnector,
+            default => parent::createConnector($config),
+        };
     }
 
     /**
@@ -55,13 +52,11 @@ class ConnectionFactory extends LaravelConnectionFactory
             return $resolver($connection, $database, $prefix, $config);
         }
 
-        switch ($driver) {
-            case 'mysql':
-                return new MySqlConnection($connection, $database, $prefix, $config);
-            case 'sqlite':
-                return new SQLiteConnection($connection, $database, $prefix, $config);
-        }
-
-        return parent::createConnection($driver, $connection, $database, $prefix, $config);
+        return match ($driver) {
+            'mysql' => new MySqlConnection($connection, $database, $prefix, $config),
+            'sqlite' => new SQLiteConnection($connection, $database, $prefix, $config),
+            'mongodb' => new \Diviky\Bright\Database\MongoDB\Connection($config),
+            default => parent::createConnection($driver, $connection, $database, $prefix, $config),
+        };
     }
 }

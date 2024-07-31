@@ -89,7 +89,7 @@ trait Filter
      * @param  array|string  $value
      * @param  string  $condition
      */
-    public function addWhere($column, $value, $condition = '='): self
+    protected function addWhere($column, $value, $condition = '='): self
     {
         if ($this->hasModel()) {
             if (Str::startsWith($column, ':')) {
@@ -248,7 +248,7 @@ trait Filter
 
             $scope = $this->aliases[$scope] ?? $scope;
 
-            (new FiltersScope())($this->builder, $values, $scope);
+            (new FiltersScope)($this->builder, $values, $scope);
         }
 
         return $this;
@@ -430,7 +430,7 @@ trait Filter
                 continue;
             }
 
-            $parseTree = (new Parser())->parse($input);
+            $parseTree = (new Parser)->parse($input);
 
             if (isset($parseTree)) {
                 $this->addParserPredicates($parseTree->getPredicates());

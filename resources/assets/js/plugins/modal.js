@@ -92,8 +92,28 @@
     var settings = self.settings;
     var title = settings.title;
 
-    var html = '<div class="modal modal-box ' + settings.styles + '" id="' + settings.id + '">';
-    html += '   <div class="modal-dialog animated ' + settings.animation + '">';
+    if (settings.size == 'small') {
+      settings.styles = settings.styles + ' ' + 'modal-sm';
+    }
+
+    if (settings.size == 'large') {
+      settings.styles = settings.styles + ' ' + 'modal-lg';
+    }
+
+    if (settings.size == 'full') {
+      settings.styles = settings.styles + ' ' + 'modal-full-width';
+    }
+
+    if (settings.position == 'center') {
+      settings.styles = settings.styles + ' ' + 'modal-dialog-centered';
+    }
+
+    if (settings.scrollable) {
+      settings.styles = settings.styles + ' ' + 'modal-dialog-scrollable';
+    }
+
+    var html = '<div class="modal modal-blur fade modal-box ' + settings.styles + '" id="' + settings.id + '">';
+    html += '   <div class="modal-dialog animated ' + settings.styles + ' ' + settings.animation + '">';
     html += '       <div class="modal-content">';
 
     if (typeof title === 'function') {
@@ -176,11 +196,11 @@
     return this.each(function () {
       var self = $(this);
 
-      var instance = self.data('easyModal');
+      var instance = self.data('easymodal');
 
       // destroy existing instance
       if (instance) {
-        self.removeData('easyModal');
+        self.removeData('easymodal');
       }
 
       var instance = new easyModal(self, options);
@@ -189,7 +209,7 @@
         instance[options]();
       }
 
-      self.data('easyModal', instance);
+      self.data('easymodal', instance);
 
       return this;
     });
@@ -205,7 +225,10 @@
     keyboard: false,
     id: 'bmodel',
     styles: '',
+    size: '',
+    position: 'right',
     clean: false,
+    scrollable: false,
     animation: 'bounceInRight',
     content: null,
     url: null,

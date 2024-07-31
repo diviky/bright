@@ -439,13 +439,40 @@ Set the timestamps 'created_at`and`updated_at`for insert and`updated_at` for upd
 ```
 
 ```html
-<div class="form-group">
-    <label class="form-label">Sent By Employee</label>
-    <select name="sent_by" class="form-control" data-select-ajax="{{ url('search/employee') }}">
-        <option value="">Search Employee</option>
-    </select>
-</div>
+  <select name="sent_by" class="form-control" data-select data-select-fetch="{{ url('search/employee') }}" data-fetch-method="post" data-selected="2" label-field="name" value-field="employe_id">
+      <option value="">Search Employee</option>
+  </select>
 ```
+
+```html
+  <select name="sent_by" tokenizer>
+      <option value="">Search Employee</option>
+  </select>
+```
+
+```html
+  <select name="sent_by" data-select-ajax="{{ url('search/employee') }}">
+      <option value="">Search Employee</option>
+  </select>
+```
+
+```html
+  <select name="sent_by" data-select-image="{{ url('search/employee') }}">
+      <option value="">Search Employee</option>
+  </select>
+```
+
+```html
+  <select name="countries" data-select-target="#states" data-method="get" data-url="{{ url('search/states/:id') }}">
+      <option value="">Search Country</option>
+  </select>
+
+  <select name="states" id="states" >
+      <option value="">Search State</option>
+  </select>
+```
+
+- `:id` will be replaced with country id to get states list
 
 ## License
 

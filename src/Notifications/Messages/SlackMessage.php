@@ -15,7 +15,7 @@ class SlackMessage extends BaseSlackMessage
      */
     public function attachment(\Closure $callback)
     {
-        $this->attachments[] = $attachment = new SlackAttachment();
+        $this->attachments[] = $attachment = new SlackAttachment;
 
         $callback($attachment);
 

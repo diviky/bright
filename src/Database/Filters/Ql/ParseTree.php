@@ -56,7 +56,7 @@ class ParseTree
      */
     public function nest()
     {
-        $parseTree = new static();
+        $parseTree = new static;
         $parseTree->nestParent = $this;
 
         return $parseTree;

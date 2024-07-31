@@ -27,7 +27,7 @@ class Util implements UtilInterface
         }
 
         if (!isset($time) && !isset($format)) {
-            return (new Carbon())->setTimezone($timezone);
+            return (new Carbon)->setTimezone($timezone);
         }
 
         if (isset($time) && !\is_numeric($time) && is_string($time)) {
@@ -70,7 +70,7 @@ class Util implements UtilInterface
     /**
      * Convert given string to Storage url.
      *
-     * @param  string  $path
+     * @param  string|null  $path
      * @param  null|string  $disk
      * @param  null|int  $time
      * @return null|string

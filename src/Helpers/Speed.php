@@ -13,65 +13,6 @@ use Illuminate\Support\Facades\DB;
 class Speed extends Capsule
 {
     /**
-     * @param  array  $save
-     * @param  null|string  $required
-     * @return array[]
-     *
-     * @psalm-return list<array>
-     */
-    public function formatToSave($save, $required = null): array
-    {
-        $required = ($required) ? \explode(',', $required) : null;
-        $fields = \array_keys($save);
-
-        $pass = true;
-        // check all required keys exits in fields
-        if (!empty($required)) {
-            foreach ($required as $key) {
-                if (!\in_array($key, $fields)) {
-                    $pass = false;
-
-                    break;
-                }
-            }
-        }
-
-        if ($pass !== true) {
-            return [];
-        }
-
-        $total = \count($save[$fields[0]]);
-        $data = [];
-
-        for ($i = 0; $i < $total; $i++) {
-            $row = [];
-            $add = true;
-            foreach ($fields as $field) {
-                $value = $save[$field][$i];
-
-                if (
-                    !empty($required)
-                    && \in_array($field, $required)
-                    && empty($value)
-                ) {
-                    $add = false;
-
-                    continue;
-                }
-
-                $row[$field] = $value;
-            }
-
-            if ($add) {
-                $data[] = $row;
-            }
-        }
-        unset($save, $required);
-
-        return $data;
-    }
-
-    /**
      * Get the next ordering value.
      *
      * @param  string  $tbl

@@ -73,15 +73,12 @@ class SelectIterator implements \Iterator
         $this->query();
     }
 
-    /**
-     * @return array
-     */
-    public function current()
+    public function current(): mixed
     {
         return $this->results[$this->position];
     }
 
-    public function key()
+    public function key(): mixed
     {
         return $this->totalPosition;
     }

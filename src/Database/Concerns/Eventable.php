@@ -37,10 +37,9 @@ trait Eventable
     /**
      * Set event state.
      *
-     * @param  bool  $event
      * @return static
      */
-    public function eventState($event = false)
+    public function eventState(bool $event = false)
     {
         return $this->es($event);
     }
@@ -48,31 +47,13 @@ trait Eventable
     /**
      * Set event state.
      *
-     * @param  bool  $event
      * @return static
      */
-    public function es($event = false)
+    public function es(bool $event = false)
     {
         $this->eventState = $event;
 
         return $this;
-    }
-
-    /**
-     * Set the event.
-     *
-     * @deprecated 2.0
-     *
-     * @param  bool|string  $event
-     * @return static
-     */
-    public function setEvent($event)
-    {
-        if (\is_bool($event)) {
-            return $this->eventState($event);
-        }
-
-        return $this->eventColumn($event);
     }
 
     /**

@@ -114,7 +114,7 @@ trait Themable
         $device = $themes['device'];
 
         if (empty($device) || $device == 'auto') {
-            $device = (new Device())->detect(env('HTTP_USER_AGENT'));
+            $device = (new Device)->detect(env('HTTP_USER_AGENT'));
             config(['theme.device' => $device]);
         }
 

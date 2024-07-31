@@ -48,10 +48,7 @@ class ChunkedIterator extends \IteratorIterator
         }
     }
 
-    /**
-     * @return array
-     */
-    public function current()
+    public function current(): mixed
     {
         return $this->chunk;
     }

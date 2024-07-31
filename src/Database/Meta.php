@@ -58,7 +58,7 @@ class Meta
 
     public static function instance(): self
     {
-        return new self();
+        return new self;
     }
 
     /**
@@ -85,7 +85,7 @@ class Meta
             return false;
         }
 
-        $time = new Carbon();
+        $time = new Carbon;
 
         $values = [
             'meta_value' => $value,
@@ -114,7 +114,7 @@ class Meta
             return false;
         }
 
-        $time = new Carbon();
+        $time = new Carbon;
 
         $values = [
             'option_id' => $id,

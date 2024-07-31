@@ -26,7 +26,7 @@ class View
         $route = $this->getRouteFromAction($action);
 
         if (\is_string($controller)) {
-            $controller = new $controller();
+            $controller = new $controller;
         }
 
         $component = \explode('.', $route, 2)[0];

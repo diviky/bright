@@ -1,8 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Diviky\Bright\Database\Query;
+namespace Diviky\Bright\Database\MongoDB;
 
 use Diviky\Bright\Database\Concerns\Async;
 use Diviky\Bright\Database\Concerns\Build;
@@ -20,9 +18,9 @@ use Diviky\Bright\Database\Concerns\Raw;
 use Diviky\Bright\Database\Concerns\Remove;
 use Diviky\Bright\Database\Concerns\SoftDeletes;
 use Diviky\Bright\Database\Concerns\Timestamps;
-use Illuminate\Database\Query\Builder as LaravelBuilder;
+use MongoDB\Laravel\Query\Builder as QueryBuilder;
 
-class Builder extends LaravelBuilder
+class Builder extends QueryBuilder
 {
     use Async;
     use Build;
@@ -41,10 +39,10 @@ class Builder extends LaravelBuilder
     use SoftDeletes;
     use Timestamps;
 
-    public function update(array $values)
+    public function update(array $values, array $options = [])
     {
         $values = $this->updateEvent($values);
 
-        return parent::update($values);
+        return parent::update($values, $options);
     }
 }

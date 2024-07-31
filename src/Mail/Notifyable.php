@@ -33,7 +33,7 @@ trait Notifyable
             $data['subject'] = \str_replace('_sitename_', $from, $data['subject']);
         }
 
-        $mail = (new Mailable())
+        $mail = (new Mailable)
             ->subject($data['subject'])
             ->with($data['with']);
 

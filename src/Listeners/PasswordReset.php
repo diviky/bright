@@ -28,7 +28,7 @@ class PasswordReset
 
         Models::passwordHistory()::create($save);
 
-        (new Mailable())
+        (new Mailable)
             ->subject('Your password has been changed!!!')
             ->with([
                 'row' => $values,

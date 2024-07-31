@@ -130,7 +130,7 @@ trait Cachable
      */
     public function pluckCached($column, $key = null)
     {
-        $cacheKey = $this->getCacheKey($column . $key);
+        $cacheKey = $this->getCacheKey();
 
         $seconds = $this->cacheSeconds;
 
@@ -236,9 +236,9 @@ trait Cachable
      * @param  mixed  $appends
      * @return string
      */
-    public function getCacheKey($appends = null)
+    public function getCacheKey()
     {
-        $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey($appends));
+        $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey());
 
         return substr(\str_replace(':uid:', strval(user('id')), $cache), 0, 100);
     }
@@ -246,14 +246,23 @@ trait Cachable
     /**
      * Generate the unique cache key for the query.
      *
-     * @param  mixed  $appends
      * @return string
      */
-    public function generateCacheKey($appends = null)
+    public function generateCacheKey()
     {
-        $name = $this->connection->getName();
+        $key = [
+            'connection' => $this->collection->getDatabaseName(),
+            'collection' => $this->collection->getCollectionName(),
+            'wheres' => $this->wheres,
+            'columns' => $this->columns,
+            'groups' => $this->groups,
+            'orders' => $this->orders,
+            'offset' => $this->offset,
+            'limit' => $this->limit,
+            'aggregate' => $this->aggregate,
+        ];
 
-        return hash('md5', $name . $this->toSql() . serialize($this->getBindings()) . $appends);
+        return md5(serialize(array_values($key)));
     }
 
     /**

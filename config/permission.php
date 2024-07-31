@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'teams' => true,
+
     'models' => [
         /*
          * When using the "HasRoles" trait from this package, we need to know which

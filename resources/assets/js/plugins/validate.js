@@ -45,15 +45,17 @@ jQuery(document).ready(function ($) {
     function (errors, event) {
       $.each(errors, function (index, error) {
         error.input.removeClass('is-valid').addClass('is-invalid');
-        error.input.next('.invalid-feedback').remove();
-        error.input.after('<div class="invalid-feedback show">' + error.messages[0] + '</div>');
+        error.input.parents('.form-group:first').find('.invalid-feedback').remove();
+        error.input
+          .parents('.form-group:first')
+          .append('<div class="invalid-feedback show">' + error.messages[0] + '</div>');
       });
     },
     function (inputs) {
       var conf = this.getConf();
       inputs.removeClass(conf.errorClass).each(function () {
         $(this).removeClass('is-invalid').addClass('is-valid');
-        $(this).next('.invalid-feedback').remove();
+        $(this).parents('.form-group:first').find('.invalid-feedback').remove();
       });
     }
   );

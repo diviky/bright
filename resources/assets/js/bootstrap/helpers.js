@@ -1,6 +1,5 @@
-
 function load_helpers() {
-  $(document).on('click', '[data-input]', function(e) {
+  $(document).on('click', '[data-input]', function (e) {
     var $this = $(this);
     var name = $this.data('input');
     var val = $this.attr('value');
@@ -9,14 +8,13 @@ function load_helpers() {
 
     $('input[name=' + name + ']').remove();
 
-    $('<input>', {type: 'hidden', name: name, value: val}).insertAfter($this);
+    $('<input>', { type: 'hidden', name: name, value: val }).insertAfter($this);
 
     $(document).trigger('turbolinks:load');
     $(document).trigger('form:submit', [$(this)]);
   });
 
-
-  $(document).on('change', '[data-display]', function() {
+  $(document).on('change', '[data-display]', function () {
     var target = $(this).data('display');
     $('.' + target).slideUp();
     if ($(this).is(':checked')) {
@@ -26,46 +24,40 @@ function load_helpers() {
     }
   });
 
-  $(document).on('change', '[data-check-all]', function(e) {
+  $(document).on('change', '[data-check-all]', function (e) {
     var $this = $(this);
     var target = $this.parents('table:first');
     var boxes = target.find('tbody input[type=checkbox]');
 
     if ($this.is(':checked')) {
       boxes.prop('checked', true);
-      target.find('[data-on-checked]').show();
-      target.find('[data-off-checked]').hide();
+      target.find('[data-checked-on]').show();
+      target.find('[data-checked-off]').hide();
 
       var selected = target.find('tbody input[type=checkbox]:checked').length;
       target.find('[data-checked-count]').text(selected);
-
-      // target.find('[data-on-checked] input[type=checkbox]').prop('checked',
-      // true);
-      target.find('[data-on-checked] input[type=checkbox]')
-          .prop('checked', true);
+      target.find('[data-checked-on] input[type=checkbox]').prop('checked', true);
     } else {
       boxes.prop('checked', false);
-      target.find('[data-on-checked]').hide();
-      target.find('[data-off-checked]').show();
-      target.find('[data-on-checked] input[type=checkbox]')
-          .prop('checked', false);
+      target.find('[data-checked-on]').hide();
+      target.find('[data-checked-off]').show();
+      target.find('[data-checked-on] input[type=checkbox]').prop('checked', false);
     }
   });
 
-  $(document).on('change', '[data-check-alls]', function(e) {
+  $(document).on('change', '[data-uncheck-all]', function (e) {
     var $this = $(this);
     var target = $this.parents('table:first');
     var boxes = target.find('tbody input[type=checkbox]');
 
     boxes.prop('checked', false);
-    target.find('[data-on-checked]').hide();
-    target.find('[data-off-checked]').show();
+    target.find('[data-checked-on]').hide();
+    target.find('[data-checked-off]').show();
 
-    target.find('[data-off-checked] input[type=checkbox]')
-        .prop('checked', false);
+    target.find('[data-checked-off] input[type=checkbox]').prop('checked', false);
   });
 
-  $(document).on('change', '[data-checked] input[type=checkbox]', function(e) {
+  $(document).on('change', '[data-checked] input[type=checkbox]', function (e) {
     var $this = $(this);
     var target = $this.parents('table:first');
     var boxes = target.find('tbody input[type=checkbox]');
@@ -74,20 +66,17 @@ function load_helpers() {
     target.find('[data-checked-count]').text(selected);
 
     if (selected > 0) {
-      target.find('[data-on-checked]').show();
-      target.find('[data-off-checked]').hide();
-      target.find('[data-on-checked] input[type=checkbox]')
-          .prop('checked', true);
+      target.find('[data-checked-on]').show();
+      target.find('[data-checked-off]').hide();
+      target.find('[data-checked-on] input[type=checkbox]').prop('checked', true);
     } else {
-      target.find('[data-on-checked]').hide();
-      target.find('[data-off-checked]').show();
-      target.find('[data-on-checked] input[type=checkbox]')
-          .prop('checked', false);
+      target.find('[data-checked-on]').hide();
+      target.find('[data-checked-off]').show();
+      target.find('[data-checked-on] input[type=checkbox]').prop('checked', false);
     }
   });
 
-
-  $(document).on('click', '[date-prev]', function() {
+  $(document).on('click', '[date-prev]', function () {
     var input = $(this).parents('div:first').find('[date]');
     var current = input.val();
     var format = input.attr('date-format') || 'dddd, MMM DD YYYY';
@@ -111,7 +100,7 @@ function load_helpers() {
     $(document).trigger('form:submit', [$(this)]);
   });
 
-  $(document).on('click', '[date-next]', function() {
+  $(document).on('click', '[date-next]', function () {
     var input = $(this).parents('div:first').find('[date]');
     var current = input.val();
     var format = input.attr('date-format') || 'dddd, MMM DD YYYY';
@@ -135,7 +124,7 @@ function load_helpers() {
     $(document).trigger('form:submit', [$(this)]);
   });
 
-  $(document).on('click', '[data-toggle="menu"]', function(e) {
+  $(document).on('click', '[data-toggle="menu"]', function (e) {
     var parent = $(this).parent();
     parent.addClass('has-child').toggleClass('open');
 
@@ -145,11 +134,21 @@ function load_helpers() {
       $(this).next('ul').slideUp();
     }
 
-    e.preventDefault()
+    e.preventDefault();
   });
 
-  $(document).on('click', '[data-file]', function() {
+  $(document).on('click', '[data-file]', function () {
     var target = $(this).data('file');
     $('#' + target).trigger('click');
   });
-};
+
+  $(document).on('click', '[data-form-submit]', function () {
+    let target = $($(this).data('form-submit'));
+
+    if (target && target.length > 0) {
+      target.submit();
+    } else {
+      $(document).trigger('form:submit', [$(this)]);
+    }
+  });
+}

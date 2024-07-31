@@ -100,7 +100,7 @@ class Device
         $detector = app(DeviceDetector::class);
 
         $detector->setUserAgent($userAgent);
-        $detector->setYamlParser(new Symfony());
+        $detector->setYamlParser(new Symfony);
         $detector->parse();
 
         return $detector;
