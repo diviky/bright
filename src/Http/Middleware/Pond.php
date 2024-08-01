@@ -34,6 +34,10 @@ class Pond
 
                 $files = $request->post($file);
 
+                if (empty($files)) {
+                    continue;
+                }
+
                 if (is_array($files)) {
                     $uploads = [];
                     foreach ($files as $value) {
