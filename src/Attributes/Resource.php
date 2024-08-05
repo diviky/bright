@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Attributes;
 
-#[\Attribute(\Attribute::TARGET_METHOD)]
+#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_CLASS)]
 class Resource
 {
     private string $name;

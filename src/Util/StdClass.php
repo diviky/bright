@@ -10,7 +10,13 @@ class StdClass extends \stdClass
 
     protected mixed $defaultValue = 0;
 
-    public function __construct(array $attributes = [], mixed $defaultValue = 0)
+    protected bool $recursive = false;
+
+    protected float $maxDepth;
+
+    protected int $depth = 0;
+
+    public function __construct(array $attributes = [], mixed $defaultValue = null)
     {
         $this->attributes = $attributes;
         $this->defaultValue = $defaultValue;
@@ -24,6 +30,10 @@ class StdClass extends \stdClass
     public function __get(string $name): mixed
     {
         if (array_key_exists($name, $this->attributes)) {
+            if ($this->recursive && is_array($this->attributes[$name]) && $this->depth < $this->maxDepth) {
+                return (new static($this->attributes[$name], $this->defaultValue))->recursive($this->maxDepth, $this->depth + 1, $this->recursive);
+            }
+
             return $this->attributes[$name];
         }
 
@@ -33,5 +43,14 @@ class StdClass extends \stdClass
     public function toArray(): array
     {
         return $this->attributes;
+    }
+
+    public function recursive(float $maxDepth = INF, int $depth = 0, bool $recursive = true): self
+    {
+        $this->recursive = $recursive;
+        $this->depth = $depth;
+        $this->maxDepth = $maxDepth;
+
+        return $this;
     }
 }
