@@ -1,14 +1,7 @@
 function load_autocomplete() {
   if ($.fn.select2) {
-    $('[data-select]').each(function () {
-      var $this = $(this);
+    function fetchSelect2Data($this, selector) {
       var xhr;
-
-      let selector = $this.select2({
-        dropdownParent: $this.parent(),
-        minimumResultsForSearch: 5,
-      });
-
       var url = $this.data('select-fetch');
       var method = $this.data('fetch-method') || 'GET';
       var selected = $this.data('selected');
@@ -31,7 +24,10 @@ function load_autocomplete() {
             selector.val(null).empty();
             selector.prop('disabled', false);
 
-            $.map(results.rows, function (data) {
+            // if paginated results
+            let records = results.rows?.links ? results.rows.data : results.rows;
+
+            $.map(records, function (data) {
               let value = data[valueField].toString();
               let isSelected = jQuery.inArray(value, selected) !== -1 ? true : false;
               var option = new Option(data[labelField], value, isSelected, isSelected);
@@ -46,11 +42,33 @@ function load_autocomplete() {
           },
         });
       }
+    }
+
+    $(document).on('click', '[data-select-refetch]', function (e) {
+      let selector = $($(this).attr('data-select-refetch'));
+      fetchSelect2Data(selector, selector);
+      e.preventDefault();
+    });
+
+    $('[data-select]').each(function () {
+      var $this = $(this);
+      // if ($this.data('select2')) {
+      //   return false;
+      // }
+
+      let selector = $this.select2({
+        dropdownParent: $this.parent(),
+        minimumResultsForSearch: 10,
+      });
+
+      fetchSelect2Data($this, selector);
     });
 
     $('[tokenizer]').each(function () {
       var $this = $(this);
-      var xhr;
+      // if ($this.data('select2')) {
+      //   return false;
+      // }
 
       let selector = $this.select2({
         dropdownParent: $this.parent(),
@@ -70,49 +88,16 @@ function load_autocomplete() {
         },
       });
 
-      var url = $this.data('select-fetch');
-      var method = $this.data('fetch-method') || 'GET';
-      var selected = $this.data('selected');
-      selected = selected ? selected.toString().split(',') : [];
-
-      var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
-      var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
-      var data = $this.data('post-data') || {};
-
-      if (url && selector && selector.length > 0) {
-        selector.prop('disabled', true);
-
-        xhr && xhr.abort();
-        xhr = $.ajax({
-          url: url,
-          data: data,
-          method: method,
-          dataType: 'json',
-          success: function (results) {
-            selector.val(null).empty();
-            selector.prop('disabled', false);
-
-            $.map(results.rows, function (data) {
-              let value = data[valueField].toString();
-              let isSelected = jQuery.inArray(value, selected) !== -1 ? true : false;
-              var option = new Option(data[labelField], value, isSelected, isSelected);
-              selector.append(option);
-            });
-
-            selector.trigger('change');
-          },
-          error: function () {
-            selector.val(null).empty().trigger('change');
-            selector.prop('disabled', false);
-          },
-        });
-      }
+      fetchSelect2Data($this, selector);
     });
 
     $('[data-select-ajax]').each(function () {
       var $this = $(this);
+      // if ($this.data('select2')) {
+      //   return false;
+      // }
+
       var url = $this.data('select-ajax');
-      var xhr;
 
       var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
       var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
@@ -173,50 +158,18 @@ function load_autocomplete() {
         },
       });
 
-      var url = $this.data('select-fetch');
-      var method = $this.data('fetch-method') || 'GET';
-      var selected = $this.data('selected');
-      var data = $this.data('post-data') || {};
-
-      selected = selected ? selected.toString().split(',') : [];
-
-      if (url && selector && selector.length > 0) {
-        selector.prop('disabled', true);
-
-        xhr && xhr.abort();
-        xhr = $.ajax({
-          url: url,
-          data: data,
-          method: method,
-          dataType: 'json',
-          success: function (results) {
-            selector.val(null).empty();
-            selector.prop('disabled', false);
-
-            $.map(results.rows, function (data) {
-              let value = data[valueField].toString();
-              let isSelected = jQuery.inArray(value, selected) !== -1 ? true : false;
-              var option = new Option(data[labelField], value, isSelected, isSelected);
-              selector.append(option);
-            });
-
-            selector.trigger('change');
-          },
-          error: function () {
-            selector.val(null).empty().trigger('change');
-            selector.prop('disabled', false);
-          },
-        });
-      }
+      fetchSelect2Data($this, selector);
     });
 
     $('[data-select-image]').each(function () {
       var $this = $(this);
+      // if ($this.data('select2')) {
+      //   return false;
+      // }
+
       var url = $this.data('select-image');
       var data = $this.data('post-data') || {};
       var method = $this.data('method') || 'GET';
-
-      var xhr;
 
       var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
       var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
@@ -272,45 +225,14 @@ function load_autocomplete() {
         },
       });
 
-      var url = $this.data('select-fetch');
-      var method = $this.data('fetch-method') || 'GET';
-      var selected = $this.data('selected');
-      selected = selected ? selected.toString().split(',') : [];
-      var data = $this.data('post-data') || {};
-
-      if (url && selector && selector.length > 0) {
-        selector.prop('disabled', true);
-
-        xhr && xhr.abort();
-        xhr = $.ajax({
-          url: url,
-          data: data,
-          method: method,
-          dataType: 'json',
-          success: function (results) {
-            selector.val(null).empty();
-            selector.prop('disabled', false);
-
-            $.map(results.rows, function (data) {
-              let value = data[valueField].toString();
-              let isSelected = jQuery.inArray(value, selected) !== -1 ? true : false;
-              var option = new Option(data[labelField], value, isSelected, isSelected);
-              selector.append(option);
-            });
-
-            selector.trigger('change');
-          },
-          error: function () {
-            selector.val(null).empty().trigger('change');
-            selector.prop('disabled', false);
-          },
-        });
-      }
+      fetchSelect2Data($this, selector);
     });
 
     $('[data-select-target]').each(function () {
       var $this = $(this);
-      var xhr;
+      // if ($this.data('select2')) {
+      //   return false;
+      // }
 
       let selector = $this.select2({
         dropdownParent: $this.parent(),
@@ -327,43 +249,7 @@ function load_autocomplete() {
         loadSelectTargetValues($this, val);
       }
 
-      var url = $this.data('select-fetch');
-      var method = $this.data('fetch-method') || 'GET';
-      var selected = $this.data('selected');
-      selected = selected ? selected.toString().split(',') : [];
-
-      var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
-      var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
-      var data = $this.data('post-data') || {};
-
-      if (url && selector && selector.length > 0) {
-        selector.prop('disabled', true);
-
-        xhr && xhr.abort();
-        xhr = $.ajax({
-          url: url,
-          method: method,
-          data: data,
-          dataType: 'json',
-          success: function (results) {
-            selector.val(null).empty();
-            selector.prop('disabled', false);
-
-            $.map(results.rows, function (data) {
-              let value = data[valueField].toString();
-              let isSelected = jQuery.inArray(value, selected) !== -1 ? true : false;
-              var option = new Option(data[labelField], value, isSelected, isSelected);
-              selector.append(option);
-            });
-
-            selector.trigger('change');
-          },
-          error: function () {
-            selector.val(null).empty().trigger('change');
-            selector.prop('disabled', false);
-          },
-        });
-      }
+      fetchSelect2Data($this, selector);
     });
 
     function loadSelectTargetValues($this, value) {
@@ -380,6 +266,14 @@ function load_autocomplete() {
       var method = $this.data('method') || 'GET';
       var data = $this.data('post-data') || {};
 
+      if (typeof data === 'string') {
+        data = data.replace(':id', value);
+      } else {
+        for (const [key, value] of Object.entries(data)) {
+          data[key] = value.toString().replace(':id', value);
+        }
+      }
+
       var selected = next.data('selected');
       selected = selected ? selected.toString().split(',') : [];
 
@@ -389,7 +283,16 @@ function load_autocomplete() {
       var placeholder = next.attr('placeholder') || null;
 
       var nextdata = next.data('post-data') || {};
+
+      if (typeof nextdata === 'string') {
+        nextdata = nextdata.replace(':' + nameField, value);
+      }
+
       nextdata[nameField] = value;
+
+      for (const [key, value] of Object.entries(nextdata)) {
+        nextdata[key] = value.toString().replace(':' + nameField, value);
+      }
 
       next.attr('data-post-data', JSON.stringify(nextdata));
       next.prop('disabled', true);
@@ -409,8 +312,11 @@ function load_autocomplete() {
             next.append(option);
           }
 
-          $.map(results.rows, function (data) {
-            let value = data[valueField]?.toString();
+          // if paginated results
+          let records = results.rows?.links ? results.rows.data : results.rows;
+
+          $.map(records, function (data) {
+            let value = data[valueField].toString();
             let isSelected = jQuery.inArray(value, selected) !== -1 ? true : false;
             var option = new Option(data[labelField], value, isSelected, isSelected);
             next.append(option);
@@ -427,21 +333,8 @@ function load_autocomplete() {
   }
 
   if ($.fn.selectize) {
-    $('[data-selectize]').each(function () {
-      var $this = $(this);
-      var xhr;
-      var url = $this.data('selectize-ajax');
-      var method = $this.data('method') || 'GET';
-      var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
-      var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
-      var searchField = $this.data('search-field') || ['text'];
-
-      let selector = $this.selectize({
-        valueField: valueField,
-        labelField: labelField,
-        searchField: searchField,
-      });
-
+    function fetchSelectizeData($this, selector) {
+      let xhr;
       var url = $this.data('selectize-fetch');
       var method = $this.data('fetch-method') || 'GET';
       var selected = $this.data('selected');
@@ -477,6 +370,30 @@ function load_autocomplete() {
           });
         });
       }
+    }
+
+    $(document).on('click', '[data-selectize-refetch]', function (e) {
+      let selector = $($(this).attr('data-selectize-refetch'));
+      fetchSelectizeData(selector, selector);
+      e.preventDefault();
+    });
+
+    $('[data-selectize]').each(function () {
+      var $this = $(this);
+      var xhr;
+      var url = $this.data('selectize-ajax');
+      var method = $this.data('method') || 'GET';
+      var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
+      var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
+      var searchField = $this.data('search-field') || ['text'];
+
+      let selector = $this.selectize({
+        valueField: valueField,
+        labelField: labelField,
+        searchField: searchField,
+      });
+
+      fetchSelectizeData($this, selector);
     });
 
     $('[data-selectize-image]').each(function () {
@@ -541,41 +458,7 @@ function load_autocomplete() {
         },
       });
 
-      var url = $this.data('selectize-fetch');
-      var method = $this.data('fetch-method') || 'GET';
-      var selected = $this.data('selected');
-      var data = $this.data('post-data') || {};
-
-      if (url && selector[0] && selector[0].selectize) {
-        var control = selector[0].selectize;
-
-        control.clearOptions();
-        control.clear();
-        control.disable();
-
-        control.load(function (callback) {
-          xhr && xhr.abort();
-          xhr = $.ajax({
-            url: url,
-            data: data,
-            method: method,
-            dataType: 'json',
-            success: function (results) {
-              control.enable();
-
-              callback(results.rows);
-
-              if (selected) {
-                control.setValue(selected);
-              }
-            },
-            error: function () {
-              control.enable();
-              callback();
-            },
-          });
-        });
-      }
+      fetchSelectizeData($this, selector);
     });
 
     $('[data-selectize-tags]').each(function () {
@@ -594,7 +477,6 @@ function load_autocomplete() {
 
     $('[data-selectize-ajax]').each(function () {
       var $this = $(this);
-      var xhr;
       var url = $this.data('selectize-ajax');
       var method = $this.data('method') || 'GET';
       var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
@@ -631,40 +513,7 @@ function load_autocomplete() {
         },
       });
 
-      var url = $this.data('selectize-fetch');
-      var method = $this.data('fetch-method') || 'GET';
-      var selected = $this.data('selected');
-
-      if (url && selector[0] && selector[0].selectize) {
-        var control = selector[0].selectize;
-
-        control.clearOptions();
-        control.clear();
-        control.disable();
-
-        control.load(function (callback) {
-          xhr && xhr.abort();
-          xhr = $.ajax({
-            url: url,
-            method: method,
-            data: data,
-            dataType: 'json',
-            success: function (results) {
-              control.enable();
-
-              callback(results.rows);
-
-              if (selected) {
-                control.setValue(selected);
-              }
-            },
-            error: function () {
-              control.enable();
-              callback();
-            },
-          });
-        });
-      }
+      fetchSelectizeData($this, selector);
     });
 
     $('[data-selectize-target]').each(function () {
@@ -692,41 +541,7 @@ function load_autocomplete() {
           loadSelectizeTargetValues($this, target, val);
         }
 
-        var url = $this.data('selectize-fetch');
-        var method = $this.data('fetch-method') || 'GET';
-        var selected = $this.data('selected');
-        var data = $this.data('post-data') || {};
-
-        if (url && selector[0] && selector[0].selectize) {
-          var control = selector[0].selectize;
-
-          control.clearOptions();
-          control.clear();
-          control.disable();
-
-          control.load(function (callback) {
-            xhr && xhr.abort();
-            xhr = $.ajax({
-              url: url,
-              method: method,
-              data: data,
-              dataType: 'json',
-              success: function (results) {
-                control.enable();
-
-                callback(results.rows);
-
-                if (selected) {
-                  control.setValue(selected);
-                }
-              },
-              error: function () {
-                control.enable();
-                callback();
-              },
-            });
-          });
-        }
+        fetchSelectizeData($this, selector);
       }
     });
 

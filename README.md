@@ -6,29 +6,6 @@
     composer require diviky/bright
 ```
 
-## Setup
-
-```
-    php artisan bright:setup
-```
-
-```php
-    php artisan vendor:publish --tag="bright-config"
-    php artisan vendor:publish --tag="bright-assets"
-    php artisan vendor:publish --tag="bright-views"
-    php artisan vendor:publish --tag="bright-migrations"
-
-    //Copy webpack and some other files
-    php artisan vendor:publish --tag="bright-setup"
-```
-
-```
-    bower install selectize --save
-    npm install jquery --save
-    npm install popper.js --save
-    npm install bootstrap --save
-```
-
 ##### Filter the query with input values
 
 ```php
@@ -473,6 +450,49 @@ Set the timestamps 'created_at`and`updated_at`for insert and`updated_at` for upd
 ```
 
 - `:id` will be replaced with country id to get states list
+
+
+## Attributes
+
+Custom attributes used in controllers to configure view, resources and layouts
+
+Avaliable attributes
+
+```
+use Diviky\Bright\Attributes\View;
+use Diviky\Bright\Attributes\ViewPaths;
+use Diviky\Bright\Attributes\ViewNamespace;
+use Diviky\Bright\Attributes\Resource;
+use Diviky\Bright\Attributes\ResourceCollection;
+
+
+#[View('name', 'layout')]
+#[View('none')] //No view will be rendered
+#[ViewPaths([__DIR__.'views'])]
+#[ViewNamespace("package")]
+#[Resource('Resources/PostResource', 'post')]
+#[ResourceCollection('Resources/PostResource', 'posts')]
+```
+
+
+
+```php
+
+#[View('name', 'layout')] // by default method name has view name
+public function index(Request $request)
+{
+    $data = $request->all();
+
+    $rows = Post::filter($data)
+        ->ordering($data, ['ordering' => 'asc'])
+        ->paginate();
+
+    return [
+        'rows' => $rows,
+    ];
+}
+
+```
 
 ## License
 

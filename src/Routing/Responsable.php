@@ -166,6 +166,10 @@ class Responsable implements BaseResponsable
             $layout = $instance->getLayout();
         }
 
+        if ($view === 'none' || $view === 'json') {
+            return $response;
+        }
+
         $attributes = $reflection->getAttributes(ViewNamespace::class);
 
         foreach ($attributes as $attribute) {
@@ -175,7 +179,6 @@ class Responsable implements BaseResponsable
 
         if (empty($layout)) {
             $theme = $this->setUpThemeFromRequest($request, $component, $paths);
-            //$layout = $format == 'html' ? 'layouts.html' : $theme['layout'];
 
             if ($request->pjax() && Str::endsWith($theme['layout'], ':html')) {
                 $layout = Str::replaceLast('.', '.html.', Str::replaceLast(':html', '', $theme['layout']));

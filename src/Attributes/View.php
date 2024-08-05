@@ -7,11 +7,11 @@ namespace Diviky\Bright\Attributes;
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_CLASS)]
 class View
 {
-    private string $name;
+    private ?string $name = null;
 
     private ?string $layout = null;
 
-    public function __construct(string $name, ?string $layout = null)
+    public function __construct(?string $name = null, ?string $layout = null)
     {
         $this->name = $name;
         $this->layout = $layout;
