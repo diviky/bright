@@ -13,7 +13,7 @@ class Form extends Component
     public function __construct(string $action)
     {
         $attribs = [];
-        $attribs['role'] = 'krender';
+        $attribs['easyrender'] = 'easyrender';
         $attribs['action'] = $action;
 
         $this->attribs = $attribs;

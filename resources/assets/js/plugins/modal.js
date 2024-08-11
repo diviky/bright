@@ -73,6 +73,8 @@
       url: url,
       data: data,
       cache: false,
+      method: self.settings.method || 'GET',
+      headers: self.settings.headers || {},
     }).then(
       function (html) {
         self.content(html);
@@ -226,6 +228,7 @@
     id: 'bmodel',
     styles: '',
     size: '',
+    method: 'GET',
     position: 'right',
     clean: false,
     scrollable: false,
@@ -234,6 +237,7 @@
     url: null,
     history: false,
     data: {},
+    headers: {},
     container: 'body',
   };
 })(jQuery, this);

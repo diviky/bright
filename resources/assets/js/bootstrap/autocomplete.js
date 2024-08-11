@@ -9,6 +9,7 @@ function load_autocomplete() {
 
       var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
       var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
+      var placeholder = $this.attr('placeholder') || null;
       var data = $this.data('post-data') || {};
 
       if (url && selector && selector.length > 0) {
@@ -23,6 +24,11 @@ function load_autocomplete() {
           success: function (results) {
             selector.val(null).empty();
             selector.prop('disabled', false);
+
+            if (placeholder) {
+              var option = new Option(placeholder, '');
+              selector.append(option);
+            }
 
             // if paginated results
             let records = results.rows?.links ? results.rows.data : results.rows;
@@ -52,204 +58,195 @@ function load_autocomplete() {
 
     $('[data-select]').each(function () {
       var $this = $(this);
-      // if ($this.data('select2')) {
-      //   return false;
-      // }
 
-      let selector = $this.select2({
-        dropdownParent: $this.parent(),
-        minimumResultsForSearch: 10,
-      });
+      if (!$this.data('select2')) {
+        let selector = $this.select2({
+          dropdownParent: $this.parent(),
+          minimumResultsForSearch: 10,
+        });
 
-      fetchSelect2Data($this, selector);
+        fetchSelect2Data($this, selector);
+      }
     });
 
     $('[tokenizer]').each(function () {
       var $this = $(this);
-      // if ($this.data('select2')) {
-      //   return false;
-      // }
+      if (!$this.data('select2')) {
+        let selector = $this.select2({
+          dropdownParent: $this.parent(),
+          tags: true,
+          tokenSeparators: [',', ' '],
+          createTag: function (params) {
+            var term = params.term;
+            if (term === '') {
+              return null;
+            }
 
-      let selector = $this.select2({
-        dropdownParent: $this.parent(),
-        tags: true,
-        tokenSeparators: [',', ' '],
-        createTag: function (params) {
-          var term = params.term;
-          if (term === '') {
-            return null;
-          }
+            return {
+              id: term,
+              text: term,
+              new: true, // add additional parameters
+            };
+          },
+        });
 
-          return {
-            id: term,
-            text: term,
-            new: true, // add additional parameters
-          };
-        },
-      });
-
-      fetchSelect2Data($this, selector);
+        fetchSelect2Data($this, selector);
+      }
     });
 
     $('[data-select-ajax]').each(function () {
       var $this = $(this);
-      // if ($this.data('select2')) {
-      //   return false;
-      // }
+      if (!$this.data('select2')) {
+        var url = $this.data('select-ajax');
 
-      var url = $this.data('select-ajax');
+        var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
+        var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
+        var data = $this.data('post-data') || {};
 
-      var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
-      var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
-      var data = $this.data('post-data') || {};
+        let selector = $this.select2({
+          minimumInputLength: 3,
+          maximumInputLength: 20,
+          dropdownParent: $this.parent(),
+          ajax: {
+            url: url,
+            data: function (params) {
+              data['q'] = params.term;
+              data['term'] = params.term;
+              return data;
+            },
+            delay: 250,
+            processResults: function (data) {
+              var rows = $.map(data.rows, function (obj) {
+                obj.id = obj[valueField];
+                obj.text = obj[labelField];
 
-      let selector = $this.select2({
-        minimumInputLength: 3,
-        maximumInputLength: 20,
-        dropdownParent: $this.parent(),
-        ajax: {
-          url: url,
-          data: function (params) {
-            data['q'] = params.term;
-            data['term'] = params.term;
-            return data;
+                return obj;
+              });
+
+              // Tranforms the top-level key of the response object from 'items' to 'results'
+              return {
+                results: rows,
+              };
+            },
           },
-          delay: 250,
-          processResults: function (data) {
-            var rows = $.map(data.rows, function (obj) {
-              obj.id = obj[valueField];
-              obj.text = obj[labelField];
+          templateResult: function (data) {
+            if (!data.id) {
+              return data.text;
+            }
 
-              return obj;
-            });
+            var template = '<div class="item">';
 
-            // Tranforms the top-level key of the response object from 'items' to 'results'
-            return {
-              results: rows,
-            };
+            if (data.html) {
+              template += '<span class="item-text">' + data.html + '</span>';
+            }
+
+            if (data.image) {
+              template += '<span class="item-image">' + data.image + '</span>';
+            }
+
+            if (data.icon) {
+              template +=
+                '<span class="avatar avatar-xs item-icon" style="background-image: url(' +
+                data.icon +
+                ')" alt=""/></span>';
+            }
+
+            template += '<span class="item-title">' + data.text + '</span>';
+            template += '</div>';
+
+            return $(template);
           },
-        },
-        templateResult: function (data) {
-          if (!data.id) {
-            return data.text;
-          }
+        });
 
-          var template = '<div class="item">';
-
-          if (data.html) {
-            template += '<span class="item-text">' + data.html + '</span>';
-          }
-
-          if (data.image) {
-            template += '<span class="item-image">' + data.image + '</span>';
-          }
-
-          if (data.icon) {
-            template +=
-              '<span class="avatar avatar-xs item-icon" style="background-image: url(' +
-              data.icon +
-              ')" alt=""/></span>';
-          }
-
-          template += '<span class="item-title">' + data.text + '</span>';
-          template += '</div>';
-
-          return $(template);
-        },
-      });
-
-      fetchSelect2Data($this, selector);
+        fetchSelect2Data($this, selector);
+      }
     });
 
     $('[data-select-image]').each(function () {
       var $this = $(this);
-      // if ($this.data('select2')) {
-      //   return false;
-      // }
+      if (!$this.data('select2')) {
+        var url = $this.data('select-image');
+        var data = $this.data('post-data') || {};
+        var method = $this.data('method') || 'GET';
 
-      var url = $this.data('select-image');
-      var data = $this.data('post-data') || {};
-      var method = $this.data('method') || 'GET';
+        var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
+        var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
 
-      var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
-      var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
+        let selector = $this.select2({
+          minimumInputLength: 3,
+          maximumInputLength: 20,
+          ajax: {
+            url: url,
+            data: data,
+            method: method,
+            delay: 250,
+            processResults: function (data) {
+              var rows = $.map(data.rows, function (obj) {
+                obj.id = obj[valueField];
+                obj.text = obj[labelField];
 
-      let selector = $this.select2({
-        minimumInputLength: 3,
-        maximumInputLength: 20,
-        ajax: {
-          url: url,
-          data: data,
-          method: method,
-          delay: 250,
-          processResults: function (data) {
-            var rows = $.map(data.rows, function (obj) {
-              obj.id = obj[valueField];
-              obj.text = obj[labelField];
+                return obj;
+              });
 
-              return obj;
-            });
-
-            // Tranforms the top-level key of the response object from 'items' to 'results'
-            return {
-              results: rows,
-            };
+              // Tranforms the top-level key of the response object from 'items' to 'results'
+              return {
+                results: rows,
+              };
+            },
           },
-        },
-        templateResult: function (data) {
-          if (!data.id) {
-            return data.text;
-          }
+          templateResult: function (data) {
+            if (!data.id) {
+              return data.text;
+            }
 
-          var template = '<div class="item">';
+            var template = '<div class="item">';
 
-          if (data.html) {
-            template += '<span class="item-text">' + data.html + '</span>';
-          }
+            if (data.html) {
+              template += '<span class="item-text">' + data.html + '</span>';
+            }
 
-          if (data.image) {
-            template += '<span class="item-image">' + data.image + '</span>';
-          }
+            if (data.image) {
+              template += '<span class="item-image">' + data.image + '</span>';
+            }
 
-          if (data.icon) {
-            template +=
-              '<span class="avatar avatar-xs item-icon" style="background-image: url(' +
-              data.icon +
-              ')" alt=""/></span>';
-          }
+            if (data.icon) {
+              template +=
+                '<span class="avatar avatar-xs item-icon" style="background-image: url(' +
+                data.icon +
+                ')" alt=""/></span>';
+            }
 
-          template += '<span class="item-title">' + data.text + '</span>';
-          template += '</div>';
+            template += '<span class="item-title">' + data.text + '</span>';
+            template += '</div>';
 
-          return $(template);
-        },
-      });
+            return $(template);
+          },
+        });
 
-      fetchSelect2Data($this, selector);
+        fetchSelect2Data($this, selector);
+      }
     });
 
     $('[data-select-target]').each(function () {
       var $this = $(this);
-      // if ($this.data('select2')) {
-      //   return false;
-      // }
+      if (!$this.data('select2')) {
+        let selector = $this.select2({
+          dropdownParent: $this.parent(),
+          minimumResultsForSearch: 5,
+        });
 
-      let selector = $this.select2({
-        dropdownParent: $this.parent(),
-        minimumResultsForSearch: 5,
-      });
+        selector.on('change.select2', function () {
+          loadSelectTargetValues($this, this.value);
+        });
 
-      selector.on('change.select2', function () {
-        loadSelectTargetValues($this, this.value);
-      });
+        //if it's selected value by default
+        let val = $this.val();
+        if (val !== undefined && val !== null && val.length > 0) {
+          loadSelectTargetValues($this, val);
+        }
 
-      //if it's selected value by default
-      let val = $this.val();
-      if (val !== undefined && val !== null && val.length > 0) {
-        loadSelectTargetValues($this, val);
+        fetchSelect2Data($this, selector);
       }
-
-      fetchSelect2Data($this, selector);
     });
 
     function loadSelectTargetValues($this, value) {

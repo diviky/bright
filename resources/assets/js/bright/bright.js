@@ -50,57 +50,6 @@ function brightJs() {
     });
   }
 
-  // Drag and drop sortable
-  if ($.fn.sortable) {
-    var _gridSortHelper = function (e, ui) {
-      ui.children().each(function () {
-        $(this).width($(this).width());
-      });
-      return ui;
-    };
-
-    var _gridSortUpdateHandler = function (e, ui) {
-      var form = getForm($(this));
-
-      var page = 1;
-      var target = $(e.originalEvent.target);
-      var task = target.attr('data-task') || 'sorting';
-
-      if (form.find('.ac-task-input').length > 0) {
-        $('.ac-task-input').val(task);
-      } else {
-        $('<input/>', {
-          class: 'ac-task-input',
-          name: 'task',
-          value: task,
-          type: 'hidden',
-        }).appendTo(form);
-      }
-
-      form.find("input[name='page']").val(page);
-      $('#page').val(page);
-
-      form.submit();
-      return ui;
-    };
-
-    $('[grid-sortable]').sortable({
-      connectWith: '[grid-sortable]',
-      handle: '[sortable]',
-      placeholder: 'state-highlight',
-      opacity: 0.8,
-      helper: _gridSortHelper,
-      update: _gridSortUpdateHandler,
-    });
-
-    $('[sortables]').sortable({
-      connectWith: ['[sortables]'],
-      handle: '[sortable]',
-      placeholder: 'state-highlight',
-      opacity: 0.6,
-    });
-  }
-
   if ($.fn.waypoint) {
     $('[data-waypoint]').each(function () {
       var $this = $(this);
@@ -140,9 +89,12 @@ function brightBootJs() {
       $.ajax({
         url: link,
         method: method,
+        dataType: 'json',
+        headers: {
+          Accept: 'application/json',
+        },
         data: {
           status: $this.data('value'),
-          format: 'json',
         },
         complete: function (xhr) {
           displayNoti(xhr, $this);

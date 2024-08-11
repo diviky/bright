@@ -25,9 +25,9 @@
     "laravel/ui": "^4.2",
     "league/flysystem-aws-s3-v3": "^3.10",
     "matomo/decompress": "^2.1",
+    "mongodb/laravel-mongodb": "^4.5",
     "schuppo/password-strength": "^2.6",
     "spatie/laravel-permission": "^6.9",
-    "mongodb/laravel-mongodb": "^4.5",
     "spatie/laravel-schemaless-attributes": "^2.3"
   },
   "require-dev": {

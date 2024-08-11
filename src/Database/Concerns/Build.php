@@ -40,9 +40,12 @@ trait Build
      */
     public function where($column, $operator = null, $value = null, $boolean = 'and')
     {
-        $val = \func_num_args() === 2 ? $operator : $value;
-        if (\is_array($val)) {
-            return parent::whereIn($column, $val);
+        [$value, $operator] = $this->prepareValueAndOperator(
+            $value, $operator, func_num_args() === 2
+        );
+
+        if (\is_array($value)) {
+            return parent::whereIn($column, $value);
         }
 
         return parent::where($column, $operator, $value, $boolean);

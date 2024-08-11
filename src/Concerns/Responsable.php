@@ -6,6 +6,7 @@ namespace Diviky\Bright\Concerns;
 
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 trait Responsable
 {
@@ -37,7 +38,7 @@ trait Responsable
         $method = $this->getMethod($action);
         $component = $this->getNamespace($action);
 
-        return \strtolower($component . '.' . $method);
+        return Str::lower($component . '.' . Str::kebab($method));
     }
 
     /**

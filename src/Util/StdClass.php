@@ -6,9 +6,9 @@ namespace Diviky\Bright\Util;
 
 class StdClass extends \stdClass
 {
-    protected array $attributes = [];
+    protected array $items = [];
 
-    protected mixed $defaultValue = 0;
+    protected mixed $defalut = null;
 
     protected bool $recursive = false;
 
@@ -16,33 +16,33 @@ class StdClass extends \stdClass
 
     protected int $depth = 0;
 
-    public function __construct(array $attributes = [], mixed $defaultValue = null)
+    public function __construct(array $items = [], mixed $defalut = null)
     {
-        $this->attributes = $attributes;
-        $this->defaultValue = $defaultValue;
+        $this->items = $items;
+        $this->defalut = $defalut;
     }
 
     public function __set(string $name, mixed $value): void
     {
-        $this->attributes[$name] = $value;
+        $this->items[$name] = $value;
     }
 
     public function __get(string $name): mixed
     {
-        if (array_key_exists($name, $this->attributes)) {
-            if ($this->recursive && is_array($this->attributes[$name]) && $this->depth < $this->maxDepth) {
-                return (new static($this->attributes[$name], $this->defaultValue))->recursive($this->maxDepth, $this->depth + 1, $this->recursive);
+        if (array_key_exists($name, $this->items)) {
+            if ($this->recursive && is_array($this->items[$name]) && $this->depth < $this->maxDepth) {
+                return (new static($this->items[$name], $this->defalut))->recursive($this->maxDepth, $this->depth + 1, $this->recursive);
             }
 
-            return $this->attributes[$name];
+            return $this->items[$name];
         }
 
-        return $this->defaultValue;
+        return $this->defalut;
     }
 
     public function toArray(): array
     {
-        return $this->attributes;
+        return $this->items;
     }
 
     public function recursive(float $maxDepth = INF, int $depth = 0, bool $recursive = true): self

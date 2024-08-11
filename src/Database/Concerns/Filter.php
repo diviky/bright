@@ -321,8 +321,8 @@ trait Filter
             $to = $date['to'];
             $to = $to ?: $from;
 
-            $from = $this->toTime($from, 'Y-m-d H:i:s', '00:00:00');
-            $to = $this->toTime($to, 'Y-m-d H:i:s', '23:59:59');
+            $from = carbon($this->toTime($from, 'Y-m-d H:i:s', '00:00:00'));
+            $to = carbon($this->toTime($to, 'Y-m-d H:i:s', '23:59:59'));
 
             $this->whereBetween($this->cleanField($column), [$from, $to]);
         }

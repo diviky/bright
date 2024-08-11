@@ -326,6 +326,7 @@
           self.form.closest('form').submit();
         } else if (submit == 'render' || submit == true) {
           $('[role="krender"]').submit();
+          $('[easyrender]').submit();
         } else if (submit) {
           $(self.settings.submit).submit();
         }
@@ -460,7 +461,8 @@
       if (value == 'parent') {
         var element = self.form.closest('form');
       } else if (value == 'render' || value == true) {
-        var element = $('[role="krender"]');
+        var element = $('[easyrender]:first');
+        element = element && element.length > 0 ? element : $('[role="krender"]:first');
       } else if (value && value != false) {
         var element = $(value);
       }

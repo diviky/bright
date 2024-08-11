@@ -87,7 +87,7 @@ function load_dateranges() {
     }
 
     var t = $(e.currentTarget);
-    if (typeof t.data('auto-submit') != undefined) {
+    if (typeof t.data('auto-submit') !== undefined) {
       t.trigger('change');
       $(document).trigger('form:submit', [t]);
     }
