@@ -4,57 +4,70 @@ function load_dates() {
 }
 
 function load_datetimepicker() {
-  if (!$.fn.datetimepicker) {
-    console.info('npm install eonasdan-bootstrap-datetimepicker --save');
+  if (!tempusDominus) {
+    console.info('npm install @eonasdan/tempus-dominus --save');
     return;
   }
 
-  $('[data-datetime]').datetimepicker({
-    format: 'MMM DD, YYYY h:m A',
+  let options = {
+    dateRange: false,
     keepInvalid: true,
-    icons: {
-      time: 'ti ti-clock',
-      date: 'ti ti-calendar-month',
-      up: 'ti ti-arrow-up',
-      down: 'ti ti-arrow-down',
-      previous: 'ti ti-chevron-left',
-      next: 'ti ti-chevron-right',
-      today: 'ti ti-calendar',
-      clear: 'ti ti-x',
-      close: 'ti ti-square-x',
+    multipleDatesSeparator: ' - ',
+    display: {
+      sideBySide: false,
+      icons: {
+        time: 'ti ti-clock',
+        date: 'ti ti-calendar-month',
+        up: 'ti ti-arrow-up',
+        down: 'ti ti-arrow-down',
+        previous: 'ti ti-chevron-left',
+        next: 'ti ti-chevron-right',
+        today: 'ti ti-calendar',
+        clear: 'ti ti-x',
+        close: 'ti ti-square-x',
+      },
     },
+  };
+
+  $('[data-datetime]').each(function () {
+    let $this = $(this);
+    let data = {
+      localization: {
+        format: 'MMM dd, yyyy h:mm T',
+      },
+    };
+    new tempusDominus.TempusDominus($this[0], { ...options, ...data });
   });
 
-  $('[data-time]').datetimepicker({
-    format: 'LT',
-    keepInvalid: true,
-    icons: {
-      time: 'ti ti-clock',
-      date: 'ti ti-calendar-month',
-      up: 'ti ti-arrow-up',
-      down: 'ti ti-arrow-down',
-      previous: 'ti ti-chevron-left',
-      next: 'ti ti-chevron-right',
-      today: 'ti ti-calendar',
-      clear: 'ti ti-x',
-      close: 'ti ti-square-x',
-    },
+  $('[data-time]').each(function () {
+    let $this = $(this);
+    let data = {
+      localization: {
+        format: 'LT',
+      },
+    };
+    new tempusDominus.TempusDominus($this[0], { ...data, ...options });
   });
 
-  $('[data-datepicker]').datetimepicker({
-    format: 'MMM DD, YYYY',
-    keepInvalid: true,
-    icons: {
-      time: 'ti ti-clock',
-      date: 'ti ti-calendar-month',
-      up: 'ti ti-arrow-up',
-      down: 'ti ti-arrow-down',
-      previous: 'ti ti-chevron-left',
-      next: 'ti ti-chevron-right',
-      today: 'ti ti-calendar',
-      clear: 'ti ti-x',
-      close: 'ti ti-square-x',
-    },
+  $('[data-datepicker]').each(function () {
+    let $this = $(this);
+    let data = {
+      localization: {
+        format: 'LL',
+      },
+    };
+    new tempusDominus.TempusDominus($this[0], { ...options, ...data });
+  });
+
+  $('[data-rangepicker]').each(function () {
+    let $this = $(this);
+    let data = {
+      dateRange: true,
+      localization: {
+        format: 'LL',
+      },
+    };
+    new tempusDominus.TempusDominus($this[0], { ...options, ...data });
   });
 }
 

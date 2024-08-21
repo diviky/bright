@@ -31,7 +31,7 @@ class StdClass extends \stdClass
     {
         if (array_key_exists($name, $this->items)) {
             if ($this->recursive && is_array($this->items[$name]) && $this->depth < $this->maxDepth) {
-                return (new static($this->items[$name], $this->defalut))->recursive($this->maxDepth, $this->depth + 1, $this->recursive);
+                return (new self($this->items[$name], $this->defalut))->recursive($this->maxDepth, $this->depth + 1, $this->recursive);
             }
 
             return $this->items[$name];
@@ -45,6 +45,11 @@ class StdClass extends \stdClass
         return $this->items;
     }
 
+    public function toJson(): string
+    {
+        return json_encode($this->items);
+    }
+
     public function recursive(float $maxDepth = INF, int $depth = 0, bool $recursive = true): self
     {
         $this->recursive = $recursive;
@@ -52,5 +57,20 @@ class StdClass extends \stdClass
         $this->maxDepth = $maxDepth;
 
         return $this;
+    }
+
+    /**
+     * Convert the model to its string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toJson();
+    }
+
+    public function __serialize(): array
+    {
+        return $this->toArray();
     }
 }

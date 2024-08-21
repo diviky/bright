@@ -9,9 +9,12 @@ class ViewPaths
 {
     private array $paths;
 
-    public function __construct(array $paths)
+    private bool $append = true;
+
+    public function __construct(array $paths, bool $append = true)
     {
         $this->paths = $paths;
+        $this->append = $append;
     }
 
     /**
@@ -19,7 +22,14 @@ class ViewPaths
      */
     public function getPaths(): array
     {
-        return $this->paths;
+        $paths = $this->paths;
+        if ($this->append) {
+            foreach ($paths as $key => $path) {
+                $paths[$key] = $path . '/views/';
+            }
+        }
+
+        return $paths;
     }
 
     /**

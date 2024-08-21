@@ -146,16 +146,8 @@ class Responsable implements BaseResponsable
         }
 
         $route = $this->getRouteFromAction($this->action);
-        $paths = $this->getViewPathsFrom($this->controller, $this->action);
 
         [$component, $view] = \explode('.', $route, 2);
-
-        $attributes = $reflection->getAttributes(ViewPaths::class);
-
-        foreach ($attributes as $attribute) {
-            $instance = $attribute->newInstance();
-            $paths = array_merge($paths, $instance->getPaths());
-        }
 
         $layout = null;
         $attributes = $method->getAttributes(AttributesView::class);
@@ -168,6 +160,14 @@ class Responsable implements BaseResponsable
 
         if ($view === 'none' || $view === 'json') {
             return $response;
+        }
+
+        $paths = $this->getViewPathsFrom($this->controller, $this->action);
+        $attributes = $reflection->getAttributes(ViewPaths::class);
+
+        foreach ($attributes as $attribute) {
+            $instance = $attribute->newInstance();
+            $paths = array_merge($paths, $instance->getPaths());
         }
 
         $attributes = $reflection->getAttributes(ViewNamespace::class);

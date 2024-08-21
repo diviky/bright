@@ -28,6 +28,11 @@ class ViewServiceProvider extends BaseServiceProvider
         });
     }
 
+    protected function path(): string
+    {
+        return __DIR__ . '/../..';
+    }
+
     /**
      * Register the application services.
      */

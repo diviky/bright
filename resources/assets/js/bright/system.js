@@ -435,6 +435,21 @@ function brightSystemJs() {
     $(realTarget).val(value);
   });
 
+  $(document).on('keyup blur', '[data-alias]', function (e) {
+    var target = $(this).data('alias');
+    var realTarget = '[data-alias-' + target + ']';
+
+    var value = $(this).val();
+    value = $.trim(value);
+    value = value
+      .replace(/[^a-z0-9-]/gi, '_')
+      .replace(/-+/g, '_')
+      .replace(/^_|_$/g, '');
+    value = value.toLowerCase();
+
+    $(realTarget).val(value);
+  });
+
   $(document).on('keyup blur', '[data-copy]', function (e) {
     var target = $(this).data('copy');
     var realTarget = '[data-copy-' + target + ']';
@@ -444,6 +459,15 @@ function brightSystemJs() {
 
   $(document).on('click', '[data-add]', function (e) {
     var target = $(this).parents('table:first');
+    if ($(this).attr('validate')) {
+      let easy = $('[easysubmit]').data('easySubmit');
+      let valid = easy['validate']();
+
+      if (!valid) {
+        return false;
+      }
+    }
+
     var clone = target.find('tfoot:first tr').clone();
     target.find('tbody:first').append(clone);
 
@@ -616,17 +640,21 @@ function brightSystemJs() {
 
   $(document).on('click change', '[data-task]', function (e) {
     var $this = $(this);
-    var form = getForm($this);
 
-    setTask($this, form);
+    var message = $this.attr('data-confirm') || $this.attr('confirm');
+    box.confirm(message, (result) => {
+      if (result) {
+        var form = getForm($this);
+        setTask($this, form);
+        $(document).trigger('form:reset', $this);
 
-    $(document).trigger('form:reset', $this);
-
-    if ($this.attr('type') != 'submit') {
-      form.submit();
-      e.preventDefault();
-      removeTask($this, form);
-    }
+        if ($this.attr('type') != 'submit') {
+          form.submit();
+          e.preventDefault();
+          removeTask($this, form);
+        }
+      }
+    });
   });
 
   $(document).on('click', '[data-task-checkbox]', function (e) {

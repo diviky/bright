@@ -1,8 +1,44 @@
 function load_autocomplete() {
   if ($.fn.select2) {
+    $('[data-select]').on('change', function (e) {
+      if (wired() && wired().get(e.target.name) !== undefined) {
+        wired().$set(e.target.name, e.target.value);
+      }
+    });
+
+    $('[tokenizer]').on('change', function (e) {
+      if (wired() && wired().get(e.target.name) !== undefined) {
+        wired().$set(e.target.name, e.target.value);
+      }
+    });
+
+    $('[data-select-ajax]').on('change', function (e) {
+      if (wired() && wired().get(e.target.name) !== undefined) {
+        wired().$set(e.target.name, e.target.value);
+      }
+    });
+
+    $('[data-select-image]').on('change', function (e) {
+      if (wired() && wired().get(e.target.name) !== undefined) {
+        wired().$set(e.target.name, e.target.value);
+      }
+    });
+
+    $('[data-select-target]').on('change', function (e) {
+      if (wired() && wired().get(e.target.name) !== undefined) {
+        wired().$set(e.target.name, e.target.value);
+      }
+    });
+
+    $(document).on('click', '[data-select-refetch]', function (e) {
+      let selector = $($(this).attr('data-select-refetch'));
+      fetchSelect2Data(selector, selector);
+      e.preventDefault();
+    });
+
     function fetchSelect2Data($this, selector) {
       var xhr;
-      var url = $this.data('select-fetch');
+      var url = $this.data('select-fetch') || $this.data('select-refetch');
       var method = $this.data('fetch-method') || 'GET';
       var selected = $this.data('selected');
       selected = selected ? selected.toString().split(',') : [];
@@ -49,12 +85,6 @@ function load_autocomplete() {
         });
       }
     }
-
-    $(document).on('click', '[data-select-refetch]', function (e) {
-      let selector = $($(this).attr('data-select-refetch'));
-      fetchSelect2Data(selector, selector);
-      e.preventDefault();
-    });
 
     $('[data-select]').each(function () {
       var $this = $(this);
@@ -377,9 +407,6 @@ function load_autocomplete() {
 
     $('[data-selectize]').each(function () {
       var $this = $(this);
-      var xhr;
-      var url = $this.data('selectize-ajax');
-      var method = $this.data('method') || 'GET';
       var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
       var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
       var searchField = $this.data('search-field') || ['text'];
@@ -395,7 +422,6 @@ function load_autocomplete() {
 
     $('[data-selectize-image]').each(function () {
       var $this = $(this);
-      var xhr;
 
       var labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
       var valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
@@ -515,7 +541,6 @@ function load_autocomplete() {
 
     $('[data-selectize-target]').each(function () {
       var $this = $(this);
-      var xhr;
       if (!$this[0] || !$this[0].selectize) {
         var target = getTargetNextSelectize($this);
 

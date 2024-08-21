@@ -28,7 +28,8 @@
     "mongodb/laravel-mongodb": "^4.5",
     "schuppo/password-strength": "^2.6",
     "spatie/laravel-permission": "^6.9",
-    "spatie/laravel-schemaless-attributes": "^2.3"
+    "spatie/laravel-schemaless-attributes": "^2.3",
+    "livewire/livewire": "^3.0"
   },
   "require-dev": {
     "diviky/code-analysis": "^2.0",

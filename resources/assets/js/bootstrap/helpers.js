@@ -24,6 +24,11 @@ function load_helpers() {
     }
   });
 
+  $(document).on('click', '[data-show]', function () {
+    var target = $(this).data('display');
+    $(target).slideToggle();
+  });
+
   $(document).on('change', '[data-check-all]', function (e) {
     var $this = $(this);
     var target = $this.parents('table:first');

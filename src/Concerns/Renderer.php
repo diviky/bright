@@ -9,6 +9,7 @@ use Diviky\Bright\Attributes\ViewNamespace;
 use Diviky\Bright\Attributes\ViewPaths;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use Livewire\Component;
 
 trait Renderer
 {
@@ -28,6 +29,10 @@ trait Renderer
 
         $view = $this->getViewFrom($this);
 
+        if ($this instanceof Component) {
+            return view('bright::components.livewire', ['livewire' => $view]);
+        }
+
         return view($view);
     }
 
@@ -37,7 +42,7 @@ trait Renderer
      * @param  self  $controller
      * @return array
      */
-    protected function getViewFrom($controller)
+    protected function getViewFrom($controller): string
     {
         $view = Str::kebab(class_basename($this));
 
@@ -63,14 +68,17 @@ trait Renderer
      * Get the view locations from controller.
      *
      * @param  self  $controller
-     * @return array
      */
-    protected function getViewPathsFrom($controller)
+    protected function getViewPathsFrom($controller): array
     {
         $paths = [];
         if (\method_exists($controller, 'getViewsFrom')) {
             $paths = $controller->getViewsFrom();
             $paths = !\is_array($paths) ? [$paths] : $paths;
+        }
+
+        foreach ($paths as $key => $path) {
+            $paths[$key] = $path . '/views/';
         }
 
         $reflection = new \ReflectionClass($controller);
@@ -82,10 +90,11 @@ trait Renderer
             $paths = array_merge($paths, $instance->getPaths());
         }
 
-        foreach ($paths as $key => $path) {
-            $paths[$key] = $path . '/views/';
-        }
-
         return $paths;
+    }
+
+    public function rendered(): void
+    {
+        $this->dispatch('component.rendered');
     }
 }
