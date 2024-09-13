@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
 {
-    public function getViewsFrom(): array
+    public function loadViewsFrom(): array
     {
         return [__DIR__];
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
+use Carbon\Carbon;
 use Diviky\Bright\Database\Filters\FilterRelation;
 use Diviky\Bright\Database\Filters\FiltersScope;
 use Diviky\Bright\Database\Filters\Ql\Parser;
@@ -46,14 +47,18 @@ trait Filter
         return $this->filterExact($this->cleanUpFilters($data['filter'] ?? []))
             ->filterParse($this->cleanUpFilters($data['parse'] ?? []))
             ->filterMatch($this->cleanUpFilters($data['dfilter'] ?? []), $data)
-            ->filterLike($this->cleanUpFilters($data['lfilter'] ?? []))
-            ->filterLeft($this->cleanUpFilters($data['efilter'] ?? []))
-            ->filterDateRanges($this->cleanUpFilters($data['date'] ?? []))
+            ->filterContains($this->cleanUpFilters($data['lfilter'] ?? []))
+            ->filterEndWith($this->cleanUpFilters($data['efilter'] ?? []))
+            ->filterStartWith($this->cleanUpFilters($data['sfilter'] ?? []))
+            ->filterDate($this->cleanUpFilters($data['date'] ?? []))
+            ->filterNull($data['empty'] ?? [])
+            ->filterNotNull($data['notempty'] ?? [])
             ->filterDatetimes($this->cleanUpFilters($data['datetime'] ?? []))
             ->filterDatetimes($this->cleanUpFilters($data['timestamp'] ?? []))
             ->filterUnixTimes($this->cleanUpFilters($data['unix'] ?? []))
             ->filterUnixTimes($this->cleanUpFilters($data['unixtime'] ?? []))
             ->filterRange($this->cleanUpFilters($data['range'] ?? []))
+            ->filterParse($this->cleanUpFilters($data['parser'] ?? []))
             ->filterBetween($this->cleanUpFilters($data['between'] ?? []))
             ->filterScopes($this->cleanUpFilters($data['scope'] ?? []));
     }
@@ -107,10 +112,48 @@ trait Filter
             $this->whereFilter(array_map(function ($column) {
                 return $this->cleanField($column);
             }, $columns), $value, $condition);
+        } elseif (is_array($value) && $condition == '=') {
+            $this->whereIn($this->cleanField($column), $value);
+        } elseif (is_array($value) && ($condition == '<>' || $condition == '!=')) {
+            $this->whereNotIn($this->cleanField($column), $value);
         } elseif (is_array($value)) {
             $this->whereIn($this->cleanField($column), $value);
         } else {
             $this->where($this->cleanField($column), $condition, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add where condition for filters.
+     *
+     * @param  string  $column
+     * @param  array|string  $value
+     * @param  string  $condition
+     */
+    protected function addNotWhere($column, $value, $condition = '='): self
+    {
+        if ($this->hasModel()) {
+            if (Str::startsWith($column, ':')) {
+                return $this->filterScopes([substr($column, 1) => $value]);
+            }
+
+            if (Str::contains($column, '.')) {
+                return $this->filterRelations(explode('|', $column), $value, $condition);
+            }
+        }
+
+        if (Str::contains($column, '|')) {
+            $columns = \explode('|', $column);
+
+            $this->whereFilter(array_map(function ($column) {
+                return $this->cleanField($column);
+            }, $columns), $value, $condition);
+        } elseif (is_array($value)) {
+            $this->whereNotIn($this->cleanField($column), $value);
+        } else {
+            $this->whereNot($this->cleanField($column), $condition, $value);
         }
 
         return $this;
@@ -139,12 +182,20 @@ trait Filter
 
     protected function filterExact(array $filters = []): self
     {
+
         foreach ($filters as $column => $value) {
-            if (isset($value) && $value[0] != '') {
+
+            if (!empty($column) && isset($value) && $value[0] != '') {
+
+                $condition = '=';
+                if (Str::contains($column, '~')) {
+                    [$column, $condition] = explode('~', $column);
+                }
+
                 $type = $this->types[$column] ?? null;
 
                 if (is_null($type)) {
-                    $this->addWhere($column, $value);
+                    $this->addWhere($column, $value, $condition);
 
                     continue;
                 }
@@ -152,11 +203,15 @@ trait Filter
                 if ($type == 'scope') {
                     $this->filterScopes([$column => $value]);
                 } elseif ($type == 'like') {
-                    $this->filterLike([$column => $value]);
+                    $this->filterContains([$column => $value]);
                 } elseif ($type == 'left') {
-                    $this->filterLeft([$column => $value]);
+                    $this->filterStartWith([$column => $value]);
                 } elseif ($type == 'right') {
-                    $this->filterRight([$column => $value]);
+                    $this->filterEndWith([$column => $value]);
+                } elseif ($type == 'empty') {
+                    $this->filterNull([$column => $value]);
+                } elseif ($type == 'notempty') {
+                    $this->filterNotNull([$column => $value]);
                 } elseif ($type == 'between') {
                     $this->filterBetween([$column => $value]);
                 } elseif ($type == 'range') {
@@ -166,11 +221,11 @@ trait Filter
                 } elseif ($type == 'datetime' || $type == 'timestamp') {
                     $this->filterDatetimes([$column => $value]);
                 } elseif ($type == 'date') {
-                    $this->filterDateRanges([$column => $value]);
+                    $this->filterDate([$column => $value]);
                 } elseif ($type == 'parser') {
                     $this->filterParse([$column => $value]);
                 } else {
-                    $this->addWhere($column, $value);
+                    $this->addWhere($column, $value, $condition);
                 }
             }
         }
@@ -178,37 +233,67 @@ trait Filter
         return $this;
     }
 
-    protected function filterLike(array $filters = []): self
+    protected function filterContains(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && $value != '' && !empty($column)) {
+            if (!empty($column) && isset($value) && $value != '') {
                 $value = '%' . $value . '%';
 
-                $this->addWhere($column, $value, 'like');
+                if (Str::startsWith($column, '!')) {
+                    $this->addNotWhere(ltrim($column, '!'), $value, 'like');
+                } else {
+                    $this->addWhere($column, $value, 'like');
+                }
             }
         }
 
         return $this;
     }
 
-    protected function filterLeft(array $filters = []): self
+    protected function filterNull(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && $value != '' && !empty($column)) {
+            $this->whereNull($this->cleanField($column));
+        }
+
+        return $this;
+    }
+
+    protected function filterNotNull(array $filters = []): self
+    {
+        foreach ($filters as $column => $value) {
+            $this->whereNotNull($this->cleanField($column));
+        }
+
+        return $this;
+    }
+
+    protected function filterStartWith(array $filters = []): self
+    {
+        foreach ($filters as $column => $value) {
+            if (!empty($column) && isset($value) && $value != '') {
                 $value = '%' . $value;
-                $this->addWhere($column, $value, 'like');
+                if (Str::startsWith($column, '!')) {
+                    $this->addNotWhere(ltrim($column, '!'), $value, 'like');
+                } else {
+                    $this->addWhere($column, $value, 'like');
+                }
             }
         }
 
         return $this;
     }
 
-    protected function filterRight(array $filters = []): self
+    protected function filterEndWith(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (isset($value) && $value != '' && !empty($column)) {
+            if (!empty($column) && isset($value) && $value != '') {
                 $value .= '%';
-                $this->addWhere($column, $value, 'like');
+                if (Str::startsWith($column, '!')) {
+                    $this->addNotWhere(ltrim($column, '!'), $value, 'like');
+                } else {
+                    $this->addWhere($column, $value, 'like');
+                }
             }
         }
 
@@ -219,7 +304,7 @@ trait Filter
     {
         foreach ($filters as $value => $column) {
             $value = $data[$value];
-            if (isset($value) && $value != '' && !empty($column)) {
+            if (!empty($column) && isset($value) && $value != '') {
                 if (Str::startsWith('%', $column)) {
                     $value = '%' . $value;
 
@@ -273,9 +358,9 @@ trait Filter
         return $this;
     }
 
-    protected function filterDateRanges(array $date_range): self
+    protected function filterDate(array $dates): self
     {
-        foreach ($date_range as $column => $date) {
+        foreach ($dates as $column => $date) {
             if (empty($date)) {
                 continue;
             }
@@ -285,24 +370,26 @@ trait Filter
                 $date = [
                     'from' => isset($date[0]) ? \trim($date[0]) : null,
                     'to' => isset($date[1]) ? \trim($date[1]) : null,
+                    'condition' => isset($date[2]) ? \trim($date[2]) : null,
                 ];
             }
 
             $from = $this->toTime($date['from'], 'Y-m-d');
             $to = $this->toTime($date['to'], 'Y-m-d');
+            $condition = $date['condition'] ?? '=';
             $column = $this->cleanField($column);
 
             if ($from && $to) {
                 $this->whereDateBetween($column, [$from, $to]);
             } elseif ($from) {
-                $this->whereDate($column, '=', $from);
+                $this->whereDate($column, $condition, $from);
             }
         }
 
         return $this;
     }
 
-    protected function filterDatetimes(array $datetime): self
+    protected function filterDatetimes(array $datetime, bool $negative = false): self
     {
         foreach ($datetime as $column => $date) {
             if (empty($date)) {
@@ -324,13 +411,19 @@ trait Filter
             $from = carbon($this->toTime($from, 'Y-m-d H:i:s', '00:00:00'));
             $to = carbon($this->toTime($to, 'Y-m-d H:i:s', '23:59:59'));
 
-            $this->whereBetween($this->cleanField($column), [$from, $to]);
+            if ($negative) {
+                $this->whereNotBetween($this->cleanField($column), [$from, $to]);
+
+            } else {
+
+                $this->whereBetween($this->cleanField($column), [$from, $to]);
+            }
         }
 
         return $this;
     }
 
-    protected function filterUnixTimes(array $unixtime): self
+    protected function filterUnixTimes(array $unixtime, bool $negative = false): self
     {
         foreach ($unixtime as $column => $date) {
             if (empty($date)) {
@@ -359,42 +452,22 @@ trait Filter
                 $to = $to && !is_string($to) ? $to->timestamp : null;
             }
 
-            $this->whereBetween($this->cleanField($column), [$from, $to]);
+            if ($negative) {
+                $this->whereNotBetween($this->cleanField($column), [$from, $to]);
+            } else {
+                $this->whereBetween($this->cleanField($column), [$from, $to]);
+            }
         }
 
         return $this;
     }
 
-    protected function filterRange(array $ranges): self
+    protected function filterRange(array $ranges, bool $negative = false): self
     {
-        foreach ($ranges as $column => $date) {
-            if (empty($date)) {
-                continue;
-            }
-
-            if (!\is_array($date)) {
-                $date = \explode(' - ', $date);
-                $date = [
-                    'from' => isset($date[0]) ? \trim($date[0]) : null,
-                    'to' => isset($date[1]) ? \trim($date[1]) : null,
-                ];
-            }
-
-            $from = $this->toTime($date['from']);
-            $to = $this->toTime($date['to']);
-            $column = $this->cleanField($column);
-
-            if ($from && $to) {
-                $this->whereBetween($column, [$from, $to]);
-            } elseif ($from) {
-                $this->addWhere($column, $from);
-            }
-        }
-
-        return $this;
+        return $this->filterBetween($ranges, $negative);
     }
 
-    protected function filterBetween(array $between): self
+    protected function filterBetween(array $between, bool $negative = false): self
     {
         foreach ($between as $column => $date) {
             if (empty($date)) {
@@ -406,17 +479,27 @@ trait Filter
                 $date = [
                     'from' => isset($date[0]) ? \trim($date[0]) : null,
                     'to' => isset($date[1]) ? \trim($date[1]) : null,
+                    'condition' => isset($date[2]) ? \trim($date[2]) : null,
                 ];
             }
 
             $from = $date['from'];
             $to = $date['to'];
+            $condition = $date['condition'] ?? '=';
             $column = $this->cleanField($column);
 
-            if ($from && $to) {
-                $this->whereBetween($column, [$from, $to]);
-            } elseif ($from) {
-                $this->addWhere($column, $from);
+            if ($negative) {
+                if ($from && $to) {
+                    $this->whereNotBetween($column, [$from, $to]);
+                } elseif ($from) {
+                    $this->addNotWhere($column, $from, $condition);
+                }
+            } else {
+                if ($from && $to) {
+                    $this->whereBetween($column, [$from, $to]);
+                } elseif ($from) {
+                    $this->addWhere($column, $from, $condition);
+                }
             }
         }
 
@@ -500,6 +583,10 @@ trait Filter
     {
         if (empty($time)) {
             return null;
+        }
+
+        if ($time instanceof Carbon) {
+            return $time->format($format);
         }
 
         if (Str::contains($format, ':')) {

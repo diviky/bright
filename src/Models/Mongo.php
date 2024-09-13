@@ -11,7 +11,5 @@ class Mongo extends BaseModel
 
     protected $connection = 'mongodb';
 
-    protected $primaryKey = 'id';
-
     protected $guarded = [];
 }

@@ -76,8 +76,17 @@
       method: self.settings.method || 'GET',
       headers: self.settings.headers || {},
     }).then(
-      function (html) {
-        self.content(html);
+      function (response, status, xhr) {
+        var ct = xhr.getResponseHeader('content-type') || '';
+        if (ct.indexOf('html') > -1) {
+          self.content(response);
+        } else if (ct.indexOf('json') > -1) {
+          let fragments = response.fragments;
+          for (const [key, value] of Object.entries(fragments)) {
+            //var fragment = self.form.find('[fragment=' + key + ']');
+            self.content(value);
+          }
+        }
       },
       function (xhr) {
         if (xhr.status === 401) {
@@ -151,6 +160,7 @@
     var self = this;
 
     $(self.settings.el + ' .modal-body').html(html);
+
     $(self.settings.el).modal({
       keyboard: this.settings.keyboard,
       backdrop: this.settings.backdrop,

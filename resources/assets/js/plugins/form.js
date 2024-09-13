@@ -1038,7 +1038,7 @@
           // #180
           a.push({ name: n, value: '', type: el.type });
         }
-      } else if (v !== null && typeof v != 'undefined') {
+      } else if (v !== null && typeof v !== 'undefined') {
         if (elements) {
           elements.push(el);
         }
@@ -1084,7 +1084,7 @@
         for (var i = 0, max = v.length; i < max; i++) {
           a.push({ name: n, value: v[i] });
         }
-      } else if (v !== null && typeof v != 'undefined') {
+      } else if (v !== null && typeof v !== 'undefined') {
         a.push({ name: this.name, value: v });
       }
     });

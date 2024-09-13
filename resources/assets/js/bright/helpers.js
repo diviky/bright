@@ -1,9 +1,9 @@
 function getForm($this) {
-  if ($this.parents('form:eq(0)').length > 0) {
+  if ($this && $this.parents('form:eq(0)').length > 0) {
     return $this.parents('form:eq(0)');
   }
 
-  if ($this.parents().find('[ajax-form]').length > 0) {
+  if ($this && $this.parents().find('[ajax-form]').length > 0) {
     return $('[ajax-form]:first');
   }
 

@@ -11,13 +11,6 @@ use Illuminate\Support\Collection;
 class Chart extends BaseChart
 {
     /**
-     * Chartjs dataset class.
-     *
-     * @var object
-     */
-    public $dataset = Dataset::class;
-
-    /**
      * Initiates the Chartjs Line Chart.
      *
      * @return self
@@ -35,6 +28,11 @@ class Chart extends BaseChart
             'interaction' => [
                 'mode' => 'index',
                 'intersect' => false,
+                'plugins' => [
+                    'colors' => [
+                        'enabled' => false,
+                    ],
+                ],
             ],
         ]);
     }
@@ -81,5 +79,39 @@ class Chart extends BaseChart
         }
 
         return $colors[$index];
+    }
+
+    public function datasets(array $sets)
+    {
+        foreach ($sets as $index => $set) {
+            $this->dataset($set['label'], $set['type'], $set['data'], $index);
+        }
+    }
+
+    /**
+     * Adds a new dataset to the chart.
+     *
+     * @param  array|Collection  $data
+     */
+    public function dataset(string $name, string $type, $data, int $index = 0)
+    {
+        if ($data instanceof Collection) {
+            $data = $data->toArray();
+        }
+
+        $dataset = new $this->dataset($name, $type, $data);
+
+        // $dataset->options([
+        //     'color' => $this->colors($index),
+        // ]);
+
+        // match ($type) {
+        //     'pie' => $dataset->backgroundColor($this->colors()),
+        //     default => $dataset->backgroundColor($this->colors($index))
+        // };
+
+        array_push($this->datasets, $dataset);
+
+        return $dataset;
     }
 }

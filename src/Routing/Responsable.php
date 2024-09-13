@@ -193,9 +193,19 @@ class Responsable implements BaseResponsable
 
         $pjax = $request->pjax() ? true : $request->input('pjax');
         $fragment = $pjax ? false : $request->ajax();
-        $container = $request->header('X-Pjax-Container', 'content');
 
-        return $view->fragmentIf($fragment, $container);
+        if ($fragment) {
+            $container = $request->header('X-Pjax-Container', 'content');
+
+            return [
+                'fragments' => [
+                    $container => $view->fragment($container),
+                    //'indicator' => $view->fragment('indicator'),
+                ],
+            ];
+        }
+
+        return $view->render();
     }
 
     /**

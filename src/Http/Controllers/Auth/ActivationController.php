@@ -46,6 +46,10 @@ class ActivationController extends Controller
             ];
         }
 
+        if (is_array($token)) {
+            $token = implode('', $token);
+        }
+
         $activation = Activation::where('token', $token)
             ->where('user_id', $user->id)
             ->first();

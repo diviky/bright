@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Controllers\Auth\Concerns;
 
+use Diviky\Bright\Events\Registered as AccountCreated;
 use Diviky\Bright\Models\Models;
 use Diviky\Bright\Notifications\SendActivationToken;
 use Illuminate\Auth\Events\Registered;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 
 trait RegistersUsers
 {
@@ -24,6 +26,7 @@ trait RegistersUsers
     {
         $user = $this->create($values);
         event(new Registered($user));
+        event(new AccountCreated($user, $values));
 
         $this->registered($user);
 
@@ -46,7 +49,7 @@ trait RegistersUsers
 
         $this->guard()->login($user);
 
-        $next = ($user->status == 0) ? 'user.activate' : $this->redirectPath();
+        $next = ($user->status == 0) ? 'activate' : $this->redirectPath();
 
         return [
             'redirect' => $next,
@@ -122,7 +125,7 @@ trait RegistersUsers
         return Validator::make($rules, [
             'name' => 'required|string|max:100',
             'email' => 'required|string|email|unique:' . config('bright.table.users'),
-            'password' => 'required|case_diff|numbers|letters|min:6|max:20',
+            'password' => ['required', Password::min(8)->max(20)->mixedCase()->numbers()->symbols()->uncompromised()],
         ]);
     }
 

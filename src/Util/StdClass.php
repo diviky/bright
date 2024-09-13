@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Util;
 
-class StdClass extends \stdClass
-{
-    protected array $items = [];
+use Illuminate\Support\Collection;
 
-    protected mixed $defalut = null;
+class StdClass extends Collection
+{
+    protected mixed $default = null;
 
     protected bool $recursive = false;
 
@@ -16,10 +16,15 @@ class StdClass extends \stdClass
 
     protected int $depth = 0;
 
-    public function __construct(array $items = [], mixed $defalut = null)
+    /**
+     * @param  \Illuminate\Contracts\Support\Arrayable|iterable|array|null  $items
+     * @param  mixed  $default
+     */
+    public function __construct($items = [], $default = null)
     {
-        $this->items = $items;
-        $this->defalut = $defalut;
+        $this->default = $default;
+
+        parent::__construct($items);
     }
 
     public function __set(string $name, mixed $value): void
@@ -27,27 +32,17 @@ class StdClass extends \stdClass
         $this->items[$name] = $value;
     }
 
-    public function __get(string $name): mixed
+    public function __get($name): mixed
     {
         if (array_key_exists($name, $this->items)) {
             if ($this->recursive && is_array($this->items[$name]) && $this->depth < $this->maxDepth) {
-                return (new self($this->items[$name], $this->defalut))->recursive($this->maxDepth, $this->depth + 1, $this->recursive);
+                return (new self($this->items[$name], $this->default))->recursive($this->maxDepth, $this->depth + 1, $this->recursive);
             }
 
             return $this->items[$name];
         }
 
-        return $this->defalut;
-    }
-
-    public function toArray(): array
-    {
-        return $this->items;
-    }
-
-    public function toJson(): string
-    {
-        return json_encode($this->items);
+        return $this->default;
     }
 
     public function recursive(float $maxDepth = INF, int $depth = 0, bool $recursive = true): self

@@ -9,11 +9,17 @@ use Diviky\Bright\Attributes\ViewNamespace;
 use Diviky\Bright\Attributes\ViewPaths;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use Livewire\Component;
 
 trait Renderer
 {
     public function render()
+    {
+        $view = $this->setUpView()->getViewFrom($this);
+
+        return view($view);
+    }
+
+    protected function setUpView()
     {
         // Added to avoid the cache views with same name in different components
         View::resetDefaultPaths();
@@ -27,13 +33,7 @@ trait Renderer
             $finder->prependLocation($path);
         }
 
-        $view = $this->getViewFrom($this);
-
-        if ($this instanceof Component) {
-            return view('bright::components.livewire', ['livewire' => $view]);
-        }
-
-        return view($view);
+        return $this;
     }
 
     /**
@@ -42,7 +42,7 @@ trait Renderer
      * @param  self  $controller
      * @return array
      */
-    protected function getViewFrom($controller): string
+    protected function getViewFrom($controller)
     {
         $view = Str::kebab(class_basename($this));
 
@@ -68,17 +68,18 @@ trait Renderer
      * Get the view locations from controller.
      *
      * @param  self  $controller
+     * @return array
      */
-    protected function getViewPathsFrom($controller): array
+    protected function getViewPathsFrom($controller)
     {
         $paths = [];
-        if (\method_exists($controller, 'getViewsFrom')) {
+        if (\method_exists($controller, 'loadViewsFrom')) {
             $paths = $controller->getViewsFrom();
             $paths = !\is_array($paths) ? [$paths] : $paths;
-        }
 
-        foreach ($paths as $key => $path) {
-            $paths[$key] = $path . '/views/';
+            foreach ($paths as $key => $path) {
+                $paths[$key] = $path . '/views/';
+            }
         }
 
         $reflection = new \ReflectionClass($controller);
@@ -91,10 +92,5 @@ trait Renderer
         }
 
         return $paths;
-    }
-
-    public function rendered(): void
-    {
-        $this->dispatch('component.rendered');
     }
 }

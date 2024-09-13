@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Concerns;
 
+use Diviky\Bright\Attributes\ViewPaths;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -148,30 +149,29 @@ trait Responsable
      */
     protected function getViewPathsFrom($controller, $action = null)
     {
-        if (\method_exists($controller, 'getViewsFrom')) {
-            $paths = $controller->getViewsFrom();
-            $paths = !\is_array($paths) ? [$paths] : $paths;
-            foreach ($paths as $key => $path) {
-                $paths[$key] = $path . '/views/';
-            }
-
-            return $paths;
-        }
-
+        $paths = [];
         if (\method_exists($controller, 'loadViewsFrom')) {
             $paths = $controller->loadViewsFrom();
             $paths = !\is_array($paths) ? [$paths] : $paths;
+
             foreach ($paths as $key => $path) {
                 $paths[$key] = $path . '/views/';
             }
+        }
 
-            return $paths;
+        $reflection = new \ReflectionClass($controller);
+
+        $attributes = $reflection->getAttributes(ViewPaths::class);
+
+        foreach ($attributes as $attribute) {
+            $instance = $attribute->newInstance();
+            $paths = array_merge($paths, $instance->getPaths());
         }
 
         if ($action) {
-            return [$this->getViewPath($action)];
+            $paths = array_merge($paths, [$this->getViewPath($action)]);
         }
 
-        return [];
+        return array_filter($paths);
     }
 }

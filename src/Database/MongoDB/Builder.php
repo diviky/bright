@@ -22,6 +22,7 @@ use MongoDB\Laravel\Query\Builder as QueryBuilder;
 
 class Builder extends QueryBuilder
 {
+    use Aggregator;
     use Async;
     use Build;
     use BuildsQueries;

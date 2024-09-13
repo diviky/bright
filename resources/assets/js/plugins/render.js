@@ -2,7 +2,7 @@
   var pluginName = 'easyRender';
 
   var defaults = {
-    response_target: '[ajax-content]',
+    response_target: '[fragment]',
     total_target: '[ajax-total]',
     loadmore: '[ajax-more]',
     backdrop: 'backdrop',
@@ -157,32 +157,35 @@
   easyRender.prototype.onSuccess = function (response) {
     var self = this;
 
-    if (self.settings.json && isJson(response)) {
+    if (self.settings.json) {
       displayNoty(response, self.form);
-      self.callback('onComplete', response);
-      return true;
     }
 
     // check the page number
     var page = self.form.find('input[name=page]').val();
     var append = page == 1 ? false : self.settings.append;
 
-    var target = self.form.find(self.settings.response_target);
-    if (append) {
-      self.form.find('.ac-load-more-remove').remove();
-      target.append(response);
-    } else {
-      target.html(response);
-      var total = self.form.find('[data-total]').data('total');
+    let fragments = response.fragments || {};
 
-      if (total == '' || total == undefined) {
-        var total = self.form.find('input[name=total]').val();
+    for (const [key, value] of Object.entries(fragments)) {
+      var fragment = self.form.find('[fragment=' + key + ']');
+
+      if (append) {
+        self.form.find('.ac-load-more-remove').remove();
+        fragment.append(value);
+      } else {
+        fragment.html(value);
+        var total = self.form.find('[data-total]').data('total');
+
+        if (total == '' || total == undefined) {
+          var total = self.form.find('input[name=total]').val();
+        }
+
+        self.form.find('input[name=total]').val(total);
+        self.form.find(self.settings.total_target).html(total);
       }
-
-      self.form.find('input[name=total]').val(total);
-      self.form.find(self.settings.total_target).html(total);
+      fragment.removeClass(self.settings.backdrop);
     }
-    target.removeClass(self.settings.backdrop);
 
     self.callback('onComplete', response);
   };

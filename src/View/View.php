@@ -32,6 +32,7 @@ class View
         $component = \explode('.', $route, 2)[0];
 
         $paths = $this->getViewPathsFrom($controller, $action);
+
         $this->setUpThemeFromRoute($route, $component, $paths);
 
         return view($view, $data, $mergeData);

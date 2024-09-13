@@ -27,7 +27,7 @@ return [
      */
     'tables' => [
         'default' => [
-            'table' => ['user_id'],
+            'table' => ['user_id'], //[$column => $value]
         ],
         'select' => [],
         'insert' => [],

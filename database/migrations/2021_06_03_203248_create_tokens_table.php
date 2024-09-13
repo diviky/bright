@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create(config('bright.table.tokens'), function (Blueprint $table): void {
             $table->increments('id');
-            $table->foreignId('user_id')->index('tokens_user_id_foreign');
+            $table->foreignId('owner_id')->index('tokens_owner_id_foreign');
             $table->string('name', 100)->nullable();
             $table->string('access_token', 100)->unique('tokens_access_token');
             $table->string('refresh_token', 100)->nullable();

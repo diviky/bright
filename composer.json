@@ -20,16 +20,14 @@
     "php": "^8.2",
     "guzzlehttp/guzzle": "^7.2",
     "kirschbaum-development/eloquent-power-joins": "^3.5",
-    "laravel/framework": "^10.2",
-    "laravel/sanctum": "^3.0",
+    "laravel/framework": "^10.48|^11.2",
+    "laravel/sanctum": "^3.0|^4.0",
     "laravel/ui": "^4.2",
     "league/flysystem-aws-s3-v3": "^3.10",
     "matomo/decompress": "^2.1",
-    "mongodb/laravel-mongodb": "^4.5",
-    "schuppo/password-strength": "^2.6",
+    "mongodb/laravel-mongodb": "^5.0",
     "spatie/laravel-permission": "^6.9",
-    "spatie/laravel-schemaless-attributes": "^2.3",
-    "livewire/livewire": "^3.0"
+    "spatie/laravel-schemaless-attributes": "^2.3"
   },
   "require-dev": {
     "diviky/code-analysis": "^2.0",

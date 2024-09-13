@@ -165,6 +165,15 @@ trait Eventable
         return $values;
     }
 
+    protected function setOwnerId(array $values): array
+    {
+        if (!isset($values['owner_id']) && user('id')) {
+            $values['owner_id'] = user('id');
+        }
+
+        return $values;
+    }
+
     /**
      * Get the event tables.
      *
@@ -219,6 +228,10 @@ trait Eventable
                         $value = $this->setUserId($value);
 
                         break;
+                    case 'owner_id':
+                        $value = $this->setOwnerId($value);
+
+                        break;
                     case 'time':
                         $value = $this->setTimeStamps($value, true);
 
@@ -271,22 +284,19 @@ trait Eventable
 
         $from = \preg_split('/ as /i', $this->getExpressionValue($this->from));
 
-        $mainAlias = (\count($from) > 1) ? last($from) . '.' : $this->from . '.';
+        $mainAlias = (\count($from) > 1) ? last($from) . '.' : '';
 
-        foreach ($eventColumns as $columns) {
-            if (!\is_array($columns)) {
-                $columns = [$columns => $columns];
+        foreach ($eventColumns as $column => $value) {
+            if (\is_numeric($column)) {
+                $column = $value;
             }
 
             $alias = $mainAlias;
-            $column = \key($columns);
             if (\strpos($column, '.') !== false) {
                 [$alias, $column] = \explode('.', $column);
 
                 $alias .= '.';
             }
-
-            $field = isset($columns[$column]) ? $columns[$column] : null;
 
             switch ($column) {
                 case 'user_id':
@@ -297,9 +307,16 @@ trait Eventable
                     }
 
                     break;
+                case 'owner_id':
+                    $user_id = user('id');
+                    if ($user_id) {
+                        $this->where($alias . $column, $user_id);
+                    }
+
+                    break;
                 default:
-                    if ($field && app()->has($field)) {
-                        $this->where($alias . $column, app()->get($field));
+                    if ($value && app()->has($value)) {
+                        $this->where($alias . $column, app()->get($value));
                     }
 
                     break;

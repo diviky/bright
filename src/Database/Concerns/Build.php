@@ -24,9 +24,7 @@ trait Build
             return parent::whereDate($column, $values);
         }
 
-        $column = $this->raw('DATE(' . $this->grammar->wrap($column) . ')');
-
-        return parent::whereBetween($column, $values, $boolean, $not);
+        return parent::whereDate($column, '>=', $values[0])->whereDate($column, '<=', $values[1]);
     }
 
     /**

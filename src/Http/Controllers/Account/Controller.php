@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller as BaseController;
 use Diviky\Bright\Models\Models;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -15,17 +16,17 @@ use Illuminate\Validation\Rules\Password;
 
 class Controller extends BaseController
 {
-    public function getViewsFrom(): array
+    public function loadViewsFrom(): array
     {
         return [__DIR__];
     }
 
-    public function index(): array
+    public function index(Request $request): array
     {
         $user_id = user('id');
         $user = Models::user()::findOrFail($user_id);
 
-        if ($this->isMethod('post')) {
+        if ($request->isMethod('post')) {
             $this->rules([
                 'name' => 'required',
                 'email' => 'required|email',
@@ -34,14 +35,14 @@ class Controller extends BaseController
             ]);
 
             $password = user('password');
-            if (!Hash::check($this->input('password'), $password)) {
+            if (!Hash::check($request->post('password'), $password)) {
                 return [
                     'status' => 'ERROR',
                     'message' => trans('Your current password didn\'t match.'),
                 ];
             }
 
-            $email = $this->input('email');
+            $email = $request->post('email');
             // Check email is changed
             if ($user->email != $email) {
                 $exists = Models::user()::where('email', $email)
@@ -56,11 +57,11 @@ class Controller extends BaseController
                 }
             }
 
-            $user->name = $this->input('name');
-            $user->email = $this->input('email');
-            $user->mobile = $this->input('mobile');
+            $user->name = $request->post('name');
+            $user->email = $request->post('email');
+            $user->mobile = $request->post('mobile');
 
-            $file = $this->request->file('avatar');
+            $file = $request->file('avatar');
 
             $user->setAvatar($file);
             $user->save();
@@ -79,7 +80,7 @@ class Controller extends BaseController
         ];
     }
 
-    public function password(): array
+    public function password(Request $request): array
     {
         $user_id = user('id');
         $user = Models::user()::findOrFail($user_id);
@@ -87,7 +88,7 @@ class Controller extends BaseController
         if ($this->isMethod('post')) {
             $this->rules([
                 'oldpassword' => 'required',
-                'password' => ['required', 'string', 'max:20', Password::min(12)->mixedCase()->numbers()->symbols()->uncompromised()],
+                'password' => ['required', 'string', 'max:20', Password::min(8)->mixedCase()->numbers()->symbols()->uncompromised()],
                 'password_confirm' => 'required|same:password',
             ]);
 
@@ -142,13 +143,13 @@ class Controller extends BaseController
         ];
     }
 
-    public function sniff(?string $key = null)
+    public function sniff(Request $request, ?string $key = null)
     {
         $decrypted = null;
         session()->forget('sniffed');
         session()->forget('sniff');
 
-        $key = $this->post('key', $key);
+        $key = $request->post('key', $key);
 
         try {
             $decrypted = decrypt($key);
@@ -190,9 +191,9 @@ class Controller extends BaseController
         return redirect()->route('home');
     }
 
-    public function search(): array
+    public function search(Request $request): array
     {
-        $term = $this->query('term');
+        $term = $request->query('term');
         if (empty($term)) {
             return [];
         }

@@ -5,7 +5,7 @@ function brightJs() {
   jQuery('[role="ksubmit"], [easysubmit]').easySubmit();
   jQuery('[tooltip=modal], [role="modal"]').easyModal();
 
-  $('[data-toggle="tooltip"]').on('remove hide mouseleave', function (e) {
+  $('[data-toggle="tooltip"]').on('remove click mouseup mouseleave mousedown ', function (e) {
     $(this).tooltip('hide');
   });
 
