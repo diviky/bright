@@ -8,7 +8,7 @@ use Illuminate\Support\Collection as LaravelCollection;
 use Illuminate\Support\LazyCollection;
 use InvalidArgumentException;
 use Iterator;
-use MongoDB\Collection;
+use MongoDB\Laravel\Collection;
 use MongoDB\Driver\CursorInterface;
 
 use function array_replace;

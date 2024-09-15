@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Diviky\Bright\Contracts\UtilInterface as Util;
+use Diviky\Bright\Util\StdClass;
 use Diviky\Bright\View\View;
 use Illuminate\Support\Str;
 
@@ -123,4 +124,9 @@ function kview($controller, $view, $data = [], $mergeData = [])
 function utcTime($date = null, $timezone = null)
 {
     return app(Util::class)->utcTime($date, $timezone);
+}
+
+function collects($items = [], $default = null)
+{
+    return new StdClass($items, $default);
 }
