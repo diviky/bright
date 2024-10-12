@@ -36,16 +36,22 @@ function brightJs() {
   }
 
   if (typeof ClipboardJS === 'function') {
-    var clipboard = new ClipboardJS('[data-clipboard]');
+    var clipboard = new ClipboardJS('[data-clipboard]', {
+      text: function (trigger) {
+        return trigger.getAttribute('data-clipboard');
+      },
+    });
+
     clipboard.on('success', function (e) {
       e.clearSelection();
       $('.tooltip-inner').html('Copied!');
       $(e.trigger).tooltip('update');
     });
+
     clipboard.on('error', function (e) {
       notify({
         text: 'Error!',
-        type: 'info',
+        type: 'error',
       });
     });
   }

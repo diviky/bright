@@ -574,7 +574,7 @@ trait Filter
     /**
      * Convert time to proper format.
      *
-     * @param  string  $time
+     * @param  null|\Illuminate\Support\Carbon|string|int  $time
      * @param  string  $format
      * @param  null|mixed  $prefix
      * @return null|\Illuminate\Support\Carbon|string

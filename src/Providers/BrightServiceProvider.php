@@ -87,7 +87,6 @@ class BrightServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         $this->mergeConfigFrom($this->path() . '/config/bright.php', 'bright');
-        $this->mergeConfigFrom($this->path() . '/config/charts.php', 'charts');
         $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
         $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
 

@@ -21,8 +21,13 @@ trait Aggregator
 
             // Add grouping columns to the $group part of the aggregation pipeline.
             if ($this->groups) {
-                foreach ($this->groups as $column) {
-                    $group['_id'][$column] = '$' . $column;
+                foreach ($this->groups as $key => $column) {
+                    if (!is_numeric($key)) {
+                        $group['_id'][$key] = $column;
+                        $column = $key;
+                    } else {
+                        $group['_id'][$column] = '$' . $column;
+                    }
 
                     // When grouping, also add the $last operator to each grouped field,
                     // this mimics SQL's behaviour a bit.
@@ -119,66 +124,10 @@ trait Aggregator
             return $aggregator;
         }
 
-        // Distinct query
-        if ($this->distinct) {
-            // Return distinct results directly
-            $column = $columns[0] ?? '_id';
-
-            $options = $this->inheritConnectionOptions();
-
-            return ['distinct' => [$column, $wheres, $options]];
-        }
-
-        // Normal query
-        // Convert select columns to simple projections.
-        $projection = array_fill_keys($columns, true);
-
-        // Add custom projections.
-        if ($this->projections) {
-            $projection = array_merge($projection, $this->projections);
-        }
-
-        $options = [];
-
-        // Apply order, offset, limit and projection
-        if ($this->timeout) {
-            $options['maxTimeMS'] = $this->timeout * 1000;
-        }
-
-        if ($this->orders) {
-            $options['sort'] = $this->orders;
-        }
-
-        if ($this->offset) {
-            $options['skip'] = $this->offset;
-        }
-
-        if ($this->limit) {
-            $options['limit'] = $this->limit;
-        }
-
-        if ($this->hint) {
-            $options['hint'] = $this->hint;
-        }
-
-        if ($projection) {
-            $options['projection'] = $projection;
-        }
-
-        // Fix for legacy support, converts the results to arrays instead of objects.
-        $options['typeMap'] = ['root' => 'array', 'document' => 'array'];
-
-        // Add custom query options
-        if (count($this->options)) {
-            $options = array_merge($options, $this->options);
-        }
-
-        $options = $this->inheritConnectionOptions($options);
-
-        return ['find' => [$wheres, $options]];
+        return $this;
     }
 
-    public function addAggregate($function, $columns = ['*'])
+    public function addAggregate(string $function, array $columns = ['*'])
     {
         $this->aggregate = [
             'function' => $function,

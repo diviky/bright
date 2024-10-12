@@ -16,7 +16,7 @@ trait UserAvatarTrait
      * @param  int  $size
      * @param  string  $disk
      */
-    public function setAvatar($file, $size = 400, $disk = 's3'): void
+    public function setAvatar($file, $size = 400, $disk = null): void
     {
         if ($file) {
             $img = Image::make($file);

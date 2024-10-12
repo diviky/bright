@@ -8,7 +8,7 @@ use Illuminate\Support\Collection as LaravelCollection;
 use Illuminate\Support\LazyCollection;
 use InvalidArgumentException;
 use Iterator;
-use MongoDB\Laravel\Collection;
+use MongoDB\Collection;
 use MongoDB\Driver\CursorInterface;
 
 use function array_replace;
@@ -53,7 +53,7 @@ class AggregationBuilder
     /**
      * Execute the aggregation pipeline and return the results in a lazy collection.
      */
-    public function cursor($options = []): LazyCollection
+    public function cursor(array $options = []): LazyCollection
     {
         $cursor = $this->execute($options);
 

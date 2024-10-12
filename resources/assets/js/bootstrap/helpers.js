@@ -31,7 +31,7 @@ function load_helpers() {
 
   $(document).on('change', '[data-check-all]', function (e) {
     var $this = $(this);
-    var target = $this.parents('table:first');
+    var target = $this.parents('[data-check]:first');
     var boxes = target.find('tbody input[type=checkbox]');
 
     if ($this.is(':checked')) {
@@ -41,31 +41,30 @@ function load_helpers() {
 
       var selected = target.find('tbody input[type=checkbox]:checked').length;
       target.find('[data-checked-count]').text(selected);
-      target.find('[data-checked-on] input[type=checkbox]').prop('checked', true);
+      target.find('[data-uncheck-all]').prop('checked', true);
     } else {
       boxes.prop('checked', false);
       target.find('[data-checked-on]').hide();
       target.find('[data-checked-off]').show();
-      target.find('[data-checked-on] input[type=checkbox]').prop('checked', false);
+      target.find('[data-uncheck-all]').prop('checked', false);
     }
   });
 
   $(document).on('change', '[data-uncheck-all]', function (e) {
     var $this = $(this);
-    var target = $this.parents('table:first');
+    var target = $this.parents('[data-check]:first');
     var boxes = target.find('tbody input[type=checkbox]');
 
     boxes.prop('checked', false);
     target.find('[data-checked-on]').hide();
     target.find('[data-checked-off]').show();
 
-    target.find('[data-checked-off] input[type=checkbox]').prop('checked', false);
+    target.find('[data-check-all]').prop('checked', false);
   });
 
   $(document).on('change', '[data-checked] input[type=checkbox]', function (e) {
     var $this = $(this);
-    var target = $this.parents('table:first');
-    var boxes = target.find('tbody input[type=checkbox]');
+    var target = $this.parents('[data-check]:first');
 
     var selected = target.find('tbody input[type=checkbox]:checked').length;
     target.find('[data-checked-count]').text(selected);
@@ -77,7 +76,8 @@ function load_helpers() {
     } else {
       target.find('[data-checked-on]').hide();
       target.find('[data-checked-off]').show();
-      target.find('[data-checked-on] input[type=checkbox]').prop('checked', false);
+      target.find('[data-uncheck-all]').prop('checked', false);
+      target.find('[data-check-all]').prop('checked', false);
     }
   });
 
