@@ -117,20 +117,21 @@ RegExp.escape = function (s) {
 };
 
 function setLivewire($wire) {
+  setTimeout(function () {
+    $(document).trigger('ajax:loaded');
+  }, 100);
+
   if (typeof $wire === 'undefined') {
     return null;
   }
 
   window.wire = $wire;
-
-  setTimeout(function () {
-    $(document).trigger('ajax:loaded');
-  }, 100);
 }
 
 function wired() {
   if (typeof window.wire === 'undefined') {
     return null;
   }
+
   return window.wire;
 }
