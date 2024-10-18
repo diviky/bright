@@ -23,7 +23,7 @@ return new class extends Migration
             $table->text('options')->nullable()->after('access_token');
             $table->timestamp('last_password_at')->nullable()->after('remember_token');
             $table->timestamp('last_login_at')->nullable()->after('last_password_at');
-            $table->string('last_login_ip', 20)->nullable()->after('last_login_at');
+            $table->string('last_login_ip', 100)->nullable()->after('last_login_at');
             $table->softDeletes()->after('updated_at');
             $table->boolean('status')->default(0)->index('users_status_index');
         });

@@ -1,5 +1,5 @@
 function load_menuJs() {
-  $('#toggle-sidebar').on('click', function() {
+  $('#toggle-sidebar').on('click', function () {
     if ($('.sided-layout').hasClass('sidebar-mini')) {
       $('.sided-layout').removeClass('sidebar-mini');
       setCookie('sbm', 0, 1);
@@ -9,7 +9,7 @@ function load_menuJs() {
     }
   });
 
-  $(document).ajaxComplete(function() {
-    $('#header-menu').collapse('hide');
+  $(document).ajaxComplete(function () {
+    $('[navbar]').collapse('hide');
   });
 }
