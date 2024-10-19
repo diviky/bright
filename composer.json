@@ -19,7 +19,7 @@
   "require": {
     "php": "^8.2 || ^8.3 || ^8.4",
     "guzzlehttp/guzzle": "^7.2",
-    "kirschbaum-development/eloquent-power-joins": "^3.5",
+    "kirschbaum-development/eloquent-power-joins": "^4.0",
     "laravel/framework": "^11.2",
     "laravel/sanctum": "^3.0|^4.0",
     "laravel/ui": "^4.2",
