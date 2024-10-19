@@ -20,7 +20,7 @@
     "php": "^8.2 || ^8.3 || ^8.4",
     "guzzlehttp/guzzle": "^7.2",
     "kirschbaum-development/eloquent-power-joins": "^3.5",
-    "laravel/framework": "^10.48|^11.2",
+    "laravel/framework": "^11.2",
     "laravel/sanctum": "^3.0|^4.0",
     "laravel/ui": "^4.2",
     "league/flysystem-aws-s3-v3": "^3.10",
@@ -30,7 +30,7 @@
     "spatie/laravel-schemaless-attributes": "^2.3"
   },
   "require-dev": {
-    "diviky/code-analysis": "^2.0|^3.0",
+    "diviky/code-analysis": "^3.0",
     "laravel/socialite": "^5.0",
     "league/oauth2-client": "^2.6"
   },

@@ -65,7 +65,7 @@ trait Build
      * @param  array|string  $attributes
      * @return self
      */
-    public function whereLike($attributes, ?string $searchTerm)
+    public function whereFilterLike($attributes, ?string $searchTerm)
     {
         $this->where(function ($query) use ($attributes, $searchTerm) {
             foreach (Arr::wrap($attributes) as $attribute) {
