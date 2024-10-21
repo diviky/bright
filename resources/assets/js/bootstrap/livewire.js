@@ -6,6 +6,14 @@ if (typeof Livewire !== 'undefined') {
       }, 100);
     });
 
+    Livewire.on('component.dehydrate', (event) => {
+      $(document).trigger('ajax:loaded');
+
+      setTimeout(() => {
+        $(document).trigger('ajax:loaded');
+      }, 100);
+    });
+
     Livewire.on('fragment.change', (event) => {
       let task = event.task || 'submit';
       let $this = null;

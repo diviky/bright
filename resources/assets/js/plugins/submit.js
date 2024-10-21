@@ -343,6 +343,22 @@
         });
       }
 
+      if (res.events) {
+        for (const [key, value] of Object.entries(res.events)) {
+          if (typeof key === 'string' && key.length > 5) {
+            if (typeof Livewire !== 'undefined') {
+              Livewire.dispatch(key, value);
+            }
+            document.dispatchEvent(new CustomEvent(key, value));
+          } else {
+            if (typeof Livewire !== 'undefined') {
+              Livewire.dispatch(value);
+            }
+            document.dispatchEvent(new CustomEvent(value));
+          }
+        }
+      }
+
       var callback = res.callback;
       if (typeof callback === 'function') {
         callback(res, self);

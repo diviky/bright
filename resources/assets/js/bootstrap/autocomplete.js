@@ -1,33 +1,36 @@
 function load_autocomplete() {
+  function wireSet(target) {
+    if (wired()) {
+      try {
+        let name = target.hasAttribute('model') ? target.getAttribute('model') : target.name;
+        if (wired().$get(name) !== undefined) {
+          wired().$set(name, target.value);
+        }
+      } catch (e) {
+        //console.error(e);
+      }
+    }
+  }
+
   if ($.fn.select2) {
     $('[data-select]').on('change', function (e) {
-      if (wired() && wired().get(e.target.name) !== undefined) {
-        wired().$set(e.target.name, e.target.value);
-      }
+      wireSet(e.target);
     });
 
     $('[tokenizer]').on('change', function (e) {
-      if (wired() && wired().get(e.target.name) !== undefined) {
-        wired().$set(e.target.name, e.target.value);
-      }
+      wireSet(e.target);
     });
 
     $('[data-select-ajax]').on('change', function (e) {
-      if (wired() && wired().get(e.target.name) !== undefined) {
-        wired().$set(e.target.name, e.target.value);
-      }
+      wireSet(e.target);
     });
 
     $('[data-select-image]').on('change', function (e) {
-      if (wired() && wired().get(e.target.name) !== undefined) {
-        wired().$set(e.target.name, e.target.value);
-      }
+      wireSet(e.target);
     });
 
     $('[data-select-target]').on('change', function (e) {
-      if (wired() && wired().get(e.target.name) !== undefined) {
-        wired().$set(e.target.name, e.target.value);
-      }
+      wireSet(e.target);
     });
 
     $(document).on('click', '[data-select-refetch]', function (e) {

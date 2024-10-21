@@ -93,4 +93,14 @@ trait Renderer
 
         return $paths;
     }
+
+    public function dehydrate()
+    {
+        $this->dispatch('component.dehydrate');
+    }
+
+    public function rendered()
+    {
+        $this->dispatch('component.rendered');
+    }
 }
