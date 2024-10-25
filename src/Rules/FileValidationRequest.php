@@ -11,7 +11,7 @@ class FileValidationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'sometimes|required|mimetypes:' . $this->input('accept'),
+            'file' => ['sometimes', 'required', 'mimetypes:' . $this->input('accept', 'image/*')],
         ];
     }
 

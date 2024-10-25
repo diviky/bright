@@ -22,8 +22,14 @@ class Controller extends BaseController
     public function forLocal(Request $request): JsonResponse
     {
         $extension = $request->post('extension');
-        $filename = (string) Str::uuid();
-        $filename .= '.' . $extension;
+        $filename = $request->post('filename', (string) Str::uuid());
+
+        if ($extension) {
+            $filename .= '.' . $extension;
+        }
+
+        $disk = 'local';
+        $path = $request->input('folder', $this->path . '/');
 
         $prefix = $request->post('prefix');
         $route = $prefix ? ltrim($prefix, '/') . '.upload.files' : 'upload.files';
@@ -35,12 +41,15 @@ class Controller extends BaseController
 
         return response()->json([
             'key' => $filename,
-            'disk' => 'local',
+            'url' => Storage::disk($disk)->temporaryUrl($path . $filename, now()->addMinutes(10)),
+            'file' => $path . $filename,
+            'disk' => $disk,
             'headers' => [
                 'Content-Type' => $content_type ?: 'application/octet-stream',
             ],
             'attributes' => [
                 'action' => $url,
+                'method' => 'POST',
                 'name' => $filename,
                 'extension' => $request->post('extension'),
                 'accept' => $request->post('accept'),
@@ -57,19 +66,51 @@ class Controller extends BaseController
         abort_unless($request->hasValidSignature(), 401);
 
         $files = $request->allFiles();
-        $path = $this->path;
+        $path = $request->input('folder', $this->path);
 
         $disk = config('filesystems.default');
         $filename = $request->input('file');
 
         $fileHashPaths = collect($files)->map(function ($file) use ($disk, $path, $filename): string {
-            return $file->storeAs($path, $filename, $disk);
+            return $filename ? $file->storeAs($path, $filename, $disk) : $file->store($path, $disk);
         });
 
-        // Strip out the temporary upload directory from the paths.
-        $paths = $fileHashPaths->map(function ($name) use ($path) {
-            return str_replace($path . '/', '', $name);
+        $paths = [];
+        foreach ($fileHashPaths as $name) {
+            $paths[] = [
+                'file' => $name,
+                'name' => str_replace($path . '/', '', $name),
+                'folder' => $path,
+                'url' => Storage::disk($disk)->temporaryUrl($name, now()->addMinutes(10)),
+            ];
+        }
+
+        return response()->json([
+            'paths' => $paths,
+        ]);
+    }
+
+    public function store(FileValidationRequest $request): JsonResponse
+    {
+        $files = $request->allFiles();
+        $path = $request->input('folder', '/');
+
+        $disk = config('filesystems.default');
+        $filename = $request->input('file');
+
+        $fileHashPaths = collect($files)->map(function ($file) use ($disk, $path, $filename): string {
+            return $filename ? $file->storeAs($path, $filename, $disk) : $file->store($path, $disk);
         });
+
+        $paths = [];
+        foreach ($fileHashPaths as $name) {
+            $paths[] = [
+                'file' => $name,
+                'name' => str_replace($path . '/', '', $name),
+                'folder' => $path,
+                'url' => Storage::disk($disk)->temporaryUrl($name, now()->addMinutes(10)),
+            ];
+        }
 
         return response()->json([
             'paths' => $paths,
@@ -79,9 +120,9 @@ class Controller extends BaseController
     public function revert(Request $request): array
     {
         $disk = config('filesystems.default');
-        $path = $this->path . '/';
         $file = $request->input('filename');
         $disk = Storage::disk($disk);
+        $path = $request->input('folder', $this->path . '/');
 
         if ($disk->exists($path . $file)) {
             $disk->delete($path . $file);
@@ -110,12 +151,16 @@ class Controller extends BaseController
     public function forS3(Request $request): JsonResponse
     {
         $config = config('filesystems.disks.s3');
+        $disk = 's3';
 
         $extension = $request->post('extension');
-        $filename = (string) Str::uuid();
-        $filename .= '.' . $extension;
+        $filename = $request->post('filename', (string) Str::uuid());
 
-        $path = $this->path . '/';
+        if ($extension) {
+            $filename .= '.' . $extension;
+        }
+
+        $path = $request->input('folder', $this->path . '/');
         $client = $this->storageClient();
 
         $command = $this->createCommand($request, $client, $config['bucket'], $path . $filename);
@@ -129,12 +174,15 @@ class Controller extends BaseController
 
         return response()->json([
             'key' => $filename,
-            'disk' => 's3',
+            'url' => Storage::disk($disk)->temporaryUrl($path . $filename, now()->addMinutes(30)),
+            'file' => $path . $filename,
+            'disk' => $disk,
             'headers' => array_merge($signedRequest->getHeaders(), [
                 'Content-Type' => $content_type ?: 'application/octet-stream',
             ]),
             'attributes' => [
                 'action' => (string) $uri,
+                'method' => 'PUT',
                 'name' => $filename,
                 'extension' => $request->post('extension'),
             ],

@@ -70,6 +70,7 @@ class BrightServiceProvider extends ServiceProvider
                 function (): void {
                     Route::post('upload/signed', '\Diviky\Bright\Http\Controllers\Upload\Controller@signed')->name('upload.signed');
                     Route::match(['post', 'put'], 'upload/files', '\Diviky\Bright\Http\Controllers\Upload\Controller@upload')->name('upload.files');
+                    Route::match(['post', 'put'], 'store/files', '\Diviky\Bright\Http\Controllers\Upload\Controller@store')->name('store.files');
                     Route::delete('upload/revert', '\Diviky\Bright\Http\Controllers\Upload\Controller@revert')->name('upload.revert');
                 }
             );
