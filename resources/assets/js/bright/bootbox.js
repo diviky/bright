@@ -18,3 +18,5 @@ var box = {
     }
   },
 };
+
+window.box = box;

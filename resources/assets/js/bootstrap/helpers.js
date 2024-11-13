@@ -1,4 +1,4 @@
-function load_helpers() {
+window.load_helpers = () => {
   $(document).on('click', '[data-input]', function (e) {
     var $this = $(this);
     var name = $this.data('input');
@@ -156,4 +156,4 @@ function load_helpers() {
       $(document).trigger('form:submit', [$(this)]);
     }
   });
-}
+};

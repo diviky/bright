@@ -17,23 +17,55 @@ trait Ordering
     public function ordering($data = [], $defaults = []): self
     {
         if (isset($data['sort'])) {
-            if (empty($data['order'])) {
-                if (Str::contains($data['sort'], ':')) {
-                    $sort = \explode(':', $data['sort'], 2);
-                } else {
-                    $sort = \explode('|', $data['sort'], 2);
+            if (is_array($data['sort'])) {
+                $sorted = $data['sort'];
+
+                foreach ($sorted as $column => $direction) {
+                    if (!is_string($column)) {
+                        continue;
+                    }
+
+                    if (empty($direction)) {
+                        if (Str::contains($column, ':')) {
+                            $sort = \explode(':', $column, 2);
+                        } else {
+                            $sort = \explode('|', $column, 2);
+                        }
+
+                        $column = $sort[0];
+                        $direction = $sort[1] ?? 'asc';
+                    }
+
+                    if (Str::contains($column, '.')) {
+                        $this->builder->orderByPowerJoins($column, \strtolower($direction));
+
+                        return $this;
+                    } else {
+                        return $this->orderBy($column, \strtolower($direction));
+                    }
+                }
+            } else {
+                $column = $data['sort'];
+                $direction = $data['order'];
+
+                if (empty($direction)) {
+                    if (Str::contains($column, ':')) {
+                        $sort = \explode(':', $column, 2);
+                    } else {
+                        $sort = \explode('|', $column, 2);
+                    }
+
+                    $column = $sort[0];
+                    $direction = $sort[1] ?? 'asc';
                 }
 
-                $data['sort'] = $sort[0];
-                $data['order'] = $sort[1] ?? 'asc';
-            }
+                if (Str::contains($column, '.')) {
+                    $this->builder->orderByPowerJoins($column, \strtolower($direction));
 
-            if (Str::contains($data['sort'], '.')) {
-                $this->builder->orderByPowerJoins($data['sort'], \strtolower($data['order']));
-
-                return $this;
-            } else {
-                return $this->orderBy($data['sort'], \strtolower($data['order']));
+                    return $this;
+                } else {
+                    return $this->orderBy($column, \strtolower($direction));
+                }
             }
         }
 

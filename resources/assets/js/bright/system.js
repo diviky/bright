@@ -1,46 +1,4 @@
-function setTask($this, form, task) {
-  var task = task || $this.data('task');
-  var name = $this.data('task-name') || 'task';
-  var input = form.find("input[name='" + name + "']");
-
-  if (input.length > 0) {
-    input.val(task);
-  } else {
-    $('<input/>', {
-      name: name,
-      class: 'task-input',
-      value: task,
-      type: 'hidden',
-    }).appendTo(form);
-  }
-
-  let params = $this.data('params');
-
-  if (params) {
-    params = Object.fromEntries([...new URLSearchParams(params)]);
-    for (const [key, value] of Object.entries(params)) {
-      $('<input/>', {
-        name: key,
-        class: 'task-input',
-        value: value,
-        type: 'hidden',
-      }).appendTo(form);
-    }
-  }
-}
-
-function removeTask($this, form, task) {
-  var name = $this.data('task-name') || 'task';
-  var input = form.find("input[name='" + name + "']");
-
-  if (input.length > 0) {
-    input.remove();
-  }
-
-  $('.task-input').remove();
-}
-
-function brightSystemJs() {
+window.brightSystemJs = () => {
   $(document).on('click', '[data-href]', function (e) {
     e.preventDefault();
 
@@ -312,48 +270,30 @@ function brightSystemJs() {
   $(document).on('click', '[data-order]', function (e) {
     e.preventDefault();
 
-    var name = $(this).attr('data-order');
-    var order = $(this).attr('data-order-type') || 'ASC';
+    var name = $(this).data('order');
+    var direction = $(this).data('order-type') || 'desc';
     $('[data-order]').removeClass('ordering');
+
     $(this).addClass('ordering');
 
-    var task = 1;
     var page = 1;
 
-    if (new RegExp('ASC').test(order)) {
-      task = 0;
-    }
+    direction = direction == 'asc' ? 'desc' : 'asc';
 
-    if (task == 1) {
-      $(this).attr('data-order-type', 'ASC');
-      $(this).removeClass('desc').addClass('asc');
-    } else {
-      $(this).removeClass('asc').addClass('desc');
-      $(this).attr('data-order-type', 'DESC');
-    }
+    $(this).data('order-type', direction);
+    $(this).removeClass('desc').addClass(direction);
+
     var form = getForm($(this));
 
-    if (form.find('.ac-sort-name').length > 0) {
-      $('.ac-sort-name').val(name);
-    } else {
-      $('<input/>', {
-        class: 'ac-sort-name',
-        name: 'sort',
-        value: name,
-        type: 'hidden',
-      }).appendTo(form);
-    }
+    // keep only one item to stort
+    $('.ac-sort-name').remove();
 
-    if (form.find('.ac-sort-order').length > 0) {
-      $('.ac-sort-order').val(order);
-    } else {
-      $('<input/>', {
-        class: 'ac-sort-order',
-        name: 'order',
-        value: order,
-        type: 'hidden',
-      }).appendTo(form);
-    }
+    $('<input/>', {
+      class: 'ac-sort-name',
+      name: 'sort[' + name + ']',
+      value: direction,
+      type: 'hidden',
+    }).appendTo(form);
 
     form.find("input[name='page']").val(page);
     $('#page').val(page);
@@ -782,4 +722,4 @@ function brightSystemJs() {
       };
     }
   });
-}
+};

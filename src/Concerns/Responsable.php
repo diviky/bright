@@ -26,6 +26,8 @@ trait Responsable
 
         $factory = app(ViewFactory::class);
 
+        //dd($factory->getFinder()->getPaths(), $layout);
+
         return $factory->make($layout, $data);
     }
 

@@ -1,4 +1,4 @@
-function load_intl() {
+window.load_intl = () => {
   function setCountryCode($this, val) {
     $this.next('input:hidden').remove();
     var name = 'code';
@@ -35,4 +35,4 @@ function load_intl() {
       setCountryCode($this, val);
     });
   });
-}
+};

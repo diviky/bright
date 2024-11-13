@@ -1,4 +1,4 @@
-function load_menuJs() {
+window.load_menuJs = () => {
   $('#toggle-sidebar').on('click', function () {
     if ($('.sided-layout').hasClass('sidebar-mini')) {
       $('.sided-layout').removeClass('sidebar-mini');
@@ -12,4 +12,4 @@ function load_menuJs() {
   $(document).ajaxComplete(function () {
     $('[navbar]').collapse('hide');
   });
-}
+};

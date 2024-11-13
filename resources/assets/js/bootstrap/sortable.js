@@ -1,4 +1,4 @@
-function load_sortable() {
+window.load_sortable = () => {
   if (typeof Sortable === 'undefined') {
     console.info('npm install sortablejs --save');
     return;
@@ -68,4 +68,4 @@ function load_sortable() {
       },
     });
   });
-}
+};

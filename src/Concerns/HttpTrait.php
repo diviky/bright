@@ -95,47 +95,6 @@ trait HttpTrait
     }
 
     /**
-     * Retrieve a header from the request.
-     *
-     * @param  null|string  $key
-     * @param  null|array|string  $default
-     * @return null|array|string
-     */
-    public function header($key = null, $default = null)
-    {
-        return $this->request()->header($key, $default);
-    }
-
-    /**
-     * Retrieve a server variable from the request.
-     *
-     * @param  null|string  $key
-     * @param  null|array|string  $default
-     * @return null|array|string
-     */
-    public function server($key = null, $default = null)
-    {
-        return $this->request()->server($key, $default);
-    }
-
-    /**
-     * Get the input method.
-     *
-     * @param  string  $type
-     * @return bool|string
-     */
-    public function method($type = null)
-    {
-        $method = $this->request()->getMethod();
-
-        if ($type) {
-            return \strtoupper($type) == $method ? true : false;
-        }
-
-        return $method;
-    }
-
-    /**
      * Checks if the request method is of specified type.
      *
      * @param  string  $method  Uppercase request method (GET, POST etc)

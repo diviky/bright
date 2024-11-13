@@ -1,5 +1,16 @@
-(function ($) {
-  function easySubmit(element, options) {
+(function (factory) {
+  'use strict';
+  if (typeof define === 'function' && define.amd) {
+    // using AMD; register as anon module
+    define(['jquery'], factory);
+  } else {
+    // no AMD; invoke directly
+    factory(typeof jQuery != 'undefined' ? jQuery : window.Zepto);
+  }
+})(function ($) {
+  'use strict';
+
+  var easySubmit = function (element, options) {
     this.element = element;
     var self = this;
 
@@ -24,7 +35,7 @@
         self.formSubmit();
       });
     }
-  }
+  };
 
   $.extend(easySubmit.prototype, {
     validateAndSubmit: function (submit = true) {
@@ -571,4 +582,4 @@
     onFailed: function () {},
     inputEvent: 'blur', // change, blur
   };
-})(jQuery);
+});

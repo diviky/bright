@@ -1,9 +1,9 @@
-function load_dates() {
+window.load_dates = () => {
   load_dateranges();
   load_datetimepicker();
-}
+};
 
-function load_datetimepicker() {
+window.load_datetimepicker = () => {
   if (!tempusDominus) {
     console.info('npm install @eonasdan/tempus-dominus --save');
     return;
@@ -69,9 +69,9 @@ function load_datetimepicker() {
     };
     new tempusDominus.TempusDominus($this[0], { ...options, ...data });
   });
-}
+};
 
-function load_dateranges() {
+window.load_dateranges = () => {
   if (!$.fn.daterangepicker) {
     console.info('npm install daterangepicker --save');
     return;
@@ -111,4 +111,4 @@ function load_dateranges() {
       $(this).val('');
     }
   });
-}
+};

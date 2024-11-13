@@ -1,45 +1,35 @@
-function load_drop() {
-  $(document).on('change', '[data-drop] input[type=file]', function(e) {
+window.load_drop = () => {
+  $(document).on('change', '[data-drop] input[type=file]', function (e) {
     e.preventDefault();
-    var $this = $(this)
-      .parent()
-      .find('.drop-preview');
+    var $this = $(this).parent().find('.drop-preview');
     var files = $(this).prop('files');
     drawPreview($this, files);
   });
 
-  $(document).on('click', '[data-dropzone]', function() {
-    $(this)
-      .next('input[type=file]')
-      .click();
+  $(document).on('click', '[data-dropzone]', function () {
+    $(this).next('input[type=file]').click();
   });
 
-  $(document).on('dragover', '[data-drop]', function(e) {
-    $(this)
-      .find('[data-dropzone]')
-      .addClass('drag-hover');
+  $(document).on('dragover', '[data-drop]', function (e) {
+    $(this).find('[data-dropzone]').addClass('drag-hover');
     e.preventDefault();
   });
 
-  $(document).on('dragleave', '[data-drop]', function(e) {
-    $(this)
-      .find('[data-dropzone]')
-      .removeClass('drag-hover');
+  $(document).on('dragleave', '[data-drop]', function (e) {
+    $(this).find('[data-dropzone]').removeClass('drag-hover');
     e.preventDefault();
   });
 
-  $(document).on('drop', '[data-drop]', function(e) {
+  $(document).on('drop', '[data-drop]', function (e) {
     e.preventDefault();
     var $this = $(this).find('.drop-preview');
     var files = e.originalEvent.dataTransfer.files;
-    $(this)
-      .find("input[type='file']")
-      .prop('files', files);
+    $(this).find("input[type='file']").prop('files', files);
     drawPreview($this, files);
   });
-}
+};
 
-function drawPreview($this, files) {
+window.drawPreview = ($this, files) => {
   $this.empty();
   $this.show();
   for (var i = 0; i < files.length; i++) {
@@ -54,4 +44,4 @@ function drawPreview($this, files) {
       $this.append('<li data-toggle="tooltip" title="' + file.name + '"> <i class="fa fa-file-o"></i></li>');
     }
   }
-}
+};

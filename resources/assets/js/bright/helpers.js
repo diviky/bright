@@ -1,4 +1,4 @@
-function getForm($this) {
+window.getForm = ($this) => {
   if ($this && $this.parents('form:eq(0)').length > 0) {
     return $this.parents('form:eq(0)');
   }
@@ -10,17 +10,17 @@ function getForm($this) {
   let render = $('[easyrender]:first');
 
   return render && render.length > 0 ? render : $('[role="krender"]:first');
-}
+};
 
-function isSuccess(status) {
+window.isSuccess = (status) => {
   if (status == 'OK' || status == 'success' || status == 200) {
     return true;
   }
 
   return false;
-}
+};
 
-function displayNoty(response, $this) {
+window.displayNoty = (response, $this) => {
   var res = parseJSON(response);
 
   if (res.message) {
@@ -116,13 +116,13 @@ function displayNoty(response, $this) {
       }
     }
   }
-}
+};
 
-function displayNoti(xhr, $this) {
+window.displayNoti = (xhr, $this) => {
   displayNoty(xhr.responseText, $this);
-}
+};
 
-function parseJSON(response) {
+window.parseJSON = (response) => {
   if ('object' === typeof response) {
     return response;
   }
@@ -137,9 +137,9 @@ function parseJSON(response) {
   }
 
   return res;
-}
+};
 
-function isJson(response) {
+window.isJson = (response) => {
   if ('object' === typeof response) {
     return true;
   }
@@ -151,9 +151,9 @@ function isJson(response) {
   }
 
   return true;
-}
+};
 
-function notify(message) {
+window.notify = (message) => {
   new Noty({
     text: message.text,
     type: message.type || 'error',
@@ -165,15 +165,15 @@ function notify(message) {
     maxVisible: 5,
     killer: true,
   }).show();
-}
+};
 
-function trace(text) {
+window.trace = (text) => {
   if (window['console'] !== undefined) {
     console.log(text);
   }
-}
+};
 
-function e(s) {
+window.e = (s) => {
   var argv = Array.apply(null, arguments).slice(1);
   if ($.isArray(argv)) {
     $.each(argv, function (i) {
@@ -181,4 +181,4 @@ function e(s) {
     });
   }
   return s;
-}
+};

@@ -1,4 +1,4 @@
-function load_autocomplete() {
+window.load_autocomplete = () => {
   function wireSet(target) {
     if (wired()) {
       try {
@@ -668,4 +668,4 @@ function load_autocomplete() {
       });
     }
   }
-}
+};

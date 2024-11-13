@@ -3,44 +3,16 @@ String.prototype.replaceAll = function (search, replacement) {
   return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  var expires = 'expires=' + d.toUTCString();
-  var secure = location.protocol === 'https:';
-  document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/;SameSite=Lax' + (secure ? ';secure' : '');
-}
-
-function getCookie(cname) {
-  var name = cname + '=';
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return '';
-}
-
-function removeCookie(cname) {
-  document.cookie = cname + '=; expires = Thu, 01 Jan 1970 00:00:00 GMT;path=/';
-}
-
-function nl2br(str, is_xhtml) {
+window.nl2br = (str, is_xhtml) => {
   if (typeof str === 'undefined' || str === null) {
     return '';
   }
   var breakTag = is_xhtml || typeof is_xhtml === 'undefined' ? '<br />' : '<br>';
   return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
-}
+};
 
 // load JSON files from url
-function loadJSON(url, callback, headers) {
+window.loadJSON = (url, callback, headers) => {
   $.ajax({
     url: url,
     method: 'GET',
@@ -56,16 +28,16 @@ function loadJSON(url, callback, headers) {
       callback(null, 'error');
     },
   });
-}
+};
 
-function uuid() {
+window.uuid = () => {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
       .toString(16)
       .substring(1);
   }
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
+};
 
 const loadDynamicScript = (url, id, callback) => {
   const existingScript = document.getElementById('scriptId');
@@ -84,14 +56,14 @@ const loadDynamicScript = (url, id, callback) => {
   if (existingScript && callback) callback();
 };
 
-function guid() {
+window.guid = () => {
   function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
       .toString(16)
       .substring(1);
   }
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
+};
 
 jQuery.fn.preventDoubleClick = function () {
   $(this).on('click', function (e) {
@@ -116,7 +88,7 @@ RegExp.escape = function (s) {
   return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
 
-function setLivewire($wire) {
+window.setLivewire = function ($wire) {
   setTimeout(function () {
     $(document).trigger('ajax:loaded');
   }, 100);
@@ -126,12 +98,12 @@ function setLivewire($wire) {
   }
 
   window.wire = $wire;
-}
+};
 
-function wired() {
+window.wired = () => {
   if (typeof window.wire === 'undefined') {
     return null;
   }
 
   return window.wire;
-}
+};

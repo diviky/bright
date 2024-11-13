@@ -66,8 +66,8 @@ trait Themable
             $template = $this->getDefaultTheme();
         }
 
-        if (Str::contains($template, '|')) {
-            [$themeName, $layout] = \explode('|', $template);
+        if (Str::contains($template, '::')) {
+            [$themeName, $layout] = \explode('::', $template);
         } else {
             $layout = $template;
             $themeName = config('theme.active', 'boostrap');
@@ -97,12 +97,14 @@ trait Themable
 
         $paths[] = $views . '/' . $component;
         $paths[] = $themePath;
-        $paths[] = $themePath . '/views/' . $component;
+        $paths[] = $themePath ? $themePath . '/views/' . $component : null;
 
         $paths = array_filter($paths);
 
+        //dd($paths);
+
         foreach ($paths as $path) {
-            $finder->prependLocation($path);
+            $finder->prependLocation(str_replace('//', '/', $path));
         }
 
         return $theme;

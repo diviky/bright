@@ -1,4 +1,3 @@
-
 $(document).ajaxComplete(function () {
-    $("#header-menu").collapse('hide');
+  $('#header-menu').collapse('hide');
 });

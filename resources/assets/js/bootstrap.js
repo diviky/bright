@@ -1,0 +1,34 @@
+import './plugins/metadata';
+import './plugins/form';
+import './plugins/validator';
+import './plugins/validate';
+import './plugins/effects';
+import './plugins/submit';
+import './plugins/modal';
+import './plugins/form';
+import './plugins/render';
+import './plugins/plugins';
+
+import './bright/bright';
+import './bright/boot';
+import './bright/helpers';
+import './bright/nprogress';
+import './bright/pjax';
+import './bright/system';
+import './bright/task';
+import './bright/bootbox';
+import './bright/bootstrap';
+
+import './bootstrap/autocomplete';
+import './bootstrap/chart';
+import './bootstrap/dates';
+import './bootstrap/drop';
+import './bootstrap/filepond';
+import './bootstrap/helpers';
+import './bootstrap/intl';
+import './bootstrap/livewire';
+import './bootstrap/menu';
+import './bootstrap/password';
+import './bootstrap/sortable';
+import './bootstrap/util';
+import './bootstrap/cookie';
