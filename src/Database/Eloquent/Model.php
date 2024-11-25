@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database\Eloquent;
 
 use Diviky\Bright\Database\Concerns\Connector;
+use Diviky\Bright\Database\Eloquent\Concerns\ArrayToObject;
 use Diviky\Bright\Database\Eloquent\Concerns\Cachable;
 use Diviky\Bright\Database\Eloquent\Concerns\Connection;
 use Diviky\Bright\Database\Eloquent\Concerns\Eloquent;
@@ -17,6 +18,7 @@ use Kirschbaum\PowerJoins\PowerJoins;
 
 class Model extends BaseModel
 {
+    use ArrayToObject;
     use Cachable;
     use Connection;
     use Connector;

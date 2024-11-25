@@ -52,7 +52,7 @@ trait Filter
             ->filterStartWith($this->cleanUpFilters($data['sfilter'] ?? []))
             ->filterDate($this->cleanUpFilters($data['date'] ?? []))
             ->filterNull($data['empty'] ?? [])
-            ->filterNotNull($data['notempty'] ?? [])
+            ->filterNotNull($data['not_empty'] ?? [])
             ->filterDatetimes($this->cleanUpFilters($data['datetime'] ?? []))
             ->filterDatetimes($this->cleanUpFilters($data['timestamp'] ?? []))
             ->filterUnixTimes($this->cleanUpFilters($data['unix'] ?? []))

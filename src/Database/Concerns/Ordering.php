@@ -8,11 +8,16 @@ use Illuminate\Support\Str;
 
 trait Ordering
 {
+    public function sortBy($columns = [], $defaults = []): self
+    {
+        return $this->ordering(['sort' => $columns], $defaults);
+    }
+
     /**
      * Add Ordering to query.
      *
-     * @param  array  &$data
-     * @param  mixed  $defaults
+     * @param  array  $data
+     * @param  array  $defaults
      */
     public function ordering($data = [], $defaults = []): self
     {
@@ -38,12 +43,12 @@ trait Ordering
 
                     if (Str::contains($column, '.')) {
                         $this->builder->orderByPowerJoins($column, \strtolower($direction));
-
-                        return $this;
                     } else {
-                        return $this->orderBy($column, \strtolower($direction));
+                        $this->orderBy($column, \strtolower($direction));
                     }
                 }
+
+                return $this;
             } else {
                 $column = $data['sort'];
                 $direction = $data['order'];
@@ -81,8 +86,8 @@ trait Ordering
     /**
      * Add Ordering to query.
      *
-     * @param  array  &$data
-     * @param  mixed  $defaults
+     * @param  array  $data
+     * @param  array  $defaults
      */
     public function sorting($data = [], $defaults = []): self
     {

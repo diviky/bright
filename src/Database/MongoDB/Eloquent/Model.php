@@ -3,6 +3,7 @@
 namespace Diviky\Bright\Database\MongoDB\Eloquent;
 
 use Diviky\Bright\Database\Concerns\Connector;
+use Diviky\Bright\Database\Eloquent\Concerns\ArrayToObject;
 use Diviky\Bright\Database\Eloquent\Concerns\Cachable;
 use Diviky\Bright\Database\Eloquent\Concerns\Connection;
 use Diviky\Bright\Database\Eloquent\Concerns\Eloquent;
@@ -16,6 +17,7 @@ use MongoDB\Laravel\Eloquent\Model as BaseModel;
 
 class Model extends BaseModel
 {
+    use ArrayToObject;
     use Cachable;
     use Connection;
     use Connector;

@@ -32,6 +32,11 @@ class StdClass extends Collection
         $this->items[$name] = $value;
     }
 
+    public function __isset(string $name)
+    {
+        return !empty($this->items[$name]);
+    }
+
     public function __get($name): mixed
     {
         if (array_key_exists($name, $this->items)) {

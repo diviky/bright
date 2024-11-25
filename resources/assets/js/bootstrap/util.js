@@ -1,8 +1,3 @@
-String.prototype.replaceAll = function (search, replacement) {
-  var target = this;
-  return target.replace(new RegExp(search, 'g'), replacement);
-};
-
 window.nl2br = (str, is_xhtml) => {
   if (typeof str === 'undefined' || str === null) {
     return '';

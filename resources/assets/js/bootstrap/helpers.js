@@ -32,15 +32,13 @@ window.load_helpers = () => {
   $(document).on('change', '[data-check-all]', function (e) {
     var $this = $(this);
     var target = $this.parents('[data-check]:first');
-    var boxes = target.find('tbody input[type=checkbox]');
+    var boxes = target.find('input[type=checkbox]');
 
     if ($this.is(':checked')) {
       boxes.prop('checked', true);
       target.find('[data-checked-on]').show();
       target.find('[data-checked-off]').hide();
 
-      var selected = target.find('tbody input[type=checkbox]:checked').length;
-      target.find('[data-checked-count]').text(selected);
       target.find('[data-uncheck-all]').prop('checked', true);
     } else {
       boxes.prop('checked', false);
@@ -48,26 +46,32 @@ window.load_helpers = () => {
       target.find('[data-checked-off]').show();
       target.find('[data-uncheck-all]').prop('checked', false);
     }
+
+    var selected = target.find('input[type=checkbox]:checked').length;
+    target.find('[data-checked-count]').text(parseInt(selected) - 1);
   });
 
   $(document).on('change', '[data-uncheck-all]', function (e) {
     var $this = $(this);
     var target = $this.parents('[data-check]:first');
-    var boxes = target.find('tbody input[type=checkbox]');
+    var boxes = target.find('input[type=checkbox]');
 
     boxes.prop('checked', false);
     target.find('[data-checked-on]').hide();
     target.find('[data-checked-off]').show();
 
     target.find('[data-check-all]').prop('checked', false);
+    target.find('[data-checked-count]').text('0');
   });
 
-  $(document).on('change', '[data-checked] input[type=checkbox]', function (e) {
+  $(document).on('change', '[data-check] input[type=checkbox]', function (e) {
     var $this = $(this);
     var target = $this.parents('[data-check]:first');
 
-    var selected = target.find('tbody input[type=checkbox]:checked').length;
-    target.find('[data-checked-count]').text(selected);
+    var selected = target.find('input[type=checkbox]:checked').length;
+    let ignore = target.find('[data-check-all]:checked').length;
+
+    target.find('[data-checked-count]').text(parseInt(selected) - parseInt(ignore));
 
     if (selected > 0) {
       target.find('[data-checked-on]').show();
