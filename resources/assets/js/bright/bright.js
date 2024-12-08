@@ -4,7 +4,6 @@ window.brightJs = () => {
   jQuery('[role="krender"], [easyrender]').easyRender();
   jQuery('[role="ksubmit"], [easysubmit]').easySubmit();
   jQuery('[tooltip=modal], [role="modal"]').easyModal();
-  jQuery('[tooltip=popover]').easyModal();
 
   $('[data-toggle="tooltip"]').on('remove click mouseup mouseleave mousedown ', function (e) {
     $(this).tooltip('hide');

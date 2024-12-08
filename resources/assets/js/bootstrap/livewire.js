@@ -1,14 +1,18 @@
 document.addEventListener('livewire:initialized', () => {
+  var timer;
   Livewire.on('component.rendered', () => {
-    setTimeout(() => {
+    timer || clearTimeout(timer);
+
+    timer = setTimeout(() => {
       $(document).trigger('ajax:loaded');
     }, 100);
   });
 
   Livewire.on('component.dehydrate', (event) => {
     $(document).trigger('ajax:loaded');
+    timer || clearTimeout(timer);
 
-    setTimeout(() => {
+    timer = setTimeout(() => {
       $(document).trigger('ajax:loaded');
     }, 100);
   });
@@ -17,7 +21,9 @@ document.addEventListener('livewire:initialized', () => {
     let task = event.task || 'submit';
     let $this = null;
 
-    setTimeout(() => {
+    timer || clearTimeout(timer);
+
+    timer = setTimeout(() => {
       var form = getForm($this);
       setTask(form, form, task);
       form.submit();

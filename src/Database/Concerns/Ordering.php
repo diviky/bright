@@ -41,7 +41,7 @@ trait Ordering
                         $direction = $sort[1] ?? 'asc';
                     }
 
-                    if (Str::contains($column, '.')) {
+                    if (Str::contains($column, '.') && $this->builder) {
                         $this->builder->orderByPowerJoins($column, \strtolower($direction));
                     } else {
                         $this->orderBy($column, \strtolower($direction));

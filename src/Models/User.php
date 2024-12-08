@@ -14,6 +14,7 @@ use Diviky\Bright\Http\Controllers\Auth\Concerns\HasRoles;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UserParent;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UserRole;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UsersParent;
+use Diviky\Bright\Models\Concerns\Scopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -28,6 +29,7 @@ class User extends Authenticatable
     use HasFactory;
     use HasRoles;
     use Notifiable;
+    use Scopes;
     use UserAvatarTrait;
     use UserParent;
     use UserRole;

@@ -49,7 +49,7 @@ window.brightSystemJs = () => {
         var $this = $(this);
         var tag = $this.data('tag') || 'tr';
         var parent = $this.parents(tag + ':eq(0)');
-        var link = $(this).attr('href') || $this.data('delete');
+        let link = $(this).attr('href') && $(this).attr('href') != '#' ? $(this).attr('href') : $this.data('delete');
         var method = $this.data('method') || 'DELETE';
 
         $.ajax({
@@ -80,7 +80,7 @@ window.brightSystemJs = () => {
     var message = $this.attr('data-confirm');
     box.confirm(message, (result) => {
       if (result) {
-        var link = $this.attr('href') || $this.data('ajax');
+        var link = $(this).attr('href') && $(this).attr('href') != '#' ? $(this).attr('href') : $this.data('ajax');
         var method = $this.data('method') || 'GET';
 
         $.ajax({
@@ -442,7 +442,7 @@ window.brightSystemJs = () => {
 
     e.preventDefault();
     var $this = $(this);
-    var url = $this.attr('href') ? $this.attr('href') : '/login';
+    var url = $this.attr('href') && $this.attr('href') != '#' ? $this.attr('href') : '/login';
 
     $.fn.easyModalShow({
       url: url,
@@ -473,20 +473,56 @@ window.brightSystemJs = () => {
 
   $(document).on('click', '[data-poload]', function (e) {
     var $this = $(this);
-    //$this.off('hover');
-    $.get(
-      $this.data('poload'),
-      {
-        format: 'html',
-      },
-      function (d) {
+    let url = $(this).attr('href') && $(this).attr('href') != '#' ? $(this).attr('href') : $this.data('poload');
+    e.preventDefault();
+
+    $.ajax({
+      url: url,
+      data: { format: 'html' },
+      dataType: 'json',
+      method: 'GET',
+    }).then(
+      function (response, status, xhr) {
         $this.popover('dispose');
+        let content = '';
+
+        var ct = xhr.getResponseHeader('content-type') || '';
+        if (ct.indexOf('html') > -1) {
+          content = response;
+        } else if (ct.indexOf('json') > -1) {
+          let fragments = response.fragments;
+          for (const [key, value] of Object.entries(fragments)) {
+            content = value;
+          }
+        }
+
         $this
           .popover({
-            content: d,
+            content: content,
             html: true,
             sanitize: false,
-            placement: 'bottom',
+            trigger: 'focus',
+          })
+          .popover('show');
+
+        $this.on('shown.bs.popover', function (e) {
+          $('[data-poload]').not(e.target).popover('dispose');
+          $(document).trigger('ajax:loaded');
+        });
+      },
+      function (xhr) {
+        let content = '';
+        if (xhr.status === 401) {
+          content = 'You are not allowed to access this. Please login';
+        } else {
+          content = xhr.responseText;
+        }
+
+        $this
+          .popover({
+            content: content,
+            html: true,
+            sanitize: false,
             trigger: 'focus',
           })
           .popover('show');
@@ -497,8 +533,6 @@ window.brightSystemJs = () => {
         });
       }
     );
-
-    e.preventDefault();
   });
 
   $('body').on('click', function (e) {

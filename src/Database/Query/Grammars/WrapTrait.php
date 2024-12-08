@@ -37,6 +37,10 @@ trait WrapTrait
 
         $table = $this->getExpressionValue($table);
 
+        if (str_starts_with($table, 'laravel_reserved')) {
+            return $table;
+        }
+
         if (\strpos($table, '.') !== false) {
             [$database, $table] = \explode('.', $table);
             $table = preg_replace('/^' . $this->tablePrefix . '/', '', $table);

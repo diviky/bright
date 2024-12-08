@@ -116,6 +116,10 @@
       settings.styles = settings.styles + ' ' + 'modal-sm';
     }
 
+    if (settings.size == 'medium') {
+      settings.styles = settings.styles + ' ' + 'modal-md';
+    }
+
     if (settings.size == 'large') {
       settings.styles = settings.styles + ' ' + 'modal-lg';
     }
@@ -126,6 +130,14 @@
 
     if (settings.position == 'center') {
       settings.styles = settings.styles + ' ' + 'modal-dialog-centered';
+    }
+
+    if (settings.position == 'right') {
+      settings.styles = settings.styles + ' ' + 'modal-dialog-right';
+    }
+
+    if (settings.position == 'left') {
+      settings.styles = settings.styles + ' ' + 'modal-dialog-left';
     }
 
     if (settings.scrollable) {
@@ -200,9 +212,7 @@
   };
 
   $.fn.easyModalShow = function (options) {
-    if (!$.data(this, 'easymodal')) {
-      return new easyModal(null, options);
-    }
+    return new easyModal(null, options);
   };
 
   $.fn.easyModalHide = function () {
