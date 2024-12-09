@@ -3,7 +3,7 @@
 namespace Diviky\Bright\Database\MongoDB;
 
 use Diviky\Bright\Database\Query\Builder as QueryBuilder;
-use Diviky\Bright\Database\Query\Grammars\Grammar;
+use Diviky\Bright\Database\Query\Grammars\MongoDBGrammar;
 use MongoDB\Laravel\Connection as MongoDBConnection;
 
 class Connection extends MongoDBConnection
@@ -23,6 +23,6 @@ class Connection extends MongoDBConnection
     /** {@inheritdoc} */
     protected function getDefaultQueryGrammar()
     {
-        return new Grammar;
+        return new MongoDBGrammar;
     }
 }

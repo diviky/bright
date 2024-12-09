@@ -20,6 +20,7 @@ trait Connection
         }
 
         $connection = $this->setConnection($connection)->getConnection();
+
         $connection->getQueryGrammar()->setConfig($config);
     }
 }

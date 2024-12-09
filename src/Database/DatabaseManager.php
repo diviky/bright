@@ -11,6 +11,38 @@ class DatabaseManager extends LaravelDatabaseManager
 {
     use Connector;
 
+    protected function makeConnection($name)
+    {
+        $config = $this->configuration($name);
+
+        if ($config['driver'] === 'mongodb') {
+            return $this->factory->make($config, $name);
+        }
+
+        // First we will check by the connection name to see if an extension has been
+        // registered specifically for that connection. If it has we will call the
+        // Closure and pass it the config allowing it to resolve the connection.
+        if (isset($this->extensions[$name])) {
+            return call_user_func($this->extensions[$name], $config, $name);
+        }
+
+        // Next we will check to see if an extension has been registered for a driver
+        // and will call the Closure if so, which allows us to have a more generic
+        // resolver for the drivers themselves which applies to all connections.
+        if (isset($this->extensions[$driver = $config['driver']])) {
+            return call_user_func($this->extensions[$driver], $config, $name);
+        }
+
+        return $this->factory->make($config, $name);
+    }
+
+    public function extend($name, callable $resolver, bool $overwrite = false)
+    {
+        if (!isset($this->extension[$name]) || $overwrite) {
+            $this->extensions[$name] = $resolver;
+        }
+    }
+
     /**
      * Database table.
      *

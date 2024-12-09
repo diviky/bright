@@ -6,6 +6,7 @@ namespace Diviky\Bright\Providers;
 
 use Diviky\Bright\Database\Connectors\ConnectionFactory;
 use Diviky\Bright\Database\DatabaseManager;
+use Diviky\Bright\Database\MongoDB\Connection;
 use Illuminate\Support\ServiceProvider;
 
 class DatabaseServiceProvider extends ServiceProvider
@@ -27,6 +28,14 @@ class DatabaseServiceProvider extends ServiceProvider
         // interface which may be used by other components requiring connections.
         $this->app->singleton('db', function ($app) {
             return new DatabaseManager($app, $app['db.factory']);
+        });
+
+        $this->app->resolving('db', function ($db) {
+            $db->extend('mongodb', function ($config, $name) {
+                $config['name'] = $name;
+
+                return new Connection($config);
+            });
         });
     }
 }
