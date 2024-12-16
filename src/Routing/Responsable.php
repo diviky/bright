@@ -177,9 +177,9 @@ class Responsable implements BaseResponsable
             $view = $instance->getViewName($view);
         }
 
-        if (empty($layout)) {
-            $theme = $this->setUpThemeFromRequest($request, $component, $paths);
+        $theme = $this->setUpThemeFromRequest($request, $component, $paths);
 
+        if (empty($layout)) {
             if ($request->pjax() && Str::endsWith($theme['layout'], ':html')) {
                 $layout = Str::replaceLast('.', '.html.', Str::replaceLast(':html', '', $theme['layout']));
             } elseif ($format == 'html') {
@@ -189,21 +189,25 @@ class Responsable implements BaseResponsable
             }
         }
 
-        $view = $this->getView($view, $response, $layout);
-
         $pjax = $request->pjax() ? true : $request->input('pjax');
         $fragment = $pjax ? false : $request->ajax();
 
         if ($fragment) {
             $container = $request->header('X-Pjax-Container', 'content');
 
+            $content = $this->getView($view, $response)->fragment($container);
+            $view = $this->getViewLayout($content, $response, $layout);
+
             return [
                 'fragments' => [
                     $container => $view->fragment($container),
-                    //'indicator' => $view->fragment('indicator'),
                 ],
             ];
         }
+
+        $content = $this->getViewContent($view, $response);
+
+        $view = $this->getViewLayout($content, $response, $layout);
 
         return $view->render();
     }

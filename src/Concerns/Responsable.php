@@ -19,16 +19,24 @@ trait Responsable
      * @param  string  $layout
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    protected function getView($route, $data = [], $layout = null)
+    protected function getViewLayout($route, $data = [], $layout = null)
     {
         $layout = $layout ?: 'index';
         $data['component'] = $route;
 
+        return $this->getView($layout, $data);
+    }
+
+    protected function getViewContent($view, $data = [])
+    {
+        return $this->getView($view, $data)->render();
+    }
+
+    protected function getView($view, $data = [])
+    {
         $factory = app(ViewFactory::class);
 
-        //dd($factory->getFinder()->getPaths(), $layout);
-
-        return $factory->make($layout, $data);
+        return $factory->make($view, $data);
     }
 
     /**
