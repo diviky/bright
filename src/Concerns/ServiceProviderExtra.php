@@ -143,4 +143,9 @@ trait ServiceProviderExtra
             return 'Database\\Factories\\' . class_basename($modelName) . 'Factory';
         });
     }
+
+    protected function loadChanelsFrom($path)
+    {
+        require $path;
+    }
 }

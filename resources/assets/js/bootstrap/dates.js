@@ -9,65 +9,141 @@ window.load_datetimepicker = () => {
     return;
   }
 
-  let options = {
-    dateRange: false,
-    keepInvalid: true,
-    multipleDatesSeparator: ' - ',
-    display: {
-      sideBySide: false,
-      icons: {
-        time: 'ti ti-clock',
-        date: 'ti ti-calendar-month',
-        up: 'ti ti-arrow-up',
-        down: 'ti ti-arrow-down',
-        previous: 'ti ti-chevron-left',
-        next: 'ti ti-chevron-right',
-        today: 'ti ti-calendar',
-        clear: 'ti ti-x',
-        close: 'ti ti-square-x',
-      },
-    },
-  };
-
-  $('[data-datetime]').each(function () {
-    let $this = $(this);
+  document.querySelectorAll('[data-datetime]').forEach((container) => {
     let data = {
+      dateRange: false,
+      keepInvalid: true,
+      multipleDatesSeparator: ' - ',
+      display: {
+        sideBySide: false,
+        icons: {
+          time: 'ti ti-clock',
+          date: 'ti ti-calendar-month',
+          up: 'ti ti-arrow-up',
+          down: 'ti ti-arrow-down',
+          previous: 'ti ti-chevron-left',
+          next: 'ti ti-chevron-right',
+          today: 'ti ti-calendar',
+          clear: 'ti ti-x',
+          close: 'ti ti-square-x',
+        },
+      },
       localization: {
         format: 'MMM dd, yyyy h:mm T',
       },
     };
-    new tempusDominus.TempusDominus($this[0], { ...options, ...data });
+    new tempusDominus.TempusDominus(container, data);
   });
 
-  $('[data-time]').each(function () {
-    let $this = $(this);
+  document.querySelectorAll('[data-time]').forEach((container) => {
     let data = {
+      dateRange: false,
+      keepInvalid: true,
+      multipleDatesSeparator: ' - ',
+      display: {
+        sideBySide: false,
+        viewMode: 'clock',
+        components: {
+          calendar: false,
+          date: false,
+          month: false,
+          year: false,
+          decades: false,
+        },
+        icons: {
+          time: 'ti ti-clock',
+          date: 'ti ti-calendar-month',
+          up: 'ti ti-arrow-up',
+          down: 'ti ti-arrow-down',
+          previous: 'ti ti-chevron-left',
+          next: 'ti ti-chevron-right',
+          today: 'ti ti-calendar',
+          clear: 'ti ti-x',
+          close: 'ti ti-square-x',
+        },
+      },
       localization: {
         format: 'LT',
       },
     };
-    new tempusDominus.TempusDominus($this[0], { ...data, ...options });
+
+    new tempusDominus.TempusDominus(container, data);
   });
 
-  $('[data-datepicker]').each(function () {
-    let $this = $(this);
+  document.querySelectorAll('[data-date]').forEach((container) => {
     let data = {
+      dateRange: false,
+      keepInvalid: true,
+      multipleDatesSeparator: ' - ',
+      display: {
+        sideBySide: false,
+        viewMode: 'clock',
+        components: {
+          calendar: true,
+          date: true,
+          month: true,
+          year: true,
+          decades: true,
+          clock: false,
+          hours: false,
+          minutes: false,
+          seconds: false,
+        },
+        icons: {
+          time: 'ti ti-clock',
+          date: 'ti ti-calendar-month',
+          up: 'ti ti-arrow-up',
+          down: 'ti ti-arrow-down',
+          previous: 'ti ti-chevron-left',
+          next: 'ti ti-chevron-right',
+          today: 'ti ti-calendar',
+          clear: 'ti ti-x',
+          close: 'ti ti-square-x',
+        },
+      },
       localization: {
         format: 'LL',
       },
     };
-    new tempusDominus.TempusDominus($this[0], { ...options, ...data });
+    new tempusDominus.TempusDominus(container, data);
   });
 
-  $('[data-rangepicker]').each(function () {
-    let $this = $(this);
+  document.querySelectorAll('[data-daterange]').forEach((container) => {
     let data = {
       dateRange: true,
+      keepInvalid: true,
+      multipleDatesSeparator: ' - ',
+      display: {
+        sideBySide: false,
+        viewMode: 'clock',
+        components: {
+          calendar: true,
+          date: true,
+          month: true,
+          year: true,
+          decades: true,
+          clock: false,
+          hours: false,
+          minutes: false,
+          seconds: false,
+        },
+        icons: {
+          time: 'ti ti-clock',
+          date: 'ti ti-calendar-month',
+          up: 'ti ti-arrow-up',
+          down: 'ti ti-arrow-down',
+          previous: 'ti ti-chevron-left',
+          next: 'ti ti-chevron-right',
+          today: 'ti ti-calendar',
+          clear: 'ti ti-x',
+          close: 'ti ti-square-x',
+        },
+      },
       localization: {
         format: 'LL',
       },
     };
-    new tempusDominus.TempusDominus($this[0], { ...options, ...data });
+    new tempusDominus.TempusDominus(container, data);
   });
 };
 
