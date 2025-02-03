@@ -261,7 +261,7 @@
     return !v || numRe.test(v);
   });
 
-  v.fn("[data-type='mobile'], [type=mobile]", 'Please enter a valid 10 digits mobile number.', function (el, v) {
+  v.fn("[data-type='mobile'], [type=mobile]", 'Please enter a valid mobile number.', function (el, v) {
     return !v || mobRe.test(v);
   });
 
@@ -322,11 +322,11 @@
 
   v.fn('[required]', 'Please complete this mandatory field.', function (el, v) {
     v = $.trim(v);
-    if (el.attr('placeholder') != '' && el.attr('placeholder') != undefined) {
-      if (el.attr('placeholder') == v) {
-        return false;
-      }
-    }
+    // if (el.attr('placeholder') != '' && el.attr('placeholder') != undefined) {
+    //   if (el.attr('placeholder') == v) {
+    //     return false;
+    //   }
+    // }
 
     if (el.attr('data-type') == 'group') {
       return true;
@@ -785,10 +785,14 @@
         var form = $(this);
         instance = new Validator(form.find(':input'), form, conf);
         form.data('validator', instance);
+
+        return this;
       });
     } else {
       instance = new Validator(this, this.eq(0).closest('form'), conf);
-      return this.data('validator', instance);
+      this.data('validator', instance);
+
+      return this;
     }
   };
 });

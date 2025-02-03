@@ -78,7 +78,11 @@
 
     validator: function () {
       var self = this;
-      return self.form.data('validator') || self.form.validator(self.settings);
+      if (!self.form.data('validator')) {
+        self.form.validator(self.settings);
+      }
+
+      return self.form.data('validator');
     },
 
     formSubmit: function () {

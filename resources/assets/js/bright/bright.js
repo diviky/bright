@@ -1,9 +1,9 @@
 window.brightJs = () => {
-  jQuery('[role="validate"]').validate();
-  jQuery('[role="validator"]').validator();
+  jQuery('[validate]').validate();
+  jQuery('[validator]').validator();
   jQuery('[easyrender]').easyRender();
   jQuery('[easysubmit]').easySubmit();
-  jQuery('[tooltip=modal], [role="modal"]').easyModal();
+  jQuery('[tooltip="modal"], [modal]').easyModal();
 
   $('[data-toggle="tooltip"]').on('remove click mouseup mouseleave mousedown ', function (e) {
     $(this).tooltip('hide');

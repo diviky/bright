@@ -20,7 +20,7 @@ jQuery(document).ready(function ($) {
     }
   );
 
-  // adds an effect called "image" to the validator
+  // adds an effect called "errors" to the validator
   $.tools.validator.addEffect(
     'errors',
     function (errors, event) {

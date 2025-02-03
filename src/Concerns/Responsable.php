@@ -22,7 +22,7 @@ trait Responsable
     protected function getViewLayout($route, $data = [], $layout = null)
     {
         $layout = $layout ?: 'index';
-        $data['component'] = $route;
+        $data['slot'] = $route;
 
         return $this->getView($layout, $data);
     }

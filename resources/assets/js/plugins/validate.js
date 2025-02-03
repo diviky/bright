@@ -10,41 +10,92 @@
 })(function ($) {
   'use strict';
 
-  $.fn.validate = function (options) {
-    var defaults = {
-      message: '<div><em/><div/>',
-      grouped: false, // show all error messages at once inside the container
-      inputEvent: 'keyup blur', // change, blur, keyup, null
-      errorInputEvent: 'keyup', // change, blur, keyup, null
-      //effect        : 'image',
-      formEvent: 'submit', // submit, null
-    };
-    options = $.extend(defaults, options);
-    return this.each(function () {
-      var obj = $(this);
-      var opt = $.metadata ? $.extend({}, options, obj.metadata({ type: 'html5' })) : options; // metadata plugin support (applied on link element)
-      if (obj.is('form')) {
-        var form = obj;
-      } else {
-        var form = obj.closest('form');
+  var Validate = function (element, options) {
+    var self = this;
+
+    this.element = element;
+    self.settings = $.extend({}, $.fn.validate.defaults, options);
+
+    if ($.metadata) {
+      self.settings = $.extend({}, self.settings, element.metadata({ type: 'html5' }));
+    }
+
+    if (element.is('form')) {
+      self.form = element;
+    } else {
+      self.form = element.parents('form:eq(0)');
+    }
+
+    self.validate();
+
+    return self;
+  };
+
+  Validate.prototype.validator = function () {
+    var self = this;
+    if (!self.form.data('validator')) {
+      self.form.validator(self.settings);
+    }
+
+    return self.form.data('validator');
+  };
+
+  Validate.prototype.isValid = function () {
+    var self = this;
+    return self.validator()?.checkValidity();
+  };
+
+  Validate.prototype.validate = function () {
+    var self = this;
+
+    self.validator();
+
+    self.form.submit(function (e) {
+      e.preventDefault();
+      // client-side validation OK.
+      if (!e.isDefaultPrevented()) {
+        self.form.attr({
+          valid: true,
+        });
+
+        return true;
       }
-      return $.fn.validate.isValid(form, opt);
+
+      self.form.attr({
+        valid: false,
+      });
+
+      return false;
     });
   };
 
-  $.fn.validate.isValid = function (form, options) {
-    form.validator(options).submit(function (e) {
-      if (!e.isDefaultPrevented()) {
-        $(form).attr({
-          valid: true,
-        });
-        e.preventDefault();
-        return true;
+  $.fn.validate = function (options) {
+    return this.each(function () {
+      var self = $(this);
+
+      var instance = self.data('validate');
+
+      // destroy existing instance
+      if (instance) {
+        instance.destroy();
+        self.removeData('validate');
       }
-      $(form).attr({
-        valid: false,
-      });
-      return false;
+
+      var instance = new Validate(self, options);
+
+      if (typeof options === 'string' && typeof instance[options] === 'function') {
+        instance[options]();
+      }
+
+      self.data('validate', instance);
+
+      return this;
     });
+  };
+
+  $.fn.validate.defaults = {
+    inputEvent: 'keyup blur change', // change, blur, keyup, null
+    errorInputEvent: 'keyup', // change, blur, keyup, null
+    effect: 'errors',
   };
 });

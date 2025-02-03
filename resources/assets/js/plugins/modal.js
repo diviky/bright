@@ -19,12 +19,6 @@
       this.settings = $.extend({}, this.settings, el.metadata({ type: 'html5' }));
     }
 
-    this.settings.el = '#' + this.settings.id;
-
-    if (this.settings.content === null) {
-      this.settings.content = self.ajaxContent;
-    }
-
     var event = self.settings.event;
 
     if (event == 'ready') {
@@ -41,18 +35,44 @@
   };
 
   easyModal.prototype.show = function () {
-    var self = this;
+    let self = this;
+    self.settings.el = '#' + self.settings.id;
+
+    let el = self.el;
+
+    if (self.settings.content === null) {
+      self.settings.content = self.ajaxContent;
+    }
+
+    var url = self.settings.url || (el && el.attr('href'));
+
+    if (url == '' || url == undefined) {
+      return false;
+    }
+
+    if (self.settings.cache) {
+      self.settings.id = 'modal_' + btoa(url).replace('=');
+      self.settings.el = '#' + self.settings.id;
+
+      // check already exists
+      let content = $(self.settings.el);
+      if (content && content.length > 0) {
+        self.enable(content);
+        return this;
+      }
+    }
+
     $(self.settings.el).remove();
     $('.modal-backdrop').remove();
 
     self.start(self.el);
-    var content = self.settings.content;
+    let content = self.settings.content;
 
     if (typeof content === 'function') {
       content = content(self, self.el);
     }
 
-    self.content(content);
+    self.content(content).enable();
 
     return this;
   };
@@ -88,20 +108,20 @@
       function (response, status, xhr) {
         var ct = xhr.getResponseHeader('content-type') || '';
         if (ct.indexOf('html') > -1) {
-          self.content(response);
+          self.content(response).enable();
         } else if (ct.indexOf('json') > -1) {
           let fragments = response.fragments;
           for (const [key, value] of Object.entries(fragments)) {
             //var fragment = self.form.find('[fragment=' + key + ']');
-            self.content(value);
+            self.content(value).enable();
           }
         }
       },
       function (xhr) {
         if (xhr.status === 401) {
-          self.content('You are not allowed to access this. Please login');
+          self.content('You are not allowed to access this. Please login').enable();
         } else {
-          self.content(xhr.responseText);
+          self.content(xhr.responseText).enable();
         }
       }
     );
@@ -111,6 +131,10 @@
     var self = this;
     var settings = self.settings;
     var title = settings.title;
+
+    if (settings.layout !== 'modal') {
+      return self;
+    }
 
     if (settings.size == 'small') {
       settings.styles = settings.styles + ' ' + 'modal-sm';
@@ -180,16 +204,27 @@
   easyModal.prototype.content = function (html) {
     var self = this;
 
-    $(self.settings.el + ' .modal-body').html(html);
+    if (self.settings.layout == 'modal') {
+      $(self.settings.el + ' .modal-body').html(html);
+    } else {
+      $(self.settings.container).html(html);
+    }
 
-    $(self.settings.el).modal({
+    return this;
+  };
+
+  easyModal.prototype.enable = function () {
+    var self = this;
+    let el = self.settings.el;
+
+    $(el).modal({
       keyboard: this.settings.keyboard,
       backdrop: this.settings.backdrop,
     });
 
-    $(self.settings.el).modal('show');
+    $(el).modal('show');
 
-    $(self.settings.el)
+    $(el)
       .off('hidden.bs.modal')
       .on('hidden.bs.modal', function () {
         $(this).data('bs.modal', null);
@@ -201,7 +236,7 @@
         }
 
         if (self.settings.clean) {
-          $(self.settings.el).remove();
+          $(el).remove();
         }
       });
 
@@ -260,6 +295,8 @@
     method: 'GET',
     position: 'right',
     clean: false,
+    layout: 'modal',
+    cache: false,
     scrollable: false,
     animation: 'bounceInRight',
     content: null,

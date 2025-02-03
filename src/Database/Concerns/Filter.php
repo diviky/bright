@@ -182,9 +182,7 @@ trait Filter
 
     protected function filterExact(array $filters = []): self
     {
-
         foreach ($filters as $column => $value) {
-
             if (!empty($column) && isset($value) && $value[0] != '') {
 
                 $condition = '=';
@@ -374,6 +372,10 @@ trait Filter
                 ];
             }
 
+            if (!isset($date['from'])) {
+                continue;
+            }
+
             $from = $this->toTime($date['from'], 'Y-m-d');
             $to = $this->toTime($date['to'], 'Y-m-d');
             $condition = $date['condition'] ?? '=';
@@ -389,7 +391,7 @@ trait Filter
         return $this;
     }
 
-    protected function filterDatetimes(array $datetime, bool $negative = false): self
+    protected function filterDatetimes(array $datetime, bool $inverse = false): self
     {
         foreach ($datetime as $column => $date) {
             if (empty($date)) {
@@ -404,18 +406,20 @@ trait Filter
                 ];
             }
 
+            if (!isset($date['from'])) {
+                continue;
+            }
+
             $from = $date['from'];
-            $to = $date['to'];
+            $to = $date['to'] ?? null;
             $to = $to ?: $from;
 
             $from = carbon($this->toTime($from, 'Y-m-d H:i:s', '00:00:00'));
             $to = carbon($this->toTime($to, 'Y-m-d H:i:s', '23:59:59'));
 
-            if ($negative) {
+            if ($inverse) {
                 $this->whereNotBetween($this->cleanField($column), [$from, $to]);
-
             } else {
-
                 $this->whereBetween($this->cleanField($column), [$from, $to]);
             }
         }
@@ -423,7 +427,7 @@ trait Filter
         return $this;
     }
 
-    protected function filterUnixTimes(array $unixtime, bool $negative = false): self
+    protected function filterUnixTimes(array $unixtime, bool $inverse = false): self
     {
         foreach ($unixtime as $column => $date) {
             if (empty($date)) {
@@ -436,6 +440,10 @@ trait Filter
                     'from' => isset($date[0]) ? \trim($date[0]) : null,
                     'to' => isset($date[1]) ? \trim($date[1]) : null,
                 ];
+            }
+
+            if (!isset($date['from'])) {
+                continue;
             }
 
             $from = isset($date['from']) ? \trim($date['from']) : null;
@@ -452,7 +460,7 @@ trait Filter
                 $to = $to && !is_string($to) ? $to->timestamp : null;
             }
 
-            if ($negative) {
+            if ($inverse) {
                 $this->whereNotBetween($this->cleanField($column), [$from, $to]);
             } else {
                 $this->whereBetween($this->cleanField($column), [$from, $to]);
@@ -462,12 +470,12 @@ trait Filter
         return $this;
     }
 
-    protected function filterRange(array $ranges, bool $negative = false): self
+    protected function filterRange(array $ranges, bool $inverse = false): self
     {
-        return $this->filterBetween($ranges, $negative);
+        return $this->filterBetween($ranges, $inverse);
     }
 
-    protected function filterBetween(array $between, bool $negative = false): self
+    protected function filterBetween(array $between, bool $inverse = false): self
     {
         foreach ($between as $column => $date) {
             if (empty($date)) {
@@ -488,7 +496,7 @@ trait Filter
             $condition = $date['condition'] ?? '=';
             $column = $this->cleanField($column);
 
-            if ($negative) {
+            if ($inverse) {
                 if ($from && $to) {
                     $this->whereNotBetween($column, [$from, $to]);
                 } elseif ($from) {

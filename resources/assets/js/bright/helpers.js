@@ -154,9 +154,15 @@ window.isJson = (response) => {
 };
 
 window.notify = (message) => {
+  let type = message.type == 'OK' ? 'success' : message.type;
+  type = type == 'ERROR' ? 'error' : type;
+  type = type == 'INFO' ? 'info' : type;
+
+  let text = message.text || message.message;
+
   new Noty({
-    text: message.text,
-    type: message.type || 'error',
+    text: text,
+    type: type || 'error',
     layout: 'bottomRight',
     theme: 'nest',
     dismissQueue: false,

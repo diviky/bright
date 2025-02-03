@@ -28,10 +28,11 @@ window.brightSystemJs = () => {
     var message = $this.attr('data-confirm');
     box.confirm(message, (result) => {
       if (result) {
-        var data = $this.data('post-data') || {};
+        let data = $this.data('post-data') || {};
+        let link = $(this).attr('href') && $(this).attr('href') != '#' ? $(this).attr('href') : $this.data('post');
 
         $.ajax({
-          url: $this.data('post'),
+          url: link,
           data: data,
           method: 'POST',
           complete: function (xhr) {
