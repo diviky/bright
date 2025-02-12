@@ -63,7 +63,7 @@ window.load_datetimepicker = () => {
         },
       },
       localization: {
-        format: 'LT',
+        format: 'h:mm T',
       },
     };
 
@@ -77,7 +77,7 @@ window.load_datetimepicker = () => {
       multipleDatesSeparator: ' - ',
       display: {
         sideBySide: false,
-        viewMode: 'clock',
+        viewMode: 'calendar',
         components: {
           calendar: true,
           date: true,
@@ -115,7 +115,7 @@ window.load_datetimepicker = () => {
       multipleDatesSeparator: ' - ',
       display: {
         sideBySide: false,
-        viewMode: 'clock',
+        viewMode: 'calendar',
         components: {
           calendar: true,
           date: true,

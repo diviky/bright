@@ -58,34 +58,15 @@ trait Connection
 
         $type = \trim(\strtolower(\explode(' ', $query)[0]));
 
-        switch ($type) {
-            case 'delete':
-                return parent::affectingStatement($query, $bindings);
-
-                break;
-            case 'update':
-                return parent::affectingStatement($query, $bindings);
-
-                break;
-            case 'insert':
-                return parent::statement($query, $bindings);
-
-                break;
-            case 'select':
-                if (\preg_match('/outfile\s/i', $query)) {
-                    return parent::statement($query, $bindings);
-                }
-
-                return $this->select($query, $bindings);
-
-                break;
-            case 'load':
-                return $this->unprepared($query);
-
-                break;
-        }
-
-        return parent::statement($query, $bindings);
+        return match ($type) {
+            'delete', 'update' => parent::affectingStatement($query, $bindings),
+            'insert' => parent::statement($query, $bindings),
+            'select' => \preg_match('/outfile\s/i', $query)
+                ? parent::statement($query, $bindings)
+                : $this->select($query, $bindings),
+            'load' => $this->unprepared($query),
+            default => parent::statement($query, $bindings),
+        };
     }
 
     /**

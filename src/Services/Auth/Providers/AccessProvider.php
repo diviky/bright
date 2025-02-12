@@ -8,6 +8,7 @@ use App\Models\User;
 use Diviky\Bright\Models\Token;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -18,10 +19,19 @@ class AccessProvider implements UserProvider
 
     protected $user;
 
-    public function __construct(User $user, Token $token)
+    /**
+     * The hasher implementation.
+     *
+     * @var \Illuminate\Contracts\Hashing\Hasher
+     */
+    protected $hasher;
+
+    public function __construct(User $user, Token $token, HasherContract $hasher)
     {
         $this->user = $user;
         $this->token = $token;
+        $this->hasher = $hasher;
+
     }
 
     public function retrieveById($identifier)
@@ -101,5 +111,22 @@ class AccessProvider implements UserProvider
         $plain = $credentials['password'];
 
         return Hash::check($plain, $user->getAuthPassword());
+    }
+
+    /**
+     * Rehash the user's password if enabled and required.
+     *
+     * @param  bool  $force
+     * @return void
+     */
+    public function rehashPasswordIfRequired(Authenticatable $user, #[\SensitiveParameter] array $credentials, $force = false)
+    {
+        if (!$this->hasher->needsRehash($user->getAuthPassword()) && !$force) {
+            return;
+        }
+
+        $user->forceFill([
+            $user->getAuthPasswordName() => $this->hasher->make($credentials['password']),
+        ])->save();
     }
 }

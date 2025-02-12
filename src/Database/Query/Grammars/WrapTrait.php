@@ -60,7 +60,7 @@ trait WrapTrait
         $databases = $this->config['databases'] ?? [];
         if (\is_array($databases)) {
             if (isset($databases['names']) && \is_array($databases['names']) && isset($databases['names'][$table])) {
-                return $this->wrap($databases['names'][$table]) . '.' . $this->wrap($this->tablePrefix . $table . $alias, true);
+                return $this->wrap($databases['names'][$table]) . '.' . $this->wrap($this->tablePrefix . $table . $alias);
             }
 
             $patterns = $databases['patterns'] ?? [];
@@ -71,13 +71,13 @@ trait WrapTrait
                             $database = $database[0];
                         }
 
-                        return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $table . $alias, true);
+                        return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $table . $alias);
                     }
                 }
             }
         }
 
-        return $this->wrap($this->tablePrefix . $table . $alias, true);
+        return $this->wrap($this->tablePrefix . $table . $alias);
     }
 
     /**

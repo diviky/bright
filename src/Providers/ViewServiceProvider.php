@@ -26,6 +26,10 @@ class ViewServiceProvider extends BaseServiceProvider
         Blade::directive('datetime', function ($expression) {
             return "<?php echo ({$expression})->format('d/m/Y H:i'); ?>";
         });
+
+        Blade::directive('page', function ($paginator) {
+            return "<?php echo ({$paginator}->currentPage() - 1) * {$paginator}->perPage() + \$loop->index + 1; ?>";
+        });
     }
 
     protected function path(): string

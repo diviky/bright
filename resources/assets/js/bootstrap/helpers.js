@@ -48,7 +48,9 @@ window.load_helpers = () => {
     }
 
     var selected = target.find('input[type=checkbox]:checked').length;
-    target.find('[data-checked-count]').text(parseInt(selected) - 1);
+    let ignore = target.find('[data-check-all]:checked, [data-check-ignore]:checked').length;
+
+    target.find('[data-checked-count]').text(parseInt(selected) - parseInt(ignore));
   });
 
   $(document).on('change', '[data-uncheck-all]', function (e) {
@@ -69,7 +71,7 @@ window.load_helpers = () => {
     var target = $this.parents('[data-check]:first');
 
     var selected = target.find('input[type=checkbox]:checked').length;
-    let ignore = target.find('[data-check-all]:checked').length;
+    let ignore = target.find('[data-check-all]:checked, [data-check-ignore]:checked').length;
 
     target.find('[data-checked-count]').text(parseInt(selected) - parseInt(ignore));
 

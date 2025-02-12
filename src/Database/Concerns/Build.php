@@ -16,7 +16,7 @@ trait Build
      * @param  array|string  $values
      * @param  string  $boolean
      * @param  bool  $not
-     * @return static
+     * @return $this
      */
     public function whereDateBetween($column, $values, $boolean = 'and', $not = false)
     {

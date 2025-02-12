@@ -181,10 +181,8 @@ window.trace = (text) => {
 
 window.e = (s) => {
   var argv = Array.apply(null, arguments).slice(1);
-  if ($.isArray(argv)) {
-    $.each(argv, function (i) {
-      s = s.replace(this, argv[i]);
-    });
-  }
+  $.each(argv, function (i) {
+    s = s.replace(this, argv[i]);
+  });
   return s;
 };

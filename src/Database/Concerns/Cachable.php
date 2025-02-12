@@ -233,7 +233,6 @@ trait Cachable
     /**
      * Get a unique cache key for the complete query.
      *
-     * @param  mixed  $appends
      * @return string
      */
     public function getCacheKey()

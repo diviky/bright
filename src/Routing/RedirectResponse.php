@@ -36,7 +36,7 @@ class RedirectResponse extends BaseRedirectResponse
         $data = $this->with;
         $data['redirect'] = $url;
 
-        $this->setContent(\json_encode($data));
+        $this->setContent((string) \json_encode($data));
 
         return $this;
     }

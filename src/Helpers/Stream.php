@@ -187,8 +187,6 @@ class Stream
     public function readFile($filename): bool
     {
         $chunksize = 2 * (1024 * 1024); // how many bytes per chunk
-        $buffer = '';
-
         $stream = \fopen($filename, 'rb');
 
         if ($stream === false) {
@@ -196,8 +194,7 @@ class Stream
         }
 
         while (!\feof($stream)) {
-            $buffer = \fread($stream, $chunksize);
-            echo $buffer;
+            echo \fread($stream, $chunksize);
         }
 
         return \fclose($stream);
@@ -332,22 +329,22 @@ class Stream
     {
         if ($rows instanceof Collection) {
             $rows = $rows->toArray();
-            $rows = \json_decode(\json_encode($rows), true);
+            $rows = \json_decode((string) \json_encode($rows), true);
         }
 
         if ($rows instanceof LazyCollection) {
             $rows = $rows->toArray();
-            $rows = \json_decode(\json_encode($rows), true);
+            $rows = \json_decode((string) \json_encode($rows), true);
         }
 
         if ($rows instanceof Arrayable) {
             $rows = $rows->toArray();
-            $rows = \json_decode(\json_encode($rows), true);
+            $rows = \json_decode((string) \json_encode($rows), true);
         }
 
         if ($rows instanceof \JsonSerializable) {
             $rows = $rows->jsonSerialize();
-            $rows = \json_decode(\json_encode($rows), true);
+            $rows = \json_decode((string) \json_encode($rows), true);
         }
 
         if ($rows instanceof \Iterator) {

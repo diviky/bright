@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Models;
 
+use Illuminate\Database\Eloquent\Model;
+
 class Models
 {
     /**
@@ -14,6 +16,13 @@ class Models
     public static function user()
     {
         return config('auth.providers.users.model', User::class);
+    }
+
+    public static function with(string $name): Model
+    {
+        $model = config('bright.models.' . $name);
+
+        return new $model;
     }
 
     /**
@@ -72,15 +81,15 @@ class Models
      */
     public static function table($name)
     {
-        if ($name == 'app_options') {
+        if ($name == 'options') {
             return static::options();
         }
 
-        if ($name == 'app_meta') {
+        if ($name == 'meta') {
             return static::meta();
         }
 
-        if ($name == 'app_meta_values') {
+        if ($name == 'meta_values') {
             return static::metaValues();
         }
 

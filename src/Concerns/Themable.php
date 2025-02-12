@@ -101,8 +101,6 @@ trait Themable
 
         $paths = array_filter($paths);
 
-        //dd($paths);
-
         foreach ($paths as $path) {
             $finder->prependLocation(str_replace('//', '/', $path));
         }

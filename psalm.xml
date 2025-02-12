@@ -5,229 +5,219 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
     xmlns:xi="http://www.w3.org/2001/XInclude"
 >
-    <projectFiles>
+  <projectFiles>
+    <directory name="src"/>
+    <ignoreFiles>
+      <directory name="vendor"/>
+    </ignoreFiles>
+  </projectFiles>
+  <plugins>
+    <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
+  </plugins>
+  <issueHandlers>
+    <PossiblyUnusedMethod>
+      <errorLevel type="suppress">
         <directory name="src"/>
-        <ignoreFiles>
-            <directory name="vendor"/>
-        </ignoreFiles>
-    </projectFiles>
-    <plugins>
-        <pluginClass class="Psalm\LaravelPlugin\Plugin"/>
-    </plugins>
-    <issueHandlers>
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <referencedClass name="App\Http\Controllers\Controller"/>
-                <referencedClass name="App\Models\User"/>
-                <referencedClass name="ConsoleTVs\Charts\Classes\Chartjs\Chart"/>
-                <referencedClass name="ConsoleTVs\Charts\Classes\Chartjs\Dataset"/>
-                <referencedClass name="wapmorgan\UnifiedArchive\UnifiedArchive"/>
-                <referencedClass name="Intervention\Image\Facades\Image"/>
-                <directory name="src/Notifications"/>
-                <directory name="src/Helpers"/>
-            </errorLevel>
-        </UndefinedClass>
-        <PropertyNotSetInConstructor>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </PropertyNotSetInConstructor>
-        <NoInterfaceProperties>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </NoInterfaceProperties>
-        <MissingClosureReturnType>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </MissingClosureReturnType>
-        <PossiblyUndefinedMethod>
-            <errorLevel type="suppress">
-                <directory name="src/Http/Controllers"/>
-            </errorLevel>
-        </PossiblyUndefinedMethod>
-        <UndefinedMethod>
-            <errorLevel type="suppress">
-                <file name="src/Database/Filters/FiltersScope.php"/>
-            </errorLevel>
-        </UndefinedMethod>
-        <InvalidReturnType>
-            <errorLevel type="suppress">
-                <file name="src/Exceptions/Handler.php"/>
-            </errorLevel>
-        </InvalidReturnType>
-        <InvalidReturnStatement>
-            <errorLevel type="suppress">
-                <file name="src/Exceptions/Handler.php"/>
-            </errorLevel>
-        </InvalidReturnStatement>
-        <InvalidTemplateParam>
-            <errorLevel type="suppress">
-                <file name="src/Database/Eloquent/Builder.php"/>
-            </errorLevel>
-        </InvalidTemplateParam>
-        <PossiblyNullReference>
-            <errorLevel type="suppress">
-                <file name="src/Database/Filters/FiltersScope.php"/>
-            </errorLevel>
-        </PossiblyNullReference>
-        <UnsafeInstantiation>
-            <errorLevel type="suppress">
-                <file name="src/Database/Exceptions/InvalidFilterValue.php"/>
-            </errorLevel>
-        </UnsafeInstantiation>
-        <PossiblyInvalidArgument>
-            <errorLevel type="suppress">
-                <file name="src/Helpers/Reader.php"/>
-                <file name="src/Helpers/File.php"/>
-                <file name="src/Database/Concerns/Build.php"/>
-                <file name="src/Services/Auth/AccessTokenGuard.php"/>
-                <file name="src/Database/Concerns/Paging.php"/>
-            </errorLevel>
-        </PossiblyInvalidArgument>
-        <InvalidArgument>
-            <errorLevel type="suppress">
-                <file name="src/Services/Auth/AccessTokenGuard.php"/>
-            </errorLevel>
-        </InvalidArgument>
-        <ArgumentTypeCoercion>
-            <errorLevel type="suppress">
-                <file name="src/Helpers/Reader.php"/>
-                <file name="src/Helpers/File.php"/>
-                <file name="src/Concerns/ServiceProviderExtra.php"/>
-            </errorLevel>
-        </ArgumentTypeCoercion>
-        <MoreSpecificReturnType>
-            <errorLevel type="suppress">
-                <file name="src/Database/MySqlConnection.php"/>
-                <file name="src/Database/SQLiteConnection.php"/>
-                <file name="src/Database/Concerns/Connection.php"/>
-                <file name="src/Database/Concerns/Filter.php"/>
-            </errorLevel>
-        </MoreSpecificReturnType>
-        <ImplementedReturnTypeMismatch>
-            <errorLevel type="suppress">
-                <file name="src/Database/Concerns/Connection.php"/>
-            </errorLevel>
-        </ImplementedReturnTypeMismatch>
-        <LessSpecificReturnStatement>
-            <errorLevel type="suppress">
-                <file name="src/Database/MySqlConnection.php"/>
-                <file name="src/Database/SQLiteConnection.php"/>
-                <file name="src/Helpers/Stream.php"/>
-            </errorLevel>
-        </LessSpecificReturnStatement>
-        <UnresolvableInclude>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </UnresolvableInclude>
-        <UndefinedInterfaceMethod>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </UndefinedInterfaceMethod>
-        <UndefinedMagicMethod>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </UndefinedMagicMethod>
-        <PossiblyUndefinedArrayOffset>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </PossiblyUndefinedArrayOffset>
-        <InvalidArrayOffset>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </InvalidArrayOffset>
-        <RiskyTruthyFalsyComparison>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </RiskyTruthyFalsyComparison>
-        <MissingTemplateParam>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </MissingTemplateParam>
-         <PossiblyInvalidArgument>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </PossiblyInvalidArgument>
-         <PossiblyInvalidOperand>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </PossiblyInvalidOperand>
-        <PossiblyInvalidPropertyAssignmentValue>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </PossiblyInvalidPropertyAssignmentValue>
-        <InvalidPropertyAssignmentValue>
-            <errorLevel type="suppress">
-                <file name="src/Database/Batch.php"/>
-            </errorLevel>
-        </InvalidPropertyAssignmentValue>
-        <MissingClosureParamType>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </MissingClosureParamType>
-        <InvalidScalarArgument>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </InvalidScalarArgument>
-        <InvalidStringClass>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </InvalidStringClass>
-        <PossiblyNullArgument>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </PossiblyNullArgument>
-        <InvalidMethodCall>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </InvalidMethodCall>
-        <RedundantConditionGivenDocblockType>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </RedundantConditionGivenDocblockType>
-        <LessSpecificImplementedReturnType>
-            <errorLevel type="suppress">
-                <file name="src/Routing/Responsable.php"/>
-            </errorLevel>
-        </LessSpecificImplementedReturnType>
-        <!-- @todo: Can't get this to work within a package? Ide helper or migrations somehow? -->
-        <UndefinedMagicPropertyFetch>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </UndefinedMagicPropertyFetch>
-        <UndefinedThisPropertyFetch>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </UndefinedThisPropertyFetch>
-        <UndefinedThisPropertyAssignment>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </UndefinedThisPropertyAssignment>
-        <UndefinedMagicPropertyAssignment>
-            <errorLevel type="suppress">
-                <directory name="src"/>
-            </errorLevel>
-        </UndefinedMagicPropertyAssignment>
-    </issueHandlers>
+      </errorLevel>
+    </PossiblyUnusedMethod>
+    <UnusedClass>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </UnusedClass>
+    <PossiblyUnusedProperty>
+      <errorLevel type="suppress">
+        <directory name="src/View/Components"/>
+      </errorLevel>
+    </PossiblyUnusedProperty>
+    <UndefinedClass>
+      <errorLevel type="suppress">
+        <referencedClass name="App\Http\Controllers\Controller"/>
+        <referencedClass name="App\Models\User"/>
+        <referencedClass name="ConsoleTVs\Charts\Classes\Chartjs\Chart"/>
+        <referencedClass name="ConsoleTVs\Charts\Classes\Chartjs\Dataset"/>
+        <referencedClass name="wapmorgan\UnifiedArchive\UnifiedArchive"/>
+        <referencedClass name="Intervention\Image\Facades\Image"/>
+        <directory name="src/Notifications"/>
+        <directory name="src/Helpers"/>
+      </errorLevel>
+    </UndefinedClass>
+    <PropertyNotSetInConstructor>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </PropertyNotSetInConstructor>
+    <NoInterfaceProperties>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </NoInterfaceProperties>
+    <MissingClosureReturnType>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </MissingClosureReturnType>
+    <UndefinedMethod>
+      <errorLevel type="suppress">
+        <file name="src/Database/Filters/FiltersScope.php"/>
+      </errorLevel>
+    </UndefinedMethod>
+    <InvalidReturnType>
+      <errorLevel type="suppress">
+        <file name="src/Exceptions/Handler.php"/>
+      </errorLevel>
+    </InvalidReturnType>
+    <PossiblyNullReference>
+      <errorLevel type="suppress">
+        <file name="src/Database/Filters/FiltersScope.php"/>
+      </errorLevel>
+    </PossiblyNullReference>
+    <UnsafeInstantiation>
+      <errorLevel type="suppress">
+        <file name="src/Database/Exceptions/InvalidFilterValue.php"/>
+      </errorLevel>
+    </UnsafeInstantiation>
+    <PossiblyInvalidArgument>
+      <errorLevel type="suppress">
+        <file name="src/Helpers/Reader.php"/>
+        <file name="src/Helpers/File.php"/>
+        <file name="src/Database/Concerns/Build.php"/>
+        <file name="src/Services/Auth/AccessTokenGuard.php"/>
+        <file name="src/Database/Concerns/Paging.php"/>
+      </errorLevel>
+    </PossiblyInvalidArgument>
+    <InvalidArgument>
+      <errorLevel type="suppress">
+        <file name="src/Services/Auth/AccessTokenGuard.php"/>
+      </errorLevel>
+    </InvalidArgument>
+    <ArgumentTypeCoercion>
+      <errorLevel type="suppress">
+        <file name="src/Helpers/Reader.php"/>
+        <file name="src/Helpers/File.php"/>
+        <file name="src/Concerns/ServiceProviderExtra.php"/>
+      </errorLevel>
+    </ArgumentTypeCoercion>
+    <MoreSpecificReturnType>
+      <errorLevel type="suppress">
+        <file name="src/Database/MySqlConnection.php"/>
+        <file name="src/Database/SQLiteConnection.php"/>
+        <file name="src/Database/Concerns/Connection.php"/>
+        <file name="src/Database/Concerns/Filter.php"/>
+      </errorLevel>
+    </MoreSpecificReturnType>
+    <ImplementedReturnTypeMismatch>
+      <errorLevel type="suppress">
+        <file name="src/Database/Concerns/Connection.php"/>
+      </errorLevel>
+    </ImplementedReturnTypeMismatch>
+    <LessSpecificReturnStatement>
+      <errorLevel type="suppress">
+        <file name="src/Database/MySqlConnection.php"/>
+        <file name="src/Database/SQLiteConnection.php"/>
+        <file name="src/Helpers/Stream.php"/>
+      </errorLevel>
+    </LessSpecificReturnStatement>
+    <UnresolvableInclude>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </UnresolvableInclude>
+    <UndefinedInterfaceMethod>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </UndefinedInterfaceMethod>
+    <UndefinedMagicMethod>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </UndefinedMagicMethod>
+    <PossiblyUndefinedArrayOffset>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </PossiblyUndefinedArrayOffset>
+    <InvalidArrayOffset>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </InvalidArrayOffset>
+    <RiskyTruthyFalsyComparison>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </RiskyTruthyFalsyComparison>
+    <MissingTemplateParam>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </MissingTemplateParam>
+    <PossiblyInvalidArgument>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidOperand>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </PossiblyInvalidOperand>
+    <PossiblyInvalidPropertyAssignmentValue>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </PossiblyInvalidPropertyAssignmentValue>
+    <InvalidPropertyAssignmentValue>
+      <errorLevel type="suppress">
+        <file name="src/Database/Batch.php"/>
+      </errorLevel>
+    </InvalidPropertyAssignmentValue>
+    <MissingClosureParamType>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </MissingClosureParamType>
+    <InvalidScalarArgument>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </InvalidScalarArgument>
+    <InvalidStringClass>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </InvalidStringClass>
+    <PossiblyNullArgument>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </PossiblyNullArgument>
+    <InvalidMethodCall>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </InvalidMethodCall>
+    <RedundantConditionGivenDocblockType>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </RedundantConditionGivenDocblockType>
+    <LessSpecificImplementedReturnType>
+      <errorLevel type="suppress">
+        <file name="src/Routing/Responsable.php"/>
+      </errorLevel>
+    </LessSpecificImplementedReturnType>
+    <!-- @todo: Can't get this to work within a package? Ide helper or migrations somehow? -->
+    <UndefinedThisPropertyFetch>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </UndefinedThisPropertyFetch>
+    <UndefinedThisPropertyAssignment>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </UndefinedThisPropertyAssignment>
+  </issueHandlers>
 </psalm>

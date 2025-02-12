@@ -13,11 +13,6 @@ class GeoIpUpdater
     /**
      * @var bool|string
      */
-    protected $databaseFileGzipped;
-
-    /**
-     * @var bool|string
-     */
     protected $databaseFile;
 
     /**

@@ -29,13 +29,6 @@ class AccessTokenGuard
     protected $storageKey = '';
 
     /**
-     * database column.
-     *
-     * @var string
-     */
-    protected $inputKey = '';
-
-    /**
      * Guard configuration.
      *
      * @var array
@@ -56,7 +49,6 @@ class AccessTokenGuard
         $this->inputKeys = ['access_token', 'api_token'];
         // key to check in database
         $this->storageKey = 'access_token';
-        $this->inputKey = 'access_token';
     }
 
     /**
@@ -74,11 +66,8 @@ class AccessTokenGuard
 
         if (!isset($access_key)) {
             throw new AuthenticationException('Missing Authorization');
-
-            return null;
         }
 
-        $token = null;
         $signature = null;
         if (\strpos($access_key, ':') !== false) {
             [$access_key, $signature] = \explode(':', $access_key, 2);
@@ -89,40 +78,28 @@ class AccessTokenGuard
 
         if (\is_null($token) || \is_null($token->user_id)) {
             throw new AuthenticationException('Token or userid is null');
-
-            return null;
         }
 
         if ($token->status != 1 || !\is_null($token->deleted_at)) {
             throw new AuthenticationException('Token is not active or deleted');
-
-            return null;
         }
 
         if (!$this->validateIp($token->allowed_ip)) {
             throw new AuthenticationException('Token is not allowed from this ip:' . $this->request->ip());
-
-            return null;
         }
 
         if (isset($token->expires_at) && $token->expires_at->isPast()) {
             throw new AuthenticationException('Token was expired at ' . $token->expires_at);
-
-            return null;
         }
 
         if (!empty($token->refresh_token) && !$this->validateSignature($token, $signature)) {
             throw new AuthenticationException('Missing refresh token or signature mismatched');
-
-            return null;
         }
 
         $user = $this->provider->retrieveById($token->user_id);
 
         if (is_null($user) || !\is_null($user->deleted_at) || $user->status != 1) {
             throw new AuthenticationException('User is null, deleted or inactive');
-
-            return null;
         }
 
         $this->user = $user;

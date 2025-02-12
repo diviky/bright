@@ -36,13 +36,6 @@ class User extends Authenticatable
     use UsersParent;
 
     /**
-     * Guard name.
-     *
-     * @var string
-     */
-    public $guard_name = 'web';
-
-    /**
      * Admin role.
      *
      * @var string

@@ -96,7 +96,7 @@ class Responsable implements BaseResponsable
 
         if ($format == 'iframe') {
             $html = '<textarea>';
-            $html .= \json_encode($response);
+            $html .= (string) \json_encode($response);
             $html .= '</textarea>';
 
             return $html;

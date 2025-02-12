@@ -55,7 +55,6 @@ class Reader
             }
 
             $lines = ($ext == '.txt') ? 1 : 5;
-            $file = '';
 
             \ini_set('auto_detect_line_endings', 'on');
             $file = new \SplFileObject($reader);

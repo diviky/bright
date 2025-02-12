@@ -43,8 +43,6 @@ class CredentialsGuard
             return $this->user;
         }
 
-        $user = null;
-
         $credentials = $this->getCredentials();
 
         $user = $this->provider->retrieveByCredentials($credentials);

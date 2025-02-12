@@ -580,7 +580,7 @@
     hide: false,
     reset: false,
     clear: false,
-    render: true,
+    render: false,
     placeholder: null,
     onComplete: function () {},
     onFailed: function () {},

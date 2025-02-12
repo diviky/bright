@@ -31,17 +31,12 @@ class File
      */
     protected $reader;
 
-    /**
-     * @var callable
-     */
-    protected $callable;
-
     protected string $path;
 
     /**
      * @param  array|\Iterator|string|\Traversable  $reader
      */
-    final public function __construct($reader = null, array $options = [])
+    public function __construct($reader = null, array $options = [])
     {
         if (isset($reader)) {
             $this->reader = $this->getReader($reader, $options);

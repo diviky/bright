@@ -183,8 +183,7 @@ trait Filter
     protected function filterExact(array $filters = []): self
     {
         foreach ($filters as $column => $value) {
-            if (!empty($column) && isset($value) && $value[0] != '') {
-
+            if (!empty($column) && isset($value) && $value != '') {
                 $condition = '=';
                 if (Str::contains($column, '~')) {
                     [$column, $condition] = explode('~', $column);

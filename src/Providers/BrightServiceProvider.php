@@ -26,6 +26,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Laravel\Sanctum\Sanctum;
 
 /**
@@ -81,6 +83,22 @@ class BrightServiceProvider extends ServiceProvider
         Route::auth();
 
         Sanctum::usePersonalAccessTokenModel(Token::class);
+
+        Storage::disk('local')->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
+            return URL::temporarySignedRoute(
+                'signed.url',
+                $expiration,
+                array_merge($options, ['disk' => 'local', 'path' => $path])
+            );
+        });
+
+        Storage::disk('public')->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
+            return URL::temporarySignedRoute(
+                'signed.url',
+                $expiration,
+                array_merge($options, ['disk' => 'public', 'path' => $path])
+            );
+        });
     }
 
     public function register(): void

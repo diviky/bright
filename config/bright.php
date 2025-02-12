@@ -27,7 +27,7 @@ return [
      */
     'tables' => [
         'default' => [
-            'table' => ['user_id'], //[$column => $value]
+            'table' => ['user_id'], // [$column => $value]
         ],
         'select' => [],
         'insert' => [],
@@ -100,6 +100,12 @@ return [
 
     'models' => [
         'user' => \Diviky\Bright\Models\User::class,
+        'passwod_history' => \Diviky\Bright\Models\PasswordHistory::class,
+        'options' => \Diviky\Bright\Models\Options::class,
+        'meta' => \Diviky\Bright\Models\Meta::class,
+        'meta_values' => \Diviky\Bright\Models\MetaValues::class,
+        'email_logs' => \Diviky\Bright\Models\EmailLogs::class,
+        'user_users' => \Diviky\Bright\Models\UserUsers::class,
     ],
 
     'table' => [

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Diviky\Bright\Contracts\UtilInterface as Util;
 use Diviky\Bright\Util\StdClass;
 use Diviky\Bright\View\View;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 if (!function_exists('user')) {
@@ -126,7 +127,11 @@ function utcTime($date = null, $timezone = null)
     return app(Util::class)->utcTime($date, $timezone);
 }
 
-function collects($items = [], $default = null)
+/**
+ * @param  \Illuminate\Contracts\Support\Arrayable|iterable|array|null  $items
+ * @param  mixed  $default
+ */
+function collects($items = [], $default = null): Collection
 {
     return new StdClass($items, $default);
 }

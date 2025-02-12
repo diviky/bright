@@ -82,34 +82,16 @@ trait Builder
 
         $type = \trim(\strtolower(\explode(' ', $query)[0]));
 
-        switch ($type) {
-            case 'delete':
-                return $this->connection->delete($query, $bindings);
-
-                break;
-            case 'update':
-                return $this->connection->update($query, $bindings);
-
-                break;
-            case 'insert':
-                return $this->connection->insert($query, $bindings);
-
-                break;
-            case 'select':
-                if (\preg_match('/outfile\s/i', $query)) {
-                    return $this->connection->statement($query, $bindings);
-                }
-
-                return $this->connection->select($query, $bindings);
-
-                break;
-            case 'load':
-                return $this->connection->unprepared($query);
-
-                break;
-        }
-
-        return $this->connection->statement($query, $bindings);
+        return match ($type) {
+            'delete' => $this->connection->delete($query, $bindings),
+            'update' => $this->connection->update($query, $bindings),
+            'insert' => $this->connection->insert($query, $bindings),
+            'select' => \preg_match('/outfile\s/i', $query)
+                ? $this->connection->statement($query, $bindings)
+                : $this->connection->select($query, $bindings),
+            'load' => $this->connection->unprepared($query),
+            default => $this->connection->statement($query, $bindings),
+        };
     }
 
     public function toQuery(): ?string
