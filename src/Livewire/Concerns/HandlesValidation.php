@@ -12,8 +12,6 @@ trait HandlesValidation
 
         [$rules, $messages, $attributes] = $this->providedOrGlobalRulesMessagesAndAttributes($rules, $messages, $attributes);
 
-        $ruleKeysToShorten = $this->getModelAttributeRuleKeysToShorten($data, $rules);
-
         $data = $this->unwrapDataForValidation($data);
 
         $validator = Validator::make($data, $rules, $messages, $attributes);
@@ -23,8 +21,6 @@ trait HandlesValidation
 
             $this->withValidatorCallback = null;
         }
-
-        $this->shortenModelAttributesInsideValidator($ruleKeysToShorten, $validator);
 
         $customValues = $this->getValidationCustomValues();
 

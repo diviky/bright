@@ -1,6 +1,6 @@
-<div x-init="setLivewire($wire)">
+<span x-init="setLivewire($wire)">
     @include($livewire)
-</div>
+</span>
 @script
     <script>
         setLivewire($wire);
