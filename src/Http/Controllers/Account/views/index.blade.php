@@ -5,7 +5,7 @@
 
     <div class="card-body p-6 form-float">
 
-        <form method="POST" action="{{ url('account') }}" role="ksubmit">
+        <form method="POST" action="{{ url('account') }}" easysubmit>
             @csrf
 
             <div class="avatar-upload">

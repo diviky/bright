@@ -126,7 +126,7 @@ On changing of the dropdown it will take all the form details and submit form. B
 
 ```php
 
-<form role="ksubmit" method="post" action="{{ url('/sms/upload') }}" data-clear="true" data-progress=".progress-bar" data-onsuccess="uploaded" enctype="multipart/form-data">
+<form easysubmit method="post" action="{{ url('/sms/upload') }}" data-clear="true" data-progress=".progress-bar" data-onsuccess="uploaded" enctype="multipart/form-data">
     <input type="file" name="file" auto-submit id="uploadfile" size="1" style="display:none" />
 </form>
 ```

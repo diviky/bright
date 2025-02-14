@@ -6,7 +6,7 @@
     <div class="card-body p-4 form-float">
 
         <form method="POST" action="{{ url('courier/edit/'.$row->id) }}" data-hide="true" data-render="true"
-            role="ksubmit">
+            easysubmit>
             @csrf
 
             <div class="input-group">

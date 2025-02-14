@@ -7,7 +7,7 @@
             <x-bright::flash />
             <p class="text-muted">Enter the code sent to your email address.</p>
 
-            <form method="POST" action="{{ url('activate') }}" role="ksubmit">
+            <form method="POST" action="{{ url('activate') }}" easysubmit>
                 @csrf
 
                 <div class="form-group">
