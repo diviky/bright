@@ -1,8 +1,3 @@
-<span x-init="setLivewire($wire)">
+<div x-init="setLivewire($wire)" class="livewire">
     @include($livewire)
-</span>
-@script
-    <script>
-        setLivewire($wire);
-    </script>
-@endscript
+</div>
