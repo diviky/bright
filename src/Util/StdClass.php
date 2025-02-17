@@ -10,12 +10,6 @@ class StdClass extends Collection
 {
     protected mixed $default = null;
 
-    protected bool $recursive = false;
-
-    protected float $maxDepth;
-
-    protected int $depth = 0;
-
     /**
      * @param  \Illuminate\Contracts\Support\Arrayable|iterable|array|null  $items
      * @param  mixed  $default
@@ -40,23 +34,10 @@ class StdClass extends Collection
     public function __get($name): mixed
     {
         if (array_key_exists($name, $this->items)) {
-            if ($this->recursive && is_array($this->items[$name]) && $this->depth < $this->maxDepth) {
-                return (new self($this->items[$name], $this->default))->recursive($this->maxDepth, $this->depth + 1, $this->recursive);
-            }
-
             return $this->items[$name];
         }
 
         return $this->default;
-    }
-
-    public function recursive(float $maxDepth = INF, int $depth = 0, bool $recursive = true): self
-    {
-        $this->recursive = $recursive;
-        $this->depth = $depth;
-        $this->maxDepth = $maxDepth;
-
-        return $this;
     }
 
     /**

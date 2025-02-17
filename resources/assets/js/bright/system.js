@@ -463,7 +463,7 @@ window.brightSystemJs = () => {
 
       $.pjax.click(e, {
         container: container,
-        timeout: 3000,
+        timeout: 30000,
       });
     });
 
