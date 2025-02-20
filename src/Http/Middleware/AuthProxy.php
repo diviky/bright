@@ -47,7 +47,7 @@ class AuthProxy
             return [Authenticate::class . ':jwt'];
         }
 
-        return [Authenticate::class . ':token'];
+        return [Authenticate::class . ':auth_token'];
     }
 
     /**

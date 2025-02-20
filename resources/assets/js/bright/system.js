@@ -451,27 +451,6 @@ window.brightSystemJs = () => {
     });
   });
 
-  if ($.fn.pjax) {
-    $(document).on('click', '[data-pjax] a, a[data-pjax]', function (e) {
-      if ($(this).data('nojax')) {
-        return true;
-      }
-
-      var container = $(this).data('pjax-container') || '[data-pjax-container]';
-      $(this).parents('[data-pjax]').find('a').removeClass('active');
-      $(this).addClass('active');
-
-      $.pjax.click(e, {
-        container: container,
-        timeout: 15000,
-      });
-    });
-
-    $(document).on('pjax:end', function () {
-      $(document).trigger('ajax:loaded');
-    });
-  }
-
   $(document).on('click', '[data-poload]', function (e) {
     var $this = $(this);
     let url = $(this).attr('href') && $(this).attr('href') != '#' ? $(this).attr('href') : $this.data('poload');

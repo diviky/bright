@@ -5,7 +5,7 @@
 *.sublime-project
 *.sublime-workspace
 composer.phar
-
+node_modules
 # OS Files
 ._*
 .nfs*p.

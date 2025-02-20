@@ -10,7 +10,7 @@ use Diviky\Bright\Console\Commands\Migrate;
 use Diviky\Bright\Console\Commands\Rollback;
 use Diviky\Bright\Console\Commands\Setup;
 use Diviky\Bright\Contracts\UtilInterface;
-use Diviky\Bright\Models\Token;
+use Diviky\Bright\Models\PersonalAccessToken;
 use Diviky\Bright\Routing\ControllerDispatcher;
 use Diviky\Bright\Routing\Redirector;
 use Diviky\Bright\Routing\Resolver;
@@ -80,9 +80,9 @@ class BrightServiceProvider extends ServiceProvider
 
         Route::health();
         Route::upload();
-        Route::auth();
+        // Route::auth();
 
-        Sanctum::usePersonalAccessTokenModel(Token::class);
+        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
 
         Storage::disk('local')->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
             return URL::temporarySignedRoute(

@@ -2,6 +2,7 @@ jQuery(document).ready(function ($) {
   brightJs();
   brightBootJs();
   brightSystemJs();
+  brightPjax();
 
   $(document).on('ajax:modal:loaded', function (e, $this) {
     //brightSystemJs();
