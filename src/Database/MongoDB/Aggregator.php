@@ -111,6 +111,9 @@ trait Aggregator
                 $options = array_merge($options, $this->options);
             }
 
+            $this->groups = [];
+            $this->aggregate = [];
+
             $options = $this->inheritConnectionOptions($options);
 
             $aggregator = new AggregationBuilder($this->collection, $this->options);

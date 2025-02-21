@@ -40,6 +40,16 @@ class Builder extends QueryBuilder
     use SoftDeletes;
     use Timestamps;
 
+    public function compileWheres(): array
+    {
+        return parent::compileWheres();
+    }
+
+    protected function aliasIdForQuery(array $values): array
+    {
+        return $this->aliasIdForQuery($values);
+    }
+
     public function update(array $values, array $options = [])
     {
         $values = $this->updateEvent($values);
