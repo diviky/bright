@@ -47,40 +47,13 @@ class BrightServiceProvider extends ServiceProvider
 
         $this->loadViewsFrom($this->path() . '/resources/views/', 'bright');
 
-        $this->registerMiddlewares();
-        $this->registerEvents();
+        $this->bootMiddlewares();
+        $this->bootEvents();
+        $this->bootRoutes();
 
         if ($this->app->runningInConsole()) {
             $this->console($filesystem);
         }
-
-        $this->loadRoutesFrom($this->path() . '/routes/api.php');
-
-        Route::macro('auth', function (string $prefix = ''): void {
-            $as = $prefix ? $prefix . '.' : '';
-            $routes = require __DIR__ . '/../../routes/web.php';
-            $routes($prefix, $as);
-        });
-
-        Route::macro('health', function (string $prefix = ''): void {
-            Route::prefix($prefix)->group(__DIR__ . '/../../routes/health.php');
-        });
-
-        Route::macro('upload', function (string $prefix = ''): void {
-            $as = $prefix ? $prefix . '.' : '';
-            Route::prefix($prefix)->as($as)->group(
-                function (): void {
-                    Route::post('upload/signed', '\Diviky\Bright\Http\Controllers\Upload\Controller@signed')->name('upload.signed');
-                    Route::match(['post', 'put'], 'upload/files', '\Diviky\Bright\Http\Controllers\Upload\Controller@upload')->name('upload.files');
-                    Route::match(['post', 'put'], 'store/files', '\Diviky\Bright\Http\Controllers\Upload\Controller@store')->name('store.files');
-                    Route::delete('upload/revert', '\Diviky\Bright\Http\Controllers\Upload\Controller@revert')->name('upload.revert');
-                }
-            );
-        });
-
-        Route::health();
-        Route::upload();
-        // Route::auth();
 
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
 
@@ -99,6 +72,37 @@ class BrightServiceProvider extends ServiceProvider
                 array_merge($options, ['disk' => 'public', 'path' => $path])
             );
         });
+    }
+
+    public function bootRoutes(): self
+    {
+        Route::macro('auth', function (string $prefix = ''): void {
+            $as = $prefix ? $prefix . '.' : '';
+            $routes = require __DIR__ . '/../../routes/web.php';
+            $routes($prefix, $as);
+        });
+
+        Route::macro('api', function (string $prefix = 'api/v1', string $auth = 'auth:credentials'): void {
+            $routes = require __DIR__ . '/../../routes/api.php';
+            $routes($prefix, $auth);
+        });
+
+        Route::macro('health', function (string $prefix = ''): void {
+            $routes = require __DIR__ . '/../../routes/health.php';
+            $routes($prefix);
+        });
+
+        Route::macro('upload', function (string $prefix = ''): void {
+            $as = $prefix ? $prefix . '.' : '';
+            $routes = require __DIR__ . '/../../routes/upload.php';
+            $routes($prefix, $as);
+        });
+
+        Route::health();
+        Route::upload();
+        // Route::auth();
+
+        return $this;
     }
 
     public function register(): void
@@ -217,7 +221,7 @@ class BrightServiceProvider extends ServiceProvider
     /**
      * Register the Authentication Log's events.
      */
-    protected function registerEvents(): void
+    protected function bootEvents(): void
     {
         $events = $this->app['config']->get('bright.events');
 
@@ -230,7 +234,7 @@ class BrightServiceProvider extends ServiceProvider
         }
     }
 
-    protected function registerMiddlewares(): void
+    protected function bootMiddlewares(): void
     {
         $router = $this->app['router'];
 

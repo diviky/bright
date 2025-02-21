@@ -29,6 +29,7 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
 
     protected $hidden = [
         'access_token',
+        'refresh_token',
         'token',
     ];
 
@@ -37,14 +38,16 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
         return config('bright.table.tokens', 'tokens');
     }
 
-    protected static function boot() {
+    protected static function boot()
+    {
 
-      self::creating(function($model) {
-        $model->access_token = $model->token;
-        return $model;
-      });
+        self::creating(function ($model) {
+            $model->access_token = $model->access_token ?? $model->token;
 
-      parent::boot();
+            return $model;
+        });
+
+        parent::boot();
     }
 
     /**
