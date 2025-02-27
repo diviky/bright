@@ -10,6 +10,7 @@ class SocialiteUser extends Model
         'payload' => 'array',
     ];
 
+    #[\Override]
     public function getTable()
     {
         return 'auth_socialite_users';

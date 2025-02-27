@@ -96,6 +96,7 @@ return [
 
     'priority_middleware' => [
         \Diviky\Bright\Http\Middleware\ApiKey::class,
+        \Diviky\Bright\Http\Middleware\Accept::class,
     ],
 
     'models' => [

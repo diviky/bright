@@ -35,6 +35,7 @@ class Builder extends BaseBuilder
         $this->sync();
     }
 
+    #[\Override]
     public function setModel(Model $model)
     {
         $this->query->setModel($model)->setBuilder($this);
@@ -42,6 +43,7 @@ class Builder extends BaseBuilder
         return parent::setModel($model);
     }
 
+    #[\Override]
     public function getRelation($name)
     {
         $relation = parent::getRelation($name);

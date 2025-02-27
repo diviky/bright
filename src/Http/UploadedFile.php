@@ -8,6 +8,7 @@ use Illuminate\Http\UploadedFile as HttpUploadedFile;
 
 class UploadedFile extends HttpUploadedFile
 {
+    #[\Override]
     public function isValid(): bool
     {
         return true;

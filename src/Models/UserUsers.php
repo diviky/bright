@@ -8,6 +8,7 @@ class UserUsers extends Model
 {
     public $timestamps = false;
 
+    #[\Override]
     public function getTable()
     {
         return config('bright.table.user_users', 'user_users');

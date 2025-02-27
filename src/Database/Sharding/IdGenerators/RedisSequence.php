@@ -21,11 +21,13 @@ class RedisSequence implements IdGeneratorInterface
         $this->sequenceKey = $sequenceKey;
     }
 
+    #[\Override]
     public function getNextId(): int
     {
         return (int) Redis::get($this->sequenceKey) + 1;
     }
 
+    #[\Override]
     public function getLastId(): int
     {
         return (int) Redis::get($this->sequenceKey);
@@ -41,6 +43,7 @@ class RedisSequence implements IdGeneratorInterface
         return Redis::set($this->sequenceKey, $id);
     }
 
+    #[\Override]
     public function increment(): int
     {
         return Redis::incr($this->sequenceKey);

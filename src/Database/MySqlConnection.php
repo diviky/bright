@@ -18,6 +18,7 @@ class MySqlConnection extends LaravelMySqlConnection
      *
      * @return QueryBuilder
      */
+    #[\Override]
     public function query()
     {
         $builder = new QueryBuilder(
@@ -36,6 +37,7 @@ class MySqlConnection extends LaravelMySqlConnection
      *
      * @return \Illuminate\Database\Query\Grammars\MySqlGrammar
      */
+    #[\Override]
     protected function getDefaultQueryGrammar()
     {
         $grammar = new QueryGrammar;

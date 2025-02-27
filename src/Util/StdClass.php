@@ -31,6 +31,7 @@ class StdClass extends Collection
         return !empty($this->items[$name]);
     }
 
+    #[\Override]
     public function __get($name): mixed
     {
         if (array_key_exists($name, $this->items)) {

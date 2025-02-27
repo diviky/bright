@@ -17,6 +17,7 @@ class ControllerDispatcher extends BaseControllerDispatcher
      * @param  string  $method
      * @return mixed
      */
+    #[\Override]
     public function dispatch(Route $route, $controller, $method)
     {
         $response = parent::dispatch($route, $controller, $method);

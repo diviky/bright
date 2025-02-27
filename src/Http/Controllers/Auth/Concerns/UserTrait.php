@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Controllers\Auth\Concerns;
 
-use App\Models\User;
+use Diviky\Bright\Models\Models;
 
 trait UserTrait
 {
     public function getUserBy($value, $column = 'id')
     {
-        return User::from('users_view')
+        return Models::user()::from('users_view')
             ->where($column, $value)
             ->first();
     }
 
     public function getUsersBy($value, $column = 'id')
     {
-        return User::from('users_role_view')
+        return Models::user()::from('users_role_view')
             ->where($column, $value)
             ->select(['id', 'username', 'parent_id', 'role_name as role', 'status'])
             ->get();
@@ -27,7 +27,7 @@ trait UserTrait
     {
         $id = is_array($id) ? array_map('intval', $id) : intval($id);
 
-        return User::from('users_role_view')
+        return Models::user()::from('users_role_view')
             ->where('id', $id)
             ->select(['id', 'username', 'parent_id', 'role_name as role', 'status'])
             ->first();
@@ -35,7 +35,7 @@ trait UserTrait
 
     public function getParentById($id)
     {
-        return User::from('users_role_view')
+        return Models::user()::from('users_role_view')
             ->where('parent_id', $id)
             ->select(['id', 'username', 'parent_id', 'role_name as role', 'status'])
             ->first();

@@ -18,6 +18,7 @@ class ConnectionFactory extends LaravelConnectionFactory
      *
      * @throws \InvalidArgumentException
      */
+    #[\Override]
     public function createConnector(array $config)
     {
         $key = "db.connector.{$config['driver']}";
@@ -44,6 +45,7 @@ class ConnectionFactory extends LaravelConnectionFactory
      *
      * @throws \InvalidArgumentException
      */
+    #[\Override]
     protected function createConnection($driver, $connection, $database, $prefix = '', array $config = [])
     {
         $resolver = Connection::getResolver($driver);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Controllers\Auth\Concerns;
 
-use App\Models\User;
 use Diviky\Bright\Models\Models;
 
 trait UserParent
@@ -20,7 +19,7 @@ trait UserParent
             if (app()->has('owner')) {
                 $parent_id = app()->get('owner');
             } else {
-                $parent_id = User::where('role', $this->admin)
+                $parent_id = Models::user()::where('role', $this->admin)
                     ->orderBy('id', 'asc')
                     ->take(1)
                     ->value('id');

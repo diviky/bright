@@ -33,11 +33,13 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
         'token',
     ];
 
+    #[\Override]
     public function getTable()
     {
         return config('bright.table.tokens', 'tokens');
     }
 
+    #[\Override]
     protected static function boot()
     {
 
@@ -56,6 +58,7 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
      * @param  string  $token
      * @return null|static
      */
+    #[\Override]
     public static function findToken($token)
     {
         if (strpos($token, '|') === false) {

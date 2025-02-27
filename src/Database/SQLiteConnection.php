@@ -18,6 +18,7 @@ class SQLiteConnection extends LaravelSQLiteConnection
      *
      * @return QueryBuilder
      */
+    #[\Override]
     public function query()
     {
         return new QueryBuilder(
@@ -32,6 +33,7 @@ class SQLiteConnection extends LaravelSQLiteConnection
      *
      * @return \Illuminate\Database\Query\Grammars\SQLiteGrammar
      */
+    #[\Override]
     protected function getDefaultQueryGrammar()
     {
         $grammar = new QueryGrammar;

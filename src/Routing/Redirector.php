@@ -16,6 +16,7 @@ class Redirector extends BaseRedirector
      * @param  array  $headers
      * @return \Illuminate\Http\RedirectResponse
      */
+    #[\Override]
     protected function createRedirect($path, $status, $headers)
     {
         $request = $this->generator->getRequest();

@@ -59,6 +59,7 @@ class Responsable implements BaseResponsable
      * @param  \Illuminate\Http\Request  $request
      * @return mixed|\Symfony\Component\HttpFoundation\Response
      */
+    #[\Override]
     public function toResponse($request)
     {
         $response = $this->getResponse();

@@ -11,6 +11,7 @@ class AuthTokenGuard extends AccessTokenGuard
      *
      * @return null|\Illuminate\Contracts\Auth\Authenticatable
      */
+    #[\Override]
     public function user()
     {
         if (!\is_null($this->user)) {

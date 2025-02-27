@@ -26,6 +26,7 @@ class ShardingServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
+    #[\Override]
     public function register(): void
     {
         $this->mergeConfigFrom($this->path() . '/config/sharding.php', 'sharding');

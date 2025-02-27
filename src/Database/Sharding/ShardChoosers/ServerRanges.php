@@ -30,6 +30,7 @@ class ServerRanges implements ShardChooserInterface
      *
      * @throws ShardingException
      */
+    #[\Override]
     public function getShardById($id)
     {
         foreach ($this->connections as $shard => $range) {
@@ -41,11 +42,13 @@ class ServerRanges implements ShardChooserInterface
         throw new ShardingException('Your must to set up range for this id!');
     }
 
+    #[\Override]
     public function chooseShard($id)
     {
         return $this->getShardById($id);
     }
 
+    #[\Override]
     public function setRelation($id, $shard): bool
     {
         return true;

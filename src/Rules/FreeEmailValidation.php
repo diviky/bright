@@ -27,6 +27,7 @@ class FreeEmailValidation implements ValidationRule
     /**
      * Determine if the validation rule passes.
      */
+    #[\Override]
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $parts = \explode('@', $value);

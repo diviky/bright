@@ -15,6 +15,7 @@ class FiltersScope implements Filter
     /**
      * @param  mixed  $values
      */
+    #[\Override]
     public function __invoke(Builder $query, $values, string $property): void
     {
         $propertyParts = collect(explode(':', $property));

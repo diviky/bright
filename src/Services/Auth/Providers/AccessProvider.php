@@ -34,6 +34,7 @@ class AccessProvider implements UserProvider
 
     }
 
+    #[\Override]
     public function retrieveById($identifier)
     {
         return $this->user
@@ -54,6 +55,7 @@ class AccessProvider implements UserProvider
             ->first();
     }
 
+    #[\Override]
     public function retrieveByToken($identifier, $token)
     {
         if (strpos($token, '|') === false) {
@@ -82,11 +84,13 @@ class AccessProvider implements UserProvider
         return null;
     }
 
+    #[\Override]
     public function updateRememberToken(Authenticatable $user, $token): void
     {
         // update via remember token not necessary
     }
 
+    #[\Override]
     public function retrieveByCredentials(array $credentials)
     {
         $key = null;
@@ -106,6 +110,7 @@ class AccessProvider implements UserProvider
         return $user->first();
     }
 
+    #[\Override]
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
         $plain = $credentials['password'];
@@ -119,6 +124,7 @@ class AccessProvider implements UserProvider
      * @param  bool  $force
      * @return void
      */
+    #[\Override]
     public function rehashPasswordIfRequired(Authenticatable $user, #[\SensitiveParameter] array $credentials, $force = false)
     {
         if (!$this->hasher->needsRehash($user->getAuthPassword()) && !$force) {

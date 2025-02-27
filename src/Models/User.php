@@ -76,6 +76,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    #[\Override]
     public function getTable(): string
     {
         return config('bright.table.users', 'users');

@@ -67,6 +67,7 @@ class Link extends Component
         }
     }
 
+    #[\Override]
     public function shouldRender(): bool
     {
         return $this->isAuthorized();
@@ -77,6 +78,7 @@ class Link extends Component
      *
      * @return \Illuminate\Contracts\View\View|string
      */
+    #[\Override]
     public function render()
     {
         return view('bright::components.link');

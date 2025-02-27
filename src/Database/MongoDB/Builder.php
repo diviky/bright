@@ -40,6 +40,7 @@ class Builder extends QueryBuilder
     use SoftDeletes;
     use Timestamps;
 
+    #[\Override]
     public function compileWheres(): array
     {
         return parent::compileWheres();
@@ -50,6 +51,7 @@ class Builder extends QueryBuilder
         return $this->aliasIdForQuery($values);
     }
 
+    #[\Override]
     public function update(array $values, array $options = [])
     {
         $values = $this->updateEvent($values);

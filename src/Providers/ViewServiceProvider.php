@@ -40,6 +40,7 @@ class ViewServiceProvider extends BaseServiceProvider
     /**
      * Register the application services.
      */
+    #[\Override]
     public function register(): void
     {
         $this->registerFactory();

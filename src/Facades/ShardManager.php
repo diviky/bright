@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Facade;
 
 class ShardManager extends Facade
 {
+    #[\Override]
     protected static function getFacadeAccessor()
     {
         return 'bright.shardmanager';

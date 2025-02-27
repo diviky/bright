@@ -41,6 +41,7 @@ class Builder extends LaravelBuilder
     use SoftDeletes;
     use Timestamps;
 
+    #[\Override]
     public function update(array $values)
     {
         $values = $this->updateEvent($values);

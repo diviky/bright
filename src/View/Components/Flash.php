@@ -13,6 +13,7 @@ class Flash extends Component
      *
      * @return \Illuminate\Contracts\View\View|string
      */
+    #[\Override]
     public function render()
     {
         return view('bright::components.flash');

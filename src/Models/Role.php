@@ -9,11 +9,13 @@ use Spatie\Permission\Models\Role as BaseRole;
 
 class Role extends BaseRole
 {
+    #[\Override]
     public function getTable()
     {
         return config('bright.table.roles', parent::getTable());
     }
 
+    #[\Override]
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(

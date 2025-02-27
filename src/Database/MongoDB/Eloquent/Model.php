@@ -31,18 +31,21 @@ class Model extends BaseModel
     /**
      * @return \Diviky\Bright\Database\MongoDB\Eloquent\Builder
      */
+    #[\Override]
     public function newEloquentBuilder($query)
     {
         return new Builder($query);
     }
 
     /** {@inheritdoc} */
+    #[\Override]
     public function qualifyColumn($column)
     {
         return $column;
     }
 
     /** {@inheritdoc} */
+    #[\Override]
     protected function newBaseQueryBuilder()
     {
         $connection = $this->getConnection();

@@ -53,11 +53,6 @@ return function (string $prefix = '', string $as = ''): void {
             Route::get('change', 'Auth\ForgotPasswordController@change')->name('change');
             Route::post('change', 'Auth\ForgotPasswordController@change')->name('change.post');
         });
-
-        Route::group(['prefix' => 'social/connect', 'as' => 'social.'], function (): void {
-            Route::get('{provider}', 'Socialite\Controller@connect')->name('connect');
-            Route::get('{provider}/callback', 'Socialite\Controller@callback')->name('callback');
-        });
     });
 
     Route::group([

@@ -11,6 +11,7 @@ class DatabaseManager extends LaravelDatabaseManager
 {
     use Connector;
 
+    #[\Override]
     protected function makeConnection($name)
     {
         $config = $this->configuration($name);
@@ -36,6 +37,7 @@ class DatabaseManager extends LaravelDatabaseManager
         return $this->factory->make($config, $name);
     }
 
+    #[\Override]
     public function extend($name, callable $resolver, bool $overwrite = false)
     {
         if (!isset($this->extension[$name]) || $overwrite) {
@@ -84,6 +86,7 @@ class DatabaseManager extends LaravelDatabaseManager
      *
      * @throws \InvalidArgumentException
      */
+    #[\Override]
     protected function configuration($name)
     {
         $config = parent::configuration($name);

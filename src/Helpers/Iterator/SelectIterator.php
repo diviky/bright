@@ -67,22 +67,26 @@ class SelectIterator implements \Iterator
         $this->callback = $callback;
     }
 
+    #[\Override]
     public function rewind(): void
     {
         $this->reset();
         $this->query();
     }
 
+    #[\Override]
     public function current(): mixed
     {
         return $this->results[$this->position];
     }
 
+    #[\Override]
     public function key(): mixed
     {
         return $this->totalPosition;
     }
 
+    #[\Override]
     public function next(): void
     {
         $this->position++;
@@ -93,6 +97,7 @@ class SelectIterator implements \Iterator
         }
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return isset($this->results[$this->position]) && $this->next;

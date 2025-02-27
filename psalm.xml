@@ -34,10 +34,6 @@
       <errorLevel type="suppress">
         <referencedClass name="App\Http\Controllers\Controller"/>
         <referencedClass name="App\Models\User"/>
-        <referencedClass name="ConsoleTVs\Charts\Classes\Chartjs\Chart"/>
-        <referencedClass name="ConsoleTVs\Charts\Classes\Chartjs\Dataset"/>
-        <referencedClass name="wapmorgan\UnifiedArchive\UnifiedArchive"/>
-        <referencedClass name="Intervention\Image\Facades\Image"/>
         <directory name="src/Notifications"/>
         <directory name="src/Helpers"/>
       </errorLevel>
@@ -208,7 +204,6 @@
         <file name="src/Routing/Responsable.php"/>
       </errorLevel>
     </LessSpecificImplementedReturnType>
-    <!-- @todo: Can't get this to work within a package? Ide helper or migrations somehow? -->
     <UndefinedThisPropertyFetch>
       <errorLevel type="suppress">
         <directory name="src"/>
@@ -219,5 +214,10 @@
         <directory name="src"/>
       </errorLevel>
     </UndefinedThisPropertyAssignment>
+    <ClassMustBeFinal>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </ClassMustBeFinal>
   </issueHandlers>
 </psalm>

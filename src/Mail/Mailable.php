@@ -16,13 +16,6 @@ class Mailable extends BaseMailable implements ShouldQueue
     use SerializesModels;
 
     /**
-     * The number of times the job may be attempted.
-     *
-     * @var int
-     */
-    public $tries = 5;
-
-    /**
      * View prefix.
      *
      * @var string
@@ -45,6 +38,7 @@ class Mailable extends BaseMailable implements ShouldQueue
      * @param  string  $view
      * @return $this
      */
+    #[\Override]
     public function view($view, array $data = [])
     {
         $this->view = $this->prefix . $view;
@@ -59,6 +53,7 @@ class Mailable extends BaseMailable implements ShouldQueue
      * @param  string  $textView
      * @return $this
      */
+    #[\Override]
     public function text($textView, array $data = [])
     {
         $this->textView = $this->prefix . $textView;
@@ -73,6 +68,7 @@ class Mailable extends BaseMailable implements ShouldQueue
      * @param  string  $view
      * @return $this
      */
+    #[\Override]
     public function markdown($view, array $data = [])
     {
         $this->markdown = $this->prefix . $view;
@@ -131,6 +127,7 @@ class Mailable extends BaseMailable implements ShouldQueue
         return $this;
     }
 
+    #[\Override]
     protected function setAddress($address, $name = null, $property = 'to')
     {
         $address = $this->format($address, $name);
@@ -176,12 +173,14 @@ class Mailable extends BaseMailable implements ShouldQueue
             }
         } else {
             $address = \preg_split("/[,|\n]/", $address);
-            foreach ($address as $v) {
-                $v = \explode(';', $v);
-                $email = isset($v[1]) ? $v[1] : $v[0];
-                $name = isset($v[1]) ? $v[1] : $from;
+            if (is_array($address)) {
+                foreach ($address as $v) {
+                    $v = \explode(';', $v);
+                    $email = isset($v[1]) ? $v[1] : $v[0];
+                    $name = isset($v[1]) ? $v[1] : $from;
 
-                $addresses[] = ['email' => \trim($email), 'name' => $name];
+                    $addresses[] = ['email' => \trim($email), 'name' => $name];
+                }
             }
         }
 

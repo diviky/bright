@@ -29,6 +29,7 @@ class MapIterator extends \IteratorIterator
         $this->callback = $callback;
     }
 
+    #[\Override]
     public function current(): mixed
     {
         $callback = $this->callback;

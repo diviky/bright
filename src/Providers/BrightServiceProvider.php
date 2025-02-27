@@ -105,6 +105,7 @@ class BrightServiceProvider extends ServiceProvider
         return $this;
     }
 
+    #[\Override]
     public function register(): void
     {
         Schema::defaultStringLength(191);

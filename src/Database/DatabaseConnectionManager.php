@@ -16,6 +16,7 @@ class DatabaseConnectionManager extends LaravelDatabaseManager
      *
      * @throws \InvalidArgumentException
      */
+    #[\Override]
     protected function configuration($name)
     {
         $config = parent::configuration($name);

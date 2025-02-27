@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Mail;
 
-use App\Models\User;
+use Diviky\Bright\Models\Models;
 
 trait Notifyable
 {
@@ -86,7 +86,7 @@ trait Notifyable
             return null;
         }
 
-        return User::where('id', $user_id)
+        return Models::user()::where('id', $user_id)
             ->first(['email', 'name']);
     }
 

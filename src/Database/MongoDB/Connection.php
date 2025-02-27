@@ -13,6 +13,7 @@ class Connection extends MongoDBConnection
      *
      * @return \Illuminate\Database\Query\Builder
      */
+    #[\Override]
     public function query()
     {
         return new QueryBuilder(
@@ -21,6 +22,7 @@ class Connection extends MongoDBConnection
     }
 
     /** {@inheritdoc} */
+    #[\Override]
     protected function getDefaultQueryGrammar()
     {
         return new MongoDBGrammar;

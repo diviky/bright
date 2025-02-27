@@ -13,6 +13,7 @@ class RedirectResponse extends BaseRedirectResponse
      */
     protected $with = [];
 
+    #[\Override]
     public function with($key, $value = null)
     {
         $key = \is_array($key) ? $key : [$key => $value];
@@ -24,6 +25,7 @@ class RedirectResponse extends BaseRedirectResponse
         return parent::with($key, $value);
     }
 
+    #[\Override]
     public function setTargetUrl(string $url): static
     {
         if ($url === '') {
@@ -46,6 +48,7 @@ class RedirectResponse extends BaseRedirectResponse
      *
      * @SuppressWarnings(PHPMD)
      */
+    #[\Override]
     public function isRedirect(?string $location = null): bool
     {
         return true;

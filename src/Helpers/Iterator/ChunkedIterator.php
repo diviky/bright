@@ -33,12 +33,14 @@ class ChunkedIterator extends \IteratorIterator
         $this->chunkSize = $chunkSize;
     }
 
+    #[\Override]
     public function rewind(): void
     {
         parent::rewind();
         $this->next();
     }
 
+    #[\Override]
     public function next(): void
     {
         $this->chunk = [];
@@ -48,11 +50,13 @@ class ChunkedIterator extends \IteratorIterator
         }
     }
 
+    #[\Override]
     public function current(): mixed
     {
         return $this->chunk;
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return (bool) $this->chunk;

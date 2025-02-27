@@ -10,6 +10,7 @@ class Activation extends Model
         'expires_at' => 'datetime',
     ];
 
+    #[\Override]
     public function getTable()
     {
         return config('bright.table.activations', 'activations');

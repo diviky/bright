@@ -43,6 +43,7 @@ class Money implements CastsAttributes
      * @param  array  $attributes
      * @return string
      */
+    #[\Override]
     public function get($model, $key, $value, $attributes)
     {
         return $this->from($value);
@@ -57,6 +58,7 @@ class Money implements CastsAttributes
      * @param  array  $attributes
      * @return float|int
      */
+    #[\Override]
     public function set($model, $key, $value, $attributes)
     {
         return $this->to($value);

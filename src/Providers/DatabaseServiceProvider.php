@@ -14,6 +14,7 @@ class DatabaseServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
+    #[\Override]
     public function register(): void
     {
         // The connection factory is used to create the actual connection instances on

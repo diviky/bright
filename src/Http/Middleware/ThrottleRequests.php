@@ -19,6 +19,7 @@ class ThrottleRequests extends BaseRequest
      * @param  null|callable  $responseCallback
      * @return \Illuminate\Http\Exceptions\HttpResponseException|\Illuminate\Http\Exceptions\ThrottleRequestsException
      */
+    #[\Override]
     protected function buildException($request, $key, $maxAttempts, $responseCallback = null)
     {
         $retryAfter = $this->getTimeUntilNextRetry($key);
@@ -48,6 +49,7 @@ class ThrottleRequests extends BaseRequest
      *
      * @throws \RuntimeException
      */
+    #[\Override]
     protected function resolveRequestSignature($request)
     {
         $user = $request->user();

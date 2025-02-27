@@ -35,6 +35,7 @@ class FilterRelation implements Filter
     /**
      * @param  mixed  $value
      */
+    #[\Override]
     public function __invoke(Builder $query, $value, string $property): void
     {
         if ($this->isRelationProperty($query, $property)) {
