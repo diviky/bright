@@ -19,9 +19,12 @@ class AuthProxy
      */
     public function handle($request, $next)
     {
-        return (new Pipeline(app()))->send($request)->through(static::middlewares($request))->then(function ($request) use ($next): mixed {
-            return $next($request);
-        });
+        return (new Pipeline(app()))
+            ->send($request)
+            ->through(static::middlewares($request))
+            ->then(function ($request) use ($next): mixed {
+                return $next($request);
+            });
     }
 
     /**
@@ -47,7 +50,7 @@ class AuthProxy
             return [Authenticate::class . ':jwt'];
         }
 
-        return [Authenticate::class . ':auth_token'];
+        return [Authenticate::class . ':access_token'];
     }
 
     /**

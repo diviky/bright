@@ -58,10 +58,6 @@ class AccessTokenGuard
      */
     public function user()
     {
-        if (!\is_null($this->user)) {
-            return $this->user;
-        }
-
         $access_key = $this->getTokenForRequest();
 
         if (!isset($access_key)) {
@@ -76,8 +72,8 @@ class AccessTokenGuard
         // the token was found, how do you want to pass?
         $token = $this->provider->retrieveByToken($this->storageKey, $access_key);
 
-        if (\is_null($token) || \is_null($token->user_id)) {
-            throw new AuthenticationException('Token or userid is null');
+        if (\is_null($token)) {
+            throw new AuthenticationException('Token not found');
         }
 
         if ($token->status != 1 || !\is_null($token->deleted_at)) {
@@ -96,16 +92,19 @@ class AccessTokenGuard
             throw new AuthenticationException('Missing refresh token or signature mismatched');
         }
 
-        $user = $this->provider->retrieveById($token->user_id);
+        $tokenable = $token->tokenable;
 
-        if (is_null($user) || !\is_null($user->deleted_at) || $user->status != 1) {
-            throw new AuthenticationException('User is null, deleted or inactive');
+        if (is_null($tokenable) || !\is_null($tokenable->deleted_at)) {
+            throw new AuthenticationException('Tokenable is null, deleted');
         }
 
-        $this->user = $user;
-        $this->user->token = $token;
+        if (property_exists($tokenable, 'status') && $tokenable->status != 1) {
+            throw new AuthenticationException('Tokenable is not active');
+        }
 
-        return $this->user;
+        $tokenable->withAccessToken($token);
+
+        return $tokenable;
     }
 
     /**

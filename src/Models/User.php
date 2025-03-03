@@ -18,6 +18,7 @@ use Diviky\Bright\Models\Concerns\Scopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -26,6 +27,7 @@ class User extends Authenticatable
     use Connection;
     use Connector;
     use Eloquent;
+    use HasApiTokens;
     use HasFactory;
     use HasRoles;
     use Notifiable;

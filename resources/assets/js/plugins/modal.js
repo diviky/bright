@@ -46,7 +46,7 @@
 
     var url = self.settings.url || (el && el.attr('href'));
 
-    if (url == '' || url == undefined) {
+    if ((url == '' || url == undefined) && self.settings.event !== 'ready') {
       return false;
     }
 

@@ -396,7 +396,7 @@
         };
 
         if (res.modal.options) {
-          var opts = $.extend({}, res.modal.options, opts);
+          opts = $.extend({}, res.modal.options, opts);
         }
 
         $.fn.easyModalShow(opts);

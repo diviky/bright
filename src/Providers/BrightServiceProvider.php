@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Laravel\Sanctum\Http\Middleware\CheckAbilities;
+use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use Laravel\Sanctum\Sanctum;
 
 /**
@@ -200,22 +202,22 @@ class BrightServiceProvider extends ServiceProvider
     {
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
-            $userProvider = app(AccessProvider::class);
+            $provider = app(AccessProvider::class);
 
-            return new AccessTokenGuard($userProvider, $app['request'], $config);
+            return new AccessTokenGuard($provider, $app['request'], $config);
         });
 
         Auth::extend('auth_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
-            $userProvider = app(AccessProvider::class);
+            $provider = app(AccessProvider::class);
 
-            return new AuthTokenGuard($userProvider, $app['request'], $config);
+            return new AuthTokenGuard($provider, $app['request'], $config);
         });
 
         Auth::extend('credentials', function ($app, $name, array $config) {
-            $userProvider = app(AccessProvider::class);
+            $provider = app(AccessProvider::class);
 
-            return new CredentialsGuard($userProvider, $app['request'], $config);
+            return new CredentialsGuard($provider, $app['request'], $config);
         });
     }
 
@@ -246,6 +248,9 @@ class BrightServiceProvider extends ServiceProvider
                 $router->aliasMiddleware($name, $value);
             }
         }
+
+        $router->aliasMiddleware('ability', CheckAbilities::class);
+        $router->aliasMiddleware('abilities', CheckForAnyAbility::class);
 
         $kernel = app()->make(Kernel::class);
 
