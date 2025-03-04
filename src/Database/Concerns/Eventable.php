@@ -145,35 +145,6 @@ trait Eventable
         return $this->eventState;
     }
 
-    protected function setPrimaryKey(array $values, string $id): array
-    {
-        if (!isset($values['id'])) {
-            $values['id'] = $id;
-        }
-
-        $this->lastId = $values['id'];
-
-        return $values;
-    }
-
-    protected function setUserId(array $values): array
-    {
-        if (!isset($values['user_id']) && user('id')) {
-            $values['user_id'] = user('id');
-        }
-
-        return $values;
-    }
-
-    protected function setOwnerId(array $values): array
-    {
-        if (!isset($values['owner_id']) && user('id')) {
-            $values['owner_id'] = user('id');
-        }
-
-        return $values;
-    }
-
     /**
      * Get the event tables.
      *
@@ -214,26 +185,26 @@ trait Eventable
                     continue;
                 }
 
-                switch ($column) {
+                switch ($field) {
                     case 'id':
-                        $value = $this->setPrimaryKey($value, (string) Str::uuid());
+                        $value[$column] = (string) Str::uuid();
 
                         break;
                     case 'uid':
                     case 'uuid':
-                        $value = $this->setPrimaryKey($value, (string) Str::orderedUuid());
+                        $value[$column] = (string) Str::orderedUuid();
 
                         break;
                     case 'user_id':
-                        $value = $this->setUserId($value);
-
-                        break;
                     case 'owner_id':
-                        $value = $this->setOwnerId($value);
+                        $value[$column] = user('id');
 
                         break;
                     case 'time':
-                        $value = $this->setTimeStamps($value, true);
+                        $time = $this->freshTimestamp();
+
+                        $values['updated_at'] = $time;
+                        $values['created_at'] = $time;
 
                         break;
                     default:

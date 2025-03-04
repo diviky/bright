@@ -219,5 +219,20 @@
         <directory name="src"/>
       </errorLevel>
     </ClassMustBeFinal>
+    <PossiblyUnusedParam>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </PossiblyUnusedParam>
+    <PossiblyInvalidCast>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </PossiblyInvalidCast>
+    <PossiblyFalseArgument>
+      <errorLevel type="suppress">
+        <directory name="src"/>
+      </errorLevel>
+    </PossiblyFalseArgument>
   </issueHandlers>
 </psalm>
