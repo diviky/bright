@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Concerns;
 
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 trait Authorize
@@ -22,12 +22,9 @@ trait Authorize
         }
 
         // Check user has permission
-        $user = Auth::user();
-        if ($user) {
-            foreach ($names as $route) {
-                if ($user->isPermissionRevoked($route)) {
-                    return true;
-                }
+        foreach ($names as $route) {
+            if ($this->isForbid($route)) {
+                return true;
             }
         }
 
@@ -45,6 +42,7 @@ trait Authorize
             return false;
         }
 
+        $names = Arr::wrap($names);
         $public = config('permission.public');
 
         // is public permission
@@ -59,18 +57,13 @@ trait Authorize
         }
 
         // Check user has permission
-        $user = Auth::user();
-        if ($user) {
-            foreach ($names as $route) {
-                if ($user->can($route)) {
-                    return true;
-                }
+        foreach ($names as $route) {
+            if ($this->can($route)) {
+                return true;
             }
-
-            return false;
         }
 
-        return true;
+        return false;
     }
 
     /**

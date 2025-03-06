@@ -56,7 +56,7 @@ return function (string $prefix = '', string $as = ''): void {
     });
 
     Route::group([
-        'middleware' => ['web', 'auth'],
+        'middleware' => ['web', 'app'],
         'namespace' => '\Diviky\Bright\Http\Controllers',
         'prefix' => $prefix,
         'as' => $as,

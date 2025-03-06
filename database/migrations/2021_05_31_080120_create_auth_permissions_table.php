@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('auth_permissions', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('guard_name');
+        Schema::table(config('permission.table_names.permissions'), function (Blueprint $table) {
             $table->string('display_name', 50)->nullable();
-            $table->timestamps();
             $table->boolean('status')->default(false);
         });
     }
@@ -30,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('auth_permissions');
+        Schema::table(config('permission.table_names.permissions'), function (Blueprint $table): void {
+            $table->dropColumn('display_name');
+            $table->dropColumn('status');
+        });
     }
 };

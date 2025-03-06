@@ -27,6 +27,7 @@
     "matomo/decompress": "^2.1",
     "mongodb/laravel-mongodb": "^5.0",
     "spatie/laravel-permission": "^6.9",
+    "silber/bouncer": "^1.0",
     "spatie/laravel-schemaless-attributes": "^2.3"
   },
   "require-dev": {

@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Concerns;
 
+use Diviky\Bright\Http\Controllers\Auth\Concerns\HasRoles;
 use Illuminate\Support\Str;
 
-trait Authorizable
+trait Spatie
 {
+    use Authorize;
+    use HasRoles;
+
     /**
      * Check user as right permission.
      *
      * @param  string  $ability
      * @return null|mixed
      */
-    public function isPermissionRevoked($ability)
+    public function isForbid($ability)
     {
         [$option, $view] = \array_pad(\explode('.', $ability), 2, null);
 

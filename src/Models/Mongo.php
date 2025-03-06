@@ -12,4 +12,6 @@ class Mongo extends BaseModel
     protected $connection = 'mongodb';
 
     protected $guarded = [];
+
+    protected static $userModel = 'App\Models\User';
 }

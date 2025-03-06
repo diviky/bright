@@ -14,4 +14,6 @@ class Model extends BaseModel
     use Scopes;
 
     public $guarded = [];
+
+    protected static $userModel = 'App\Models\User';
 }

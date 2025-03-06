@@ -29,13 +29,6 @@ class RegisterController extends Controller
     use Token;
 
     /**
-     * Default user role.
-     *
-     * @var string
-     */
-    protected $role;
-
-    /**
      * Where to redirect users after registration.
      *
      * @var string

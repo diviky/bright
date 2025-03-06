@@ -53,10 +53,4 @@ return [
         'username' => 'email',
         'address' => 'email',
     ],
-
-    'user' => [
-        'role' => 'customer',
-        // Default user status if 0 user should verify email address
-        'status' => 0,
-    ],
 ];

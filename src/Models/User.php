@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Diviky\Bright\Models;
 
 use Diviky\Bright\Concerns\AccessToken;
-use Diviky\Bright\Concerns\Authorizable;
 use Diviky\Bright\Database\Concerns\Connector;
 use Diviky\Bright\Database\Eloquent\Concerns\Connection;
 use Diviky\Bright\Database\Eloquent\Concerns\Eloquent;
 use Diviky\Bright\Http\Controllers\Account\Traits\UserAvatarTrait;
-use Diviky\Bright\Http\Controllers\Auth\Concerns\HasRoles;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UserParent;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UserRole;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UsersParent;
@@ -23,13 +21,11 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use AccessToken;
-    use Authorizable;
     use Connection;
     use Connector;
     use Eloquent;
     use HasApiTokens;
     use HasFactory;
-    use HasRoles;
     use Notifiable;
     use Scopes;
     use UserAvatarTrait;

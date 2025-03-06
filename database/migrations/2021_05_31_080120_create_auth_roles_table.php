@@ -13,15 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('auth_roles', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('team_id')->nullable()->index('roles_team_foreign_key_index');
-            $table->string('name');
-            $table->string('guard_name');
+        Schema::table(config('permission.table_names.roles'), function (Blueprint $table) {
             $table->string('display_name', 50)->nullable();
-            $table->timestamps();
-
-            $table->unique(['team_id', 'name', 'guard_name']);
         });
     }
 
@@ -32,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('auth_roles');
+        Schema::table(config('permission.table_names.roles'), function (Blueprint $table) {
+            $table->dropColumn('display_name');
+        });
     }
 };

@@ -99,16 +99,6 @@ trait RegistersUsers
      */
     protected function registered($user): void
     {
-        // Assign a role to user
-        $role = property_exists($this, 'role') ? $this->role : config('auth.user.role');
-
-        if ($role) {
-            $user->assignRole($role);
-            $user->assignOwnRole($role);
-        }
-
-        $user->assignParent();
-
         if ($user->status == 0) {
             $token = $this->saveToken($user);
             $user->notify(new SendActivationToken($token));

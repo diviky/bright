@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('auth_role_permissions', function (Blueprint $table) {
-            $table->unsignedBigInteger('permission_id');
-            $table->unsignedBigInteger('role_id')->index('erp_auth_role_permissions_role_id_foreign');
+        Schema::table(config('permission.table_names.role_has_permissions'), function (Blueprint $table) {
             $table->boolean('is_exclude')->default(false);
-
-            $table->primary(['permission_id', 'role_id']);
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('auth_role_permissions');
+        Schema::table(config('permission.table_names.role_has_permissions'), function (Blueprint $table) {
+            $table->dropColumn('is_exclude');
+        });
     }
 };
