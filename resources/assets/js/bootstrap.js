@@ -1,3 +1,4 @@
+import './static';
 import './plugins/metadata';
 import './plugins/form';
 import './plugins/validator';
@@ -19,6 +20,9 @@ import './bright/task';
 import './bright/bootbox';
 import './bright/bootstrap';
 
+import './bootstrap/events';
+import './bootstrap/platform';
+import './bootstrap/theme';
 import './bootstrap/autocomplete';
 import './bootstrap/chart';
 import './bootstrap/dates';
@@ -26,7 +30,6 @@ import './bootstrap/drop';
 import './bootstrap/filepond';
 import './bootstrap/helpers';
 import './bootstrap/intl';
-import './bootstrap/livewire';
 import './bootstrap/menu';
 import './bootstrap/password';
 import './bootstrap/sortable';

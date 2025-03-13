@@ -10,10 +10,26 @@ class Form extends Component
 {
     public array $attribs;
 
-    public function __construct(string $action)
-    {
+    /**
+     * Form method spoofing to support PUT, PATCH and DELETE actions.
+     * https://laravel.com/docs/master/routing#form-method-spoofing
+     */
+    public bool $spoofMethod = false;
+
+    public function __construct(
+        ?string $action = null,
+        ?string $route = null,
+        public ?string $method = 'POST',
+        public ?string $style = null,
+        public bool $hasFiles = false,
+        public bool $spellcheck = false,
+    ) {
+
+        if ($route) {
+            $action = route($route);
+        }
+
         $attribs = [];
-        $attribs['easyrender'] = 'easyrender';
         $attribs['action'] = $action;
 
         $this->attribs = $attribs;

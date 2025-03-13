@@ -22,4 +22,6 @@ class Controller extends BaseController
     use Message;
     use ValidatesRequests;
     use ViewTrait;
+
+    protected static $userModel = 'App\Models\User';
 }

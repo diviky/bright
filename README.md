@@ -494,6 +494,9 @@ public function index(Request $request)
 
 ```
 
+## JS files
+
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
