@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Str;
 
 trait Eventable
@@ -196,7 +197,6 @@ trait Eventable
 
                         break;
                     case 'user_id':
-                    case 'owner_id':
                         $value[$column] = user('id');
 
                         break;
@@ -210,8 +210,8 @@ trait Eventable
                     default:
                         if (strpos($field, 'user.') !== false) {
                             $value[$column] = user(ltrim($field, 'user.'));
-                        } elseif (app()->has($field)) {
-                            $value[$column] = app($field);
+                        } elseif (Context::has($field)) {
+                            $value[$column] = Context::get($field);
                         }
 
                         break;
@@ -271,14 +271,6 @@ trait Eventable
 
             switch ($column) {
                 case 'user_id':
-                case 'parent_id':
-                    $user_id = user('id');
-                    if ($user_id) {
-                        $this->where($alias . $column, $user_id);
-                    }
-
-                    break;
-                case 'owner_id':
                     $user_id = user('id');
                     if ($user_id) {
                         $this->where($alias . $column, $user_id);
@@ -286,8 +278,8 @@ trait Eventable
 
                     break;
                 default:
-                    if ($value && app()->has($value)) {
-                        $this->where($alias . $column, app()->get($value));
+                    if ($value && Context::has($value)) {
+                        $this->where($alias . $column, Context::get($value));
                     }
 
                     break;

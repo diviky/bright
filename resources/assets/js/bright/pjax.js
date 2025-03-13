@@ -1,6 +1,7 @@
 $(document).ajaxComplete(function () {
   $('#header-menu').collapse('hide');
 });
+
 window.brightPjax = () => {
   $(document).on('click', '[data-pjax] a, a[data-pjax]', function (e) {
     if ($(this).data('nojax')) {

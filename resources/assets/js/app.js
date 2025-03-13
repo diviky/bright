@@ -1,6 +1,5 @@
 function bootstrapJs() {
   load_dates();
-  load_password();
   load_charts();
   load_intl();
   load_helpers();

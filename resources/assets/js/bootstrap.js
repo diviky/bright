@@ -20,6 +20,7 @@ import './bright/task';
 import './bright/bootbox';
 import './bright/bootstrap';
 
+import './bootstrap/cookie';
 import './bootstrap/events';
 import './bootstrap/platform';
 import './bootstrap/theme';
@@ -31,7 +32,5 @@ import './bootstrap/filepond';
 import './bootstrap/helpers';
 import './bootstrap/intl';
 import './bootstrap/menu';
-import './bootstrap/password';
 import './bootstrap/sortable';
 import './bootstrap/util';
-import './bootstrap/cookie';
