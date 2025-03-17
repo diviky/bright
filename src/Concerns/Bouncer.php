@@ -79,4 +79,29 @@ trait Bouncer
     {
         return $this->assign($role);
     }
+
+    /**
+     * Check the user has permission.
+     *
+     * @param  string  $permission
+     * @param  null|string  $guardName
+     *
+     * @SuppressWarnings(PHPMD)
+     */
+    public function hasPermissionTo($permission, $guardName = null): bool
+    {
+        $granted = $this->isMatched($permission);
+
+        return ($granted) ? true : false;
+    }
+
+    /**
+     * Get the user first role.
+     *
+     * @return null|string
+     */
+    public function getRole()
+    {
+        return $this->getRoles()->first();
+    }
 }

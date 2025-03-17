@@ -79,29 +79,4 @@ class User extends Authenticatable
     {
         return config('bright.table.users', 'users');
     }
-
-    /**
-     * Check the user has permission.
-     *
-     * @param  string  $permission
-     * @param  null|string  $guardName
-     *
-     * @SuppressWarnings(PHPMD)
-     */
-    public function hasPermissionTo($permission, $guardName = null): bool
-    {
-        $granted = $this->isMatched($permission);
-
-        return ($granted) ? true : false;
-    }
-
-    /**
-     * Get the user first role.
-     *
-     * @return null|string
-     */
-    public function role()
-    {
-        return $this->getRoleNames()->first();
-    }
 }

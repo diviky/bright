@@ -10,6 +10,7 @@ use Illuminate\Container\RewindableGenerator;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\LazyCollection;
 use Iterator;
 use Port\Csv\CsvReader;
@@ -351,6 +352,9 @@ class Reader
             return null;
         }
 
+        // check the file exists or download to local
+        $zip = $this->download($zip);
+
         $ext = isset($options['ext']) ? $options['ext'] : \strrchr($zip, '.');
         $ext = \strtolower($ext);
 
@@ -392,6 +396,38 @@ class Reader
         }
 
         return $zip;
+    }
+
+    public function download($path)
+    {
+        $localDisk = Storage::disk('local');
+
+        if ($localDisk->exists($path)) {
+            return $localDisk->path($path);
+        }
+
+        // Get the file from remote and store it locally
+        $contents = Storage::get($path);
+
+        // Check if contents exist before storing
+        if (empty($contents)) {
+            return $path;
+        }
+
+        // Store the file in local disk
+        $localDisk->put($path, $contents);
+        $localPath = $localDisk->path($path);
+
+        return $localPath;
+    }
+
+    public function cleanup($path)
+    {
+        $localDisk = Storage::disk('local');
+
+        if ($localDisk->exists($path)) {
+            $localDisk->delete($path);
+        }
     }
 
     /**

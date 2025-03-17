@@ -34,7 +34,7 @@ trait Uuids
     /**
      * Boot function from Laravel.
      */
-    protected static function bootUuids(): void
+    public static function bootUuids(): void
     {
         static::creating(function (Model $model): void {
             if (empty($model->{$model->getKeyName()})) {
