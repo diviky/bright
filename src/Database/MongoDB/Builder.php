@@ -58,4 +58,9 @@ class Builder extends QueryBuilder
 
         return parent::update($values, $options);
     }
+
+    protected function getAliasFromTable(string $table): string
+    {
+        return '';
+    }
 }

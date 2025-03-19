@@ -253,16 +253,13 @@ trait Eventable
         $eventColumns = $this->getEventTables($type);
         $eventColumns = \array_merge($eventColumns, $this->eventColumns);
 
-        $from = \preg_split('/ as /i', $this->getExpressionValue($this->from));
-
-        $mainAlias = (\count($from) > 1) ? last($from) . '.' : $from[0] . '.';
+        $alias = $this->getAliasFromTable($this->from);
 
         foreach ($eventColumns as $column => $value) {
             if (\is_numeric($column)) {
                 $column = $value;
             }
 
-            $alias = $mainAlias;
             if (\strpos($column, '.') !== false) {
                 [$alias, $column] = \explode('.', $column);
 
@@ -299,5 +296,14 @@ trait Eventable
         $from = \preg_split('/ as /i', $table);
 
         return $from[0] ?? $table;
+    }
+
+    protected function getAliasFromTable(string $table): string
+    {
+        $from = \preg_split('/ as /i', $this->getExpressionValue($table));
+
+        $alias = \count($from) > 1 ? last($from) : $from[0];
+
+        return $alias . '.';
     }
 }

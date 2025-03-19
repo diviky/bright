@@ -12,7 +12,6 @@ use Diviky\Bright\Database\Eloquent\Concerns\HasTimestamps;
 use Diviky\Bright\Database\Eloquent\Concerns\Relations;
 use Diviky\Bright\Database\MongoDB\Builder as QueryBuilder;
 use Diviky\Bright\Models\Concerns\Eventable;
-use Kirschbaum\PowerJoins\PowerJoins;
 use MongoDB\Laravel\Eloquent\Model as BaseModel;
 
 class Model extends BaseModel
@@ -25,7 +24,6 @@ class Model extends BaseModel
     use Eventable;
     use HasEvents;
     use HasTimestamps;
-    use PowerJoins;
     use Relations;
 
     /**
