@@ -255,7 +255,7 @@ trait Eventable
 
         $from = \preg_split('/ as /i', $this->getExpressionValue($this->from));
 
-        $mainAlias = (\count($from) > 1) ? last($from) . '.' : '';
+        $mainAlias = (\count($from) > 1) ? last($from) . '.' : $from[0] . '.';
 
         foreach ($eventColumns as $column => $value) {
             if (\is_numeric($column)) {
