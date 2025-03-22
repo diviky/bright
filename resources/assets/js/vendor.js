@@ -6,8 +6,8 @@ import FilePondPluginImagePreview from '/node_modules/filepond-plugin-image-prev
 import '/node_modules/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import FilePondPluginFileValidateSize from '/node_modules/filepond-plugin-file-validate-size';
 import FilePondPluginFileValidateType from '/node_modules/filepond-plugin-file-validate-type';
-import '/node_modules/jquery-pjax';
 import intlTelInput from '/node_modules/intl-tel-input';
+import '/node_modules/jquery-pjax';
 
 window.ClipboardJS = ClipboardJS;
 window.tempusDominus = tempusDominus;

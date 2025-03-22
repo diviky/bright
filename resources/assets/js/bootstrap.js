@@ -1,4 +1,3 @@
-import './static';
 import './plugins/metadata';
 import './plugins/form';
 import './plugins/validator';
