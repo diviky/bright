@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Providers;
 
+use Diviky\Bright\View\Compilers\BladeCompiler;
+use Diviky\Bright\View\Compilers\ComponentTagCompiler;
 use Diviky\Bright\View\Components\Flash;
 use Diviky\Bright\View\Components\Form;
 use Diviky\Bright\View\Components\Link;
+use Diviky\Bright\View\DynamicComponent;
 use Diviky\Bright\View\Factory;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Illuminate\View\Compilers\ComponentTagCompiler as BaseComponentTagCompiler;
 
 class ViewServiceProvider extends BaseServiceProvider
 {
@@ -67,6 +71,34 @@ class ViewServiceProvider extends BaseServiceProvider
             $factory->setDefaultPaths();
 
             return $factory;
+        });
+
+        $this->app->extend(BaseComponentTagCompiler::class, function ($compiler, $app) {
+            return new ComponentTagCompiler(
+                Blade::getClassComponentAliases()
+            );
+        });
+
+        $this->registerBladeCompiler();
+    }
+
+    /**
+     * Register the Blade compiler implementation.
+     *
+     * @return void
+     */
+    public function registerBladeCompiler()
+    {
+        $this->app->singleton('blade.compiler', function ($app) {
+            return tap(new BladeCompiler(
+                $app['files'],
+                $app['config']['view.compiled'],
+                $app['config']->get('view.relative_hash', false) ? $app->basePath() : '',
+                $app['config']->get('view.cache', true),
+                $app['config']->get('view.compiled_extension', 'php'),
+            ), function ($blade) {
+                $blade->component('dynamic-component', DynamicComponent::class);
+            });
         });
     }
 
