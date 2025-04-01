@@ -254,9 +254,6 @@ class BrightServiceProvider extends ServiceProvider
 
         $kernel = app()->make(Kernel::class);
 
-        $kernel->appendMiddlewareToGroup('app', 'auth');
-        $kernel->appendMiddlewareToGroup('app', 'preflight');
-
         $middlewares = $this->app['config']->get('bright.priority_middleware');
         if (\is_array($middlewares)) {
             foreach ($middlewares as $value) {
