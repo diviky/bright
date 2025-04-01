@@ -82,11 +82,6 @@
         <file name="src/Database/Concerns/Paging.php"/>
       </errorLevel>
     </PossiblyInvalidArgument>
-    <InvalidArgument>
-      <errorLevel type="suppress">
-        <file name="src/Services/Auth/AccessTokenGuard.php"/>
-      </errorLevel>
-    </InvalidArgument>
     <ArgumentTypeCoercion>
       <errorLevel type="suppress">
         <file name="src/Helpers/Reader.php"/>
