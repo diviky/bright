@@ -25,6 +25,6 @@ class Connection extends MongoDBConnection
     #[\Override]
     protected function getDefaultQueryGrammar()
     {
-        return new MongoDBGrammar;
+        return new MongoDBGrammar($this);
     }
 }

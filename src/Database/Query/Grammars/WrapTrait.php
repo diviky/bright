@@ -24,12 +24,9 @@ trait WrapTrait
     }
 
     /**
-     * Wrap a table in keyword identifiers.
-     *
-     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $table
-     * @return string
+     * {@inheritDoc}
      */
-    public function wrapTable($table)
+    public function wrapTable($table, $prefix = null)
     {
         if ($this->isExpression($table)) {
             return parent::wrapTable($table);
@@ -41,11 +38,13 @@ trait WrapTrait
             return $table;
         }
 
+        $prefix ??= $this->connection->getTablePrefix();
+
         if (\strpos($table, '.') !== false) {
             [$database, $table] = \explode('.', $table);
-            $table = preg_replace('/^' . $this->tablePrefix . '/', '', $table);
+            $table = preg_replace('/^' . $prefix . '/', '', $table);
 
-            return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $table, true);
+            return $this->wrap($database) . '.' . $this->wrap($prefix . $table, true);
         }
 
         $alias = '';
@@ -55,12 +54,12 @@ trait WrapTrait
             $table = $segments[0];
         }
 
-        $table = preg_replace('/^' . $this->tablePrefix . '/', '', $table);
+        $table = preg_replace('/^' . $prefix . '/', '', $table);
 
         $databases = $this->config['databases'] ?? [];
         if (\is_array($databases)) {
             if (isset($databases['names']) && \is_array($databases['names']) && isset($databases['names'][$table])) {
-                return $this->wrap($databases['names'][$table]) . '.' . $this->wrap($this->tablePrefix . $table . $alias);
+                return $this->wrap($databases['names'][$table]) . '.' . $this->wrap($prefix . $table . $alias);
             }
 
             $patterns = $databases['patterns'] ?? [];
@@ -71,13 +70,13 @@ trait WrapTrait
                             $database = $database[0];
                         }
 
-                        return $this->wrap($database) . '.' . $this->wrap($this->tablePrefix . $table . $alias);
+                        return $this->wrap($database) . '.' . $this->wrap($prefix . $table . $alias);
                     }
                 }
             }
         }
 
-        return $this->wrap($this->tablePrefix . $table . $alias);
+        return $this->wrap($prefix . $table . $alias);
     }
 
     /**

@@ -40,18 +40,6 @@ trait Relations
     }
 
     /**
-     * Remove attributes from model attributes.
-     *
-     * @return static
-     */
-    public function except(array $keys)
-    {
-        $this->attributes = Arr::except($this->attributes, $keys);
-
-        return $this;
-    }
-
-    /**
      * Returns only the models from the collection with the specified keys.
      *
      * @param  mixed  $keys

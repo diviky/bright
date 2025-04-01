@@ -40,9 +40,9 @@ class MySqlConnection extends LaravelMySqlConnection
     #[\Override]
     protected function getDefaultQueryGrammar()
     {
-        $grammar = new QueryGrammar;
+        $grammar = new QueryGrammar($this);
         $grammar->setConfig($this->config['bright'] ?? []);
 
-        return $this->withTablePrefix($grammar);
+        return $grammar;
     }
 }
