@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Controllers\Auth;
 
+use Diviky\Bright\Http\Controllers\Auth\Concerns\AuthenticatesUsers;
 use Diviky\Bright\Routing\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

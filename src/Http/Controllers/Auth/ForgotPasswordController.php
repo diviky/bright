@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Controllers\Auth;
 
-use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
-use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
+use Diviky\Bright\Http\Controllers\Auth\Concerns\ColumnsTrait;
+use Diviky\Bright\Http\Controllers\Auth\Concerns\Token;
 use Diviky\Bright\Models\Activation;
 use Diviky\Bright\Models\Models;
 use Diviky\Bright\Notifications\ForgetPassword;

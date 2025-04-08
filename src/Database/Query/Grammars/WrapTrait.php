@@ -38,7 +38,9 @@ trait WrapTrait
             return $table;
         }
 
-        $prefix ??= $this->connection->getTablePrefix();
+        if ($this->connection) {
+            $prefix ??= $this->connection->getTablePrefix();
+        }
 
         if (\strpos($table, '.') !== false) {
             [$database, $table] = \explode('.', $table);

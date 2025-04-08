@@ -21,7 +21,6 @@
     "guzzlehttp/guzzle": "^7.2",
     "laravel/framework": "^11.28|^12.0",
     "laravel/sanctum": "^4.0",
-    "laravel/ui": "^4.2",
     "league/flysystem-aws-s3-v3": "^3.10",
     "matomo/decompress": "^2.1",
     "mongodb/laravel-mongodb": "^5.0",
@@ -83,8 +82,9 @@
     "platform-check": false,
     "allow-plugins": {
       "composer/package-versions-deprecated": true,
-      "phpro/grumphp": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "pestphp/pest-plugin": true,
+      "phpro/grumphp": true
     }
   },
   "prefer-stable": true,

@@ -102,7 +102,6 @@ class BrightServiceProvider extends ServiceProvider
 
         Route::health();
         Route::upload();
-        // Route::auth();
 
         return $this;
     }

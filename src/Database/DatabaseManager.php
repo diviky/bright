@@ -53,14 +53,7 @@ class DatabaseManager extends LaravelDatabaseManager
      */
     public function table($name)
     {
-        $alias = '';
-        if (\stripos($name, ' as ') !== false) {
-            $segments = \preg_split('/\s+as\s+/i', $name);
-            $alias = ' as ' . $segments[1];
-            $name = $segments[0];
-        }
-
-        return $this->getConnectionByTable($name)->table($name . $alias);
+        return $this->getConnectionByTable($name)->table($name);
     }
 
     /**
@@ -70,6 +63,11 @@ class DatabaseManager extends LaravelDatabaseManager
      */
     protected function getConnectionByTable(string $name)
     {
+        if (\stripos($name, ' as ') !== false) {
+            $segments = \preg_split('/\s+as\s+/i', $name);
+            $name = $segments[0];
+        }
+
         [$connection, $config] = $this->getConnectionDetails($name);
 
         $connection = $this->connection($connection);

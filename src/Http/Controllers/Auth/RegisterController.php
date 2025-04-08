@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Controllers\Auth;
 
+use Diviky\Bright\Http\Controllers\Auth\Concerns\ColumnsTrait;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\RegistersUsers;
-use Diviky\Bright\Http\Controllers\Auth\Traits\ColumnsTrait;
-use Diviky\Bright\Http\Controllers\Auth\Traits\Token;
+use Diviky\Bright\Http\Controllers\Auth\Concerns\Token;
 use Diviky\Bright\Routing\Controller;
 use Illuminate\Notifications\Notifiable;
 
