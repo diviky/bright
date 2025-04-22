@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database\Concerns;
 
 use DateTime;
+use Illuminate\Contracts\Cache\Repository as CacheRepository;
 
 trait Cachable
 {
@@ -42,6 +43,13 @@ trait Cachable
      * @var string
      */
     protected $cachePrefix = 'sql';
+
+    /**
+     * A global callable to modify the cache key.
+     *
+     * @var callable|null
+     */
+    protected static $cacheKeyModifier;
 
     /**
      * Execute the query as a "select" statement.
@@ -231,15 +239,25 @@ trait Cachable
     }
 
     /**
-     * Get a unique cache key for the complete query.
-     *
-     * @return string
+     * Set a global callable to modify the cache key.
      */
-    public function getCacheKey()
+    public static function setCacheKeyModifier(?callable $modifier): void
     {
-        $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey());
+        self::$cacheKeyModifier = $modifier;
+    }
 
-        return substr(\str_replace(':uid:', strval(user('id')), $cache), 0, 100);
+    /**
+     * Get a unique cache key for the complete query.
+     */
+    public function getCacheKey(?string $appends = ''): string
+    {
+        $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey($appends));
+
+        if (self::$cacheKeyModifier) {
+            $cache = call_user_func(self::$cacheKeyModifier, $cache);
+        }
+
+        return $cache;
     }
 
     /**
@@ -247,21 +265,12 @@ trait Cachable
      *
      * @return string
      */
-    public function generateCacheKey()
+    public function generateCacheKey(?string $appends = '')
     {
-        $key = [
-            'connection' => $this->collection->getDatabaseName(),
-            'collection' => $this->collection->getCollectionName(),
-            'wheres' => $this->wheres,
-            'columns' => $this->columns,
-            'groups' => $this->groups,
-            'orders' => $this->orders,
-            'offset' => $this->offset,
-            'limit' => $this->limit,
-            'aggregate' => $this->aggregate,
-        ];
+        $sql = $this->toSql();
+        $bindings = $this->getBindings();
 
-        return md5(serialize(array_values($key)));
+        return md5($sql . serialize($bindings) . $appends);
     }
 
     /**
@@ -311,9 +320,9 @@ trait Cachable
     /**
      * Get the cache driver.
      */
-    protected function getCacheDriver(): \Illuminate\Contracts\Cache\Repository
+    protected function getCacheDriver(): CacheRepository
     {
-        return app('cache')->driver($this->cacheDriver);
+        return app('cache')->store($this->cacheDriver);
     }
 
     /**
@@ -349,15 +358,13 @@ trait Cachable
 
     /**
      * Check global cache enable or not.
-     *
-     * @return bool
      */
-    protected function shouldCache()
+    protected function shouldCache(): bool
     {
         if (\is_null($this->cacheSeconds)) {
             return false;
         }
 
-        return $this->connection->getConfig('bright.db_cache') ?: $this->connection->getConfig('cache');
+        return $this->connection->getConfig('bright.db_cache') ?? $this->connection->getConfig('cache') ?? false;
     }
 }

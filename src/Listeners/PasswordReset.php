@@ -23,7 +23,7 @@ class PasswordReset
 
         $save = [];
         $save['user_id'] = $user->id;
-        $save['created_at'] = carbon();
+        $save['created_at'] = now();
         $save['password'] = $user->password;
 
         Models::passwordHistory()::create($save);

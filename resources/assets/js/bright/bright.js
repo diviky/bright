@@ -5,7 +5,7 @@ window.brightJs = () => {
   jQuery('[easysubmit]').easySubmit();
   jQuery('[tooltip="modal"], [modal]').easyModal();
 
-  $('[data-toggle="tooltip"]').on('remove click mouseup mouseleave mousedown ', function (e) {
+  $('[data-bs-toggle="tooltip"]').on('remove click mouseup mouseleave mousedown ', function (e) {
     $(this).tooltip('hide');
   });
 
@@ -16,7 +16,7 @@ window.brightJs = () => {
   $(document).on('ajax:modal:loaded', function (e, $this) {
     $('.tooltip').tooltip('hide');
     if ($.fn.tooltip.Constructor) {
-      $('[data-toggle="tooltip"]').tooltip('hide');
+      $('[data-bs-toggle="tooltip"]').tooltip('hide');
     }
   });
 

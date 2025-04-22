@@ -252,6 +252,7 @@ trait Eventable
 
         $eventColumns = $this->getEventTables($type);
         $eventColumns = \array_merge($eventColumns, $this->eventColumns);
+        $eventColumns = array_unique($eventColumns);
 
         $alias = $this->getAliasFromTable($this->from);
 

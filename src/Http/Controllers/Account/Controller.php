@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Controllers\Account;
 
-use App\Http\Controllers\Controller as BaseController;
 use Diviky\Bright\Models\Models;
+use Diviky\Bright\Routing\Controller as BaseController;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
@@ -127,7 +127,7 @@ class Controller extends BaseController
 
             $user->password = Hash::make($inputpwd);
 
-            $user->last_password_at = carbon();
+            $user->last_password_at = now();
 
             $result = $user->save();
 
@@ -185,7 +185,7 @@ class Controller extends BaseController
             abort(401, 'Unable to login');
         }
 
-        $user->last_login_at = carbon();
+        $user->last_login_at = now();
         $user->save();
 
         return redirect()->route('home');

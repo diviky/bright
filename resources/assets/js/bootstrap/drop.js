@@ -35,13 +35,13 @@ window.drawPreview = ($this, files) => {
   for (var i = 0; i < files.length; i++) {
     var file = files[i];
     if (file.type.match('image/*')) {
-      $this.append('<li data-toggle="tooltip" title="' + file.name + '"> <i class="fa fa-file-image-o"></i></li>');
+      $this.append('<li data-bs-toggle="tooltip" title="' + file.name + '"> <i class="fa fa-file-image-o"></i></li>');
     } else if (file.type.match('audio/*')) {
-      $this.append('<li data-toggle="tooltip" title="' + file.name + '"> <i class="fa fa-file-audio-o"></i></li>');
+      $this.append('<li data-bs-toggle="tooltip" title="' + file.name + '"> <i class="fa fa-file-audio-o"></i></li>');
     } else if (file.type.match('video/*')) {
-      $this.append('<li data-toggle="tooltip" title="' + file.name + '"> <i class="fa fa-file-video-o"></i></li>');
+      $this.append('<li data-bs-toggle="tooltip" title="' + file.name + '"> <i class="fa fa-file-video-o"></i></li>');
     } else {
-      $this.append('<li data-toggle="tooltip" title="' + file.name + '"> <i class="fa fa-file-o"></i></li>');
+      $this.append('<li data-bs-toggle="tooltip" title="' + file.name + '"> <i class="fa fa-file-o"></i></li>');
     }
   }
 };

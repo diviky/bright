@@ -148,4 +148,9 @@ trait ServiceProviderExtra
     {
         require $path;
     }
+
+    protected function loadFileFrom($path)
+    {
+        require $path;
+    }
 }

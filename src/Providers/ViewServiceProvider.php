@@ -24,6 +24,7 @@ class ViewServiceProvider extends BaseServiceProvider
     {
         Blade::component('flash', Flash::class);
         Blade::component('link', Link::class);
+        Blade::component('bright-flash', Flash::class);
         Blade::component('bright-form', Form::class);
         Blade::componentNamespace('Diviky\\Bright\\View\\Components', 'bright');
 

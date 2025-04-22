@@ -23,10 +23,10 @@ class Form extends Component
         public ?string $style = null,
         public bool $hasFiles = false,
         public bool $spellcheck = false,
+        public array $params = [],
     ) {
-
         if ($route) {
-            $action = route($route);
+            $action = route($route, $params);
         }
 
         $attribs = [];

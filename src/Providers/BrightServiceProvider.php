@@ -112,7 +112,7 @@ class BrightServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         $this->mergeConfigFrom($this->path() . '/config/bright.php', 'bright');
-        $this->mergeConfigFrom($this->path() . '/config/theme.php', 'theme');
+        $this->mergeConfigFrom($this->path() . '/config/themes.php', 'themes');
         $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');
 
         $this->authGuards();
@@ -155,7 +155,7 @@ class BrightServiceProvider extends ServiceProvider
             $this->path() . '/config/charts.php' => config_path('charts.php'),
             // $this->path() . '/config/permission.php'  => config_path('permission.php'),
             $this->path() . '/config/bright.php' => config_path('bright.php'),
-            $this->path() . '/config/theme.php' => config_path('theme.php'),
+            $this->path() . '/config/themes.php' => config_path('themes.php'),
             $this->path() . '/config/sharding.php' => config_path('sharding.php'),
         ], 'bright-config');
 

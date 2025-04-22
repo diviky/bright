@@ -8,7 +8,7 @@ This data attribute is used to delete the record from the database table. On cli
 
 ```php
 
-<a data-delete href="{{ url('vmn/flow/delete/1') }}" data-toggle="tooltip" title="delete flow" 
+<a data-delete href="{{ url('vmn/flow/delete/1') }}" data-bs-toggle="tooltip" title="delete flow" 
 	class="btn btn-secondary btn-sm">
     <i class="fe fe-x-square"></i>
 </a>
@@ -23,7 +23,7 @@ This data attribute is used to delete the record from the database table. On cli
 
 ```php
 
-<a data-action="delete" href="{{ url('vmn/flow/delete/1') }}" data-toggle="tooltip" title="delete flow" 
+<a data-action="delete" href="{{ url('vmn/flow/delete/1') }}" data-bs-toggle="tooltip" title="delete flow" 
 	class="btn btn-secondary btn-sm">
     <i class="fe fe-x-square"></i>
 </a>
@@ -37,7 +37,7 @@ This data attribute is used to hit specific URL. On click of this element it wil
 
 ```php
 
-<a data-href="{{ url('vmn/flow/copy/1') }}" data-render="true" data-toggle="tooltip" title="Clone this flow" 
+<a data-href="{{ url('vmn/flow/copy/1') }}" data-render="true" data-bs-toggle="tooltip" title="Clone this flow" 
 	class="btn btn-secondary btn-sm">
 <i class="fe fe-copy"></i>
 </a>
@@ -272,7 +272,7 @@ On click  of this data attribute, It will get the form details and submit the fo
 
 ```php
 
-<a href="{{ url('record/export') }}" data-toggle="tooltip" title="Download records"
+<a href="{{ url('record/export') }}" data-bs-toggle="tooltip" title="Download records"
     class="btn btn-primary" ajax-export>
     <i class="fe fe-download"></i>
 </a>

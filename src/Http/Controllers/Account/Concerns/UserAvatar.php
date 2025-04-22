@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Diviky\Bright\Http\Controllers\Account\Traits;
+namespace Diviky\Bright\Http\Controllers\Account\Concerns;
 
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
-trait UserAvatarTrait
+trait UserAvatar
 {
     /**
      * Set the avatar image for user.

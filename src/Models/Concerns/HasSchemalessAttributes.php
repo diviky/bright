@@ -11,17 +11,11 @@ trait HasSchemalessAttributes
 {
     public function initializeHasSchemalessAttributes(): void
     {
-        $this->casts['meta'] = SchemalessAttributes::class;
-        $this->casts['options'] = SchemalessAttributes::class;
+        $this->casts['fields'] = SchemalessAttributes::class;
     }
 
-    public function scopeWithMeta(): Builder
+    public function scopeWithFields(): Builder
     {
-        return $this->meta->modelScope();
-    }
-
-    public function scopeWithOptions(): Builder
-    {
-        return $this->options->modelScope();
+        return $this->fields->modelScope();
     }
 }

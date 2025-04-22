@@ -8,7 +8,7 @@ use Diviky\Bright\Concerns\AccessToken;
 use Diviky\Bright\Database\Concerns\Connector;
 use Diviky\Bright\Database\Eloquent\Concerns\Connection;
 use Diviky\Bright\Database\Eloquent\Concerns\Eloquent;
-use Diviky\Bright\Http\Controllers\Account\Traits\UserAvatarTrait;
+use Diviky\Bright\Http\Controllers\Account\Concerns\UserAvatar;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UserParent;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UserRole;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UsersParent;
@@ -28,7 +28,7 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
     use Scopes;
-    use UserAvatarTrait;
+    use UserAvatar;
     use UserParent;
     use UserRole;
     use UsersParent;

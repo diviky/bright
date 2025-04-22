@@ -180,18 +180,18 @@ class Responsable implements BaseResponsable
 
         $theme = $this->setUpThemeFromRequest($request, $component, $paths);
 
+        $pjax = $request->pjax() ? true : $request->input('pjax');
+        $fragment = $pjax ? false : $request->ajax();
+
         if (empty($layout)) {
             if ($request->pjax() && Str::endsWith($theme['layout'], ':html')) {
                 $layout = Str::replaceLast('.', '.html.', Str::replaceLast(':html', '', $theme['layout']));
             } elseif ($format == 'html') {
-                $layout = 'layouts.html';
+                $layout = $fragment ? 'layouts.fragment' : 'layouts.html';
             } else {
                 $layout = Str::replaceLast(':html', '', $theme['layout']);
             }
         }
-
-        $pjax = $request->pjax() ? true : $request->input('pjax');
-        $fragment = $pjax ? false : $request->ajax();
 
         if ($fragment) {
             $container = $request->header('X-Pjax-Container', 'content');

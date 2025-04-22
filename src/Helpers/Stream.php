@@ -100,7 +100,11 @@ class Stream
             if (\strpos($field, ' AS ') !== false) {
                 $field = \explode(' AS ', $field);
                 $field = \trim($field[1]);
+            } elseif (\strpos($field, '.') !== false) {
+                $field = \explode('.', $field);
+                $field = \trim($field[1]);
             }
+
             $out[] = \ucwords($field);
         }
 

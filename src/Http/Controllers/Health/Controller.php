@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Controllers\Health;
 
-use App\Http\Controllers\Controller as BaseController;
+use Diviky\Bright\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +18,7 @@ class Controller extends BaseController
     public function ping()
     {
         try {
-            Cache::set('ping', carbon());
+            Cache::set('ping', now());
         } catch (\Exception $e) {
             return response('failed', 500);
         }
@@ -78,7 +78,7 @@ class Controller extends BaseController
     {
         // Check database connection
         try {
-            Cache::set('ping', carbon());
+            Cache::set('ping', now());
 
             return response('ok', 200);
         } catch (\Exception $exception) {

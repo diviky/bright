@@ -66,17 +66,22 @@ trait Themable
             $template = $this->getDefaultTheme();
         }
 
-        if (Str::contains($template, '::')) {
-            [$themeName, $layout] = \explode('::', $template);
+        if (preg_match('/^([^:]+):(?!:)(.+)$/', $template, $matches)) {
+            $themeName = $matches[1];
+            $layout = $matches[2];
         } else {
             $layout = $template;
-            $themeName = config('theme.active', 'boostrap');
+            $themeName = config('themes.active', 'bootstrap');
         }
 
-        $themePaths = config('theme.paths', []);
+        $themePaths = config('themes.paths', []);
 
         $themePath = isset($themePaths[$themeName]) ? $themePaths[$themeName] : null;
         $themePath = is_array($themePath) ? $themePath[0] : $themePath;
+
+        if (is_null($themePath) && !empty($themeName)) {
+            $themePath = config('themes.base_path', resource_path('views')) . '/' . $themeName;
+        }
 
         $views = resource_path('views');
         $location = public_path($themeName);
@@ -110,12 +115,12 @@ trait Themable
 
     protected function getTheme(): array
     {
-        $themes = config('theme');
+        $themes = config('themes');
         $device = $themes['device'];
 
         if (empty($device) || $device == 'auto') {
             $device = (new Device)->detect(env('HTTP_USER_AGENT'));
-            config(['theme.device' => $device]);
+            config(['themes.device' => $device]);
         }
 
         $deviceType = !\is_array($device) ? $device : Arr::get($device, 'type');

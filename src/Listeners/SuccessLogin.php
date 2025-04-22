@@ -23,7 +23,7 @@ class SuccessLogin
     public function handle(Login $event): void
     {
         $user = $event->user;
-        $user->last_login_at = carbon();
+        $user->last_login_at = now();
         $user->last_login_ip = $this->request->ip();
         $user->save();
     }

@@ -104,4 +104,23 @@ trait Bouncer
     {
         return $this->getRoles()->first();
     }
+
+    public function hasAnyRole(...$roles): bool
+    {
+        if (count($roles) === 1 && is_string($roles[0])) {
+            $roles = explode('|', $roles[0]);
+        }
+
+        return $this->isAn(...$roles);
+    }
+
+    public function hasRole($roles): bool
+    {
+        return $this->isA($roles);
+    }
+
+    public function hasAllRoles(...$roles): bool
+    {
+        return $this->isAll(...$roles);
+    }
 }
