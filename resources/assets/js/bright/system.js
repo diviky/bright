@@ -544,28 +544,6 @@ window.brightSystemJs = () => {
     e.preventDefault();
   });
 
-  $(document).on('click', '[data-toggle="tabs"] a', function (e) {
-    e.preventDefault();
-    $(this).tab('show');
-    window.location.hash = this.hash;
-    var scrollmem = $('body').scrollTop() || $('html').scrollTop();
-    $('html,body').scrollTop(scrollmem);
-  });
-
-  var hash = window.location.hash;
-  if (hash) {
-    $('[data-toggle="tabs"] a[href="' + hash + '"]').tab('show');
-    $('[data-toggle="tab"][href="' + hash + '"]').tab('show');
-  }
-
-  $(window).on('hashchange', function () {
-    var hash = window.location.hash;
-    if (hash) {
-      $('[data-toggle="tabs"], a[href="' + hash + '"]').tab('show');
-      $('[data-toggle="tab"][href="' + hash + '"]').tab('show');
-    }
-  });
-
   $(document).on('click', '[data-toggle="sidebar"]', function () {
     $(this).toggleClass('collapsed');
     var target = $(this).data('target');

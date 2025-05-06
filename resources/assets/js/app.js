@@ -5,6 +5,8 @@ function bootstrapJs() {
   load_helpers();
   load_menuJs();
   load_autocomplete();
+  load_sortable();
+  load_filepond();
 }
 
 function bootstrapOnce() {

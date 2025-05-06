@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Diviky\Bright\Http\Middleware;
 
 use Diviky\Bright\Concerns\Themable;
+use Diviky\Bright\Exceptions\UnauthorizedException;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Exceptions\UnauthorizedException;
 
 class RoleOrPermissionMiddleware
 {

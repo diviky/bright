@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Concerns;
 
-use Diviky\Bright\Http\Controllers\Auth\Concerns\HasRoles;
 use Illuminate\Support\Str;
 
 trait Spatie

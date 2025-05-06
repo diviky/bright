@@ -547,9 +547,9 @@ window.load_autocomplete = () => {
       if (!$this[0] || !$this[0].selectize) {
         var target = getTargetNextSelectize($this);
 
-        labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
-        valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
-        searchField = $this.data('search-field') || ['text'];
+        let labelField = $this.attr('label-field') || $this.data('label-field') || 'text';
+        let valueField = $this.attr('value-field') || $this.data('value-field') || 'id';
+        let searchField = $this.data('search-field') || ['text'];
 
         let selector = $this.selectize({
           valueField: valueField,

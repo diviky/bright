@@ -111,6 +111,10 @@ trait Bouncer
             $roles = explode('|', $roles[0]);
         }
 
+        if (is_array($roles[0])) {
+            $roles = $roles[0];
+        }
+
         return $this->isAn(...$roles);
     }
 

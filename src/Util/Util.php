@@ -41,8 +41,6 @@ class Util implements UtilInterface
             $carbon = $time;
         } elseif ($time instanceof \Stringable) {
             $carbon = new Carbon($time->toDateTime());
-        } elseif (strlen($time) > 10) {
-            $carbon = Carbon::createFromTimestamp($time / 1000);
         } else {
             $carbon = Carbon::createFromTimestamp($time);
         }

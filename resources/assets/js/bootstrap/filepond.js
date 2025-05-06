@@ -1,11 +1,15 @@
-window.load_app_filepond = () => {
-  window.pond = function (selector) {
+window.load_filepond = () => {
+  window.pond = function (selector, userOptions = {}) {
     FilePond.registerPlugin(FilePondPluginFileValidateSize, FilePondPluginFileValidateType);
 
     var form = selector.parents('form:eq(0)');
     var prefix = selector.data('upload-prefix') || '';
     var accept = selector.attr('accept') || '';
     var size = selector.data('size') || '500MB';
+
+    // Livewire integration options
+    var livewireSuccess = userOptions.success || selector.data('success');
+    var livewireFailure = userOptions.failure || selector.data('failure');
 
     if (prefix && typeof prefix === 'undefined') {
       prefix = '';
@@ -121,7 +125,25 @@ window.load_app_filepond = () => {
                       $(document.getElementById(json.key)).remove();
                     }, 2000);
                   }
+                  // Livewire success call
+                  if (livewireSuccess) {
+                    callLivewireMethod(selector, livewireSuccess, {
+                      file: file.name,
+                      response: json,
+                      fieldName: fieldName,
+                      inputs: file.inputs,
+                    });
+                  }
                 } else {
+                  // Livewire failure call
+                  if (livewireFailure) {
+                    callLivewireMethod(selector, livewireFailure, {
+                      file: file.name,
+                      status: filepondRequest.status,
+                      response: filepondRequest.responseText,
+                      fieldName: fieldName,
+                    });
+                  }
                   error('oh no');
                 }
                 return json.key;
@@ -132,7 +154,15 @@ window.load_app_filepond = () => {
                   type: 'error',
                   text: 'unable to upload the file',
                 });
-
+                // Livewire failure call
+                if (livewireFailure) {
+                  callLivewireMethod(selector, livewireFailure, {
+                    file: file.name,
+                    status: filepondRequest.status,
+                    response: filepondRequest.responseText,
+                    fieldName: fieldName,
+                  });
+                }
                 error('unable to upload the file');
               };
 
@@ -143,7 +173,15 @@ window.load_app_filepond = () => {
                     type: 'error',
                     text: jsonResponse.message,
                   });
-
+                  // Livewire failure call
+                  if (livewireFailure) {
+                    callLivewireMethod(selector, livewireFailure, {
+                      file: file.name,
+                      status: filepondRequest.status,
+                      response: filepondRequest.responseText,
+                      fieldName: fieldName,
+                    });
+                  }
                   error(jsonResponse.message);
                 }
               };
@@ -164,7 +202,7 @@ window.load_app_filepond = () => {
       options = $.extend({}, options, selector.metadata({ type: 'html5' }));
     }
 
-    const pond = new FilePond.create(selector[0], options);
+    const pond = FilePond.create(selector[0], options);
 
     pond.on('addfile', function (error, file) {
       if (error) {
@@ -200,3 +238,19 @@ window.load_app_filepond = () => {
     window.pond($(this));
   });
 };
+
+// Helper to call Livewire method directly
+function callLivewireMethod(selector, method, params) {
+  if (!selector || (typeof selector.closest !== 'function' && typeof selector.jquery !== 'string')) {
+    return;
+  }
+  // If it's a jQuery object, get the first DOM element
+  var el = selector.jquery ? selector[0] : selector;
+  if (!el || typeof el.closest !== 'function') {
+    return;
+  }
+  var componentEl = el.closest('[wire:id]');
+  if (componentEl && componentEl.__livewire && componentEl.__livewire.$wire) {
+    componentEl.__livewire.$wire.call(method, params);
+  }
+}

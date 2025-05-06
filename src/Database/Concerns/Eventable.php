@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Str;
 
@@ -164,9 +165,9 @@ trait Eventable
         }
 
         if (\is_array($bright['default'])) {
-            $tables = \array_merge($bright['default'], $bright[$type]);
+            $tables = \array_merge($bright['default'], $bright[$type] ?? []);
         } else {
-            $tables = $bright[$type];
+            $tables = $bright[$type] ?? [];
         }
 
         return isset($tables[$from]) ? $tables[$from] : [];
@@ -299,7 +300,7 @@ trait Eventable
         return $from[0] ?? $table;
     }
 
-    protected function getAliasFromTable(string $table): string
+    protected function getAliasFromTable(string|Expression $table): string
     {
         $from = \preg_split('/ as /i', $this->getExpressionValue($table));
 

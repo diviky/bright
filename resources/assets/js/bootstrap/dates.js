@@ -1,8 +1,3 @@
-window.load_dates = () => {
-  load_dateranges();
-  load_datetimepicker();
-};
-
 window.load_datetimepicker = () => {
   if (!tempusDominus) {
     console.info('npm install @eonasdan/tempus-dominus --save');
@@ -187,4 +182,9 @@ window.load_dateranges = () => {
       $(this).val('');
     }
   });
+};
+
+window.load_dates = () => {
+  load_dateranges();
+  load_datetimepicker();
 };
