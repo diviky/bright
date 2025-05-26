@@ -13,6 +13,7 @@ use Diviky\Bright\Http\Controllers\Auth\Concerns\UserParent;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UserRole;
 use Diviky\Bright\Http\Controllers\Auth\Concerns\UsersParent;
 use Diviky\Bright\Models\Concerns\Scopes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -78,5 +79,15 @@ class User extends Authenticatable
     public function getTable(): string
     {
         return config('bright.table.users', 'users');
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function role(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->getRole(),
+        );
     }
 }

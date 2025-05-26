@@ -80,6 +80,16 @@ trait Bouncer
         return $this->assign($role);
     }
 
+    public function assignRole($role)
+    {
+        return $this->assign($role);
+    }
+
+    public function removeRole($role)
+    {
+        return $this->retract($role);
+    }
+
     /**
      * Check the user has permission.
      *

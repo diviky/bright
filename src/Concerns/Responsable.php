@@ -19,10 +19,10 @@ trait Responsable
      * @param  string  $layout
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    protected function getViewLayout($route, $data = [], $layout = null)
+    protected function getViewLayout($content, $data = [], $layout = null)
     {
         $layout = $layout ?: 'index';
-        $data['slot'] = $route;
+        $data['slot'] = $content;
 
         return $this->getView($layout, $data);
     }

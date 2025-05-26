@@ -25,7 +25,7 @@ class Money implements CastsAttributes
      * @param  null|int  $decimals
      * @param  null|string  $currency
      */
-    public function __construct($decimals = null, $currency = 'INR')
+    public function __construct($decimals = null, $currency = null)
     {
         $decimals = $decimals ?? config('bright.money.decimals', 2);
         $currency = $currency ?? config('bright.money.currency', 'INR');

@@ -6,12 +6,15 @@ namespace Diviky\Bright\Routing;
 
 use Diviky\Bright\Attributes\Resource;
 use Diviky\Bright\Attributes\View as AttributesView;
-use Diviky\Bright\Attributes\ViewNamespace;
 use Diviky\Bright\Attributes\ViewPaths;
 use Diviky\Bright\Concerns\Themable;
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use ReflectionClass;
+use ReflectionMethod;
 
 class Responsable implements BaseResponsable
 {
@@ -39,14 +42,12 @@ class Responsable implements BaseResponsable
      */
     protected $method;
 
-    /**
-     * @param  mixed  $response
-     * @param  string  $action
-     * @param  mixed  $controller
-     * @param  string  $method
-     */
-    public function __construct($response, $action, $controller, $method)
-    {
+    public function __construct(
+        mixed $response,
+        string $action,
+        mixed $controller,
+        string $method
+    ) {
         $this->response = $response;
         $this->action = $action;
         $this->controller = $controller;
@@ -60,96 +61,160 @@ class Responsable implements BaseResponsable
      * @return mixed|\Symfony\Component\HttpFoundation\Response
      */
     #[\Override]
-    public function toResponse($request)
+    public function toResponse($request): mixed
     {
         $response = $this->getResponse();
-
-        $reflection = new \ReflectionClass($this->controller);
+        $reflection = new ReflectionClass($this->controller);
         $method = $reflection->getMethod($this->method);
 
-        if ($request->post('fingerprint') || $request->hasHeader('X-Inertia') || $request->hasHeader('X-Livewire')) {
+        if ($this->shouldReturnDirectResponse($request)) {
             return $response;
         }
 
-        $format = $request->input('_request') ?: $request->input('format');
+        $format = $this->getRequestFormat($request);
 
-        if (!$format && $request->expectsJson()) {
-            $attributes = $method->getAttributes(Resource::class, \ReflectionAttribute::IS_INSTANCEOF);
-
-            foreach ($attributes as $attribute) {
-                $instance = $attribute->newInstance();
-
-                $response = $instance->toResource($response);
-            }
-
-            return $response;
+        if ($this->shouldReturnJsonResponse($request, $format)) {
+            return $this->handleJsonResponse($response, $method);
         }
 
-        if (!\is_array($response) && $response instanceof View) {
+        if ($this->isViewResponse($response)) {
             $this->setUpThemeFromRequest($request);
 
             return $response;
         }
 
-        if (!\is_array($response)) {
+        if (!$this->isArrayOrResponse($response)) {
             return $response;
         }
 
-        if ($format == 'iframe') {
-            $html = '<textarea>';
-            $html .= (string) \json_encode($response);
-            $html .= '</textarea>';
-
-            return $html;
+        if ($format === 'iframe') {
+            return $this->handleIframeResponse($response);
         }
 
-        $ajax = $request->ajax();
+        return $this->handleViewResponse($request, $response, $method, $reflection);
+    }
 
-        if (!$ajax && isset($response['next'])) {
-            return $this->getNextRedirect($response, 'next');
+    protected function shouldReturnDirectResponse(Request $request): bool
+    {
+        return $request->post('fingerprint')
+            || $request->hasHeader('X-Inertia')
+            || $request->hasHeader('X-Livewire');
+    }
+
+    protected function getRequestFormat(Request $request): ?string
+    {
+        return $request->input('_request') ?: $request->input('format');
+    }
+
+    protected function shouldReturnJsonResponse(Request $request, ?string $format): bool
+    {
+        return !$format && $request->expectsJson();
+    }
+
+    protected function handleJsonResponse(mixed $response, ReflectionMethod $method): mixed
+    {
+        $attributes = $method->getAttributes(Resource::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+        foreach ($attributes as $attribute) {
+            $instance = $attribute->newInstance();
+            $response = $instance->toResource($response);
         }
 
-        if ($ajax && isset($response['redirect'])) {
-            if (
-                \substr($response['redirect'], 0, 1) !== '/'
-                && \substr($response['redirect'], 0, 4) !== 'http'
-            ) {
-                $redirect = $this->getNextRedirect($response, 'redirect');
-                if (isset($redirect)) {
-                    $response['redirect'] = $redirect->getTargetUrl();
-                }
+        return $response;
+    }
+
+    protected function isViewResponse(mixed $response): bool
+    {
+        return !is_array($response) && $response instanceof View;
+    }
+
+    protected function isArrayOrResponse(mixed $response): bool
+    {
+        return is_array($response) || $response instanceof Response;
+    }
+
+    protected function handleIframeResponse(mixed $response): string
+    {
+        return '<textarea>' . json_encode($response) . '</textarea>';
+    }
+
+    protected function handleViewResponse(
+        Request $request,
+        mixed $response,
+        ReflectionMethod $method,
+        ReflectionClass $reflection
+    ): mixed {
+        if (is_array($response)) {
+            $response = $this->handleArrayResponse($request, $response);
+        }
+
+        $route = $this->getRouteFromAction($this->action);
+        [$component, $view] = explode('.', $route, 2);
+
+        $viewConfig = $this->getViewConfiguration($method, $view);
+        if ($viewConfig['view'] === 'none' || $viewConfig['view'] === 'json') {
+            return $response;
+        }
+
+        $paths = $this->getViewPaths($reflection);
+        $theme = $this->setUpThemeFromRequest($request, $component, $paths);
+
+        $layout = $this->determineLayout($request, $theme, $viewConfig['layout']);
+
+        if ($request->ajax() && !$request->pjax()) {
+            return $this->handleAjaxResponse($request, $response, $viewConfig['view'], $layout);
+        }
+
+        return $this->renderView($response, $viewConfig['view'], $layout);
+    }
+
+    protected function handleArrayResponse(Request $request, array $response): array
+    {
+        if (!$request->ajax() && isset($response['next'])) {
+            $redirect = $this->getNextRedirect($response, 'next');
+
+            return $redirect instanceof Response ? ['redirect' => $redirect->getTargetUrl()] : $response;
+        }
+
+        if ($request->ajax()) {
+            if (isset($response['redirect'])) {
+                $response = $this->handleRedirectResponse($response);
+            }
+            if (isset($response['route'])) {
+                $response = $this->handleRouteResponse($response);
             }
         }
 
-        if ($ajax && isset($response['route'])) {
-            $redirect = $this->getNextRedirect($response, 'route');
-            if (isset($redirect)) {
+        return $response;
+    }
+
+    protected function handleRedirectResponse(array $response): array
+    {
+        if (
+            substr($response['redirect'], 0, 1) !== '/'
+            && substr($response['redirect'], 0, 4) !== 'http'
+        ) {
+            $redirect = $this->getNextRedirect($response, 'redirect');
+            if ($redirect instanceof Response) {
                 $response['redirect'] = $redirect->getTargetUrl();
             }
         }
 
-        if ($format == 'json' || (isset($response['_format']) && $response['_format'] == 'json')) {
-            unset($response['_format']);
+        return $response;
+    }
 
-            $attributes = $method->getAttributes(Resource::class, \ReflectionAttribute::IS_INSTANCEOF);
-
-            foreach ($attributes as $attribute) {
-                $instance = $attribute->newInstance();
-
-                $response = $instance->toResource($response);
-            }
-
-            return $response;
+    protected function handleRouteResponse(array $response): array
+    {
+        $redirect = $this->getNextRedirect($response, 'route');
+        if ($redirect instanceof Response) {
+            $response['redirect'] = $redirect->getTargetUrl();
         }
 
-        if ($request->pjax()) {
-            $format = 'html';
-        }
+        return $response;
+    }
 
-        $route = $this->getRouteFromAction($this->action);
-
-        [$component, $view] = \explode('.', $route, 2);
-
+    protected function getViewConfiguration(ReflectionMethod $method, string $view): array
+    {
         $layout = null;
         $attributes = $method->getAttributes(AttributesView::class);
 
@@ -159,54 +224,71 @@ class Responsable implements BaseResponsable
             $layout = $instance->getLayout();
         }
 
-        if ($view === 'none' || $view === 'json') {
-            return $response;
-        }
+        return ['view' => $view, 'layout' => $layout];
+    }
 
+    protected function getViewPaths(ReflectionClass $reflection): array
+    {
         $paths = $this->getViewPathsFrom($this->controller, $this->action);
-        $attributes = $reflection->getAttributes(ViewPaths::class);
 
+        $attributes = $reflection->getAttributes(ViewPaths::class);
         foreach ($attributes as $attribute) {
             $instance = $attribute->newInstance();
             $paths = array_merge($paths, $instance->getPaths());
         }
 
-        $attributes = $reflection->getAttributes(ViewNamespace::class);
+        return $paths;
+    }
 
-        foreach ($attributes as $attribute) {
-            $instance = $attribute->newInstance();
-            $view = $instance->getViewName($view);
+    protected function determineLayout(Request $request, array $theme, ?string $layout): string
+    {
+        if (!empty($layout)) {
+            return $layout;
         }
 
-        $theme = $this->setUpThemeFromRequest($request, $component, $paths);
+        $format = $request->input('format');
+        $pjax = $request->pjax() ?: $request->input('pjax');
+        $fragment = !$pjax && $request->ajax();
 
-        $pjax = $request->pjax() ? true : $request->input('pjax');
-        $fragment = $pjax ? false : $request->ajax();
-
-        if (empty($layout)) {
-            if ($request->pjax() && Str::endsWith($theme['layout'], ':html')) {
-                $layout = Str::replaceLast('.', '.html.', Str::replaceLast(':html', '', $theme['layout']));
-            } elseif ($format == 'html') {
-                $layout = $fragment ? 'layouts.fragment' : 'layouts.html';
-            } else {
-                $layout = Str::replaceLast(':html', '', $theme['layout']);
-            }
+        if ($request->pjax() && Str::endsWith($theme['layout'], ':html')) {
+            return Str::replaceLast('.', '.html.', Str::replaceLast(':html', '', $theme['layout']));
         }
 
-        if ($fragment) {
-            $container = $request->header('X-Pjax-Container', 'content');
-
-            $content = $this->getView($view, $response)->fragment($container);
-            $view = $this->getViewLayout($content, $response, $layout);
-
-            return [
-                'fragments' => [
-                    $container => $view->fragment($container),
-                ],
-            ];
+        if ($format === 'html') {
+            return $fragment ? 'layouts.fragment' : 'layouts.html';
         }
 
-        $content = $this->getViewContent($view, $response);
+        return Str::replaceLast(':html', '', $theme['layout']);
+    }
+
+    protected function handleAjaxResponse(Request $request, mixed $response, string $view, string $layout): array
+    {
+        $container = $request->header('X-Pjax-Container', 'content');
+
+        if ($response instanceof Response) {
+            $content = $response->getContent();
+            $response = [];
+        } else {
+            $content = $this->getViewContent($view, $response);
+        }
+
+        $view = $this->getViewLayout($content, $response, $layout);
+
+        return [
+            'fragments' => [
+                $container => $view->render(),
+            ],
+        ];
+    }
+
+    protected function renderView(mixed $response, string $view, string $layout): string
+    {
+        if ($response instanceof Response) {
+            $content = $response->getContent();
+            $response = [];
+        } else {
+            $content = $this->getViewContent($view, $response);
+        }
 
         $view = $this->getViewLayout($content, $response, $layout);
 
@@ -215,10 +297,8 @@ class Responsable implements BaseResponsable
 
     /**
      * Get the value of data.
-     *
-     * @return mixed
      */
-    public function getResponse()
+    public function getResponse(): mixed
     {
         return $this->response;
     }

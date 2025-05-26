@@ -2,9 +2,15 @@ window.load_autocomplete = () => {
   function wireSet(target) {
     if (wired()) {
       try {
-        let name = target.hasAttribute('model') ? target.getAttribute('model') : target.name;
-        if (wired().$get(name) !== undefined) {
-          wired().$set(name, target.value);
+        // Handle wire:model.live
+        if (target.hasAttribute('wire:model.live')) {
+          const modelName = target.getAttribute('wire:model.live');
+          wired().$set(modelName, target.value);
+        } else {
+          let name = target.hasAttribute('model') ? target.getAttribute('model') : target.name;
+          if (wired().$get(name) !== undefined) {
+            wired().$set(name, target.value);
+          }
         }
       } catch (e) {
         //console.error(e);
