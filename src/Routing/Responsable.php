@@ -6,6 +6,7 @@ namespace Diviky\Bright\Routing;
 
 use Diviky\Bright\Attributes\Resource;
 use Diviky\Bright\Attributes\View as AttributesView;
+use Diviky\Bright\Attributes\ViewNamespace;
 use Diviky\Bright\Attributes\ViewPaths;
 use Diviky\Bright\Concerns\Themable;
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
@@ -108,7 +109,7 @@ class Responsable implements BaseResponsable
 
     protected function shouldReturnJsonResponse(Request $request, ?string $format): bool
     {
-        return !$format && $request->expectsJson();
+        return $format === 'json' && $request->expectsJson();
     }
 
     protected function handleJsonResponse(mixed $response, ReflectionMethod $method): mixed
@@ -157,11 +158,15 @@ class Responsable implements BaseResponsable
         }
 
         $paths = $this->getViewPaths($reflection);
+        $view = $this->applyViewNamespace($reflection, $viewConfig['view']);
         $theme = $this->setUpThemeFromRequest($request, $component, $paths);
 
         $layout = $this->determineLayout($request, $theme, $viewConfig['layout']);
 
-        if ($request->ajax() && !$request->pjax()) {
+        $pjax = $request->pjax() ? true : $request->input('pjax');
+        $fragment = $pjax ? false : $request->ajax();
+
+        if ($fragment) {
             return $this->handleAjaxResponse($request, $response, $viewConfig['view'], $layout);
         }
 
@@ -240,6 +245,17 @@ class Responsable implements BaseResponsable
         return $paths;
     }
 
+    protected function applyViewNamespace(ReflectionClass $reflection, string $view): string
+    {
+        $attributes = $reflection->getAttributes(ViewNamespace::class);
+        foreach ($attributes as $attribute) {
+            $instance = $attribute->newInstance();
+            $view = $instance->getViewName($view);
+        }
+
+        return $view;
+    }
+
     protected function determineLayout(Request $request, array $theme, ?string $layout): string
     {
         if (!empty($layout)) {
@@ -269,14 +285,14 @@ class Responsable implements BaseResponsable
             $content = $response->getContent();
             $response = [];
         } else {
-            $content = $this->getViewContent($view, $response);
+            $content = $this->getView($view, $response)->fragment($container);
         }
 
         $view = $this->getViewLayout($content, $response, $layout);
 
         return [
             'fragments' => [
-                $container => $view->render(),
+                $container => $view->fragment($container),
             ],
         ];
     }
