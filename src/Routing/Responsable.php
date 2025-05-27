@@ -84,6 +84,12 @@ class Responsable implements BaseResponsable
             return $response;
         }
 
+        if ($format == 'json' || (isset($response['_format']) && $response['_format'] == 'json')) {
+            unset($response['_format']);
+
+            return $this->handleJsonResponse($response, $method);
+        }
+
         if (!$this->isArrayOrResponse($response)) {
             return $response;
         }
@@ -163,7 +169,7 @@ class Responsable implements BaseResponsable
 
         $layout = $this->determineLayout($request, $theme, $viewConfig['layout']);
 
-        $pjax = $request->pjax() ? true : $request->input('pjax');
+        $pjax = $request->pjax() ? true : boolval($request->input('pjax'));
         $fragment = $pjax ? false : $request->ajax();
 
         if ($fragment) {
@@ -270,6 +276,10 @@ class Responsable implements BaseResponsable
             return Str::replaceLast('.', '.html.', Str::replaceLast(':html', '', $theme['layout']));
         }
 
+        if ($request->pjax()) {
+            $format = 'html';
+        }
+
         if ($format === 'html') {
             return $fragment ? 'layouts.fragment' : 'layouts.html';
         }
@@ -292,7 +302,7 @@ class Responsable implements BaseResponsable
 
         return [
             'fragments' => [
-                $container => $view->fragment($container),
+                $container => $view->render(),
             ],
         ];
     }
