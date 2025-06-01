@@ -84,7 +84,11 @@ class Responsable implements BaseResponsable
             return $response;
         }
 
-        if ($format == 'json' || (isset($response['_format']) && $response['_format'] == 'json')) {
+        if ($format == 'json') {
+            return $this->handleJsonResponse($response, $method);
+        }
+
+        if (is_array($response) && isset($response['_format']) && $response['_format'] == 'json') {
             unset($response['_format']);
 
             return $this->handleJsonResponse($response, $method);
@@ -115,7 +119,7 @@ class Responsable implements BaseResponsable
 
     protected function shouldReturnJsonResponse(Request $request, ?string $format): bool
     {
-        return $format === 'json' && $request->expectsJson();
+        return $format === 'json' || $request->expectsJson();
     }
 
     protected function handleJsonResponse(mixed $response, ReflectionMethod $method): mixed
