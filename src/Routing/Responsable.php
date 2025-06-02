@@ -119,7 +119,11 @@ class Responsable implements BaseResponsable
 
     protected function shouldReturnJsonResponse(Request $request, ?string $format): bool
     {
-        return $format === 'json' || $request->expectsJson();
+        if (!empty($format) && $format != 'json') {
+            return false;
+        }
+
+        return $format === 'json' || $request->expectsJson() || $request->wantsJson();
     }
 
     protected function handleJsonResponse(mixed $response, ReflectionMethod $method): mixed
