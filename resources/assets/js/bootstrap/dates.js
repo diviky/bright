@@ -171,15 +171,31 @@ window.load_dateranges = () => {
     }
 
     var t = $(e.currentTarget);
-    if (typeof t.data('auto-submit') !== 'undefined') {
-      t.trigger('change');
+
+    // Always trigger native DOM change event so Alpine.js can capture it
+    const changeEvent = new Event('change', { bubbles: true });
+    t[0].dispatchEvent(changeEvent);
+
+    // Only trigger form submit when auto-submit is enabled
+    if (typeof t.data('auto-submit') !== 'undefined' || typeof t.attr('auto-submit') !== 'undefined') {
       $(document).trigger('form:submit', [t]);
     }
   });
 
-  $('[data-dateranges], [data-daterange]').on('cancel.daterangepicker', function (e, picker) {
+  $('[data-dateranges]').on('cancel.daterangepicker', function (e, picker) {
     if (picker.autoUpdateInput == false) {
       $(this).val('');
+    }
+
+    var t = $(e.currentTarget);
+
+    // Always trigger native DOM change event so Alpine.js can capture it
+    const changeEvent = new Event('change', { bubbles: true });
+    t[0].dispatchEvent(changeEvent);
+
+    // Only trigger form submit when auto-submit is enabled
+    if (typeof t.data('auto-submit') !== 'undefined' || typeof t.attr('auto-submit') !== 'undefined') {
+      $(document).trigger('form:submit', [t]);
     }
   });
 };
