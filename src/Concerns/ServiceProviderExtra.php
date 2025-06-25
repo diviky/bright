@@ -61,9 +61,18 @@ trait ServiceProviderExtra
 
         foreach ($array2 as $key => &$value) {
             if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                if (!Arr::isAssoc($value)) {
-                    $merged[$key] = array_unique(array_merge($merged[$key], $value));
+                // Check if both arrays are non-associative (indexed arrays)
+                if (!Arr::isAssoc($value) && !Arr::isAssoc($merged[$key])) {
+                    // For indexed arrays, merge and reindex with array_values to prevent index conflicts
+                    $merged[$key] = array_values(array_unique(array_merge($merged[$key], $value)));
+                } elseif (!Arr::isAssoc($value) || !Arr::isAssoc($merged[$key])) {
+                    // If one is associative and one is not, treat as indexed array merge
+                    $merged[$key] = array_values(array_unique(array_merge(
+                        array_values($merged[$key]),
+                        array_values($value)
+                    )));
                 } else {
+                    // Both are associative arrays, merge recursively
                     $merged[$key] = static::arrayMergeRecursiveDistinct($merged[$key], $value);
                 }
             } else {
