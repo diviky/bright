@@ -42,9 +42,12 @@ class Reader
         if (!\is_string($reader)) {
             $ext = isset($options['ext']) ? $options['ext'] : '.array';
         } else {
+          $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
+          $ext = $ext == '.' ? '.xls' : $ext;
+
+          if ($ext !== '.array') {
             $reader = $this->unzip($reader, $options);
-            $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
-            $ext = $ext == '.' ? '.xls' : $ext;
+          }
         }
 
         $ext = \strtolower($ext);
@@ -352,50 +355,49 @@ class Reader
             return null;
         }
 
-        // check the file exists or download to local
-        $zip = $this->download($zip);
-
         $ext = isset($options['ext']) ? $options['ext'] : \strrchr($zip, '.');
         $ext = \strtolower($ext);
 
-        if ($ext && \in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
-            $extensions = ['.csv', '.xls', '.xlsx', '.txt'];
-            $directory = \dirname($zip);
-            $extract = '/tmp/' . \uniqid() . '/';
-
-            try {
-                $archive = UnifiedArchive::open($zip);
-                $files = $archive->getFileNames();
-                $tmpfile = null;
-                $extension = null;
-
-                foreach ($files as $file) {
-                    $extension = \strtolower(\strrchr($file, '.'));
-                    if (\in_array($extension, $extensions)) {
-                        $tmpfile = $file;
-
-                        break;
-                    }
-                }
-
-                if ($extension && $tmpfile) {
-                    $archive->extractFiles($extract);
-                    $reader = $directory . '/' . \md5(\uniqid()) . $extension;
-
-                    \rename($extract . '/' . $tmpfile, $reader);
-                    \chmod($reader, 0777);
-                    \unlink($zip);
-
-                    return $reader;
-                }
-
-                return null;
-            } catch (\Exception $e) {
-                return null;
-            }
+        if ($ext && !\in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
+               // check the file exists or download to local
+            return $zip;
         }
 
-        return $zip;
+        $zip = $this->download($zip);
+        $extensions = ['.csv', '.xls', '.xlsx', '.txt'];
+        $directory = \dirname($zip);
+        $extract = '/tmp/' . \uniqid() . '/';
+
+        try {
+            $archive = UnifiedArchive::open($zip);
+            $files = $archive->getFileNames();
+            $tmpfile = null;
+            $extension = null;
+
+            foreach ($files as $file) {
+                $extension = \strtolower(\strrchr($file, '.'));
+                if (\in_array($extension, $extensions)) {
+                    $tmpfile = $file;
+
+                    break;
+                }
+            }
+
+            if ($extension && $tmpfile) {
+                $archive->extractFiles($extract);
+                $reader = $directory . '/' . \md5(\uniqid()) . $extension;
+
+                \rename($extract . '/' . $tmpfile, $reader);
+                \chmod($reader, 0777);
+                \unlink($zip);
+
+                return $reader;
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 
     public function download($path)
