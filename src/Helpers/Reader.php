@@ -179,7 +179,25 @@ class Reader
 
         $columns = $this->fetchArray($file, $callable, $options);
 
-        return $columns[0] ?? [];
+        return $this->cleanHeader($columns[0] ?? []);
+    }
+
+    public function cleanHeader($columns)
+    {
+        $columns = array_map(function($column) {
+           // Remove BOM character (UTF-8 BOM: EF BB BF, UTF-16 BOM: FF FE or FE FF)
+           $column = str_replace(["\xEF\xBB\xBF", "\xFF\xFE", "\xFE\xFF"], '', $column);
+           // Remove other common invisible characters
+           $column = preg_replace('/[\x00-\x1F\x7F]/', '', $column);
+           // Keep only alphanumeric, hyphens, and underscores
+           $column = preg_replace('/[^a-zA-Z0-9_-]/', '', $column);
+
+          $column = trim($column);
+
+          return $column ?? 'empty';
+        }, $columns);
+
+        return $columns;
     }
 
     /**

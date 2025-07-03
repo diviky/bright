@@ -94,14 +94,14 @@ trait Connector
         $config = App::make('config')->get('bright');
 
         return [
-            'databases' => $config['databases'],
-            'tables' => $config['tables'],
-            'connections' => $config['connections'],
-            'async' => $config['async'],
-            'sharding' => $config['sharding'],
-            'timestamps' => $config['timestamps'],
-            'db_events' => $config['db_events'],
-            'db_cache' => $config['db_cache'],
+            'databases' => $config['databases'] ?? [],
+            'tables' => $config['tables'] ?? [],
+            'connections' => $config['connections'] ?? [],
+            'async' => $config['async'] ?? false,
+            'sharding' => $config['sharding'] ?? false,
+            'timestamps' => $config['timestamps'] ?? false,
+            'db_events' => $config['db_events'] ?? false,
+            'db_cache' => $config['db_cache'] ?? false,
         ];
     }
 }

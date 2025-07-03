@@ -6,6 +6,7 @@ jQuery(document).ready(function ($) {
 
   $(document).on('ajax:modal:loaded', function (e, $this) {
     //brightSystemJs();
+    //brightJs();
   });
 
   $(document).on('ajax:loaded', function (e, $this) {
