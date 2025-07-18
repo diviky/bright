@@ -101,8 +101,8 @@ trait Themable
         $finder->flush();
 
         $paths[] = $views . '/' . $component;
-        $paths[] = $themePath;
-        $paths[] = $themePath ? $themePath . '/views/' . $component : null;
+        $paths[] = $themePath ? $themePath . '/views' : null;
+        $paths[] = $themePath && $component ? $themePath . '/views/' . $component : null;
 
         $paths = array_filter($paths);
 

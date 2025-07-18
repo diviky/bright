@@ -9,6 +9,7 @@ use Diviky\Bright\Attributes\View as AttributesView;
 use Diviky\Bright\Attributes\ViewNamespace;
 use Diviky\Bright\Attributes\ViewPaths;
 use Diviky\Bright\Concerns\Themable;
+use Diviky\Bright\Services\Resolver;
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -65,14 +66,16 @@ class Responsable implements BaseResponsable
     public function toResponse($request): mixed
     {
         $response = $this->getResponse();
-        $reflection = new ReflectionClass($this->controller);
-        $method = $reflection->getMethod($this->method);
+        $response = Resolver::responsable($request, $response, $this->action, $this->controller, $this->method);
 
         if ($this->shouldReturnDirectResponse($request)) {
             return $response;
         }
 
         $format = $this->getRequestFormat($request);
+
+        $reflection = new ReflectionClass($this->controller);
+        $method = $reflection->getMethod($this->method);
 
         if ($this->shouldReturnJsonResponse($request, $format)) {
             return $this->handleJsonResponse($response, $method);

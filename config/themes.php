@@ -15,7 +15,7 @@ return [
     | file is not found in the currently active theme, then it will look for it
     | in the parent theme.
     */
-    'parent' => null,
+    'parent' => env('BRIGHT_THEME_PARENT'),
 
     /*
     |--------------------------------------------------------------------------
@@ -37,8 +37,6 @@ return [
     'base_path' => resource_path('themes'),
 
     'paths' => [
-        'bootstrap' => resource_path('themes/boostrap'),
-        'theme' => resource_path('themes/' . env('BRIGHT_THEME_NAME', 'bootstrap')),
     ],
 
     'layout' => env('BRIGHT_THEME_LAYOUT', 'default'),

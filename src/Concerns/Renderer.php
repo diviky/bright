@@ -12,6 +12,16 @@ use Illuminate\Support\Str;
 
 trait Renderer
 {
+    /**
+     * Store original view paths before modification
+     */
+    protected $originalViewPaths = [];
+
+    /**
+     * Store original view namespaces
+     */
+    protected $originalViewNamespaces = [];
+
     public function render()
     {
         $view = $this->setUpView()->getViewFrom($this);
@@ -21,6 +31,9 @@ trait Renderer
 
     protected function setUpView()
     {
+        // Store original view paths and namespaces before modifying
+        // $this->storeOriginalViewConfiguration();
+
         // Added to avoid the cache views with same name in different components
         View::resetDefaultPaths();
         $finder = View::getFinder();
@@ -28,12 +41,58 @@ trait Renderer
 
         $paths = $this->getViewPathsFrom($this);
         $paths = array_filter($paths);
+        $paths = array_reverse($paths);
 
         foreach ($paths as $path) {
-            $finder->prependLocation($path);
+            $finder->addLocation($path);
         }
 
         return $this;
+    }
+
+    /**
+     * Store the original view configuration before modification
+     */
+    protected function storeOriginalViewConfiguration()
+    {
+        $finder = View::getFinder();
+        $this->originalViewPaths = $finder->getPaths();
+        $this->originalViewNamespaces = $finder->getHints();
+    }
+
+    /**
+     * Restore the original view configuration
+     */
+    protected function restoreOriginalViewConfiguration()
+    {
+        if (!empty($this->originalViewPaths)) {
+            $finder = View::getFinder();
+
+            // Reset to original state
+            View::resetDefaultPaths();
+            $finder->setPaths([]);
+            $finder->flush();
+
+            // Restore original paths
+            foreach ($this->originalViewPaths as $path) {
+                $finder->addLocation($path);
+            }
+
+            // Restore original namespaces if they exist
+            if (!empty($this->originalViewNamespaces)) {
+                foreach ($this->originalViewNamespaces as $namespace => $hints) {
+                    if (is_array($hints)) {
+                        foreach ($hints as $hint) {
+                            $finder->addNamespace($namespace, $hint);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Clear stored paths after restoration
+        $this->originalViewPaths = [];
+        $this->originalViewNamespaces = [];
     }
 
     /**
@@ -102,5 +161,8 @@ trait Renderer
     public function rendered()
     {
         $this->dispatch('component.rendered');
+
+        // Restore original view paths after rendering is complete
+        $this->restoreOriginalViewConfiguration();
     }
 }
