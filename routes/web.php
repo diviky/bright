@@ -61,16 +61,6 @@ return function (string $prefix = '', string $as = ''): void {
         'prefix' => $prefix,
         'as' => $as,
     ], function (): void {
-        Route::match(['get', 'post'], 'account/sniff/{id?}', 'Account\Controller@sniff')->name('sniff');
-
-        Route::get('activate', 'Auth\ActivationController@activate')->name('activate');
-        Route::any('logout', 'Auth\LoginController@logout')->name('logout');
-
-        Route::group(['middleware' => ['throttle:3,5'], 'as' => 'activation.'], function (): void {
-            Route::post('resend', 'Auth\ActivationController@resend')->name('resend');
-            Route::post('activate', 'Auth\ActivationController@activate')->name('activate');
-        });
-
         Route::group(['prefix' => 'account', 'as' => 'account.'], function (): void {
             Route::any('/', 'Account\Controller@index')->name('index');
             Route::any('password', 'Account\Controller@password')->name('password');
@@ -78,4 +68,21 @@ return function (string $prefix = '', string $as = ''): void {
             Route::post('token/refresh', 'Account\Controller@token')->name('refresh');
         });
     });
+
+    Route::group([
+      'middleware' => ['web'],
+      'namespace' => '\Diviky\Bright\Http\Controllers',
+      'prefix' => $prefix,
+      'as' => $as,
+  ], function (): void {
+      Route::match(['get', 'post'], 'account/sniff/{id?}', 'Account\Controller@sniff')->name('sniff');
+
+      Route::get('activate', 'Auth\ActivationController@activate')->name('activate');
+      Route::any('logout', 'Auth\LoginController@logout')->name('logout');
+
+      Route::group(['middleware' => ['throttle:3,5'], 'as' => 'activation.'], function (): void {
+          Route::post('resend', 'Auth\ActivationController@resend')->name('resend');
+          Route::post('activate', 'Auth\ActivationController@activate')->name('activate');
+      });
+  });
 };

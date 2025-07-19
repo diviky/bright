@@ -188,7 +188,7 @@ class Controller extends BaseController
         $user->last_login_at = now();
         $user->save();
 
-        return redirect()->route('home');
+        return redirect('/');
     }
 
     public function search(Request $request): array
