@@ -5,12 +5,28 @@ declare(strict_types=1);
 namespace Diviky\Bright\Concerns;
 
 use Illuminate\Support\Str;
+use Silber\Bouncer as BouncerFacade;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 trait Bouncer
 {
     use Authorize;
     use HasRolesAndAbilities;
+
+    public static function bootBouncer()
+    {
+        static::deleting(function (self $model) {
+            BouncerFacade::refreshFor($model);
+        });
+
+        static::created(function (self $model) {
+            BouncerFacade::refreshFor($model);
+        });
+
+        static::updated(function (self $model) {
+            BouncerFacade::refreshFor($model);
+        });
+    }
 
     /**
      * Check user as right permission.
