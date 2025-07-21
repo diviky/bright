@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Concerns;
 
+use Bouncer as BouncerFacade;
 use Illuminate\Support\Str;
-use Silber\Bouncer as BouncerFacade;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 trait Bouncer
