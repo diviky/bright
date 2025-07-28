@@ -101,7 +101,11 @@ trait Themable
         $finder = View::getFinder();
         $finder->flush();
 
+        $basePath = $themePaths['theme'] ?? null;
+
         $paths[] = $views;
+        $paths[] = $basePath ? $basePath . '/views' : null;
+        $paths[] = $basePath && $component ? $basePath . '/views/components/' . $component : null;
         $paths[] = $component ? $views . '/components/' . $component : null;
         $paths[] = $themePath ? $themePath . '/views' : null;
         $paths[] = $themePath && $component ? $themePath . '/views/components/' . $component : $themePath;
