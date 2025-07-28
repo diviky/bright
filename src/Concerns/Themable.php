@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Diviky\Bright\Concerns;
 
 use Diviky\Bright\Helpers\Device;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
@@ -30,10 +28,12 @@ trait Themable
      * @param  string  $action
      * @return string[]
      */
-    public function setUpThemeFromAction($action, ?string $component = null, array $paths = []): array
+    public function setUpThemeFromAction($action, array $paths = []): array
     {
         $route = $this->getRouteFromAction($action);
-        $matches = $this->getThemeFromRoute($route);
+        $component = \explode('.', $route, 2)[0];
+
+        $matches = $this->getThemeFromRouteName($component);
         $template = $this->getMatchingTheme($matches);
 
         return $this->setUpTheme($template, $component, $paths);
@@ -47,7 +47,7 @@ trait Themable
      */
     public function setUpThemeFromRoute($route, ?string $component = null, array $paths = []): array
     {
-        $matches = $this->getThemeFromRoute($route);
+        $matches = $this->getThemeFromRouteName($route);
         $template = $this->getMatchingTheme($matches);
 
         return $this->setUpTheme($template, $component, $paths);
@@ -66,11 +66,12 @@ trait Themable
             $template = $this->getDefaultTheme();
         }
 
+        $layout = null;
         if (preg_match('/^([^:]+):(?!:)(.+)$/', $template, $matches)) {
             $themeName = $matches[1];
             $layout = $matches[2];
         } else {
-            $layout = $template;
+            // $layout = $template;
             $themeName = config('themes.active', 'bootstrap');
         }
 
@@ -100,10 +101,10 @@ trait Themable
         $finder = View::getFinder();
         $finder->flush();
 
-        $paths[] = $views . '/' . $component;
+        $paths[] = $views;
+        $paths[] = $component ? $views . '/components/' . $component : null;
         $paths[] = $themePath ? $themePath . '/views' : null;
-        $paths[] = $themePath && $component ? $themePath . '/views/' . $component : null;
-
+        $paths[] = $themePath && $component ? $themePath . '/views/components/' . $component : $themePath;
         $paths = array_filter($paths);
 
         foreach ($paths as $path) {
@@ -125,33 +126,33 @@ trait Themable
 
         $deviceType = !\is_array($device) ? $device : Arr::get($device, 'type');
 
-        $user = Auth::user();
-        if ($user && $user->options) {
-            $themes = $this->userLevelTheme($user, $themes);
-        }
-
         if (empty($themes[$deviceType])) {
             $deviceType = 'computer';
         }
 
-        $layout = $themes['layout'] ?? 'default';
+        $theme = $themes['active'];
         $layouts = $themes['layouts'] ?? [];
-        $theme = $layouts[$layout] ?? [];
+        $theme = $layouts[$theme] ?? [];
+        $default = $layouts['default'] ?? [];
 
-        return array_merge($theme['default'], $theme[$deviceType] ?? []);
+        $values = array_merge($theme['default'], $theme[$deviceType] ?? []);
+
+        return array_merge($default['default'] ?? [], $default[$deviceType] ?? [], $values);
     }
 
     /**
      * Identify the theme from route.
-     *
-     * @param  string  $route
      */
-    protected function getThemeFromRoute($route): array
+    protected function getThemeFromRoute(Route $route): array
     {
-        [$option, $view] = \explode('.', $route);
+        $action = $route->getActionName();
+
+        $route_name = $this->getRouteFromAction($action);
+        [$option, $view] = \explode('.', $route_name);
 
         return [
             $option . '.' . $view,
+            $option . '.' . $view . '.*',
         ];
     }
 
@@ -169,27 +170,27 @@ trait Themable
 
     /**
      * Identify the theme from route.
-     *
-     * @param  Route  $route
-     * @param  string  $component
-     * @param  null|string  $method
      */
-    protected function getThemeFromPrefix($route, $component, $method = null): array
+    protected function getThemeFromPrefix(Route $route): array
     {
+        $action = $route->getActionName();
+
+        $route_name = $this->getRouteFromAction($action);
+        [$component, $method] = \explode('.', $route_name);
+
         $prefix = 'prefix:' . ltrim((string) $route->getPrefix(), '/');
         $prefix = str_replace('/', '.', $prefix);
 
         return [
-            $prefix . '.' . $component . '.' . $method,
+            $prefix . $component . '.' . $method,
+            $prefix . $component . '.' . $method . '.*',
         ];
     }
 
     /**
      * Identify the theme from route.
-     *
-     * @param  Route  $route
      */
-    protected function getThemeFromName($route): array
+    protected function getThemeFromName(Route $route): array
     {
         $route = $route->getName();
 
@@ -199,6 +200,19 @@ trait Themable
 
         return [
             'name:' . $route,
+            'name:' . $route . '.*',
+        ];
+    }
+
+    protected function getThemeFromRouteName(?string $route = null): array
+    {
+        if (\is_null($route)) {
+            return [];
+        }
+
+        return [
+            'name:' . $route,
+            'name:' . $route . '.*',
         ];
     }
 
@@ -228,28 +242,6 @@ trait Themable
     }
 
     /**
-     * Check user level theme avaliable.
-     *
-     * @param  \Illuminate\Contracts\Auth\Authenticatable|Model  $user
-     * @param  array  $themes
-     * @return array
-     */
-    protected function userLevelTheme($user, $themes = [])
-    {
-        // User level theme support
-        $meta = $user->options;
-
-        if ($meta && !\is_array($meta)) {
-            $meta = \json_decode($meta, true);
-            if (\is_array($meta) && isset($meta['theme']) && \is_array($meta['theme'])) {
-                $themes = \array_replace_recursive($themes, $meta['theme']);
-            }
-        }
-
-        return $themes;
-    }
-
-    /**
      * Setup theme from request.
      */
     protected function setUpThemeFromRequest(Request $request, ?string $component = null, array $paths = []): array
@@ -259,15 +251,10 @@ trait Themable
             return [];
         }
 
-        $action = $route->getActionName();
-
-        $route_name = $this->getRouteFromAction($action);
-        [$option, $view] = \explode('.', $route_name);
-
         $matches = [];
-        $matches = array_merge($matches, $this->getThemeFromRoute($route_name));
-        $matches = array_merge($matches, $this->getThemeFromPrefix($route, $option, $view));
         $matches = array_merge($matches, $this->getThemeFromName($route));
+        $matches = array_merge($matches, $this->getThemeFromRoute($route));
+        $matches = array_merge($matches, $this->getThemeFromPrefix($route));
 
         $template = $this->getMatchingTheme($matches);
 

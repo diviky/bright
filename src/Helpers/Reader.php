@@ -42,12 +42,12 @@ class Reader
         if (!\is_string($reader)) {
             $ext = isset($options['ext']) ? $options['ext'] : '.array';
         } else {
-          $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
-          $ext = $ext == '.' ? '.xls' : $ext;
+            $ext = isset($options['ext']) ? $options['ext'] : \strrchr($reader, '.');
+            $ext = $ext == '.' ? '.xls' : $ext;
 
-          if ($ext !== '.array') {
-            $reader = $this->unzip($reader, $options);
-          }
+            if ($ext !== '.array') {
+                $reader = $this->unzip($reader, $options);
+            }
         }
 
         $ext = \strtolower($ext);
@@ -184,17 +184,17 @@ class Reader
 
     public function cleanHeader($columns)
     {
-        $columns = array_map(function($column) {
-           // Remove BOM character (UTF-8 BOM: EF BB BF, UTF-16 BOM: FF FE or FE FF)
-           $column = str_replace(["\xEF\xBB\xBF", "\xFF\xFE", "\xFE\xFF"], '', $column);
-           // Remove other common invisible characters
-           $column = preg_replace('/[\x00-\x1F\x7F]/', '', $column);
-           // Keep only alphanumeric, hyphens, and underscores
-           $column = preg_replace('/[^a-zA-Z0-9_-]/', '', $column);
+        $columns = array_map(function ($column) {
+            // Remove BOM character (UTF-8 BOM: EF BB BF, UTF-16 BOM: FF FE or FE FF)
+            $column = str_replace(["\xEF\xBB\xBF", "\xFF\xFE", "\xFE\xFF"], '', $column);
+            // Remove other common invisible characters
+            $column = preg_replace('/[\x00-\x1F\x7F]/', '', $column);
+            // Keep only alphanumeric, hyphens, and underscores
+            $column = preg_replace('/[^a-zA-Z0-9_-]/', '', $column);
 
-          $column = trim($column);
+            $column = trim($column);
 
-          return $column ?? 'empty';
+            return $column ?? 'empty';
         }, $columns);
 
         return $columns;
@@ -377,7 +377,7 @@ class Reader
         $ext = \strtolower($ext);
 
         if ($ext && !\in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
-               // check the file exists or download to local
+            // check the file exists or download to local
             return $zip;
         }
 

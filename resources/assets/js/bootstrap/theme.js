@@ -2,8 +2,8 @@ window.themeDetection = () => {
   setTheme(getPreferredTheme());
 };
 
-const getStoredTheme = () => localStorage.getItem('theme');
-const setStoredTheme = (theme) => localStorage.setItem('theme', theme);
+const getStoredTheme = () => localStorage.getItem('appearance');
+const setStoredTheme = (theme) => localStorage.setItem('appearance', theme);
 
 const getPreferredTheme = () => {
   const storedTheme = getStoredTheme();

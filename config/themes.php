@@ -39,8 +39,6 @@ return [
     'paths' => [
     ],
 
-    'layout' => env('BRIGHT_THEME_LAYOUT', 'default'),
-
     'layouts' => [
         'default' => [
             /*
@@ -55,8 +53,8 @@ return [
         */
             'default' => [
                 'default' => env('BRIGHT_THEME_NAME', 'bootstrap') . '::layouts.index',
-                'auth.login' => env('BRIGHT_THEME_NAME', 'bootstrap') . '::layouts.index',
-                'auth.*' => env('BRIGHT_THEME_NAME', 'bootstrap') . '::layouts.index',
+                // 'auth.login' => env('BRIGHT_THEME_NAME', 'bootstrap') . '::layouts.index',
+                // 'auth.*' => env('BRIGHT_THEME_NAME', 'bootstrap') . '::layouts.index',
             ],
             /*
         |----------------------------------------------------------------------------
@@ -78,7 +76,7 @@ return [
             |  members.login (members component and login method)
             |  members.* (members component and all methods)
             */
-                'auth.changepass' => env('BRIGHT_THEME_NAME', 'bootstrap') . '::layouts.index',
+                // 'auth.changepass' => env('BRIGHT_THEME_NAME', 'bootstrap') . '::layouts.index',
             ],
 
             /*

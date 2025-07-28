@@ -79,7 +79,7 @@ class ActivationController extends Controller
         return [
             'status' => 'OK',
             'message' => 'Your account activated successfully.',
-            'redirect' => 'home',
+            'redirect' => '/',
         ];
     }
 

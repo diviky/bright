@@ -15,6 +15,8 @@ class Resolver
      */
     protected static $timezoneResolver;
 
+    protected static $viewResolver;
+
     public static function resolveResponsable(callable $callback)
     {
         static::$responsableResolver = $callback;
@@ -46,6 +48,25 @@ class Resolver
     public static function getThemeResolver()
     {
         return static::$themeResolver;
+    }
+
+    public static function view($request, $response, $config)
+    {
+        if (static::$viewResolver) {
+            return call_user_func(static::$viewResolver, $request, $response, $config);
+        }
+
+        return $response;
+    }
+
+    public static function getViewResolver()
+    {
+        return static::$viewResolver;
+    }
+
+    public static function resolveView(callable $callback)
+    {
+        static::$viewResolver = $callback;
     }
 
     /**

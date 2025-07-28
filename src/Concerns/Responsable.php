@@ -7,6 +7,7 @@ namespace Diviky\Bright\Concerns;
 use Diviky\Bright\Attributes\ViewPaths;
 use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
 trait Responsable
@@ -16,23 +17,22 @@ trait Responsable
      *
      * @param  string  $route
      * @param  mixed  $data
-     * @param  string  $layout
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    protected function getViewLayout($content, $data = [], $layout = null)
+    protected function getViewLayout($content, array $data = [], ?string $layout = null)
     {
-        $layout = $layout ?: 'index';
+        $layout = $layout ?: 'layouts.index';
         $data['slot'] = $content;
 
         return $this->getView($layout, $data);
     }
 
-    protected function getViewContent($view, $data = [])
+    protected function getViewContent($view, array $data = [])
     {
         return $this->getView($view, $data)->render();
     }
 
-    protected function getView($view, $data = [])
+    protected function getView($view, array $data = [])
     {
         $factory = app(ViewFactory::class);
 
@@ -41,13 +41,11 @@ trait Responsable
 
     /**
      * Get the route name from action.
-     *
-     * @param  string  $action
      */
-    protected function getRouteFromAction($action): string
+    protected function getRouteFromAction(string $action): string
     {
         $method = $this->getMethod($action);
-        $component = $this->getNamespace($action);
+        $component = $this->getComponent($action);
 
         return Str::lower($component . '.' . Str::kebab($method));
     }
@@ -57,17 +55,15 @@ trait Responsable
      *
      * @param  mixed  $action
      */
-    protected function getMethod($action): string
+    protected function getMethod(string $action): string
     {
         return Arr::last(\explode('@', $action));
     }
 
     /**
      * Get the namespace of the action.
-     *
-     * @param  string  $action
      */
-    protected function getNamespace($action): ?string
+    protected function getComponent(string $action): ?string
     {
         if (\strpos($action, '@') === false) {
             return null;
@@ -82,10 +78,8 @@ trait Responsable
 
     /**
      * Get the view path.
-     *
-     * @param  string  $action
      */
-    protected function getViewPath($action): ?string
+    protected function getViewPath(string $action): ?string
     {
         if (\strpos($action, '@') === false) {
             return null;
@@ -103,11 +97,9 @@ trait Responsable
     /**
      * Get redirect route from response.
      *
-     * @param  array  $response
-     * @param  string  $keyword
      * @return null|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    protected function getNextRedirect($response = [], $keyword = 'next')
+    protected function getNextRedirect(array $response = [], string $keyword = 'next')
     {
         $next = $response[$keyword];
         if (!isset($next)) {
@@ -119,23 +111,23 @@ trait Responsable
         $redirect = null;
         if (\is_string($next)) {
             if (\substr($next, 0, 1) == '/') {
-                $redirect = redirect($next);
+                $redirect = Redirect::to($next);
             } elseif ($next == 'back') {
-                $redirect = redirect()->back();
+                $redirect = Redirect::back();
             } elseif ($next == 'intended') {
-                $redirect = redirect()->intended('/');
+                $redirect = Redirect::intended('/');
             } else {
-                $redirect = redirect()->route($next);
+                $redirect = Redirect::route($next);
             }
         } elseif (\is_array($next)) {
             if ($next['back']) {
-                $redirect = redirect()->back();
+                $redirect = Redirect::back();
             } elseif ($next['path']) {
-                $redirect = redirect($next['path']);
+                $redirect = Redirect::to($next['path']);
             } elseif ($next['next']) {
-                $redirect = redirect()->route($next['route']);
+                $redirect = Redirect::route($next['route']);
             } elseif ($next['intended']) {
-                $redirect = redirect()->intended($next['intended']);
+                $redirect = Redirect::intended($next['intended']);
             }
         } elseif ($next instanceof \Closure) {
             $redirect = $next();
@@ -152,12 +144,8 @@ trait Responsable
 
     /**
      * Get the view locations from controller.
-     *
-     * @param  mixed  $controller
-     * @param  null|string  $action
-     * @return array
      */
-    protected function getViewPathsFrom($controller, $action = null)
+    protected function getViewPathsFrom(object $controller, ?string $action = null): array
     {
         $paths = [];
         if (\method_exists($controller, 'loadViewsFrom')) {

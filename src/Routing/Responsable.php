@@ -12,6 +12,8 @@ use Diviky\Bright\Concerns\Themable;
 use Diviky\Bright\Services\Resolver;
 use Illuminate\Contracts\Support\Responsable as BaseResponsable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
@@ -77,8 +79,12 @@ class Responsable implements BaseResponsable
         $reflection = new ReflectionClass($this->controller);
         $method = $reflection->getMethod($this->method);
 
-        if ($this->shouldReturnJsonResponse($request, $format)) {
-            return $this->handleJsonResponse($response, $method);
+        if ($this->shouldReturnJsonResponse($request, $format) || $response instanceof JsonResponse) {
+            return $this->handleJsonResponse($request, $response, $method, $reflection);
+        }
+
+        if ($response instanceof View) {
+            return $this->handleViewResponse($request, $response, $method, $reflection);
         }
 
         if ($this->isViewResponse($response)) {
@@ -88,13 +94,13 @@ class Responsable implements BaseResponsable
         }
 
         if ($format == 'json') {
-            return $this->handleJsonResponse($response, $method);
+            return $this->handleJsonResponse($request, $response, $method, $reflection);
         }
 
         if (is_array($response) && isset($response['_format']) && $response['_format'] == 'json') {
             unset($response['_format']);
 
-            return $this->handleJsonResponse($response, $method);
+            return $this->handleJsonResponse($request, $response, $method, $reflection);
         }
 
         if (!$this->isArrayOrResponse($response)) {
@@ -102,7 +108,7 @@ class Responsable implements BaseResponsable
         }
 
         if ($format === 'iframe') {
-            return $this->handleIframeResponse($response);
+            return $this->handleIframeResponse($request, $response, $method, $reflection);
         }
 
         return $this->handleViewResponse($request, $response, $method, $reflection);
@@ -111,7 +117,7 @@ class Responsable implements BaseResponsable
     protected function shouldReturnDirectResponse(Request $request): bool
     {
         return $request->post('fingerprint')
-            || $request->hasHeader('X-Inertia')
+            // || $request->hasHeader('X-Inertia')
             || $request->hasHeader('X-Livewire');
     }
 
@@ -129,7 +135,7 @@ class Responsable implements BaseResponsable
         return $format === 'json' || $request->expectsJson() || $request->wantsJson();
     }
 
-    protected function handleJsonResponse(mixed $response, ReflectionMethod $method): mixed
+    protected function handleJsonResponse(Request $request, mixed $response, ReflectionMethod $method, ReflectionClass $reflection): mixed
     {
         $attributes = $method->getAttributes(Resource::class, \ReflectionAttribute::IS_INSTANCEOF);
 
@@ -138,7 +144,7 @@ class Responsable implements BaseResponsable
             $response = $instance->toResource($response);
         }
 
-        return $response;
+        return Resolver::view($request, $response, []);
     }
 
     protected function isViewResponse(mixed $response): bool
@@ -151,7 +157,7 @@ class Responsable implements BaseResponsable
         return is_array($response) || $response instanceof Response;
     }
 
-    protected function handleIframeResponse(mixed $response): string
+    protected function handleIframeResponse(Request $request, mixed $response, ReflectionMethod $method, ReflectionClass $reflection): string
     {
         return '<textarea>' . json_encode($response) . '</textarea>';
     }
@@ -162,12 +168,26 @@ class Responsable implements BaseResponsable
         ReflectionMethod $method,
         ReflectionClass $reflection
     ): mixed {
+        $view = null;
+        $defaultLayout = null;
+
+        if ($response instanceof View) {
+            $view = $response->name();
+            $response = $response->getData();
+            $defaultLayout = 'layouts.fragment';
+        }
+
         if (is_array($response)) {
             $response = $this->handleArrayResponse($request, $response);
         }
 
         $route = $this->getRouteFromAction($this->action);
-        [$component, $view] = explode('.', $route, 2);
+
+        if ($view) {
+            [$component] = explode('.', $route, 2);
+        } else {
+            [$component, $view] = explode('.', $route, 2);
+        }
 
         $viewConfig = $this->getViewConfiguration($method, $view);
         if ($viewConfig['view'] === 'none' || $viewConfig['view'] === 'json') {
@@ -177,17 +197,35 @@ class Responsable implements BaseResponsable
         $paths = $this->getViewPaths($reflection);
         $view = $this->applyViewNamespace($reflection, $viewConfig['view']);
         $theme = $this->setUpThemeFromRequest($request, $component, $paths);
-
         $layout = $this->determineLayout($request, $theme, $viewConfig['layout']);
+        $layout = $layout ?? $defaultLayout;
+
+        $config = [
+            'view' => $viewConfig['view'],
+            'layout' => $layout,
+            'paths' => $paths,
+            'theme' => $theme,
+            'component' => $component,
+        ];
+
+        $response = Resolver::view($request, $response, $config);
+
+        if ($response instanceof BaseResponsable) {
+            return $response->toResponse($request);
+        }
+
+        if ($response instanceof RedirectResponse) {
+            return $response;
+        }
 
         $pjax = $request->pjax() ? true : boolval($request->input('pjax'));
         $fragment = $pjax ? false : $request->ajax();
 
         if ($fragment) {
-            return $this->handleAjaxResponse($request, $response, $viewConfig['view'], $layout);
+            return $this->handleFragmentResponse($request, $response, $view, $layout);
         }
 
-        return $this->renderView($response, $viewConfig['view'], $layout);
+        return $this->renderView($request, $response, $view, $layout);
     }
 
     protected function handleArrayResponse(Request $request, array $response): array
@@ -202,6 +240,7 @@ class Responsable implements BaseResponsable
             if (isset($response['redirect'])) {
                 $response = $this->handleRedirectResponse($response);
             }
+
             if (isset($response['route'])) {
                 $response = $this->handleRouteResponse($response);
             }
@@ -235,9 +274,8 @@ class Responsable implements BaseResponsable
         return $response;
     }
 
-    protected function getViewConfiguration(ReflectionMethod $method, string $view): array
+    protected function getViewConfiguration(ReflectionMethod $method, string $view, ?string $layout = null): array
     {
-        $layout = null;
         $attributes = $method->getAttributes(AttributesView::class);
 
         foreach ($attributes as $attribute) {
@@ -259,7 +297,9 @@ class Responsable implements BaseResponsable
             $paths = array_merge($paths, $instance->getPaths());
         }
 
-        return $paths;
+        $paths = array_map(fn ($path) => rtrim($path, '/'), $paths);
+
+        return array_unique($paths);
     }
 
     protected function applyViewNamespace(ReflectionClass $reflection, string $view): string
@@ -273,7 +313,7 @@ class Responsable implements BaseResponsable
         return $view;
     }
 
-    protected function determineLayout(Request $request, array $theme, ?string $layout): string
+    protected function determineLayout(Request $request, array $theme, ?string $layout = null): ?string
     {
         if (!empty($layout)) {
             return $layout;
@@ -298,11 +338,14 @@ class Responsable implements BaseResponsable
         return Str::replaceLast(':html', '', $theme['layout']);
     }
 
-    protected function handleAjaxResponse(Request $request, mixed $response, string $view, string $layout): array
+    protected function handleFragmentResponse(Request $request, mixed $response, string $view, ?string $layout = null): array
     {
         $container = $request->header('X-Pjax-Container', 'content');
 
-        if ($response instanceof Response) {
+        if ($response instanceof BaseResponsable) {
+            $content = $response->toResponse($request);
+            $response = [];
+        } elseif ($response instanceof Response) {
             $content = $response->getContent();
             $response = [];
         } else {
@@ -318,9 +361,12 @@ class Responsable implements BaseResponsable
         ];
     }
 
-    protected function renderView(mixed $response, string $view, string $layout): string
+    protected function renderView(Request $request, mixed $response, string $view, ?string $layout = null): string
     {
-        if ($response instanceof Response) {
+        if ($response instanceof BaseResponsable) {
+            $content = $response->toResponse($request);
+            $response = [];
+        } elseif ($response instanceof Response) {
             $content = $response->getContent();
             $response = [];
         } else {
