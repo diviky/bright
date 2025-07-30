@@ -185,6 +185,7 @@ class Reader
     public function cleanHeader($columns)
     {
         $columns = array_map(function ($column) {
+            $column = strval($column);
             // Remove BOM character (UTF-8 BOM: EF BB BF, UTF-16 BOM: FF FE or FE FF)
             $column = str_replace(["\xEF\xBB\xBF", "\xFF\xFE", "\xFE\xFF"], '', $column);
             // Remove other common invisible characters
