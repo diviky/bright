@@ -1,5 +1,9 @@
-window.themeDetection = () => {
-  setTheme(getPreferredTheme());
+window.enableThemeDetection = (defaultTheme = null) => {
+  if (defaultTheme === null) {
+    setTheme(getPreferredTheme());
+  } else {
+    setTheme(defaultTheme);
+  }
 };
 
 const getStoredTheme = () => localStorage.getItem('appearance');
@@ -15,7 +19,7 @@ const getPreferredTheme = () => {
 };
 
 const setTheme = (theme) => {
-  if (theme === 'auto') {
+  if (theme === 'system') {
     theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
@@ -23,8 +27,8 @@ const setTheme = (theme) => {
   document.documentElement.setAttribute('data-mode', theme);
   document.documentElement.classList.add(theme);
 
-  setCookie('theme-color-scheme', theme);
-  showActiveTheme('theme');
+  setCookie('appearance', theme);
+  showActiveTheme(theme);
 };
 
 const showActiveTheme = (theme, focus = false) => {
@@ -51,7 +55,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  showActiveTheme(getPreferredTheme());
+  enableThemeDetection();
 
   document.querySelectorAll('[data-bs-theme-value]').forEach((toggle) => {
     toggle.addEventListener('click', () => {
