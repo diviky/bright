@@ -340,7 +340,6 @@
         if (submit == 'parent') {
           self.form.closest('form').submit();
         } else if (submit == 'render' || submit == true) {
-          $('[role="krender"]').submit();
           $('[easyrender]').submit();
         } else if (submit) {
           $(self.settings.submit).submit();
@@ -379,6 +378,22 @@
         callback(res, self);
       } else if (typeof window[callback] === 'function') {
         window[callback](res, self);
+      }
+
+      if (self.settings.reset || res.form.reset) {
+        self.form.resetForm();
+      }
+
+      if (self.settings.clear || res.form.clear) {
+        self.form.clearForm();
+      }
+
+      if (self.settings.render) {
+        self.render(self.settings.render);
+      }
+
+      if (res.form.render) {
+        self.render(res.form.render);
       }
 
       if (res.modal) {
@@ -447,22 +462,6 @@
         $.fn.easyModalHide();
       }
 
-      if (self.settings.reset || res.form.reset) {
-        self.form.resetForm();
-      }
-
-      if (self.settings.clear || res.form.clear) {
-        self.form.clearForm();
-      }
-
-      if (self.settings.render) {
-        self.render(self.settings.render);
-      }
-
-      if (res.form.render) {
-        self.render(res.form.render);
-      }
-
       var delay = res.message ? 2000 : 1000;
       var redirect = self.form.find('#return_url').val();
       if (self.settings.return_url) {
@@ -493,7 +492,6 @@
         var element = self.form.closest('form');
       } else if (value == 'render' || value == true) {
         var element = $('[easyrender]:first');
-        element = element && element.length > 0 ? element : $('[role="krender"]:first');
       } else if (value && value != false) {
         var element = $(value);
       }
