@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Diviky\Bright\Providers;
 
 use Diviky\Bright\Concerns\Provider;
-use Diviky\Bright\Console\Commands\GeoipUpdate;
 use Diviky\Bright\Console\Commands\Migrate;
 use Diviky\Bright\Console\Commands\Rollback;
 use Diviky\Bright\Console\Commands\Setup;
@@ -193,7 +192,6 @@ class BrightServiceProvider extends ServiceProvider
             Setup::class,
             Migrate::class,
             Rollback::class,
-            GeoipUpdate::class,
         ]);
     }
 

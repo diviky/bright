@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Diviky\Bright\Concerns\Themable;
 use Diviky\Bright\Exceptions\UnauthorizedException;
+use Diviky\Bright\Services\Resolver;
 use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
-    use Themable;
-
     /**
      * Check the user for specific roles.
      *
@@ -24,7 +22,7 @@ class RoleMiddleware
     public function handle($request, \Closure $next, $role)
     {
         if (Auth::guest()) {
-            $this->setUpThemeFromRequest($request);
+            Resolver::theme($request);
 
             throw UnauthorizedException::notLoggedIn();
         }
@@ -35,7 +33,7 @@ class RoleMiddleware
         : \explode('|', $role);
 
         if ($user && !$user->hasAnyRole($roles)) {
-            $this->setUpThemeFromRequest($request);
+            Resolver::theme($request);
 
             throw UnauthorizedException::forRoles($roles);
         }

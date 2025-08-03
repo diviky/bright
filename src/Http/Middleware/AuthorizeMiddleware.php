@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Diviky\Bright\Concerns\Themable;
 use Diviky\Bright\Exceptions\UnauthorizedException;
+use Diviky\Bright\Services\Resolver;
 use Illuminate\Routing\Route;
 
 class AuthorizeMiddleware
 {
-    use Themable;
-
     /**
      * Check the user is authorized.
      *
@@ -26,7 +24,7 @@ class AuthorizeMiddleware
         $user = $request->user();
 
         if (isset($route) && $route instanceof Route && !$user->isAuthorizedAny($route)) {
-            $this->setUpThemeFromRequest($request);
+            Resolver::theme($request);
 
             $action = $route->getActionName();
 

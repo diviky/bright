@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
-use Diviky\Bright\Concerns\Themable;
 use Diviky\Bright\Exceptions\UnauthorizedException;
+use Diviky\Bright\Services\Resolver;
 use Illuminate\Support\Facades\Auth;
 
 class PermissionMiddleware
 {
-    use Themable;
-
     /**
      * Check the user for specific permission.
      *
@@ -24,7 +22,7 @@ class PermissionMiddleware
     public function handle($request, \Closure $next, $permission)
     {
         if (Auth::guest()) {
-            $this->setUpThemeFromRequest($request);
+            Resolver::theme($request);
 
             throw UnauthorizedException::notLoggedIn();
         }
@@ -43,7 +41,7 @@ class PermissionMiddleware
             }
         }
 
-        $this->setUpThemeFromRequest($request);
+        Resolver::theme($request);
 
         throw UnauthorizedException::forPermissions($permissions);
     }

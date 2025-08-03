@@ -86,7 +86,6 @@ return [
         'accept' => \Diviky\Bright\Http\Middleware\Accept::class,
         'api.response' => \Diviky\Bright\Http\Middleware\Api::class,
         'ajax' => \Diviky\Bright\Http\Middleware\Ajax::class,
-        'theme' => \Diviky\Bright\Http\Middleware\ThemeMiddleware::class,
         'preflight' => \Diviky\Bright\Http\Middleware\PreflightResponse::class,
         'xss' => \Diviky\Bright\Http\Middleware\XSSProtection::class,
         'auth.proxy' => \Diviky\Bright\Http\Middleware\AuthProxy::class,

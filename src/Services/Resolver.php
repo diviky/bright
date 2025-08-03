@@ -2,6 +2,8 @@
 
 namespace Diviky\Bright\Services;
 
+use Illuminate\Routing\Route;
+
 class Resolver
 {
     protected static $responsableResolver;
@@ -16,6 +18,27 @@ class Resolver
     protected static $timezoneResolver;
 
     protected static $viewResolver;
+
+    protected static $dispatchResolver;
+
+    public static function resolveDispatch(callable $callback)
+    {
+        static::$dispatchResolver = $callback;
+    }
+
+    public static function getDispatchResolver()
+    {
+        return static::$dispatchResolver;
+    }
+
+    public static function dispatch(Route $route, $response, $controller, $method)
+    {
+        if (static::$dispatchResolver) {
+            return call_user_func(static::$dispatchResolver, $route, $response, $controller, $method);
+        }
+
+        return $response;
+    }
 
     public static function resolveResponsable(callable $callback)
     {
@@ -43,6 +66,11 @@ class Resolver
         }
 
         return [];
+    }
+
+    public static function resolveTheme(callable $callback)
+    {
+        static::$themeResolver = $callback;
     }
 
     public static function getThemeResolver()

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Routing;
 
-use Illuminate\Contracts\Support\Responsable as BaseResponsable;
+use Diviky\Bright\Services\Resolver;
 use Illuminate\Routing\ControllerDispatcher as BaseControllerDispatcher;
 use Illuminate\Routing\Route;
 
@@ -22,12 +22,6 @@ class ControllerDispatcher extends BaseControllerDispatcher
     {
         $response = parent::dispatch($route, $controller, $method);
 
-        if ($response instanceof BaseResponsable) {
-            return $response;
-        }
-
-        $action = $route->getActionName();
-
-        return new Responsable($response, $action, $controller, $method);
+        return Resolver::dispatch($route, $response, $controller, $method);
     }
 }
