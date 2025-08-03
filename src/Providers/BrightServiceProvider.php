@@ -77,12 +77,6 @@ class BrightServiceProvider extends ServiceProvider
 
     public function bootRoutes(): self
     {
-        Route::macro('auth', function (string $prefix = ''): void {
-            $as = $prefix ? $prefix . '.' : '';
-            $routes = require __DIR__ . '/../../routes/web.php';
-            $routes($prefix, $as);
-        });
-
         Route::macro('api', function (string $prefix = 'api/v1', string $auth = 'auth:credentials'): void {
             $routes = require __DIR__ . '/../../routes/api.php';
             $routes($prefix, $auth);

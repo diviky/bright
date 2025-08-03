@@ -47,10 +47,4 @@ return [
     |
      */
     'throttle_key' => 'ip',
-
-    // Set columns for username and other
-    'columns' => [
-        'username' => env('AUTH_LOGIN_COLUMN', 'email'),
-        'address' => env('AUTH_ADDRESS_COLUMN', 'email'),
-    ],
 ];

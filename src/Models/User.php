@@ -8,10 +8,6 @@ use Diviky\Bright\Concerns\AccessToken;
 use Diviky\Bright\Database\Concerns\Connector;
 use Diviky\Bright\Database\Eloquent\Concerns\Connection;
 use Diviky\Bright\Database\Eloquent\Concerns\Eloquent;
-use Diviky\Bright\Http\Controllers\Account\Concerns\UserAvatar;
-use Diviky\Bright\Http\Controllers\Auth\Concerns\UserParent;
-use Diviky\Bright\Http\Controllers\Auth\Concerns\UserRole;
-use Diviky\Bright\Http\Controllers\Auth\Concerns\UsersParent;
 use Diviky\Bright\Models\Concerns\Scopes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,10 +25,6 @@ class User extends Authenticatable
     use HasFactory;
     use Notifiable;
     use Scopes;
-    use UserAvatar;
-    use UserParent;
-    use UserRole;
-    use UsersParent;
 
     /**
      * Admin role.

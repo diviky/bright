@@ -66,12 +66,7 @@ return [
         'Illuminate\Mail\Events\MessageSending' => [
             \Diviky\Bright\Listeners\EmailLogger::class,
         ],
-        'Illuminate\Auth\Events\PasswordReset' => [
-            \Diviky\Bright\Listeners\PasswordReset::class,
-        ],
-        'Illuminate\Auth\Events\Login' => [
-            \Diviky\Bright\Listeners\SuccessLogin::class,
-        ],
+
         'Diviky\Bright\Database\Events\QueryQueued' => [
             Diviky\Bright\Database\Listeners\QueryQueuedListener::class,
         ],
@@ -100,7 +95,6 @@ return [
 
     'models' => [
         'user' => \Diviky\Bright\Models\User::class,
-        'passwod_history' => \Diviky\Bright\Models\PasswordHistory::class,
         'options' => \Diviky\Bright\Models\Options::class,
         'meta' => \Diviky\Bright\Models\Meta::class,
         'meta_values' => \Diviky\Bright\Models\MetaValues::class,
