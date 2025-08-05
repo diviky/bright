@@ -8,6 +8,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable as BaseMailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class Mailable extends BaseMailable implements ShouldQueue
@@ -95,10 +96,8 @@ class Mailable extends BaseMailable implements ShouldQueue
      * @param  mixed  $to
      * @param  bool  $exception
      */
-    public function deliver($to = null, $exception = false): bool
+    public function deliver($to = null, $exception = true): bool
     {
-        // $to = $this->format($to);
-
         if ($exception) {
             Mail::to($to)->send($this);
 
@@ -110,6 +109,8 @@ class Mailable extends BaseMailable implements ShouldQueue
 
             return true;
         } catch (\Exception $e) {
+            Log::error($e);
+
             return false;
         }
     }

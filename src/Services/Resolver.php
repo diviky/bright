@@ -10,6 +10,8 @@ class Resolver
 
     protected static $themeResolver;
 
+    protected static $themeFromActionResolver;
+
     /**
      * The timezone resolver callback.
      *
@@ -68,9 +70,23 @@ class Resolver
         return [];
     }
 
+    public static function resolveThemeFromAction(callable $callback)
+    {
+        static::$themeFromActionResolver = $callback;
+    }
+
     public static function resolveTheme(callable $callback)
     {
         static::$themeResolver = $callback;
+    }
+
+    public static function themeFromAction($controller)
+    {
+        if (static::$themeFromActionResolver) {
+            return call_user_func(static::$themeFromActionResolver, $controller);
+        }
+
+        return [];
     }
 
     public static function getThemeResolver()

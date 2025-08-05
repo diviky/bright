@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\View;
 
-use Diviky\Bright\Concerns\Themable;
+use Diviky\Bright\Services\Resolver;
 use Illuminate\Routing\Controller;
 
 class View
 {
-    use Themable;
-
     /**
      * Make the view.
      *
@@ -22,14 +20,7 @@ class View
      */
     public function make($controller, $view, $data = [], $mergeData = [])
     {
-        $action = !\is_string($controller) ? \get_class($controller) : $controller;
-        if (\is_string($controller)) {
-            $controller = new $controller;
-        }
-
-        $paths = $this->getViewPathsFrom($controller, $action);
-
-        $this->setUpThemeFromAction($action, $paths);
+        Resolver::themeFromAction($controller);
 
         return view($view, $data, $mergeData);
     }

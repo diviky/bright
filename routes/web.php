@@ -24,7 +24,3 @@ Route::group([
         return Storage::disk($disk)->download($path);
     })->middleware('signed')->name('signed.url');
 });
-
-return function (string $prefix = '', string $as = ''): void {
-
-};
