@@ -30,6 +30,5 @@ import './bootstrap/drop';
 import './bootstrap/filepond';
 import './bootstrap/helpers';
 import './bootstrap/intl';
-import './bootstrap/menu';
 import './bootstrap/sortable';
 import './bootstrap/util';

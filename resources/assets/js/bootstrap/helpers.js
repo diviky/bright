@@ -135,19 +135,6 @@ window.load_helpers = () => {
     $(document).trigger('form:submit', [$(this)]);
   });
 
-  $(document).on('click', '[data-toggle="menu"]', function (e) {
-    var parent = $(this).parent();
-    parent.addClass('has-child').toggleClass('open');
-
-    if (parent.hasClass('open')) {
-      $(this).next('ul').slideDown();
-    } else {
-      $(this).next('ul').slideUp();
-    }
-
-    e.preventDefault();
-  });
-
   $(document).on('click', '[data-file]', function () {
     var target = $(this).data('file');
     $('#' + target).trigger('click');

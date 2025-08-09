@@ -3,7 +3,6 @@ function bootstrapJs() {
   load_charts();
   load_intl();
   load_helpers();
-  load_menuJs();
   load_autocomplete();
   load_sortable();
   load_filepond();
