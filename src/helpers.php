@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Diviky\Bright\Contracts\UtilInterface as Util;
-use Diviky\Bright\Util\StdClass;
+use Diviky\Bright\Support\Collection as SupportCollection;
 use Diviky\Bright\View\View;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -133,5 +133,5 @@ function utcTime($date = null, $timezone = null)
  */
 function collects($items = [], $default = null): Collection
 {
-    return new StdClass($items, $default);
+    return new SupportCollection($items, $default);
 }
