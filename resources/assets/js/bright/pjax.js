@@ -8,6 +8,7 @@ window.brightPjax = () => {
   const CACHE_EXPIRY_TIME = 10000; // 10 seconds in milliseconds
   const NAVIGATION_COOLDOWN = 2000; // 2 seconds cooldown after navigation
   const PJAX_LINK_SELECTOR = '[data-pjax] a, a[data-pjax]';
+  const PREFETCH_TIMEOUT = 10000; // 10 seconds in milliseconds
 
   // Global prefetch configuration
   let globalPrefetchEnabled = true;
@@ -52,18 +53,27 @@ window.brightPjax = () => {
     });
   }
 
+  function isPrefetchPromiseValid(url) {
+    // Check if prefetch promise exists and is not in a rejected state
+    return prefetchPromises[url] && prefetchPromises[url].then;
+  }
+
   function prefetchPage(url, container) {
     // Clean up expired cache before checking
     cleanupExpiredCache();
 
-    if (prefetchCache[url] || prefetchPromises[url]) return; // already prefetched or prefetching
+    if (prefetchCache[url] || isPrefetchPromiseValid(url)) return; // already prefetched or prefetching
 
     // Don't prefetch if recently navigated to this URL
     if (isRecentlyNavigated(url)) return;
 
     // Create timeout controller for browsers that don't support AbortSignal.timeout
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+      // Clear the promise immediately on abort to prevent race conditions
+      delete prefetchPromises[url];
+    }, PREFETCH_TIMEOUT);
 
     // Mark as prefetching to avoid duplicate requests
     prefetchPromises[url] = fetch(url, {
@@ -106,10 +116,12 @@ window.brightPjax = () => {
         if (error.name !== 'AbortError') {
           console.warn('PJAX prefetch failed for:', url, error.message);
         }
+        // Clear the promise reference immediately on error/abort
+        delete prefetchPromises[url];
         throw error; // Re-throw to propagate to promise consumers
       })
       .finally(() => {
-        // Always clean up the promise reference
+        // Always clean up the promise reference (fallback)
         delete prefetchPromises[url];
       });
   }
@@ -192,12 +204,12 @@ window.brightPjax = () => {
     if (cachedEntry) return; // Valid cache exists, no need to prefetch
 
     // Check if already prefetching
-    if (prefetchPromises[url]) return;
+    if (isPrefetchPromiseValid(url)) return;
 
     // Start hover timer with increased delay to reduce accidental triggers
     hoverTimers[url] = setTimeout(() => {
       // Double-check before prefetching to avoid race conditions
-      if (!getCachedEntry(url) && !prefetchPromises[url]) {
+      if (!getCachedEntry(url) && !isPrefetchPromiseValid(url)) {
         prefetchPage(url, container);
       }
       delete hoverTimers[url];
@@ -244,12 +256,14 @@ window.brightPjax = () => {
       return;
     }
 
-    // Check if prefetch is in progress
-    if (prefetchPromises[url]) {
+    // Check if prefetch is in progress and valid
+    if (isPrefetchPromiseValid(url)) {
+      NProgress.start();
       // Prefetch is in progress, wait for it to complete
       e.preventDefault();
       prefetchPromises[url]
         .then((html) => {
+          NProgress.done();
           // Use the HTML data directly from the promise
           if (html) {
             window.history.pushState({}, '', url);
@@ -260,21 +274,13 @@ window.brightPjax = () => {
           } else {
             // Prefetch failed, fall back to regular PJAX
             markRecentNavigation(url);
-            $.pjax.click(e, {
-              container: container,
-              url: url,
-              timeout: 15000,
-            });
+            window.location.href = url;
           }
         })
         .catch((error) => {
-          // Prefetch failed, fall back to regular PJAX
+          NProgress.done();
           markRecentNavigation(url);
-          $.pjax.click(e, {
-            container: container,
-            url: url,
-            timeout: 15000,
-          });
+          window.location.href = url;
         });
       return;
     }
@@ -284,7 +290,7 @@ window.brightPjax = () => {
     $.pjax.click(e, {
       container: container,
       url: url,
-      timeout: 15000,
+      timeout: PREFETCH_TIMEOUT,
     });
   });
 
@@ -302,6 +308,9 @@ window.brightPjax = () => {
     },
     clearRecentNavigations: () => {
       Object.keys(recentNavigations).forEach((key) => delete recentNavigations[key]);
+    },
+    clearPrefetchPromises: () => {
+      Object.keys(prefetchPromises).forEach((key) => delete prefetchPromises[key]);
     },
     prefetch: prefetchPage,
     get prefetchEnabled() {
