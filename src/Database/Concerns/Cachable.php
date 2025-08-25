@@ -270,7 +270,7 @@ trait Cachable
         $sql = $this->toSql();
         $bindings = $this->getBindings();
 
-        return md5($sql . serialize($bindings) . $appends);
+        return md5(serialize($sql) . serialize($bindings) . $appends);
     }
 
     /**
