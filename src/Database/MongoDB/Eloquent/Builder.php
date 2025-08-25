@@ -20,4 +20,14 @@ class Builder extends BaseBuilder
     use Eventable;
     use Filters;
     use Paging;
+
+    public function toSql()
+    {
+        return $this->toMql();
+    }
+
+    public function toRawSql()
+    {
+        return $this->toMql();
+    }
 }
