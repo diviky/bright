@@ -242,27 +242,6 @@ class Controller extends BaseController
     }
 
     /**
-     * Ensure the required environment variables are available.
-     */
-    protected function ensureEnvironmentVariablesAreAvailable(Request $request): void
-    {
-        $missing = array_diff_key(array_flip(array_filter([
-            $request->input('bucket') ? null : 'AWS_BUCKET',
-            'AWS_DEFAULT_REGION',
-            'AWS_ACCESS_KEY_ID',
-            'AWS_SECRET_ACCESS_KEY',
-        ])), $_ENV);
-
-        if (empty($missing)) {
-            return;
-        }
-
-        throw new \InvalidArgumentException(
-            'Unable to issue signed URL. Missing environment variables: ' . implode(', ', array_keys($missing))
-        );
-    }
-
-    /**
      * Get the default visibility for uploads.
      *
      * @return string

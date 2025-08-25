@@ -63,4 +63,14 @@ class Builder extends QueryBuilder
     {
         return '';
     }
+
+    public function toSql()
+    {
+        return $this->toMql();
+    }
+
+    public function toRawSql()
+    {
+        return $this->toMql();
+    }
 }
