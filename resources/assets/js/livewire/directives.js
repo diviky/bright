@@ -46,7 +46,12 @@ Livewire.directive('validate', ({ el, directive, component, cleanup }) => {
 
     if (content) {
       e.preventDefault();
-      Alpine.evaluate(el, `$wire.${content}`, { scope: { $event: e } });
+      // Execute the Alpine expression and handle completion
+      try {
+        Alpine.evaluate(el, `$wire.${content}`, { scope: { $event: e } });
+      } catch (error) {
+        throw error;
+      }
     }
   };
 
@@ -61,11 +66,65 @@ Livewire.directive('validate', ({ el, directive, component, cleanup }) => {
 });
 
 Livewire.directive('form', ({ el, directive, component, cleanup }) => {
+  let submitButtons = [];
+  let originalStates = [];
+
+  // Find all submit buttons in the form
+  const findSubmitButtons = () => {
+    submitButtons = el.querySelectorAll('button[type="submit"], input[type="submit"], button:not([type])');
+    originalStates = Array.from(submitButtons).map((btn) => ({
+      disabled: btn.disabled,
+      innerHTML: btn.innerHTML,
+      value: btn.value,
+    }));
+  };
+
+  // Disable submit buttons
+  const disableSubmitButtons = () => {
+    findSubmitButtons();
+    submitButtons.forEach((btn, index) => {
+      btn.disabled = true;
+      if (btn.tagName.toLowerCase() === 'button') {
+        // Add loading indicator or change text
+        const loadingText = btn.getAttribute('data-loading-text') || 'Processing...';
+        btn.innerHTML = loadingText;
+      }
+    });
+  };
+
+  // Restore submit buttons to original state
+  const restoreSubmitButtons = () => {
+    submitButtons.forEach((btn, index) => {
+      if (originalStates[index]) {
+        btn.disabled = originalStates[index].disabled;
+        if (btn.tagName.toLowerCase() === 'button') {
+          btn.innerHTML = originalStates[index].innerHTML;
+        } else {
+          btn.value = originalStates[index].value;
+        }
+      }
+    });
+  };
+
   let onSubmit = (e) => {
     e.preventDefault();
 
+    // Disable submit buttons
+    disableSubmitButtons();
+
     let fields = formToAssocArray(el);
-    component.$wire.call(directive.method, fields);
+
+    // Make the Livewire call and handle completion
+    component.$wire
+      .call(directive.method, fields)
+      .then(() => {
+        // Re-enable buttons on success
+        restoreSubmitButtons();
+      })
+      .catch(() => {
+        // Re-enable buttons on error
+        restoreSubmitButtons();
+      });
   };
 
   let formToAssocArray = (form) => {
@@ -99,14 +158,8 @@ Livewire.directive('form', ({ el, directive, component, cleanup }) => {
                 }
                 current[subKey].push(value);
               } else {
-                if (current[subKey] !== undefined) {
-                  if (!Array.isArray(current[subKey])) {
-                    current[subKey] = [current[subKey]];
-                  }
-                  current[subKey].push(value);
-                } else {
-                  current[subKey] = value;
-                }
+                // For regular fields, overwrite the previous value
+                current[subKey] = value;
               }
             }
           } else {
@@ -127,12 +180,15 @@ Livewire.directive('form', ({ el, directive, component, cleanup }) => {
           } else {
             assocArray[name] = [assocArray[name], value];
           }
-        } else if (assocArray[name] !== undefined) {
-          if (!Array.isArray(assocArray[name])) {
-            assocArray[name] = [assocArray[name]];
+        } else if (name.endsWith('[]')) {
+          // Handle array fields (name ends with [])
+          const baseName = name.slice(0, -2); // Remove []
+          if (!Array.isArray(assocArray[baseName])) {
+            assocArray[baseName] = assocArray[baseName] !== undefined ? [assocArray[baseName]] : [];
           }
-          assocArray[name].push(value);
+          assocArray[baseName].push(value);
         } else {
+          // For regular fields, overwrite the previous value
           assocArray[name] = value;
         }
       }
