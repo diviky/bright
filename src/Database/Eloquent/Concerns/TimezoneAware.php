@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Eloquent\Concerns;
 
-trait UserTimezoneAware
+trait TimezoneAware
 {
     /**
      * Return a timestamp as DateTime object.

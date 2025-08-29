@@ -13,6 +13,7 @@ use Diviky\Bright\Database\Eloquent\Concerns\HasEvents;
 use Diviky\Bright\Database\Eloquent\Concerns\HasTimestamps;
 use Diviky\Bright\Database\Eloquent\Concerns\Relations;
 use Diviky\Bright\Database\Eloquent\Concerns\Timezone;
+use Diviky\Bright\Database\Eloquent\Concerns\TimezoneStorage;
 use Diviky\Bright\Models\Concerns\Eventable;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
@@ -28,4 +29,5 @@ class Model extends BaseModel
     use HasTimestamps;
     use Relations;
     use Timezone;
+    use TimezoneStorage;
 }
