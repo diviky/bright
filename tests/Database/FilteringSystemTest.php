@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Diviky\Bright\Tests\Database;
+
 use Carbon\Carbon;
 use Diviky\Bright\Database\Concerns\Filter;
 use Diviky\Bright\Database\Eloquent\Concerns\Filters;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-uses(RefreshDatabase::class);
+uses(\Diviky\Bright\Tests\TestCase::class, RefreshDatabase::class);
 
 // Test Model with filtering capabilities
 class TestProduct extends Model
@@ -15,9 +20,10 @@ class TestProduct extends Model
     use Filters;
 
     protected $table = 'test_products';
+
     protected $fillable = [
-        'name', 'description', 'price', 'category_id', 'status', 
-        'is_featured', 'tags', 'created_at', 'updated_at'
+        'name', 'description', 'price', 'category_id', 'status',
+        'is_featured', 'tags', 'created_at', 'updated_at',
     ];
 
     protected $casts = [
@@ -49,6 +55,7 @@ class TestProduct extends Model
 class TestCategory extends Model
 {
     protected $table = 'test_categories';
+
     protected $fillable = ['name', 'slug'];
 
     public function products()
@@ -59,14 +66,14 @@ class TestCategory extends Model
 
 beforeEach(function () {
     // Create test tables
-    \Schema::create('test_categories', function ($table) {
+    Schema::create('test_categories', function ($table) {
         $table->id();
         $table->string('name');
         $table->string('slug');
         $table->timestamps();
     });
 
-    \Schema::create('test_products', function ($table) {
+    Schema::create('test_products', function ($table) {
         $table->id();
         $table->string('name');
         $table->text('description')->nullable();
@@ -76,7 +83,7 @@ beforeEach(function () {
         $table->boolean('is_featured')->default(false);
         $table->json('tags')->nullable();
         $table->timestamps();
-        
+
         $table->foreign('category_id')->references('id')->on('test_categories');
     });
 
@@ -119,24 +126,24 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-    \Schema::dropIfExists('test_products');
-    \Schema::dropIfExists('test_categories');
+    Schema::dropIfExists('test_products');
+    Schema::dropIfExists('test_categories');
 });
 
 describe('Exact Filters', function () {
     test('filters by exact match on single value', function () {
-        $products = TestProduct::filter([
-            'filter' => ['status' => 'active']
-        ])->get();
+        $query = TestProduct::query();
+        $query->getQuery()->filter(['filter' => ['status' => 'active']]);
+        $products = $query->get();
 
         expect($products)->toHaveCount(2);
         expect($products->pluck('status')->unique()->toArray())->toBe(['active']);
     });
 
     test('filters by exact match on array values (IN clause)', function () {
-        $products = TestProduct::filter([
-            'filter' => ['status' => ['active', 'pending']]
-        ])->get();
+        $query = TestProduct::query();
+        $query->getQuery()->filter(['filter' => ['status' => ['active', 'pending']]]);
+        $products = $query->get();
 
         expect($products)->toHaveCount(3);
         expect($products->pluck('status')->unique()->sort()->values()->toArray())
@@ -144,21 +151,29 @@ describe('Exact Filters', function () {
     });
 
     test('filters by boolean values', function () {
-        $products = TestProduct::filter([
-            'filter' => ['is_featured' => true]
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'filter' => ['is_featured' => true],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(1);
         expect($products->first()->name)->toBe('iPhone 15');
     });
 
     test('filters by multiple exact conditions', function () {
-        $products = TestProduct::filter([
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
             'filter' => [
                 'status' => 'active',
                 'is_featured' => true,
-            ]
-        ])->get();
+            ],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(1);
         expect($products->first()->name)->toBe('iPhone 15');
@@ -167,29 +182,41 @@ describe('Exact Filters', function () {
 
 describe('Like Filters', function () {
     test('filters by partial text match', function () {
-        $products = TestProduct::filter([
-            'lfilter' => ['name' => 'phone']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'lfilter' => ['name' => 'phone'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(1);
         expect($products->first()->name)->toBe('iPhone 15');
     });
 
     test('filters by multiple like conditions', function () {
-        $products = TestProduct::filter([
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
             'lfilter' => [
                 'name' => 'apple',
                 'description' => 'professional',
-            ]
-        ])->get();
+            ],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(0); // No product matches both conditions
     });
 
     test('filters description with contains', function () {
-        $products = TestProduct::filter([
-            'lfilter' => ['description' => 'apple']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'lfilter' => ['description' => 'apple'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(1);
         expect($products->first()->name)->toBe('iPhone 15');
@@ -198,17 +225,25 @@ describe('Like Filters', function () {
 
 describe('Date Filters', function () {
     test('filters by year', function () {
-        $products = TestProduct::filter([
-            'dfilter' => ['created_at' => '2024']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'dfilter' => ['created_at' => '2024'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(3);
     });
 
     test('filters by year and month', function () {
-        $products = TestProduct::filter([
-            'dfilter' => ['created_at' => '2024-01']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'dfilter' => ['created_at' => '2024-01'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(2);
         expect($products->pluck('name')->toArray())
@@ -216,18 +251,26 @@ describe('Date Filters', function () {
     });
 
     test('filters by specific date', function () {
-        $products = TestProduct::filter([
-            'dfilter' => ['created_at' => '2024-01-15']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'dfilter' => ['created_at' => '2024-01-15'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(1);
         expect($products->first()->name)->toBe('iPhone 15');
     });
 
     test('filters by date range', function () {
-        $products = TestProduct::filter([
-            'dfilter' => ['created_at' => ['2024-01-01', '2024-01-31']]
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'dfilter' => ['created_at' => ['2024-01-01', '2024-01-31']],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(2);
         expect($products->pluck('name')->toArray())
@@ -238,27 +281,39 @@ describe('Date Filters', function () {
 describe('Parse Filters', function () {
     test('handles comparison operators', function () {
         // Greater than or equal
-        $products = TestProduct::filter([
-            'parse' => ['price:gte:1000']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'parse' => ['price:gte:1000'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(1);
         expect($products->first()->name)->toBe('MacBook Pro');
     });
 
     test('handles less than operator', function () {
-        $products = TestProduct::filter([
-            'parse' => ['price:lt:100']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'parse' => ['price:lt:100'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(1);
         expect($products->first()->name)->toBe('PHP Best Practices');
     });
 
     test('handles between operator', function () {
-        $products = TestProduct::filter([
-            'parse' => ['price:between:50,1500']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'parse' => ['price:between:50,1500'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(2);
         expect($products->pluck('name')->toArray())
@@ -266,28 +321,40 @@ describe('Parse Filters', function () {
     });
 
     test('handles in operator', function () {
-        $products = TestProduct::filter([
-            'parse' => ['status:in:active,pending']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'parse' => ['status:in:active,pending'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(3);
     });
 
     test('handles contains operator', function () {
-        $products = TestProduct::filter([
-            'parse' => ['name:contains:apple']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'parse' => ['name:contains:apple'],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(0); // Case sensitive
     });
 
     test('handles multiple parse filters', function () {
-        $products = TestProduct::filter([
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
             'parse' => [
                 'price:gte:500',
                 'status:eq:active',
-            ]
-        ])->get();
+            ],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(2);
         expect($products->pluck('name')->toArray())
@@ -297,21 +364,29 @@ describe('Parse Filters', function () {
 
 describe('Combined Filters', function () {
     test('combines different filter types', function () {
-        $products = TestProduct::filter([
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
             'filter' => ['status' => 'active'],
             'lfilter' => ['description' => 'apple'],
             'parse' => ['price:gte:500'],
-        ])->get();
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(1);
         expect($products->first()->name)->toBe('iPhone 15');
     });
 
     test('combines date and exact filters', function () {
-        $products = TestProduct::filter([
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
             'filter' => ['status' => 'active'],
             'dfilter' => ['created_at' => '2024-01'],
-        ])->get();
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(2);
         expect($products->pluck('name')->toArray())
@@ -321,30 +396,34 @@ describe('Combined Filters', function () {
 
 describe('Filter Configuration', function () {
     test('uses filter type configuration', function () {
-        $products = TestProduct::filters([
+        $products = TestProduct::query()->filters([
             'name' => 'exact', // Override default 'like'
         ])->filter([
-            'filter' => ['name' => 'iPhone']
+            'filter' => ['name' => 'iPhone'],
         ])->get();
 
         expect($products)->toHaveCount(0); // Exact match fails
     });
 
     test('uses filter aliases', function () {
-        $products = TestProduct::filter([
-            'filter' => ['product_name' => 'iPhone 15'] // Uses alias
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'filter' => ['product_name' => 'iPhone 15'], // Uses alias
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(1);
         expect($products->first()->name)->toBe('iPhone 15');
     });
 
     test('applies custom filters configuration', function () {
-        $products = TestProduct::filters(
+        $products = TestProduct::query()->filters(
             ['status' => 'exact'], // Types
             ['is_active' => 'status'] // Aliases
         )->filter([
-            'filter' => ['is_active' => 'active']
+            'filter' => ['is_active' => 'active'],
         ])->get();
 
         expect($products)->toHaveCount(2);
@@ -354,37 +433,53 @@ describe('Filter Configuration', function () {
 
 describe('Edge Cases and Error Handling', function () {
     test('handles empty filter arrays', function () {
-        $products = TestProduct::filter([
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
             'filter' => [],
             'lfilter' => [],
             'dfilter' => [],
             'parse' => [],
-        ])->get();
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(3); // No filters applied
     });
 
     test('handles null filter values', function () {
-        $products = TestProduct::filter([
-            'filter' => ['name' => null]
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'filter' => ['name' => null],
+        ]);
+
+        $products = $query->get();
 
         expect($products)->toHaveCount(3); // Null values ignored
     });
 
     test('handles invalid parse syntax gracefully', function () {
-        $products = TestProduct::filter([
-            'parse' => ['invalid:syntax']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'parse' => ['invalid:syntax'],
+        ]);
+
+        $products = $query->get();
 
         // Should not throw exception, invalid syntax ignored
         expect($products)->toHaveCount(3);
     });
 
     test('handles non-existent fields gracefully', function () {
-        $products = TestProduct::filter([
-            'filter' => ['non_existent_field' => 'value']
-        ])->get();
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
+            'filter' => ['non_existent_field' => 'value'],
+        ]);
+
+        $products = $query->get();
 
         // Should not throw exception
         expect($products)->toHaveCount(3);
@@ -407,7 +502,7 @@ describe('Query Builder Integration', function () {
     test('combines with other query builder methods', function () {
         $products = TestProduct::where('category_id', 1)
             ->filter([
-                'filter' => ['status' => 'active']
+                'filter' => ['status' => 'active'],
             ])
             ->orderBy('price', 'desc')
             ->get();
@@ -452,7 +547,7 @@ describe('Performance Tests', function () {
             ],
         ];
 
-        $products = TestProduct::filter($filters)->get();
+        $products = TestProduct::query()->filter($filters)->get();
 
         // Should execute without performance issues
         expect($products)->toBeInstanceOf(\Illuminate\Database\Eloquent\Collection::class);
@@ -461,17 +556,21 @@ describe('Performance Tests', function () {
     test('generates efficient SQL queries', function () {
         DB::enableQueryLog();
 
-        TestProduct::filter([
+        $query = TestProduct::query();
+
+        $query->getQuery()->filter([
             'filter' => ['status' => 'active'],
             'lfilter' => ['name' => 'phone'],
             'parse' => ['price:gte:500'],
-        ])->get();
+        ]);
+
+        $products = $query->get();
 
         $queries = DB::getQueryLog();
-        
+
         // Should generate a single query with proper WHERE conditions
         expect($queries)->toHaveCount(1);
-        
+
         $sql = $queries[0]['query'];
         expect($sql)->toContain('WHERE');
         expect($sql)->toContain('status');

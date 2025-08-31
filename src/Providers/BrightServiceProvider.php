@@ -40,6 +40,8 @@ class BrightServiceProvider extends ServiceProvider
 
     public function boot(Filesystem $filesystem): void
     {
+        Schema::defaultStringLength(191);
+
         $this->directive();
         $this->macros();
         $this->validates();
@@ -100,8 +102,6 @@ class BrightServiceProvider extends ServiceProvider
     #[\Override]
     public function register(): void
     {
-        Schema::defaultStringLength(191);
-
         $this->mergeConfigFrom($this->path() . '/config/bright.php', 'bright');
         $this->mergeConfigFrom($this->path() . '/config/themes.php', 'themes');
         $this->mergeConfigFrom($this->path() . '/config/permission.php', 'permission');

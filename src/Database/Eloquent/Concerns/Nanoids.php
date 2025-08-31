@@ -9,7 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 
 trait Nanoids
 {
-    protected int $nanoidSize = 18;
+    protected int $nanoidSize = 21;
+
+    public function getNanoidSize(): int
+    {
+        return $this->nanoidSize;
+    }
 
     /**
      * Get the value indicating whether the IDs are incrementing.
@@ -40,7 +45,8 @@ trait Nanoids
     {
         static::creating(function (Model $model): void {
             if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = (new Client)->generateId(size: $this->nanoidSize);
+                $size = (int) $model->getNanoidSize();
+                $model->{$model->getKeyName()} = (new Client)->generateId(size: $size);
             }
         });
     }

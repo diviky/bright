@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Util;
 
-use Diviky\Bright\Collections\ObjectCollection;
+use Diviky\Bright\Support\Collection;
 
-class StdClass extends ObjectCollection {}
+class StdClass extends Collection {}

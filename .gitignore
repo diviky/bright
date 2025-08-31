@@ -17,3 +17,6 @@ desktop.ini
 /build
 
 *.cache
+.cursor
+.github
+.copilot

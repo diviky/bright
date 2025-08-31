@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ai="/Users/sankar/work/me/ai"
+
+rm -rf .cursor && ln -s ${ai}/.cursor .cursor
+#rm -rf .github && ln -s ${ai}/.github .github
+rm -rf .copilot && ln -s ${ai}/copilot .copilot

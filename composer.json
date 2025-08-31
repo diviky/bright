@@ -28,10 +28,11 @@
     "spatie/laravel-schemaless-attributes": "^2.3"
   },
   "require-dev": {
-    "diviky/code-analysis": "^3.0",
-    "spatie/laravel-permission": "^6.9",
+    "diviky/code-analysis": "^4.0",
+    "laravel/boost": "^1.0",
+    "league/oauth2-client": "^2.6",
     "silber/bouncer": "^1.0",
-    "league/oauth2-client": "^2.6"
+    "spatie/laravel-permission": "^6.9"
   },
   "suggest": {
     "portphp/csv": "^1.1",
@@ -60,12 +61,19 @@
       "Diviky\\Bright\\Tests\\": "tests",
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/"
-    }
+    },
+    "exclude-from-classmap": [
+      "tests/Database/FilteringSystemTest.php",
+      "tests/Database/ModelExtensionsTest.php",
+      "tests/Database/EloquentBuilderExtensionsTest.php",
+      "tests/Database/BrightDatabaseIntegrationTest.php",
+      "tests/Database/TimezoneHandlingTest.php"
+    ]
   },
   "scripts": {
     "format": "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer --allow-risky=yes --config=.php-cs-fixer.php --using-cache=no --verbose fix",
-    "test": "vendor/bin/testbench package:test --parallel",
-    "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+    "test": "vendor/bin/pest",
+    "test-coverage": "vendor/bin/pest --coverage",
     "psalm": "vendor/bin/psalm --no-cache",
     "grum": "vendor/bin/grumphp run",
     "stan": "vendor/bin/phpstan src",

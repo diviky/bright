@@ -1,24 +1,31 @@
 <?php
 
-use App\Models\User;
+declare(strict_types=1);
+
+namespace Diviky\Bright\Tests\Database;
+
 use Carbon\Carbon;
 use Diviky\Bright\Database\Eloquent\Model as BrightModel;
+use Diviky\Bright\Models\User;
 use Diviky\Bright\Services\Resolver;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Schema;
 
-uses(RefreshDatabase::class);
+uses(\Diviky\Bright\Tests\TestCase::class, RefreshDatabase::class);
 
 // Comprehensive test model showcasing all Bright features
 class EventManagementSystem extends BrightModel
 {
     protected $table = 'events';
+
     protected $fillable = [
         'name', 'description', 'event_date', 'registration_deadline',
         'max_attendees', 'price', 'status', 'category_id', 'organizer_id',
-        'location', 'tags', 'metadata'
+        'location', 'tags', 'metadata',
     ];
 
     protected $casts = [
@@ -35,10 +42,12 @@ class EventManagementSystem extends BrightModel
 
     // Cache configuration
     protected $rememberFor = 1800; // 30 minutes
+
     protected $rememberCacheTag = ['events'];
 
     // Timezone configuration
     protected $timezoneInclude = ['event_date', 'registration_deadline'];
+
     protected $userTimezoneFields = ['event_date', 'registration_deadline'];
 
     // Filter configuration
@@ -126,6 +135,7 @@ class EventManagementSystem extends BrightModel
 class EventCategory extends BrightModel
 {
     protected $table = 'event_categories';
+
     protected $fillable = ['name', 'slug', 'description', 'color'];
 
     public function events()
@@ -137,9 +147,10 @@ class EventCategory extends BrightModel
 class EventRegistration extends BrightModel
 {
     protected $table = 'event_registrations';
+
     protected $fillable = [
         'event_id', 'user_id', 'attendee_name', 'attendee_email',
-        'registration_date', 'status', 'payment_status', 'amount_paid'
+        'registration_date', 'status', 'payment_status', 'amount_paid',
     ];
 
     protected $casts = [
@@ -161,8 +172,9 @@ class EventRegistration extends BrightModel
 class EventReview extends BrightModel
 {
     protected $table = 'event_reviews';
+
     protected $fillable = [
-        'event_id', 'user_id', 'rating', 'review_text', 'is_verified'
+        'event_id', 'user_id', 'rating', 'review_text', 'is_verified',
     ];
 
     protected $casts = [
@@ -183,7 +195,15 @@ class EventReview extends BrightModel
 
 beforeEach(function () {
     // Create comprehensive database schema
-    \Schema::create('event_categories', function ($table) {
+    Schema::create('users', function ($table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->string('password');
+        $table->timestamps();
+    });
+
+    Schema::create('event_categories', function ($table) {
         $table->id();
         $table->string('name');
         $table->string('slug')->unique();
@@ -192,7 +212,7 @@ beforeEach(function () {
         $table->timestamps();
     });
 
-    \Schema::create('events', function ($table) {
+    Schema::create('events', function ($table) {
         $table->string('id', 21)->primary(); // Nanoid
         $table->string('name');
         $table->text('description')->nullable();
@@ -207,7 +227,7 @@ beforeEach(function () {
         $table->json('tags')->nullable();
         $table->json('metadata')->nullable();
         $table->timestamps();
-        
+
         $table->foreign('category_id')->references('id')->on('event_categories');
         $table->foreign('organizer_id')->references('id')->on('users');
         $table->index(['status', 'event_date']);
@@ -225,7 +245,7 @@ beforeEach(function () {
         $table->enum('payment_status', ['unpaid', 'paid', 'refunded'])->default('unpaid');
         $table->decimal('amount_paid', 10, 2)->default(0);
         $table->timestamps();
-        
+
         $table->foreign('event_id')->references('id')->on('events');
         $table->foreign('user_id')->references('id')->on('users');
         $table->unique(['event_id', 'attendee_email']);
@@ -239,14 +259,38 @@ beforeEach(function () {
         $table->text('review_text')->nullable();
         $table->boolean('is_verified')->default(false);
         $table->timestamps();
-        
+
         $table->foreign('event_id')->references('id')->on('events');
         $table->foreign('user_id')->references('id')->on('users');
         $table->unique(['event_id', 'user_id']);
     });
 
     // Seed comprehensive test data
-    $this->seedTestData();
+    $user = User::create([
+        'name' => 'Test Organizer',
+        'email' => 'organizer@test.com',
+        'password' => bcrypt('password'),
+    ]);
+
+    EventCategory::create([
+        'name' => 'Technology',
+        'slug' => 'technology',
+        'description' => 'Tech events',
+    ]);
+
+    $event = new EventManagementSystem;
+    $event->id = (new \Hidehalo\Nanoid\Client)->generateId(21);
+    $event->name = 'Sample Event';
+    $event->description = 'A sample event for testing';
+    $event->category_id = 1;
+    $event->organizer_id = $user->id;
+    $event->event_date = '2024-06-01 10:00:00';
+    $event->registration_deadline = '2024-05-25 23:59:59';
+    $event->location = 'Test Venue';
+    $event->max_attendees = 100;
+    $event->price = 50.00;
+    $event->status = 'published';
+    $event->save();
 });
 
 afterEach(function () {
@@ -254,6 +298,7 @@ afterEach(function () {
     \Schema::dropIfExists('event_registrations');
     \Schema::dropIfExists('events');
     \Schema::dropIfExists('event_categories');
+    \Schema::dropIfExists('users');
 });
 
 function seedTestData()
@@ -267,7 +312,7 @@ function seedTestData()
 
     $organizer2 = User::create([
         'name' => 'Workshop Leader',
-        'email' => 'leader@workshops.com', 
+        'email' => 'leader@workshops.com',
         'password' => bcrypt('password'),
     ]);
 
@@ -572,6 +617,7 @@ describe('Complete Event Management System Integration', function () {
                     'price' => $event->price,
                     'attendees_ratio' => $event->registrations->count() / $event->max_attendees,
                 ];
+
                 return $eventData[count($eventData) - 1];
             })
             ->collect();
@@ -602,7 +648,7 @@ describe('Complete Event Management System Integration', function () {
                     'capacity_utilization' => $event->registrations->count() / $event->max_attendees,
                     'average_rating' => $event->reviews->avg('rating'),
                     'revenue' => $event->registrations->where('payment_status', 'paid')->sum('amount_paid'),
-                    'conversion_rate' => $event->registrations->where('status', 'confirmed')->count() / 
+                    'conversion_rate' => $event->registrations->where('status', 'confirmed')->count() /
                                       max(1, $event->registrations->count()),
                 ];
             });
@@ -742,13 +788,14 @@ describe('Error Handling and Edge Cases', function () {
         }
 
         // Should handle large batch operations
-        expect(fn() => EventManagementSystem::batch()->insert($largeDataset))
+        expect(fn () => EventManagementSystem::batch()->insert($largeDataset))
             ->not->toThrow(\Exception::class);
 
         // Memory-efficient processing
         $processedCount = 0;
         EventManagementSystem::lazyMap(25, function ($event) use (&$processedCount) {
             $processedCount++;
+
             return ['id' => $event->id];
         })->collect();
 

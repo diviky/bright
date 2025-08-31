@@ -367,4 +367,16 @@ trait Cachable
 
         return $this->connection->getConfig('bright.db_cache') ?? $this->connection->getConfig('cache') ?? false;
     }
+
+    /**
+     * Remember query with custom key.
+     *
+     * @param string|null $key
+     * @param int|null $seconds
+     * @return $this
+     */
+    public function rememberWithKey($key = null, $seconds = null)
+    {
+        return $this->remember($seconds, $key);
+    }
 }

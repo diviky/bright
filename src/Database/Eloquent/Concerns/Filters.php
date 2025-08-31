@@ -4,33 +4,17 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Eloquent\Concerns;
 
+use Illuminate\Database\Eloquent\Builder;
+
 trait Filters
 {
-    public function scopeFilter(array $data): self
+    public function scopeFilter(Builder $query, array $data): self
     {
-        $this->query->filter($data);
-
-        return $this;
+        return $query->filter($data);
     }
 
-    public function scopeFilters(array $types = [], array $aliases = []): self
+    public function scopeFilters(Builder $query, array $types = [], array $aliases = []): self
     {
-        $this->query->filters($types, $aliases);
-
-        return $this;
-    }
-
-    public function filter(array $data): self
-    {
-        $this->query->filter($data);
-
-        return $this;
-    }
-
-    public function filters(array $types = [], array $aliases = []): self
-    {
-        $this->query->filters($types, $aliases);
-
-        return $this;
+        return $query->filters($types, $aliases);
     }
 }

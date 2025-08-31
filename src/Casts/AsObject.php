@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Casts;
 
-use Diviky\Bright\Collections\ObjectCollection;
+use Diviky\Bright\Support\Collection as SupportCollection;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Casts\Json;
@@ -27,7 +27,7 @@ class AsObject implements Castable
 
             public function get($model, $key, $value, $attributes)
             {
-                $collectionClass = $this->arguments[0] ?? ObjectCollection::class;
+                $collectionClass = $this->arguments[0] ?? SupportCollection::class;
 
                 if (!isset($attributes[$key])) {
                     return new $collectionClass([]);

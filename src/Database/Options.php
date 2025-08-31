@@ -6,7 +6,7 @@ namespace Diviky\Bright\Database;
 
 use Diviky\Bright\Concerns\CapsuleManager;
 use Diviky\Bright\Models\Options as ModelsOptions;
-use Diviky\Bright\Util\StdClass;
+use Diviky\Bright\Support\Collection as StdClass;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
