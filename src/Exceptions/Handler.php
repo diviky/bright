@@ -7,18 +7,26 @@ namespace Diviky\Bright\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class Handler extends ExceptionHandler
 {
     #[\Override]
     public function register(): void
     {
-        $this->reportable(function (\Throwable $e): void {
-            if ($this->shouldReport($e) && app()->bound('sentry')) {
-                app('sentry')->captureException($e);
+        $this->renderable(function (TokenMismatchException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Session expired or invalid CSRF token. Please refresh and try again.',
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
+
+            return back()
+                ->withInput($request->except('_token'))
+                ->with('error', 'Your session expired. Please refresh and try again.');
         });
     }
 

@@ -269,7 +269,7 @@ trait Filter
     {
         foreach ($filters as $column => $value) {
             if (!empty($column) && isset($value) && $value != '') {
-                $value = '%' . $value;
+                $value = $value . '%';
                 if (Str::startsWith($column, '!')) {
                     $this->addNotWhere(ltrim($column, '!'), $value, 'like');
                 } else {
@@ -285,7 +285,7 @@ trait Filter
     {
         foreach ($filters as $column => $value) {
             if (!empty($column) && isset($value) && $value != '') {
-                $value .= '%';
+                $value = '%' . $value;
                 if (Str::startsWith($column, '!')) {
                     $this->addNotWhere(ltrim($column, '!'), $value, 'like');
                 } else {
@@ -303,11 +303,11 @@ trait Filter
             $value = $data[$value];
             if (!empty($column) && isset($value) && $value != '') {
                 if (Str::startsWith('%', $column)) {
-                    $value = '%' . $value;
+                    $value = $value . '%';
 
                     $this->addWhere(ltrim($column, '%'), $value, 'like');
                 } elseif (Str::endsWith('%', $column)) {
-                    $value .= '%';
+                    $value = '%' . $value;
 
                     $this->addWhere(rtrim($column, '%'), $value, 'like');
                 } else {

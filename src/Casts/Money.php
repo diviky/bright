@@ -34,6 +34,11 @@ class Money implements CastsAttributes
         $this->decimals = intval($decimals);
     }
 
+    public static function make($decimals = null, $currency = null)
+    {
+        return new self($decimals, $currency);
+    }
+
     /**
      * Cast the given value.
      *

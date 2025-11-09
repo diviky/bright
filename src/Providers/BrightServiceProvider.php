@@ -9,6 +9,7 @@ use Diviky\Bright\Console\Commands\Migrate;
 use Diviky\Bright\Console\Commands\Rollback;
 use Diviky\Bright\Console\Commands\Setup;
 use Diviky\Bright\Contracts\UtilInterface;
+use Diviky\Bright\Exceptions\Handler;
 use Diviky\Bright\Models\PersonalAccessToken;
 use Diviky\Bright\Routing\ControllerDispatcher;
 use Diviky\Bright\Routing\Redirector;
@@ -19,6 +20,7 @@ use Diviky\Bright\Services\Auth\CredentialsGuard;
 use Diviky\Bright\Services\Auth\Providers\AccessProvider;
 use Diviky\Bright\Support\ServiceProvider;
 use Diviky\Bright\Util\Util;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Auth;
@@ -75,6 +77,8 @@ class BrightServiceProvider extends ServiceProvider
                 array_merge($options, ['disk' => 'public', 'path' => $path])
             );
         });
+
+        $this->app->singleton(ExceptionHandler::class, Handler::class);
     }
 
     public function bootRoutes(): self
