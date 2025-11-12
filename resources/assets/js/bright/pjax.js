@@ -248,7 +248,7 @@ window.brightPjax = () => {
       e.preventDefault();
       // Use cached content immediately
       const html = cachedEntry.content;
-      window.history.pushState({}, '', url);
+      window.history.pushState({ container: container, url: url }, '', url);
       applyHtmlToContainer(html, container);
       triggerPjaxLifecycle(html, container, url);
       cleanupCacheEntry(url);
@@ -266,7 +266,7 @@ window.brightPjax = () => {
           NProgress.done();
           // Use the HTML data directly from the promise
           if (html) {
-            window.history.pushState({}, '', url);
+            window.history.pushState({ container: container, url: url }, '', url);
             applyHtmlToContainer(html, container);
             triggerPjaxLifecycle(html, container, url);
             cleanupCacheEntry(url);
@@ -296,6 +296,66 @@ window.brightPjax = () => {
 
   $(document).on('pjax:end', function (xhr) {
     $(document).trigger('ajax:loaded');
+  });
+
+  // Store container in history state when regular PJAX navigates
+  $(document).on('pjax:success', function (event, data, status, xhr, options) {
+    if (options && options.container && window.history.state) {
+      // Update the current history state with container info
+      const currentState = window.history.state || {};
+      currentState.container = options.container;
+      currentState.url = window.location.href;
+      window.history.replaceState(currentState, '', window.location.href);
+    }
+  });
+
+  // Handle browser back/forward button navigation
+  window.addEventListener('popstate', function (e) {
+    const url = window.location.href;
+
+    // Get container from state if available, otherwise use default
+    const container = (e.state && e.state.container) || '[data-pjax-container]';
+
+    // Check cache first
+    const cachedEntry = getCachedEntry(url);
+    if (cachedEntry) {
+      applyHtmlToContainer(cachedEntry.content, container);
+      triggerPjaxLifecycle(cachedEntry.content, container, url);
+      cleanupCacheEntry(url);
+      markRecentNavigation(url);
+      return;
+    }
+
+    // If not in cache, fetch the page
+    NProgress.start();
+
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'X-PJAX': 'true',
+        'X-PJAX-Container': container,
+        'X-Requested-With': 'XMLHttpRequest',
+        Accept: 'text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.text();
+      })
+      .then((html) => {
+        NProgress.done();
+        applyHtmlToContainer(html, container);
+        triggerPjaxLifecycle(html, container, url);
+        markRecentNavigation(url);
+      })
+      .catch((error) => {
+        NProgress.done();
+        console.warn('PJAX popstate failed for:', url, error.message);
+        // Fall back to full page reload
+        window.location.href = url;
+      });
   });
 
   // Expose methods for debugging and manual cache management

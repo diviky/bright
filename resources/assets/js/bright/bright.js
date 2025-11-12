@@ -44,8 +44,10 @@ window.brightJs = () => {
 
     clipboard.on('success', function (e) {
       e.clearSelection();
-      $('.tooltip-inner').html('Copied!');
-      $(e.trigger).tooltip('update');
+      notify({
+        text: 'Copied!',
+        type: 'success',
+      });
     });
 
     clipboard.on('error', function (e) {
