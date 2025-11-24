@@ -27,7 +27,7 @@ class AsObject implements Castable
 
             public function get($model, $key, $value, $attributes)
             {
-                $collectionClass = $this->arguments[0] ?? SupportCollection::class;
+                $collectionClass = SupportCollection::class;
 
                 if (!isset($attributes[$key])) {
                     return new $collectionClass([]);

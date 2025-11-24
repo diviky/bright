@@ -48,9 +48,4 @@ class Collection extends BaseCollection
     {
         return $this->toJson();
     }
-
-    public function __serialize(): array
-    {
-        return $this->toArray();
-    }
 }
