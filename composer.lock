@@ -4,7 +4,7 @@
     "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
     "This file is @generated automatically"
   ],
-  "content-hash": "253a4542fe3fb8ba2a4f3f3673e7e87e",
+  "content-hash": "ecaf7fe99f3f4be11ac9b15c5f0d77e2",
   "packages": [
     {
       "name": "aws/aws-crt-php",
@@ -1260,6 +1260,69 @@
         "source": "https://github.com/hidehalo/nanoid-php/tree/2.0"
       },
       "time": "2024-11-04T03:00:05+00:00"
+    },
+    {
+      "name": "kirschbaum-development/eloquent-power-joins",
+      "version": "4.2.10",
+      "source": {
+        "type": "git",
+        "url": "https://github.com/kirschbaum-development/eloquent-power-joins.git",
+        "reference": "ccda351a75701f5b0a6f94586d9a40f1114302b4"
+      },
+      "dist": {
+        "type": "zip",
+        "url": "https://api.github.com/repos/kirschbaum-development/eloquent-power-joins/zipball/ccda351a75701f5b0a6f94586d9a40f1114302b4",
+        "reference": "ccda351a75701f5b0a6f94586d9a40f1114302b4",
+        "shasum": ""
+      },
+      "require": {
+        "illuminate/database": "^11.42|^12.0",
+        "illuminate/support": "^11.42|^12.0",
+        "php": "^8.2"
+      },
+      "require-dev": {
+        "friendsofphp/php-cs-fixer": "dev-master",
+        "laravel/legacy-factories": "^1.0@dev",
+        "orchestra/testbench": "^9.0|^10.0",
+        "phpunit/phpunit": "^10.0|^11.0"
+      },
+      "type": "library",
+      "extra": {
+        "laravel": {
+          "providers": [
+            "Kirschbaum\\PowerJoins\\PowerJoinsServiceProvider"
+          ]
+        }
+      },
+      "autoload": {
+        "psr-4": {
+          "Kirschbaum\\PowerJoins\\": "src"
+        }
+      },
+      "notification-url": "https://packagist.org/downloads/",
+      "license": [
+        "MIT"
+      ],
+      "authors": [
+        {
+          "name": "Luis Dalmolin",
+          "email": "luis.nh@gmail.com",
+          "role": "Developer"
+        }
+      ],
+      "description": "The Laravel magic applied to joins.",
+      "homepage": "https://github.com/kirschbaum-development/eloquent-power-joins",
+      "keywords": [
+        "eloquent",
+        "join",
+        "laravel",
+        "mysql"
+      ],
+      "support": {
+        "issues": "https://github.com/kirschbaum-development/eloquent-power-joins/issues",
+        "source": "https://github.com/kirschbaum-development/eloquent-power-joins/tree/4.2.10"
+      },
+      "time": "2025-11-13T14:57:49+00:00"
     },
     {
       "name": "laravel/framework",

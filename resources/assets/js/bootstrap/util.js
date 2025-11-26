@@ -88,6 +88,13 @@ window.setLivewire = function ($wire) {
     $(document).trigger('ajax:loaded');
   }, 100);
 
+  // Dispatch custom event with $wire argument
+  window.dispatchEvent(
+    new CustomEvent('livewire:component:rendered', {
+      detail: { $wire: $wire },
+    })
+  );
+
   if (typeof $wire === 'undefined') {
     return null;
   }
