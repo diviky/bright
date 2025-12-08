@@ -6,6 +6,7 @@ namespace Diviky\Bright\Database;
 
 use Diviky\Bright\Database\Concerns\Connector;
 use Illuminate\Database\DatabaseManager as LaravelDatabaseManager;
+use Illuminate\Database\Query\Expression;
 
 class DatabaseManager extends LaravelDatabaseManager
 {
@@ -48,11 +49,14 @@ class DatabaseManager extends LaravelDatabaseManager
     /**
      * Database table.
      *
-     * @param  string  $name
      * @return \Illuminate\Database\Query\Builder
      */
-    public function table($name)
+    public function table(string|Expression $name)
     {
+        if ($name instanceof Expression) {
+            return parent::table($name);
+        }
+
         return $this->getConnectionByTable($name)->table($name);
     }
 
