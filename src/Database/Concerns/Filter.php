@@ -249,17 +249,96 @@ trait Filter
 
     protected function filterNull(array $filters = []): self
     {
-        foreach ($filters as $column => $value) {
-            $this->whereNull($this->cleanField($column));
-        }
+        $this->builder->where(function (Builder $query) use ($filters) {
+            foreach ($filters as $attribute => $value) {
+                if (empty($value)) {
+                    continue;
+                }
+
+                $query->when(Str::contains($attribute, '.') && $this->hasModel(),
+                    function (Builder $query) use ($attribute) {
+                        // Handle relationship null values (supports nested relationships)
+                        $parts = collect(explode('.', $attribute));
+                        $column = $parts->pop();
+                        $relationPath = $parts->isNotEmpty()
+                            ? $parts->map([Str::class, 'camel'])->implode('.')
+                            : null;
+
+                        // Check if relationship method exists (check first level)
+                        if (!empty($relationPath)) {
+                            $firstRelation = Str::camel($parts->first());
+                            if (method_exists($query->getModel(), $firstRelation)) {
+                                $query->where(function (Builder $query) use ($relationPath, $column): void {
+                                    // Records where relationship doesn't exist
+                                    $query->whereDoesntHave($relationPath);
+
+                                    // OR records where relationship exists but column is null
+                                    if (!empty($column)) {
+                                        $query->orWhereHas($relationPath, function (Builder $query) use ($column): void {
+                                            $query->whereNull($query->qualifyColumn($column));
+                                        });
+                                    }
+                                });
+                            } else {
+                                // Fallback to direct column null check
+                                $query->whereNull($this->cleanField($attribute));
+                            }
+                        } else {
+                            // No relationship path, just column
+                            $query->whereNull($this->cleanField($attribute));
+                        }
+                    },
+                    function (Builder $query) use ($attribute) {
+                        // Handle direct column null values
+                        $query->whereNull($this->cleanField($attribute));
+                    }
+                );
+            }
+        });
 
         return $this;
     }
 
     protected function filterNotNull(array $filters = []): self
     {
-        foreach ($filters as $column => $value) {
-            $this->whereNotNull($this->cleanField($column));
+        foreach ($filters as $attribute => $value) {
+            if (empty($value)) {
+                continue;
+            }
+
+            if (Str::contains($attribute, '.') && $this->hasModel()) {
+                // Handle relationship not null values (supports nested relationships)
+                $parts = collect(explode('.', $attribute));
+                $column = $parts->pop();
+                $relationPath = $parts->isNotEmpty()
+                    ? $parts->map([Str::class, 'camel'])->implode('.')
+                    : null;
+
+                // Check if relationship method exists (check first level)
+                if (!empty($relationPath)) {
+                    $firstRelation = Str::camel($parts->first());
+                    if (method_exists($this->builder->getModel(), $firstRelation)) {
+                        // Records where relationship exists and column is not null
+                        if (!empty($column)) {
+                            $this->builder->whereHas($relationPath, function (Builder $query) use ($column): void {
+                                $query->whereNotNull($query->qualifyColumn($column));
+                            });
+                        } else {
+                            // Just check if relationship exists
+                            $this->builder->whereHas($relationPath);
+                        }
+                    } else {
+                        // Fallback to direct column not null check
+                        $this->whereNotNull($this->cleanField($attribute));
+                    }
+                } else {
+                    // No relationship path, just column
+                    $this->whereNotNull($this->cleanField($attribute));
+                }
+            } else {
+                // Handle direct column not null values
+                $this->whereNotNull($this->cleanField($attribute));
+            }
         }
 
         return $this;

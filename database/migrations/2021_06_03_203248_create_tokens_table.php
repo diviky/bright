@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('access_token')->unique('tokens_access_token');
             $table->string('refresh_token')->nullable();
             $table->text('allowed_ip')->nullable();
+            $table->text('metadata')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamp('last_used_at')->nullable();
             $table->timestamps();

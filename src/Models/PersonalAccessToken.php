@@ -4,34 +4,29 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Models;
 
+use Diviky\Bright\Casts\AsObject;
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
-    protected $fillable = [
-        'user_id',
-        'name',
-        'access_token',
-        'refresh_token',
-        'allowed_ip',
-        'expires_at',
-        'abilities',
-        'status',
-        'token',
-    ];
-
-    protected $casts = [
-        'abilities' => 'json',
-        'last_used_at' => 'datetime',
-        'expires_at' => 'datetime',
-        'created_at' => 'datetime',
-    ];
+    public $guarded = [];
 
     protected $hidden = [
         'access_token',
         'refresh_token',
         'token',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'abilities' => 'json',
+            'last_used_at' => 'datetime',
+            'expires_at' => 'datetime',
+            'created_at' => 'datetime',
+            'metadata' => AsObject::class,
+        ];
+    }
 
     #[\Override]
     public function getTable()
@@ -42,7 +37,6 @@ class PersonalAccessToken extends SanctumPersonalAccessToken
     #[\Override]
     protected static function boot()
     {
-
         self::creating(function ($model) {
             $model->access_token = $model->access_token ?? $model->token;
 
