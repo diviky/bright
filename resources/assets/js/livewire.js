@@ -26,4 +26,4 @@ Alpine.plugin(
 
 window.Sortable = Sortable;
 window.Livewire = Livewire;
-Livewire.start();
+//Livewire.start();
