@@ -371,8 +371,8 @@ trait Cachable
     /**
      * Remember query with custom key.
      *
-     * @param string|null $key
-     * @param int|null $seconds
+     * @param  string|null  $key
+     * @param  int|null  $seconds
      * @return $this
      */
     public function rememberWithKey($key = null, $seconds = null)
