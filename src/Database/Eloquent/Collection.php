@@ -158,7 +158,10 @@ class Collection extends EloquentCollection
         $request = request();
         $path = $request->path();
 
+        $filter = $request->get('filter', '');
+        $filter = is_array($filter) ? json_encode($filter) : $filter;
+
         // Create a unique key based on the current route
-        return md5($path . ($request->get('filter', '') ?: ''));
+        return md5($path . ($filter ?: ''));
     }
 }

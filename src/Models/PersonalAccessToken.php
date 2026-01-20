@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Diviky\Bright\Models;
 
 use Diviky\Bright\Casts\AsObject;
+use Diviky\Bright\Database\Eloquent\Concerns\WithModel;
 use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 
 class PersonalAccessToken extends SanctumPersonalAccessToken
 {
+    use WithModel;
+
     public $guarded = [];
 
     protected $hidden = [

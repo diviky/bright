@@ -30,7 +30,6 @@ trait WithBuilder
         $this->sync();
     }
 
-    #[\Override]
     public function setModel(Model $model)
     {
         $this->query->setModel($model)->setBuilder($this);
@@ -38,7 +37,6 @@ trait WithBuilder
         return parent::setModel($model);
     }
 
-    #[\Override]
     public function getRelation($name)
     {
         $relation = parent::getRelation($name);
