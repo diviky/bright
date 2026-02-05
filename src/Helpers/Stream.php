@@ -192,8 +192,6 @@ class Stream
 
         foreach ($rows as $row) {
             $this->flush($this->convertToArray($row), $fields);
-
-            sleep(1);
         }
 
         return $this->stopFile();
