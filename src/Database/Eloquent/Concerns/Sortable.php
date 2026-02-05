@@ -96,6 +96,40 @@ trait Sortable
         self::setNewOrder($ids, $startOrder, $primaryKeyColumn);
     }
 
+    /**
+     * Reorder this model to a new position.
+     */
+    public function reOrder(int $newPosition): static
+    {
+        $orderColumnName = $this->determineOrderColumnName();
+        $currentPosition = (int) $this->{$orderColumnName};
+
+        if ($currentPosition === $newPosition) {
+            return $this;
+        }
+
+        if ($newPosition > $currentPosition) {
+            // Moving forward: shift items between current and new position backward
+            $this->buildSortQuery()
+                ->where($this->getKeyName(), '!=', $this->getKey())
+                ->where($orderColumnName, '>', $currentPosition)
+                ->where($orderColumnName, '<=', $newPosition)
+                ->decrement($orderColumnName);
+        } else {
+            // Moving backward: shift items between new and current position forward
+            $this->buildSortQuery()
+                ->where($this->getKeyName(), '!=', $this->getKey())
+                ->where($orderColumnName, '>=', $newPosition)
+                ->where($orderColumnName, '<', $currentPosition)
+                ->increment($orderColumnName);
+        }
+
+        $this->{$orderColumnName} = $newPosition;
+        $this->save();
+
+        return $this;
+    }
+
     public function determineOrderColumnName(): string
     {
         return $this->sortable['order_column_name'] ?? 'ordering';

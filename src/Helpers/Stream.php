@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Diviky\Bright\Helpers;
 
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
@@ -133,14 +134,9 @@ class Stream
      * @param  mixed  $disposition
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
-    public function excel($rows, $fields, array $headers = [], $disposition = 'attachment')
+    public function excel($rows, $fields = [], array $headers = [], $disposition = 'attachment')
     {
-        $headers = array_merge(['X-Vapor-Base64-Encode' => 'True'], $headers);
-
-        return response()->streamDownload(function () use ($rows, $fields): void {
-            $this->setHeader($fields);
-            $this->flushRows($rows);
-        }, $this->filename, $headers, $disposition);
+        return $this->stream($rows, $fields, $headers, $disposition);
     }
 
     /**
@@ -153,11 +149,24 @@ class Stream
      */
     public function stream($rows, $fields = [], array $headers = [], $disposition = 'attachment')
     {
-        $headers = array_merge(['X-Vapor-Base64-Encode' => 'True'], $headers);
+        $ext = \strtolower(\strrchr($this->filename, '.'));
+        $mimeType = $this->mime_types[$ext] ?? 'application/octet-stream';
 
-        return response()->streamDownload(function () use ($rows, $fields): void {
+        $headers = array_merge([
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => $disposition . '; filename="' . $this->filename . '"',
+            'X-Vapor-Base64-Encode' => 'True',
+            'X-Accel-Buffering' => 'no', // Disable nginx buffering
+            'Cache-Control' => 'no-cache',
+        ], $headers);
+
+        return response()->stream(function () use ($rows, $fields): void {
+            // Force immediate response to trigger download
+            echo '';
+            $this->safeFlush();
+
             $this->output($rows, $fields);
-        }, $this->filename, $headers, $disposition);
+        }, 200, $headers);
     }
 
     /**
@@ -168,16 +177,23 @@ class Stream
      */
     protected function output($rows, $fields = []): self
     {
-        $rows = $this->toArray($rows);
-
         if (empty($fields) && !empty($rows)) {
-            $fields = (array) $rows[0];
+            foreach ($rows as $row) {
+                $fields = $this->convertToArray($row);
+                break;
+            }
         }
+
+        // Send UTF-8 BOM to trigger immediate download
+        echo "\xEF\xBB\xBF";
+        $this->safeFlush();
 
         $this->setHeader($fields);
 
         foreach ($rows as $row) {
-            $this->flush($row, $fields);
+            $this->flush($this->convertToArray($row), $fields);
+
+            sleep(1);
         }
 
         return $this->stopFile();
@@ -292,9 +308,8 @@ class Stream
      */
     protected function flushRows($rows): self
     {
-        $rows = $this->toArray($rows);
-
         foreach ($rows as $row) {
+            $row = $this->convertToArray($row);
             $this->implode($row, true);
         }
 
@@ -320,7 +335,34 @@ class Stream
 
         echo \implode($this->separator, $row) . $this->lineEnd;
 
+        // Flush output buffer for true streaming
+        $this->safeFlush();
+
         return $this;
+    }
+
+    /**
+     * Safely flush output buffer without breaking Octane/Symfony.
+     */
+    protected function safeFlush(): void
+    {
+        // Flush output buffers carefully to avoid Octane errors
+        // but still enable streaming
+        try {
+            $level = ob_get_level();
+
+            // Flush all user buffers but be careful with framework buffers
+            if ($level > 0) {
+                // Try to flush but don't end/clean the buffer
+                // This pushes content without removing the buffer
+                @ob_flush();
+            }
+        } catch (\Throwable $e) {
+            // Silently catch any buffer errors
+        }
+
+        // Always flush system output
+        @flush();
     }
 
     /**
@@ -357,5 +399,36 @@ class Stream
         }
 
         return $rows;
+    }
+
+    protected function convertToArray($row = [])
+    {
+        if ($row instanceof Collection) {
+            return $row->toArray();
+        }
+
+        if ($row instanceof LazyCollection) {
+            return $row->toArray();
+        }
+
+        if ($row instanceof Arrayable) {
+            return $row->toArray();
+        }
+
+        if ($row instanceof \JsonSerializable) {
+            return $row->jsonSerialize();
+        }
+
+        if ($row instanceof \Iterator) {
+            $row->rewind();
+
+            return \iterator_to_array($row);
+        }
+
+        if ($row instanceof Model) {
+            return $row->toArray();
+        }
+
+        return $row;
     }
 }

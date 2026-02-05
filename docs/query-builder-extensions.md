@@ -254,8 +254,7 @@ Enhanced sorting and ordering capabilities.
 ```php
 // Dynamic ordering with multiple criteria
 $users = DB::table('users')
-    ->orderByColumn('name', 'asc')
-    ->orderByColumn('created_at', 'desc')
+    ->ordering('name', 'asc')
     ->get();
 
 // Custom ordering logic

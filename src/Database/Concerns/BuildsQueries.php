@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Concerns;
 
-use Diviky\Bright\Helpers\Iterator\SelectIterator;
 use Illuminate\Support\LazyCollection;
 
 trait BuildsQueries
@@ -56,7 +55,7 @@ trait BuildsQueries
             throw new \InvalidArgumentException('The chunk size should be at least 1');
         }
 
-        return new SelectIterator($this, $chunkSize, $callback);
+        return $this->lazyMap($chunkSize, $callback);
     }
 
     /**
