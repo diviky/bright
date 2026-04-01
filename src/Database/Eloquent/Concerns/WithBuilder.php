@@ -53,7 +53,7 @@ trait WithBuilder
     /**
      * get the value from expression.
      *
-     * @param  float|\Illuminate\Contracts\Database\Query\Expression|int|string  $value
+     * @param  float|int|QueryExpression|string  $value
      */
     protected function getExpressionValue($value): string
     {
@@ -62,5 +62,29 @@ trait WithBuilder
         }
 
         return (string) $value;
+    }
+
+    /**
+     * Increment a column without updating the model's `updated_at` timestamp.
+     *
+     * @param  string|QueryExpression  $column
+     * @param  float|int  $amount
+     * @param  array<string, mixed>  $extra
+     */
+    public function plus($column, $amount = 1, array $extra = []): int
+    {
+        return $this->toBase()->increment($column, $amount, $extra);
+    }
+
+    /**
+     * Decrement a column without updating the model's `updated_at` timestamp.
+     *
+     * @param  string|QueryExpression  $column
+     * @param  float|int  $amount
+     * @param  array<string, mixed>  $extra
+     */
+    public function minus($column, $amount = 1, array $extra = []): int
+    {
+        return $this->toBase()->decrement($column, $amount, $extra);
     }
 }

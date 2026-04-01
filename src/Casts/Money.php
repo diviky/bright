@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Diviky\Bright\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Contracts\Database\Eloquent\DeviatesCastableAttributes;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @SuppressWarnings(PHPMD)
  */
-class Money implements CastsAttributes
+class Money implements CastsAttributes, DeviatesCastableAttributes
 {
     /**
      * Currency Code.
@@ -42,7 +44,7 @@ class Money implements CastsAttributes
     /**
      * Cast the given value.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
@@ -57,7 +59,7 @@ class Money implements CastsAttributes
     /**
      * Prepare the given value for storage.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Model  $model
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
@@ -69,6 +71,41 @@ class Money implements CastsAttributes
         return $this->to($value);
     }
 
+    #[\Override]
+    public function increment($model, string $key, $value, array $attributes): mixed
+    {
+        $currentMinor = $this->rawToMinorUnits($attributes[$key] ?? 0);
+        $delta = is_numeric($value) ? $this->toMinorUnits($value) : 0;
+
+        return $this->from((string) ($currentMinor + $delta));
+    }
+
+    #[\Override]
+    public function decrement($model, string $key, $value, array $attributes): mixed
+    {
+        $currentMinor = $this->rawToMinorUnits($attributes[$key] ?? 0);
+        $delta = is_numeric($value) ? $this->toMinorUnits($value) : 0;
+
+        return $this->from((string) ($currentMinor - $delta));
+    }
+
+    /**
+     * Convert a decimal (major-unit) amount to integer minor units for storage / SQL deltas.
+     */
+    protected function toMinorUnits(int|float|string $value): int
+    {
+        return (int) round((float) $value * 10 ** $this->decimals);
+    }
+
+    protected function rawToMinorUnits(mixed $raw): int
+    {
+        if (!is_numeric($raw)) {
+            return 0;
+        }
+
+        return (int) round((float) $raw);
+    }
+
     /**
      * Convert to int from decimals.
      *
@@ -78,7 +115,7 @@ class Money implements CastsAttributes
     public function to($value)
     {
         if (is_numeric($value)) {
-            return $value * 10 ** $this->decimals;
+            return $this->toMinorUnits($value);
         }
 
         return $value;

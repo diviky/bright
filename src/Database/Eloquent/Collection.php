@@ -76,7 +76,7 @@ class Collection extends EloquentCollection
 
         // Check if this is traditional pagination (page parameter exists)
         if ($request->has('page')) {
-            return (int) $request->get('page');
+            return (int) $request->input('page');
         }
 
         // For cursor pagination, use session-based page tracking
@@ -94,11 +94,11 @@ class Collection extends EloquentCollection
 
         // Check common per_page parameter names
         if ($request->has('per_page')) {
-            return (int) $request->get('per_page');
+            return (int) $request->input('per_page');
         }
 
         if ($request->has('limit')) {
-            return (int) $request->get('limit');
+            return (int) $request->input('limit');
         }
 
         // Default per page value
@@ -124,7 +124,7 @@ class Collection extends EloquentCollection
 
         // Check for direct page navigation
         if ($request->has('goto_page')) {
-            $page = max(1, (int) $request->get('goto_page'));
+            $page = max(1, (int) $request->input('goto_page'));
             session()->put("cursor_page_{$pageKey}", $page);
 
             return $page;
@@ -134,7 +134,7 @@ class Collection extends EloquentCollection
 
         // If cursor parameter exists, update page counter based on navigation
         if ($request->has('cursor')) {
-            $direction = $request->get('direction', 'next');
+            $direction = $request->input('direction', 'next');
 
             if ($direction === 'next') {
                 $currentPage++;
@@ -158,7 +158,7 @@ class Collection extends EloquentCollection
         $request = request();
         $path = $request->path();
 
-        $filter = $request->get('filter', '');
+        $filter = $request->input('filter', '');
         $filter = is_array($filter) ? json_encode($filter) : $filter;
 
         // Create a unique key based on the current route
