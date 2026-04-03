@@ -273,6 +273,9 @@
 
       if (res.status == 'OK' || res.status == 'success' || res.status == 200) {
         self.onSuccess(res, xhr);
+        if (res.events) {
+          self.handleEvents(res.events);
+        }
       } else if (res.status == 'INFO') {
         if (res.message) {
           notify({
@@ -281,6 +284,9 @@
           });
         }
         self.event('onInfo', res, xhr);
+        if (res.events) {
+          self.handleEvents(res.events);
+        }
       } else {
         self.onError(res, xhr);
       }
@@ -306,6 +312,10 @@
       }
 
       self.event('onError', res, xhr);
+
+      if (res.events) {
+        self.handleEvents(res.events);
+      }
 
       if ('undefined' === typeof res.status && res.redirect) {
         self.redirect(res.redirect, 1000);
@@ -357,22 +367,6 @@
         });
       }
 
-      if (res.events) {
-        for (const [key, value] of Object.entries(res.events)) {
-          if (typeof key === 'string' && key.length > 5) {
-            if (typeof Livewire !== 'undefined') {
-              Livewire.dispatch(key, value);
-            }
-            document.dispatchEvent(new CustomEvent(key, value));
-          } else {
-            if (typeof Livewire !== 'undefined') {
-              Livewire.dispatch(value);
-            }
-            document.dispatchEvent(new CustomEvent(value));
-          }
-        }
-      }
-
       var callback = res.callback;
       if (typeof callback === 'function') {
         callback(res, self);
@@ -380,20 +374,16 @@
         window[callback](res, self);
       }
 
-      if (self.settings.reset || res.form.reset) {
+      if ((self.settings.reset || res.form.reset) && res.form.reset !== false) {
         self.form.resetForm();
       }
 
-      if (self.settings.clear || res.form.clear) {
+      if ((self.settings.clear || res.form.clear) && res.form.clear !== false) {
         self.form.clearForm();
       }
 
-      if (self.settings.render) {
+      if ((self.settings.render || res.form.render) && res.form.render !== false) {
         self.render(self.settings.render);
-      }
-
-      if (res.form.render) {
-        self.render(res.form.render);
       }
 
       if (res.modal) {
@@ -458,7 +448,7 @@
         return true;
       }
 
-      if (self.settings.hide || res.form.hide) {
+      if ((self.settings.hide || res.form.hide) && res.form.hide !== false) {
         $.fn.easyModalHide();
       }
 
@@ -498,6 +488,24 @@
 
       //element.find('input[name=page]').val(1);
       element.submit();
+    },
+
+    handleEvents: function (events) {
+      for (const [key, value] of Object.entries(events)) {
+        if (typeof key === 'string' && key.length > 5) {
+          var livewireParams =
+            typeof value === 'object' && value !== null && !Array.isArray(value) ? value : { id: value };
+          if (typeof Livewire !== 'undefined') {
+            Livewire.dispatch(key, livewireParams);
+          }
+          document.dispatchEvent(new CustomEvent(key, { detail: value }));
+        } else {
+          if (typeof Livewire !== 'undefined') {
+            Livewire.dispatch(value);
+          }
+          document.dispatchEvent(new CustomEvent(value));
+        }
+      }
     },
 
     redirect: function (url, time) {
