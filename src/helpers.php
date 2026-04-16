@@ -5,6 +5,10 @@ declare(strict_types=1);
 use Diviky\Bright\Contracts\UtilInterface as Util;
 use Diviky\Bright\Support\Collection as SupportCollection;
 use Diviky\Bright\View\View;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -28,7 +32,7 @@ if (!function_exists('carbon')) {
      * @param  null|int|string  $time
      * @param  null|string  $format
      * @param  null|string  $timezone
-     * @return Illuminate\Support\Carbon|string
+     * @return Carbon|string
      */
     function carbon($time = null, $format = null, $timezone = null)
     {
@@ -83,7 +87,7 @@ if (!function_exists('uuid')) {
      */
     function uuid(): string
     {
-        return (string) Str::uuid();
+        return Str::uuid7()->toString();
     }
 }
 
@@ -102,11 +106,11 @@ if (!function_exists('storage_public')) {
 /**
  * Create view from controller location.
  *
- * @param  Illuminate\Routing\Controller|string  $controller
+ * @param  Controller|string  $controller
  * @param  string  $view
  * @param  mixed  $data
  * @param  mixed  $mergeData
- * @return Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+ * @return Factory|Illuminate\Contracts\View\View
  */
 function kview($controller, $view, $data = [], $mergeData = [])
 {
@@ -120,7 +124,7 @@ function kview($controller, $view, $data = [], $mergeData = [])
  *
  * @param  null|string  $date
  * @param  null|string  $timezone
- * @return Illuminate\Support\Carbon
+ * @return Carbon
  */
 function utcTime($date = null, $timezone = null)
 {
@@ -128,7 +132,7 @@ function utcTime($date = null, $timezone = null)
 }
 
 /**
- * @param  \Illuminate\Contracts\Support\Arrayable|iterable|array|null  $items
+ * @param  Arrayable|iterable|array|null  $items
  * @param  mixed  $default
  */
 function collects($items = [], $default = null): Collection

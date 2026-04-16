@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @author sankar <sankar.suda@gmail.com>
@@ -132,7 +133,7 @@ class Stream
      * @param  array|Collection|\Iterator  $rows
      * @param  array|Collection|\Iterator  $fields
      * @param  mixed  $disposition
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return StreamedResponse
      */
     public function excel($rows, $fields = [], array $headers = [], $disposition = 'attachment')
     {
@@ -145,7 +146,7 @@ class Stream
      * @param  array|Collection|\Iterator  $rows
      * @param  array  $fields
      * @param  string  $disposition
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return StreamedResponse
      */
     public function stream($rows, $fields = [], array $headers = [], $disposition = 'attachment')
     {

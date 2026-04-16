@@ -135,7 +135,7 @@ class User extends Model
     public function handleUserCreating($model)
     {
         // Execute before creating user
-        $model->uuid = Str::uuid();
+        $model->uuid = Str::uuid7();
     }
     
     public function handleUserCreated($model)

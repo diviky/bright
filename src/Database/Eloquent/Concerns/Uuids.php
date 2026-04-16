@@ -38,7 +38,7 @@ trait Uuids
     {
         static::creating(function (Model $model): void {
             if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = Str::uuid()->toString();
+                $model->{$model->getKeyName()} = Str::uuid7()->toString();
             }
         });
     }

@@ -189,7 +189,7 @@ trait Eventable
 
                 switch ($field) {
                     case 'id':
-                        $value[$column] = (string) Str::uuid();
+                        $value[$column] = (string) Str::uuid7();
 
                         break;
                     case 'uid':

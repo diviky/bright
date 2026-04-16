@@ -20,7 +20,7 @@ class EmailLogger
         $message = $event->message;
 
         Models::emailLogs()::create([
-            'id' => Str::uuid(),
+            'id' => Str::uuid7(),
             'from' => $this->formatAddressField($message, 'From'),
             'to' => $this->formatAddressField($message, 'To'),
             'cc' => $this->formatAddressField($message, 'Cc'),

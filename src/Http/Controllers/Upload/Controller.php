@@ -22,7 +22,7 @@ class Controller extends BaseController
     public function forLocal(Request $request): JsonResponse
     {
         $extension = $request->post('extension');
-        $filename = $request->post('filename', (string) Str::uuid());
+        $filename = $request->post('filename', (string) Str::uuid7());
 
         if ($extension) {
             $filename .= '.' . $extension;
@@ -154,7 +154,7 @@ class Controller extends BaseController
         $disk = 's3';
 
         $extension = $request->post('extension');
-        $filename = $request->post('filename', (string) Str::uuid());
+        $filename = $request->post('filename', (string) Str::uuid7());
 
         if ($extension) {
             $filename .= '.' . $extension;
