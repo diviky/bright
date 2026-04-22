@@ -6,6 +6,7 @@ namespace Diviky\Bright\Http\Middleware;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Http\Response;
@@ -22,9 +23,9 @@ class Api
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  bool  $keep_code
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     * @return JsonResponse|Response
      */
     public function handle($request, \Closure $next, $keep_code = true)
     {
@@ -56,7 +57,7 @@ class Api
      * Add cors headers.
      *
      * @param  mixed  $response
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Response
+     * @return JsonResponse|Response
      */
     protected function respond($response)
     {
@@ -67,7 +68,7 @@ class Api
         $original = $response->getOriginalContent();
 
         if (\is_array($original)) {
-            if (isset($original['errors'])) {
+            if (isset($original['errors']) && !empty($original['errors']) && empty($original['status'])) {
                 $original['code'] = 422;
                 $original['status'] = 'ERROR';
             }

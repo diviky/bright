@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Concerns;
 
+use Illuminate\Support\Carbon;
+
 trait Analytics
 {
     public function getGroupFormats($column, $interval = '1d')
@@ -333,14 +335,14 @@ trait Analytics
         $start = carbon($start);
         $end = $end ? carbon($end) : $start;
 
-        return [$start, $end];
+        return [$start->copy()->startOfDay(), $end->copy()->endOfDay()];
     }
 
     /**
      * Generate the time ranges.
      *
-     * @param  \Illuminate\Support\Carbon  $start
-     * @param  \Illuminate\Support\Carbon  $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      * @param  int  $interval
      * @param  string  $format
      */
