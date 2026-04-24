@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Diviky\Bright\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Pipeline;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
@@ -13,12 +15,14 @@ class AuthProxy
     /**
      * Handle the incoming requests.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  callable  $next
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function handle($request, $next)
     {
+        static::normalizeBasicAuthWithEmptyPasswordToBearer($request);
+
         return (new Pipeline(app()))
             ->send($request)
             ->through(static::middlewares($request))
@@ -30,7 +34,7 @@ class AuthProxy
     /**
      * Determine if the given request has JWT token.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      */
     public static function middlewares($request): array
     {
@@ -42,6 +46,10 @@ class AuthProxy
             }
 
             return [Authenticate::class . ':web'];
+        }
+
+        if (preg_match('/^\s*Basic\s+(\S+)\s*$/i', $token, $matches)) {
+            return [AuthenticateOnceWithBasicAuth::class];
         }
 
         $re = '/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.[A-Za-z0-9-_\.+=]*$/m';
@@ -56,7 +64,7 @@ class AuthProxy
     /**
      * Determine if the given request has JWT token.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return null|mixed|string
      */
     public static function getAccessToken($request)
@@ -82,5 +90,47 @@ class AuthProxy
         }
 
         return $token;
+    }
+
+    /**
+     * When Authorization is Basic and the password segment is empty, treat the
+     * username as an API token by rewriting the header to Bearer.
+     *
+     * @param  Request  $request
+     */
+    private static function normalizeBasicAuthWithEmptyPasswordToBearer($request): void
+    {
+        $authorization = $request->header('Authorization');
+        if ($authorization === null || $authorization === '') {
+            return;
+        }
+
+        if (!preg_match('/^\s*Basic\s+(\S+)\s*$/i', $authorization, $matches)) {
+            return;
+        }
+
+        $decoded = base64_decode($matches[1], true);
+        if ($decoded === false) {
+            return;
+        }
+
+        $colonPosition = strpos($decoded, ':');
+        if ($colonPosition === false) {
+            $username = $decoded;
+            $password = '';
+        } else {
+            $username = substr($decoded, 0, $colonPosition);
+            $password = substr($decoded, $colonPosition + 1);
+        }
+
+        if ($password !== '') {
+            return;
+        }
+
+        if ($username === '') {
+            return;
+        }
+
+        $request->headers->set('Authorization', 'Bearer ' . $username);
     }
 }
