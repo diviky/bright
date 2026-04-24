@@ -69,6 +69,8 @@ trait Raw
             }
 
             $expression = \implode(', ', $expression);
+        } else {
+            $expression = $this->wrap($expression);
         }
 
         return parent::selectRaw($expression, $bindings);
@@ -111,11 +113,27 @@ trait Raw
      */
     protected function wrap($value)
     {
-        if (is_string($value) && \preg_match_all('/([^\W]+)\.([^\W]+)?/', $value, $matches)) {
-            foreach ($matches[0] as $match) {
-                $exp = $this->grammar->wrap(\trim($match));
-                $value = \str_replace($match, $exp, $value);
+        if (is_string($value)) {
+            if (\preg_match_all('/([^\W]+)\.([^\W]+)?/', $value, $matches)) {
+                foreach ($matches[0] as $match) {
+                    $exp = $this->grammar->wrap(\trim($match));
+                    $value = \str_replace($match, $exp, $value);
+                }
             }
+
+            // Match FROM ... and wrap the table names (with optional alias)
+            // Example matches: airo_sms.sms_messages as t, sms_messages t, sms_message_feedbacks as f, etc.
+            // This will match table with an optional prefix/schema/database and optional alias using "AS" or space
+            $value = preg_replace_callback(
+                '/\bfrom\s+([\w.]+)/i',
+                function ($matches) {
+                    $table = $matches[1];
+                    $wrappedTable = $this->grammar->wrapTable($table);
+
+                    return 'from ' . $wrappedTable;
+                },
+                $value
+            );
         }
 
         return $value;
