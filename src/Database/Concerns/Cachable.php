@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database\Concerns;
 
 use DateTime;
+use Illuminate\Cache\CacheManager;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
+use Illuminate\Contracts\Database\Query\Expression;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 
 trait Cachable
 {
@@ -19,7 +23,7 @@ trait Cachable
     /**
      * The number of seconds to cache the query.
      *
-     * @var null|\DateTime|int
+     * @var null|DateTime|int
      */
     protected $cacheSeconds;
 
@@ -55,7 +59,7 @@ trait Cachable
      * Execute the query as a "select" statement.
      *
      * @param  array|string  $columns
-     * @return array|\Illuminate\Support\Collection
+     * @return array|Collection
      */
     public function get($columns = ['*'])
     {
@@ -71,9 +75,9 @@ trait Cachable
     /**
      * Get a collection instance containing the values of a given column.
      *
-     * @param  \Illuminate\Contracts\Database\Query\Expression|string  $column
+     * @param  Expression|string  $column
      * @param  null|string  $key
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function pluck($column, $key = null)
     {
@@ -122,7 +126,7 @@ trait Cachable
         // If we've been given a DateTime instance or a "seconds" value that is
         // greater than zero then we'll pass it on to the remember method.
         // Otherwise we'll cache it indefinitely.
-        if ($seconds instanceof \DateTime || $seconds > 0) {
+        if ($seconds instanceof DateTime || $seconds > 0) {
             return $cache->remember($cacheKey, $seconds, $callback);
         }
 
@@ -134,7 +138,7 @@ trait Cachable
      *
      * @param  string  $column
      * @param  mixed  $key
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function pluckCached($column, $key = null)
     {
@@ -146,7 +150,7 @@ trait Cachable
 
         $callback = $this->pluckCacheCallback($column, $key);
 
-        if ($seconds instanceof \DateTime || $seconds > 0) {
+        if ($seconds instanceof DateTime || $seconds > 0) {
             return $cache->remember($cacheKey, $seconds, $callback);
         }
 
@@ -156,7 +160,7 @@ trait Cachable
     /**
      * Indicate that the query results should be cached.
      *
-     * @param  null|\DateTime|int  $seconds
+     * @param  null|DateTime|int  $seconds
      * @param  string  $key
      * @return $this
      */
@@ -172,7 +176,7 @@ trait Cachable
     }
 
     /**
-     * @return null|\DateTime|int
+     * @return null|DateTime|int
      */
     public function getCacheTime()
     {
@@ -183,7 +187,7 @@ trait Cachable
      * Indicate that the query results should be cached forever.
      *
      * @param  null|string  $key
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return Builder|static
      */
     public function rememberForever($key = null)
     {
@@ -193,7 +197,7 @@ trait Cachable
     /**
      * Indicate that the query should not be cached.
      *
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return Builder|static
      */
     public function dontRemember()
     {
@@ -205,7 +209,7 @@ trait Cachable
     /**
      * Indicate that the query should not be cached. Alias for dontRemember().
      *
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return Builder|static
      */
     public function doNotRemember()
     {
@@ -308,7 +312,7 @@ trait Cachable
     /**
      * Get the cache object with tags assigned, if applicable.
      *
-     * @return \Illuminate\Cache\CacheManager
+     * @return CacheManager
      */
     protected function getCache()
     {

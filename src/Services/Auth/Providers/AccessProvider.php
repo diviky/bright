@@ -8,6 +8,7 @@ use App\Models\User;
 use Diviky\Bright\Models\Token;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,7 @@ class AccessProvider implements UserProvider
     /**
      * The hasher implementation.
      *
-     * @var \Illuminate\Contracts\Hashing\Hasher
+     * @var Hasher
      */
     protected $hasher;
 
@@ -46,7 +47,7 @@ class AccessProvider implements UserProvider
      * Retrieve a user by their unique identifier.
      *
      * @param  string  $token
-     * @return null|\Illuminate\Contracts\Auth\Authenticatable
+     * @return null|Authenticatable
      */
     public function retrieveByAccessToken($token)
     {
@@ -64,6 +65,7 @@ class AccessProvider implements UserProvider
             }
 
             return $this->token
+                ->with(['tokenable' => fn ($query) => $query->remember(null, 'tokenable:' . $token)])
                 ->remember(null, 'token:' . $token)
                 ->where($identifier, $token)
                 ->first();
@@ -75,7 +77,10 @@ class AccessProvider implements UserProvider
             $id = Arr::last(explode(' ', $id));
         }
 
-        $instance = $this->token->remember(null, 'token:' . $id . $token)->find($id);
+        $instance = $this->token
+            ->with(['tokenable' => fn ($query) => $query->remember(null, 'tokenable:' . $token)])
+            ->remember(null, 'token:' . $id . $token)
+            ->find($id);
 
         if ($instance) {
             return hash_equals($instance->{$identifier}, hash('sha256', $token)) ? $instance : null;
