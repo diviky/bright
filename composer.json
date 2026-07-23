@@ -1,6 +1,7 @@
 {
   "name": "diviky/bright",
   "description": "Framework extension",
+  "version": "7.0.32",
   "keywords": [
     "laravel",
     "permission",
