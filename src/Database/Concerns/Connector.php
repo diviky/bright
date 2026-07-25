@@ -79,8 +79,8 @@ trait Connector
         }
 
         if (!is_null($connection)) {
-            $config['databases'] = [];
-
+            // Keep databases patterns so related tables on other schemas
+            // (e.g. tags on the default DB) can still be qualified correctly.
             return [$connection, $config];
         }
 

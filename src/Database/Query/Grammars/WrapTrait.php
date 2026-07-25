@@ -78,7 +78,38 @@ trait WrapTrait
             }
         }
 
+        // On a non-default connection (e.g. blog → airo_blog), qualify
+        // unmatched tables with the default database (e.g. tags → airo.tags).
+        $defaultDatabase = $this->getDefaultDatabaseName();
+        $currentDatabase = $this->connection?->getDatabaseName();
+
+        if (
+            \is_string($defaultDatabase)
+            && $defaultDatabase !== ''
+            && \is_string($currentDatabase)
+            && $currentDatabase !== ''
+            && $defaultDatabase !== $currentDatabase
+        ) {
+            return $this->wrap($defaultDatabase) . '.' . $this->wrap($prefix . $table . $alias);
+        }
+
         return $this->wrap($prefix . $table . $alias);
+    }
+
+    /**
+     * Default connection database name for cross-schema table qualification.
+     */
+    protected function getDefaultDatabaseName(): ?string
+    {
+        $default = \config('database.default');
+
+        if (!\is_string($default) || $default === '') {
+            return null;
+        }
+
+        $database = \config("database.connections.{$default}.database");
+
+        return \is_string($database) && $database !== '' ? $database : null;
     }
 
     /**

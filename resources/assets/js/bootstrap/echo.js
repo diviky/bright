@@ -1,11 +1,14 @@
 import Echo from '/node_modules/laravel-echo';
 import Pusher from '/node_modules/pusher-js';
 
-if (window.env?.echo?.enabled && window.env?.userId) {
+const supportedBroadcasters = ['reverb', 'pusher', 'ably', 'socket.io', 'null'];
+const echoDriver = window.env?.echo?.driver || 'reverb';
+
+if (window.env?.echo?.enabled && window.env?.userId && supportedBroadcasters.includes(echoDriver)) {
   window.Pusher = Pusher;
 
   window.Echo = new Echo({
-    broadcaster: window.env?.echo?.driver || 'reverb',
+    broadcaster: echoDriver,
     key: window.env?.echo?.key || '7e0aefc03f0b8246ea11dddf0e3b79da',
     wsHost: window.env?.echo?.host || window.location.hostname,
     wsPort: window.env?.echo?.port || 6001,
