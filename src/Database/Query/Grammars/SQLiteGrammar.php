@@ -8,5 +8,6 @@ use Illuminate\Database\Query\Grammars\SQLiteGrammar as LarvelSQLiteGrammar;
 
 class SQLiteGrammar extends LarvelSQLiteGrammar
 {
+    use CompilesComments;
     use WrapTrait;
 }

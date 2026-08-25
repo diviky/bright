@@ -12,6 +12,7 @@ trait WithBuilder
     use Build;
     use BuildsQueries;
     use Cachable;
+    use Comment;
     use ConcernsBuilder;
     use Config;
     use Eloquent;

@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database\Connectors;
 
 use Diviky\Bright\Database\MySqlConnection;
+use Diviky\Bright\Database\PostgresConnection;
 use Diviky\Bright\Database\SQLiteConnection;
+use Diviky\Bright\Database\SqlServerConnection;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory as LaravelConnectionFactory;
+use Illuminate\Database\Connectors\ConnectorInterface;
 
 class ConnectionFactory extends LaravelConnectionFactory
 {
     /**
      * Create a connector instance based on the configuration.
      *
-     * @return \Illuminate\Database\Connectors\ConnectorInterface
+     * @return ConnectorInterface
      *
      * @throws \InvalidArgumentException
      */
@@ -55,8 +58,10 @@ class ConnectionFactory extends LaravelConnectionFactory
         }
 
         return match ($driver) {
-            'mysql' => new MySqlConnection($connection, $database, $prefix, $config),
+            'mysql', 'mariadb' => new MySqlConnection($connection, $database, $prefix, $config),
             'sqlite' => new SQLiteConnection($connection, $database, $prefix, $config),
+            'pgsql' => new PostgresConnection($connection, $database, $prefix, $config),
+            'sqlsrv' => new SqlServerConnection($connection, $database, $prefix, $config),
             'mongodb' => new \Diviky\Bright\Database\MongoDB\Connection($config),
             default => parent::createConnection($driver, $connection, $database, $prefix, $config),
         };
