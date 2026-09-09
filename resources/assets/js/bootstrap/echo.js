@@ -7,17 +7,20 @@ const echoDriver = window.env?.echo?.driver || 'reverb';
 if (window.env?.echo?.enabled && window.env?.userId && supportedBroadcasters.includes(echoDriver)) {
   window.Pusher = Pusher;
 
-  window.Echo = new Echo({
+  const useTls = Boolean(window.env?.echo?.ssl);
+
+  const echoConfig = {
     broadcaster: echoDriver,
     key: window.env?.echo?.key || '7e0aefc03f0b8246ea11dddf0e3b79da',
     wsHost: window.env?.echo?.host || window.location.hostname,
     wsPort: window.env?.echo?.port || 6001,
     wssHost: window.env?.echo?.host || window.location.hostname,
     wssPort: window.env?.echo?.port || 6001,
-    forceTLS: window.env?.echo?.ssl || false,
+    forceTLS: useTls,
     disableStats: window.env?.echo?.stats || true,
-    enableTransports: ['ws', 'wss'],
-    cluster: window.env?.echo?.cluster || 'mt1',
+    // Reverb on http://127.0.0.1:8080 only speaks ws://. Including wss on an
+    // https page makes pusher-js try wss:// first, which closes immediately.
+    enabledTransports: useTls ? ['ws', 'wss'] : ['ws'],
     authorizer: (channel, options) => {
       return {
         authorize: (socketId, callback) => {
@@ -35,7 +38,15 @@ if (window.env?.echo?.enabled && window.env?.userId && supportedBroadcasters.inc
         },
       };
     },
-  });
+  };
+
+  // Reverb is self-hosted. A `cluster` value makes pusher-js fall back to
+  // sockjs.pusher.com when the websocket handshake fails.
+  if (echoDriver === 'pusher' && window.env?.echo?.cluster) {
+    echoConfig.cluster = window.env.echo.cluster;
+  }
+
+  window.Echo = new Echo(echoConfig);
 
   window.Echo.channel('notifications').listen('.message', (e) => {
     window.dispatchEvent(
