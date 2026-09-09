@@ -9,6 +9,10 @@ window.addEventListener('modal.open', function (e) {
   $.fn.easyModalShow(opts);
 });
 
+window.addEventListener('modal.close', function (e) {
+  $.fn.easyModalHide();
+});
+
 window.addEventListener('turbo', function (e) {
   var opts = {
     container: '[data-pjax-container]',
@@ -25,5 +29,21 @@ window.addEventListener('flash', function (e) {
 
 window.addEventListener('notify', function (e) {
   const detail = Array.isArray(e.detail) ? e.detail[0] : e.detail;
-  notify(detail);
+  displayNoty(detail);
+});
+
+window.addEventListener('form.render', function (e) {
+  const detail = Array.isArray(e.detail) ? e.detail[0] : e.detail;
+  var form = getForm(detail);
+  if (form) {
+    form.submit();
+  }
+});
+
+window.addEventListener('form.reset', function (e) {
+  const detail = Array.isArray(e.detail) ? e.detail[0] : e.detail;
+  var form = getForm(detail);
+  if (form) {
+    form.reset();
+  }
 });

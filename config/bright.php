@@ -1,6 +1,27 @@
 <?php
 
 declare(strict_types=1);
+use Diviky\Bright\Database\Listeners\QueryQueuedListener;
+use Diviky\Bright\Http\Middleware\Accept;
+use Diviky\Bright\Http\Middleware\Ajax;
+use Diviky\Bright\Http\Middleware\Api;
+use Diviky\Bright\Http\Middleware\ApiKey;
+use Diviky\Bright\Http\Middleware\AuthorizeMiddleware;
+use Diviky\Bright\Http\Middleware\AuthProxy;
+use Diviky\Bright\Http\Middleware\IsUserActivated;
+use Diviky\Bright\Http\Middleware\PermissionMiddleware;
+use Diviky\Bright\Http\Middleware\Pond;
+use Diviky\Bright\Http\Middleware\PreflightResponse;
+use Diviky\Bright\Http\Middleware\RoleMiddleware;
+use Diviky\Bright\Http\Middleware\RoleOrPermissionMiddleware;
+use Diviky\Bright\Http\Middleware\XSSProtection;
+use Diviky\Bright\Listeners\EmailLogger;
+use Diviky\Bright\Models\EmailLogs;
+use Diviky\Bright\Models\Meta;
+use Diviky\Bright\Models\MetaValues;
+use Diviky\Bright\Models\Options;
+use Diviky\Bright\Models\User;
+use Diviky\Bright\Models\UserUsers;
 
 return [
     // Sharding service config name
@@ -11,6 +32,18 @@ return [
     'db_events' => env('DB_EVENTS', true),
 
     'db_cache' => env('DB_CACHE', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bulk load via LOAD DATA LOCAL INFILE
+    |--------------------------------------------------------------------------
+    |
+    | Disable when the app connects through ProxySQL or another proxy that
+    | does not support LOAD DATA LOCAL INFILE. Batch inserts will fall back
+    | to chunked INSERT statements instead.
+    |
+    */
+    'bulk_load' => env('DB_BULK_LOAD', false),
 
     'async' => [
         'enable' => env('DB_ASYNC_QUERY', false),
@@ -64,42 +97,42 @@ return [
 
     'events' => [
         'Illuminate\Mail\Events\MessageSending' => [
-            \Diviky\Bright\Listeners\EmailLogger::class,
+            EmailLogger::class,
         ],
 
         'Diviky\Bright\Database\Events\QueryQueued' => [
-            Diviky\Bright\Database\Listeners\QueryQueuedListener::class,
+            QueryQueuedListener::class,
         ],
     ],
 
     'middlewares' => [
-        'permission' => \Diviky\Bright\Http\Middleware\PermissionMiddleware::class,
-        'role' => \Diviky\Bright\Http\Middleware\RoleMiddleware::class,
-        'roleorpermission' => \Diviky\Bright\Http\Middleware\RoleOrPermissionMiddleware::class,
-        'authorize' => \Diviky\Bright\Http\Middleware\AuthorizeMiddleware::class,
-        'auth.activated' => \Diviky\Bright\Http\Middleware\IsUserActivated::class,
-        'accept' => \Diviky\Bright\Http\Middleware\Accept::class,
-        'api.response' => \Diviky\Bright\Http\Middleware\Api::class,
-        'ajax' => \Diviky\Bright\Http\Middleware\Ajax::class,
-        'preflight' => \Diviky\Bright\Http\Middleware\PreflightResponse::class,
-        'xss' => \Diviky\Bright\Http\Middleware\XSSProtection::class,
-        'auth.proxy' => \Diviky\Bright\Http\Middleware\AuthProxy::class,
-        'apikey' => \Diviky\Bright\Http\Middleware\ApiKey::class,
-        'filepond' => \Diviky\Bright\Http\Middleware\Pond::class,
+        'permission' => PermissionMiddleware::class,
+        'role' => RoleMiddleware::class,
+        'roleorpermission' => RoleOrPermissionMiddleware::class,
+        'authorize' => AuthorizeMiddleware::class,
+        'auth.activated' => IsUserActivated::class,
+        'accept' => Accept::class,
+        'api.response' => Api::class,
+        'ajax' => Ajax::class,
+        'preflight' => PreflightResponse::class,
+        'xss' => XSSProtection::class,
+        'auth.proxy' => AuthProxy::class,
+        'apikey' => ApiKey::class,
+        'filepond' => Pond::class,
     ],
 
     'priority_middleware' => [
-        \Diviky\Bright\Http\Middleware\ApiKey::class,
-        \Diviky\Bright\Http\Middleware\Accept::class,
+        ApiKey::class,
+        Accept::class,
     ],
 
     'models' => [
-        'user' => \Diviky\Bright\Models\User::class,
-        'options' => \Diviky\Bright\Models\Options::class,
-        'meta' => \Diviky\Bright\Models\Meta::class,
-        'meta_values' => \Diviky\Bright\Models\MetaValues::class,
-        'email_logs' => \Diviky\Bright\Models\EmailLogs::class,
-        'user_users' => \Diviky\Bright\Models\UserUsers::class,
+        'user' => User::class,
+        'options' => Options::class,
+        'meta' => Meta::class,
+        'meta_values' => MetaValues::class,
+        'email_logs' => EmailLogs::class,
+        'user_users' => UserUsers::class,
     ],
 
     'table' => [

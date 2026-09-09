@@ -55,7 +55,7 @@ trait Outfile
 
         $table = $this->grammar->wrapTable($table);
 
-        if ($path) {
+        if ($path && config('bright.bulk_load', false)) {
             $path = $this->outFile($path, $options);
 
             $sql = "LOAD DATA LOCAL INFILE '" . $path . "'";

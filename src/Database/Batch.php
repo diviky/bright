@@ -6,6 +6,7 @@ namespace Diviky\Bright\Database;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\QueryException;
 
 class Batch
 {
@@ -64,9 +65,9 @@ class Batch
 
     public function bulk(bool $bulk = true): self
     {
-        $this->bulk = $bulk;
+        $this->bulk = $bulk && $this->supportsBulkLoad();
 
-        if ($bulk) {
+        if ($this->bulk) {
             $this->generateFilePath();
         }
 
@@ -96,7 +97,7 @@ class Batch
 
     public function commit(): bool
     {
-        if ($this->bulk && is_resource($this->stream)) {
+        if ($this->bulk && $this->supportsBulkLoad() && is_resource($this->stream)) {
             return $this->commitBulk();
         }
 
@@ -164,14 +165,23 @@ class Batch
         $sql .= " FIELDS TERMINATED  BY '[F]' LINES TERMINATED BY '[L]'";
         $sql .= ' (' . \implode(',', $this->fields) . ') ';
 
-        if ($this->builder->statement($sql)) {
-            $this->executeModelEvent($models);
-            unset($models);
+        try {
+            if ($this->builder->statement($sql)) {
+                $this->executeModelEvent($models);
+                unset($models);
 
-            return true;
+                return true;
+            }
+        } catch (QueryException) {
+            return $this->commitInsert();
         }
 
         return false;
+    }
+
+    protected function supportsBulkLoad(): bool
+    {
+        return (bool) config('bright.bulk_load', false);
     }
 
     protected function executeModelEvent(array $models): void

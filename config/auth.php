@@ -19,6 +19,11 @@ return [
      */
 
     'guards' => [
+        'jwt' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
+
         'access_token' => [
             'driver' => 'access_token',
             'provider' => 'access_token',

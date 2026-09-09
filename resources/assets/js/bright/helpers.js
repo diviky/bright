@@ -24,11 +24,11 @@ window.displayNoty = (response, $this) => {
   var res = parseJSON(response);
 
   if (res.message) {
-    if (isSuccess(res.status)) {
+    if (isSuccess(res.status) || (res.type && res.type == 'success')) {
       notify({ text: res.message, type: 'success' });
-    } else if (res.status == 'INFO') {
+    } else if (res.status == 'INFO' || (res.type && res.type == 'info')) {
       notify({ text: res.message, type: 'info' });
-    } else {
+    } else if (res.status == 'ERROR' || (res.type && res.type == 'error')) {
       notify({ text: res.message, type: 'error' });
     }
   }
