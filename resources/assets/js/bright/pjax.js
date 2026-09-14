@@ -58,7 +58,148 @@ window.brightPjax = () => {
     return prefetchPromises[url] && prefetchPromises[url].then;
   }
 
+  function normalizeUrl(url) {
+    try {
+      return new URL(url, window.location.origin).href;
+    } catch {
+      return url;
+    }
+  }
+
+  function findInertiaLink(url) {
+    const targetUrl = normalizeUrl(url);
+
+    return Array.from(document.querySelectorAll('a[data-inertia]')).find((link) => {
+      const href = link.getAttribute('href');
+
+      if (!href || href === '#' || href === '') {
+        return false;
+      }
+
+      return normalizeUrl(href) === targetUrl;
+    });
+  }
+
+  function isInertiaHtml(html) {
+    if (!html || typeof html !== 'string') {
+      return false;
+    }
+
+    return (
+      /<script[^>]+data-page=/i.test(html) ||
+      /data-bright-inertia-page/i.test(html) ||
+      /<div[^>]+id="app"[^>]*>\s*<\/div>/i.test(html)
+    );
+  }
+
+  function isInertiaContent(contents) {
+    if (!contents || !contents.length) {
+      return false;
+    }
+
+    const $contents = contents.jquery ? contents : $(contents);
+
+    return (
+      $contents.filter('script[data-page]').length > 0 ||
+      $contents.find('script[data-page]').length > 0 ||
+      $contents.filter('[data-bright-inertia-page]').length > 0 ||
+      $contents.find('[data-bright-inertia-page]').length > 0 ||
+      ($contents.find('#app').length > 0 && $contents.find('script[data-page]').length > 0)
+    );
+  }
+
+  function prefetchInertia(url) {
+    if (typeof window.__inertiaPrefetch === 'function') {
+      window.__inertiaPrefetch(url);
+      return true;
+    }
+
+    return false;
+  }
+
+  function navigateInertia(url) {
+    const targetUrl = normalizeUrl(url);
+
+    if (typeof window.__inertiaNavigate === 'function') {
+      window.__inertiaNavigate(url);
+      return true;
+    }
+
+    // PJAX may have already updated the URL before we detect an Inertia page.
+    if (normalizeUrl(window.location.href) === targetUrl) {
+      window.location.reload();
+      return false;
+    }
+
+    window.location.assign(url);
+    return false;
+  }
+
+  function isInertiaResponse(response, html) {
+    if (response && response.headers && response.headers.get('X-Inertia')) {
+      return true;
+    }
+
+    return isInertiaHtml(html);
+  }
+
+  function applyNavigation(html, container, url) {
+    if (isInertiaHtml(html)) {
+      navigateInertia(url);
+      return true;
+    }
+
+    applyHtmlToContainer(html, container);
+    return false;
+  }
+
+  function resolvePjaxUrl(options, fallbackUrl) {
+    return (options && (options.requestUrl || options.url)) || fallbackUrl || window.location.href;
+  }
+
+  function isPjaxAjaxOptions(options) {
+    if (options.data && options.data._pjax) {
+      return true;
+    }
+
+    if (Array.isArray(options.data)) {
+      return options.data.some((entry) => entry && entry.name === '_pjax');
+    }
+
+    return false;
+  }
+
+  function interceptInertiaPjaxResponse() {
+    $.ajaxPrefilter(function (options) {
+      if (!isPjaxAjaxOptions(options)) {
+        return;
+      }
+
+      const originalSuccess = options.success;
+
+      options.success = function (data, textStatus, jqXHR) {
+        const url = resolvePjaxUrl(options, jqXHR?.getResponseHeader?.('X-PJAX-URL'));
+
+        if (isInertiaResponse(jqXHR, data)) {
+          navigateInertia(url);
+          return;
+        }
+
+        if (typeof originalSuccess === 'function') {
+          return originalSuccess.apply(this, arguments);
+        }
+      };
+    });
+  }
+
+  interceptInertiaPjaxResponse();
+
   function prefetchPage(url, container) {
+    if (findInertiaLink(url)) {
+      prefetchInertia(url);
+      return;
+    }
+
     // Clean up expired cache before checking
     cleanupExpiredCache();
 
@@ -90,10 +231,20 @@ window.brightPjax = () => {
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        return response.text();
+
+        return response.text().then((data) => ({
+          data,
+          isInertia: isInertiaResponse(response, data),
+        }));
       })
-      .then((data) => {
+      .then(({ data, isInertia }) => {
         clearTimeout(timeoutId);
+
+        if (isInertia) {
+          prefetchInertia(url);
+          return data;
+        }
+
         // Store the raw HTML response in cache (don't apply it yet)
         prefetchCache[url] = {
           content: data,
@@ -160,7 +311,7 @@ window.brightPjax = () => {
   }
 
   function hasPjaxEnabled($this) {
-    if ($this.data('nojax') || $this.attr('nojax')) {
+    if ($this.data('nojax') || $this.attr('nojax') || $this.is('[data-inertia]')) {
       return false;
     }
 
@@ -246,10 +397,15 @@ window.brightPjax = () => {
     const cachedEntry = getCachedEntry(url);
     if (cachedEntry) {
       e.preventDefault();
-      // Use cached content immediately
       const html = cachedEntry.content;
+
+      if (applyNavigation(html, container, url)) {
+        cleanupCacheEntry(url);
+        markRecentNavigation(url);
+        return;
+      }
+
       window.history.pushState({ container: container, url: url }, '', url);
-      applyHtmlToContainer(html, container);
       triggerPjaxLifecycle(html, container, url);
       cleanupCacheEntry(url);
       markRecentNavigation(url);
@@ -266,8 +422,13 @@ window.brightPjax = () => {
           NProgress.done();
           // Use the HTML data directly from the promise
           if (html) {
+            if (applyNavigation(html, container, url)) {
+              cleanupCacheEntry(url);
+              markRecentNavigation(url);
+              return;
+            }
+
             window.history.pushState({ container: container, url: url }, '', url);
-            applyHtmlToContainer(html, container);
             triggerPjaxLifecycle(html, container, url);
             cleanupCacheEntry(url);
             markRecentNavigation(url);
@@ -298,8 +459,32 @@ window.brightPjax = () => {
     $(document).trigger('ajax:loaded');
   });
 
+  // Prevent PJAX from injecting Inertia HTML (scripts won't run via .html()).
+  function handlePjaxBeforeReplace(event, contents, options) {
+    if (!isInertiaContent(contents)) {
+      return;
+    }
+
+    event.preventDefault();
+    navigateInertia(resolvePjaxUrl(options));
+  }
+
+  $(document).on('pjax:beforeReplace', handlePjaxBeforeReplace);
+  $(document).on('pjax:beforeReplace', '[data-pjax-container]', handlePjaxBeforeReplace);
+
   // Store container in history state when regular PJAX navigates
   $(document).on('pjax:success', function (event, data, status, xhr, options) {
+    const url = resolvePjaxUrl(options);
+
+    if (isInertiaHtml(data) || (xhr && xhr.getResponseHeader && xhr.getResponseHeader('X-Inertia'))) {
+      navigateInertia(url);
+      return;
+    }
+
+    if (typeof window.__inertiaUnmount === 'function' && window.__inertiaBootstrapped) {
+      window.__inertiaUnmount();
+    }
+
     if (options && options.container && window.history.state) {
       // Update the current history state with container info
       const currentState = window.history.state || {};
@@ -319,7 +504,12 @@ window.brightPjax = () => {
     // Check cache first
     const cachedEntry = getCachedEntry(url);
     if (cachedEntry) {
-      applyHtmlToContainer(cachedEntry.content, container);
+      if (applyNavigation(cachedEntry.content, container, url)) {
+        cleanupCacheEntry(url);
+        markRecentNavigation(url);
+        return;
+      }
+
       triggerPjaxLifecycle(cachedEntry.content, container, url);
       cleanupCacheEntry(url);
       markRecentNavigation(url);
@@ -342,10 +532,21 @@ window.brightPjax = () => {
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        return response.text();
+
+        return response.text().then((html) => ({
+          html,
+          isInertia: isInertiaResponse(response, html),
+        }));
       })
-      .then((html) => {
+      .then(({ html, isInertia }) => {
         NProgress.done();
+
+        if (isInertia) {
+          navigateInertia(url);
+          markRecentNavigation(url);
+          return;
+        }
+
         applyHtmlToContainer(html, container);
         triggerPjaxLifecycle(html, container, url);
         markRecentNavigation(url);

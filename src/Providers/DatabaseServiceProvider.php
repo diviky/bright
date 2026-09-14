@@ -6,7 +6,9 @@ namespace Diviky\Bright\Providers;
 
 use Diviky\Bright\Database\Connectors\ConnectionFactory;
 use Diviky\Bright\Database\DatabaseManager;
+use Diviky\Bright\Database\LostConnectionDetector;
 use Diviky\Bright\Database\MongoDB\Connection;
+use Illuminate\Contracts\Database\LostConnectionDetector as LostConnectionDetectorContract;
 use Illuminate\Support\ServiceProvider;
 
 class DatabaseServiceProvider extends ServiceProvider
@@ -17,6 +19,8 @@ class DatabaseServiceProvider extends ServiceProvider
     #[\Override]
     public function register(): void
     {
+        $this->app->singleton(LostConnectionDetectorContract::class, LostConnectionDetector::class);
+
         // The connection factory is used to create the actual connection instances on
         // the database. We will inject the factory into the manager so that it may
         // make the connections while they are actually needed and not of before.
