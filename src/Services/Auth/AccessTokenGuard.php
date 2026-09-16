@@ -6,11 +6,12 @@ namespace Diviky\Bright\Services\Auth;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\GuardHelpers;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\IpUtils;
 
-class AccessTokenGuard
+class AccessTokenGuard implements Guard
 {
     use GuardHelpers;
 
@@ -105,6 +106,32 @@ class AccessTokenGuard
         $tokenable->withAccessToken($token);
 
         return $tokenable;
+    }
+
+    /**
+     * Validate a user's credentials.
+     *
+     * @param  array<string, mixed>  $credentials
+     */
+    public function validate(#[\SensitiveParameter] array $credentials = []): bool
+    {
+        foreach ($this->inputKeys as $key) {
+            $token = $credentials[$key] ?? null;
+
+            if (!\is_string($token) || $token === '') {
+                continue;
+            }
+
+            if (\strpos($token, ':') !== false) {
+                [$token] = \explode(':', $token, 2);
+            }
+
+            if (!\is_null($this->provider->retrieveByToken($this->storageKey, $token))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

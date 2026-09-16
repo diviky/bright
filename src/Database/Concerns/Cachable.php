@@ -323,8 +323,10 @@ trait Cachable
 
     /**
      * Get the cache driver.
+     *
+     * @return CacheRepository|\Illuminate\Cache\Contracts\Repository
      */
-    protected function getCacheDriver(): CacheRepository
+    protected function getCacheDriver()
     {
         return app('cache')->store($this->cacheDriver);
     }

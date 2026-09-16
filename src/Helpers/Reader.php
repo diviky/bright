@@ -378,8 +378,7 @@ class Reader
         $ext = \strtolower($ext);
 
         if ($ext && !\in_array($ext, ['.zip', '.tar', '.tar.gz', '.rar', '.gz'])) {
-            // check the file exists or download to local
-            return $zip;
+            return $this->download($zip);
         }
 
         $zip = $this->download($zip);
@@ -421,6 +420,10 @@ class Reader
 
     public function download($path)
     {
+        if (\is_file($path) && \file_exists($path)) {
+            return $path;
+        }
+
         $localDisk = Storage::disk('local');
 
         if ($localDisk->exists($path)) {
