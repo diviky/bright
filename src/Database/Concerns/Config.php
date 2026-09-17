@@ -41,7 +41,7 @@ trait Config
             'async' => $config['async'],
             'sharding' => $config['sharding'],
             'timestamps' => $config['timestamps'],
-            'db_events' => $config['db_events'],
+            'db_events' => $config['db_events'] ?? true,
             'db_cache' => $config['db_cache'],
         ];
     }

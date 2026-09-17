@@ -6,6 +6,7 @@ namespace Diviky\Bright\Services\Auth;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\GuardHelpers;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
@@ -55,10 +56,14 @@ class AccessTokenGuard implements Guard
     /**
      * Get the currently authenticated user.
      *
-     * @return null|\Illuminate\Contracts\Auth\Authenticatable
+     * @return null|Authenticatable
      */
     public function user()
     {
+        if ($this->user) {
+            return $this->user;
+        }
+
         $access_key = $this->getTokenForRequest();
 
         if (!isset($access_key)) {
@@ -103,9 +108,15 @@ class AccessTokenGuard implements Guard
             throw new AuthenticationException('Tokenable is not active');
         }
 
+        if (!$tokenable instanceof Authenticatable) {
+            throw new AuthenticationException('Tokenable must implement Authenticatable');
+        }
+
         $tokenable->withAccessToken($token);
 
-        return $tokenable;
+        $this->user = $tokenable;
+
+        return $this->user;
     }
 
     /**

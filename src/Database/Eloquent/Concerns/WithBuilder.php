@@ -87,4 +87,32 @@ trait WithBuilder
     {
         return $this->toBase()->decrement($column, $amount, $extra);
     }
+
+    /**
+     * Increment a column without updating timestamps or firing model events.
+     *
+     * Query builder updates already skip model events; this mirrors the model API.
+     *
+     * @param  string|QueryExpression  $column
+     * @param  float|int  $amount
+     * @param  array<string, mixed>  $extra
+     */
+    public function plusQuietly($column, $amount = 1, array $extra = []): int
+    {
+        return $this->plus($column, $amount, $extra);
+    }
+
+    /**
+     * Decrement a column without updating timestamps or firing model events.
+     *
+     * Query builder updates already skip model events; this mirrors the model API.
+     *
+     * @param  string|QueryExpression  $column
+     * @param  float|int  $amount
+     * @param  array<string, mixed>  $extra
+     */
+    public function minusQuietly($column, $amount = 1, array $extra = []): int
+    {
+        return $this->minus($column, $amount, $extra);
+    }
 }

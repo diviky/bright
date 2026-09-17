@@ -41,7 +41,7 @@ trait Eventable
      *
      * @return static
      */
-    public function eventState(bool $event = false)
+    public function eventState(bool $event = true)
     {
         return $this->es($event);
     }
@@ -51,8 +51,9 @@ trait Eventable
      *
      * @return static
      */
-    public function es(bool $event = false)
+    public function es(bool $event = true)
     {
+        Context::add($this->eventStateContextKey(), $event);
         $this->eventState = $event;
 
         return $this;
@@ -108,7 +109,7 @@ trait Eventable
             return $values;
         }
 
-        if ($this->executed) {
+        if ($this->wasEventExecuted()) {
             return $values;
         }
 
@@ -140,11 +141,52 @@ trait Eventable
     {
         $bright = $this->getConfig();
 
-        if (isset($bright['db_events']) && $bright['db_events'] == false) {
+        if (($bright['db_events'] ?? true) === false) {
             return false;
         }
 
-        return $this->eventState;
+        return $this->requestEventEnabled();
+    }
+
+    /**
+     * Per-request event flag (Swoole/Octane-safe when query builders outlive the request).
+     */
+    protected function requestEventEnabled(): bool
+    {
+        $key = $this->eventStateContextKey();
+
+        if (Context::has($key)) {
+            return (bool) Context::get($key);
+        }
+
+        return true;
+    }
+
+    protected function eventStateContextKey(): string
+    {
+        return '__bright.db.event_state.' . spl_object_id($this);
+    }
+
+    protected function eventExecutedContextKey(): string
+    {
+        return '__bright.db.event_executed.' . spl_object_id($this);
+    }
+
+    protected function wasEventExecuted(): bool
+    {
+        $key = $this->eventExecutedContextKey();
+
+        if (Context::has($key)) {
+            return (bool) Context::get($key);
+        }
+
+        return false;
+    }
+
+    protected function markEventExecuted(): void
+    {
+        Context::add($this->eventExecutedContextKey(), true);
+        $this->executed = true;
     }
 
     /**
@@ -230,6 +272,7 @@ trait Eventable
             }
         }
 
+
         return $values;
     }
 
@@ -245,11 +288,11 @@ trait Eventable
             return $this;
         }
 
-        if ($this->executed) {
+        if ($this->wasEventExecuted()) {
             return $this;
         }
 
-        $this->executed = true;
+        $this->markEventExecuted();
 
         $eventColumns = $this->getEventTables($type);
         $eventColumns = \array_merge($eventColumns, $this->eventColumns);

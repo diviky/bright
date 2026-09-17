@@ -12,7 +12,7 @@ trait Eventable
      * @param  bool  $event
      * @return static
      */
-    public function eventState($event = false)
+    public function eventState($event = true)
     {
         return $this->es($event);
     }
@@ -23,7 +23,7 @@ trait Eventable
      * @param  bool  $event
      * @return static
      */
-    public function es($event = false)
+    public function es($event = true)
     {
         $this->query->es($event);
 

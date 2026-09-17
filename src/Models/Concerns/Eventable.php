@@ -11,7 +11,14 @@ trait Eventable
     public static function bootEventable(): void
     {
         static::creating(function (Model $model): void {
-            $model->setRawAttributes($model->getQuery()->insertEvent($model->getAttributes())[0]);
+            // Always apply insert context columns on create; do not inherit query es(false)
+            // from unrelated paths (e.g. batch bulk insert on the same model class).
+            $query = $model->newQuery()->getQuery()->es(true);
+
+            $attributes = $model->getAttributes();
+            $enriched = $query->insertEvent($attributes)[0];
+
+            $model->setRawAttributes(array_merge($attributes, $enriched));
         });
     }
 }

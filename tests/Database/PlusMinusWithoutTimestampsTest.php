@@ -124,3 +124,39 @@ it('plusQuietly does not fire updated observer', function () {
     $row->refresh();
     expect($row->value)->toBe(2);
 });
+
+it('builder plusQuietly updates value and leaves updated_at unchanged', function () {
+    Carbon::setTestNow(Carbon::parse('2020-01-01 12:00:00'));
+
+    $row = PlusMinusTestModel::create(['value' => 7]);
+    $updatedAtAfterCreate = $row->updated_at->copy();
+    $before = PlusMinusTestModel::$updatedEventCount;
+
+    Carbon::setTestNow(Carbon::parse('2025-06-01 15:00:00'));
+
+    PlusMinusTestModel::query()->whereKey($row->getKey())->plusQuietly('value', 2);
+
+    $row->refresh();
+
+    expect($row->value)->toBe(9);
+    expect($row->updated_at->equalTo($updatedAtAfterCreate))->toBeTrue();
+    expect(PlusMinusTestModel::$updatedEventCount)->toBe($before);
+});
+
+it('builder minusQuietly updates value and leaves updated_at unchanged', function () {
+    Carbon::setTestNow(Carbon::parse('2020-01-01 12:00:00'));
+
+    $row = PlusMinusTestModel::create(['value' => 100]);
+    $updatedAtAfterCreate = $row->updated_at->copy();
+    $before = PlusMinusTestModel::$updatedEventCount;
+
+    Carbon::setTestNow(Carbon::parse('2025-06-01 15:00:00'));
+
+    PlusMinusTestModel::query()->whereKey($row->getKey())->minusQuietly('value', 25);
+
+    $row->refresh();
+
+    expect($row->value)->toBe(75);
+    expect($row->updated_at->equalTo($updatedAtAfterCreate))->toBeTrue();
+    expect(PlusMinusTestModel::$updatedEventCount)->toBe($before);
+});

@@ -112,6 +112,17 @@ trait Connection
         return $this;
     }
 
+    /**
+     * Clear connection-level query flags (required between Swoole/Octane HTTP requests).
+     */
+    public function resetRequestState(): self
+    {
+        $this->async = null;
+        $this->query_events = [];
+
+        return $this;
+    }
+
     public function toQueue(string $query, array $bindings): self
     {
         $async = $this->async;
