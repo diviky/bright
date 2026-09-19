@@ -4,97 +4,10 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database;
 
-use Diviky\Bright\Database\Concerns\Connector;
+use Diviky\Bright\Database\Concerns\InteractsWithBrightDatabase;
 use Illuminate\Database\DatabaseManager as LaravelDatabaseManager;
-use Illuminate\Database\Query\Expression;
 
 class DatabaseManager extends LaravelDatabaseManager
 {
-    use Connector;
-
-    #[\Override]
-    protected function makeConnection($name)
-    {
-        $config = $this->configuration($name);
-
-        if ($config['driver'] === 'mongodb') {
-            return $this->factory->make($config, $name);
-        }
-
-        // First we will check by the connection name to see if an extension has been
-        // registered specifically for that connection. If it has we will call the
-        // Closure and pass it the config allowing it to resolve the connection.
-        if (isset($this->extensions[$name])) {
-            return call_user_func($this->extensions[$name], $config, $name);
-        }
-
-        // Next we will check to see if an extension has been registered for a driver
-        // and will call the Closure if so, which allows us to have a more generic
-        // resolver for the drivers themselves which applies to all connections.
-        if (isset($this->extensions[$driver = $config['driver']])) {
-            return call_user_func($this->extensions[$driver], $config, $name);
-        }
-
-        return $this->factory->make($config, $name);
-    }
-
-    #[\Override]
-    public function extend($name, callable $resolver, bool $overwrite = false)
-    {
-        if (!isset($this->extension[$name]) || $overwrite) {
-            $this->extensions[$name] = $resolver;
-        }
-    }
-
-    /**
-     * Database table.
-     *
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function table(string|Expression $name)
-    {
-        if ($name instanceof Expression) {
-            return parent::table($name);
-        }
-
-        return $this->getConnectionByTable($name)->table($name);
-    }
-
-    /**
-     * Get a database connection instance.
-     *
-     * @return \Illuminate\Database\Connection
-     */
-    protected function getConnectionByTable(string $name)
-    {
-        if (\stripos($name, ' as ') !== false) {
-            $segments = \preg_split('/\s+as\s+/i', $name);
-            $name = $segments[0];
-        }
-
-        [$connection, $config] = $this->getConnectionDetails($name);
-
-        $connection = $this->connection($connection);
-        $connection->getQueryGrammar()->setConfig($config);
-
-        return $connection;
-    }
-
-    /**
-     * Get the configuration for a connection.
-     *
-     * @param  string  $name
-     * @return array
-     *
-     * @throws \InvalidArgumentException
-     */
-    #[\Override]
-    protected function configuration($name)
-    {
-        $config = parent::configuration($name);
-
-        $config['bright'] = $this->getBrightConfig();
-
-        return $config;
-    }
+    use InteractsWithBrightDatabase;
 }

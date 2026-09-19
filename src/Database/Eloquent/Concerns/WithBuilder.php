@@ -8,6 +8,7 @@ use Diviky\Bright\Database\Concerns\BuildsQueries;
 use Diviky\Bright\Database\Concerns\Paging;
 use Diviky\Bright\Database\Eloquent\Concerns\BuildsQueries as ConcernsBuildsQueries;
 use Illuminate\Contracts\Database\Query\Expression as QueryExpression;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
@@ -41,13 +42,53 @@ trait WithBuilder
     {
         $relation = parent::getRelation($name);
 
-        $cache = $this->getQuery()->getCacheTime();
-
-        if (isset($cache) && is_numeric($cache)) {
-            $relation->getQuery()->remember($cache);
-        }
+        $this->copyQueryCacheSettings($this->getQuery(), $relation->getQuery());
 
         return $relation;
+    }
+
+    /**
+     * MorphTo eager loads rebuild the related query per type and only merge
+     * where-clauses. Copy remember()/cache settings so tokenable (Space) queries
+     * stay cached across requests.
+     */
+    public function mergeConstraintsFrom(EloquentBuilder $from)
+    {
+        $merged = parent::mergeConstraintsFrom($from);
+
+        $this->copyQueryCacheSettings($from->getQuery(), $merged->getQuery());
+
+        return $merged;
+    }
+
+    /**
+     * Copy Bright query-cache settings from one query builder to another.
+     *
+     * Accepts either Eloquent or base query builders (MorphTo relations expose
+     * the Eloquent builder via getQuery()).
+     */
+    protected function copyQueryCacheSettings(mixed $from, mixed $to): void
+    {
+        $fromBase = $from instanceof EloquentBuilder ? $from->getQuery() : $from;
+        $toBase = $to instanceof EloquentBuilder ? $to->getQuery() : $to;
+
+        if (! is_object($fromBase) || ! is_object($toBase)) {
+            return;
+        }
+
+        if (! method_exists($fromBase, 'getCacheTime') || ! method_exists($toBase, 'remember')) {
+            return;
+        }
+
+        $seconds = $fromBase->getCacheTime();
+
+        if (is_null($seconds)) {
+            return;
+        }
+
+        $key = method_exists($fromBase, 'getCacheKeyName') ? $fromBase->getCacheKeyName() : null;
+
+        $toBase->remember($seconds, $key);
     }
 
     /**

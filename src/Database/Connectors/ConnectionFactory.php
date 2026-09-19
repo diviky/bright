@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Diviky\Bright\Database\Connectors;
 
 use Diviky\Bright\Database\MySqlConnection;
+use Diviky\Bright\Database\Octane\MySqlStringBindingConnection;
 use Diviky\Bright\Database\PostgresConnection;
+use Diviky\Bright\Database\QueryGrammarConfigurator;
 use Diviky\Bright\Database\SQLiteConnection;
 use Diviky\Bright\Database\SqlServerConnection;
 use Illuminate\Database\Connection;
@@ -54,10 +56,16 @@ class ConnectionFactory extends LaravelConnectionFactory
         $resolver = Connection::getResolver($driver);
 
         if ($resolver) {
-            return $resolver($connection, $database, $prefix, $config);
+            $resolved = $resolver($connection, $database, $prefix, $config);
+
+            $resolved = $this->upgradeToBrightMySqlConnection($driver, $connection, $database, $prefix, $config, $resolved);
+
+            QueryGrammarConfigurator::apply($resolved, $config['bright'] ?? []);
+
+            return $resolved;
         }
 
-        return match ($driver) {
+        $resolved = match ($driver) {
             'mysql', 'mariadb' => new MySqlConnection($connection, $database, $prefix, $config),
             'sqlite' => new SQLiteConnection($connection, $database, $prefix, $config),
             'pgsql' => new PostgresConnection($connection, $database, $prefix, $config),
@@ -65,5 +73,39 @@ class ConnectionFactory extends LaravelConnectionFactory
             'mongodb' => new \Diviky\Bright\Database\MongoDB\Connection($config),
             default => parent::createConnection($driver, $connection, $database, $prefix, $config),
         };
+
+        if ($resolved instanceof Connection) {
+            QueryGrammarConfigurator::apply($resolved, $config['bright'] ?? []);
+        }
+
+        return $resolved;
+    }
+
+    /**
+     * Ensure Octane's MySQL connection resolver product includes Bright helpers.
+     *
+     * @param  \Closure|\PDO  $connection
+     */
+    protected function upgradeToBrightMySqlConnection(
+        string $driver,
+        $connection,
+        string $database,
+        string $prefix,
+        array $config,
+        Connection $resolved,
+    ): Connection {
+        if (!in_array($driver, ['mysql', 'mariadb'], true)) {
+            return $resolved;
+        }
+
+        if ($resolved instanceof MySqlStringBindingConnection || $resolved instanceof MySqlConnection) {
+            return $resolved;
+        }
+
+        if ($resolved instanceof \Laravel\Octane\Swoole\Database\MySqlStringBindingConnection) {
+            return new MySqlStringBindingConnection($connection, $database, $prefix, $config);
+        }
+
+        return $resolved;
     }
 }

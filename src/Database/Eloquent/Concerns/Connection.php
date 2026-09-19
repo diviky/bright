@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Eloquent\Concerns;
 
+use Diviky\Bright\Database\QueryGrammarConfigurator;
+
 trait Connection
 {
     public function initializeConnection(): void
@@ -21,6 +23,6 @@ trait Connection
 
         $connection = $this->setConnection($connection)->getConnection();
 
-        $connection->getQueryGrammar()->setConfig($config);
+        QueryGrammarConfigurator::apply($connection, $config);
     }
 }

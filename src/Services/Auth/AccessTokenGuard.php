@@ -104,8 +104,8 @@ class AccessTokenGuard implements Guard
             throw new AuthenticationException('Tokenable is null, deleted');
         }
 
-        if (property_exists($tokenable, 'status') && $tokenable->status != 1) {
-            throw new AuthenticationException('Tokenable is not active');
+        if (property_exists($tokenable, 'status') && ($tokenable->status != 1 || $tokenable->status != 'active')) {
+            throw new AuthenticationException('Tokenable is not active or deleted');
         }
 
         if (!$tokenable instanceof Authenticatable) {

@@ -184,6 +184,14 @@ trait Cachable
     }
 
     /**
+     * Get the custom cache key name (without prefix), if one was set via remember().
+     */
+    public function getCacheKeyName(): ?string
+    {
+        return $this->cacheKey;
+    }
+
+    /**
      * Indicate that the query results should be cached forever.
      *
      * @param  null|string  $key

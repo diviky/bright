@@ -165,6 +165,8 @@ window.load_dateranges = () => {
     },
   });
 
+  $('[data-dateranges]').off('apply.daterangepicker cancel.daterangepicker');
+
   $('[data-dateranges]').on('apply.daterangepicker', function (e, picker) {
     if (picker.autoUpdateInput == false) {
       $(this).val(picker.startDate.format(picker.locale.format) + ' - ' + picker.endDate.format(picker.locale.format));
@@ -183,11 +185,21 @@ window.load_dateranges = () => {
   });
 
   $('[data-dateranges]').on('cancel.daterangepicker', function (e, picker) {
-    if (picker.autoUpdateInput == false) {
-      $(this).val('');
-    }
-
     var t = $(e.currentTarget);
+    var defaultValue = t.attr('data-default') || t.data('default');
+
+    // Keep UI in sync with backends that always apply a default when empty.
+    if (defaultValue) {
+      t.val(defaultValue);
+
+      var parts = String(defaultValue).split(' - ');
+      if (parts.length === 2) {
+        picker.setStartDate(moment(parts[0], picker.locale.format));
+        picker.setEndDate(moment(parts[1], picker.locale.format));
+      }
+    } else if (picker.autoUpdateInput == false) {
+      t.val('');
+    }
 
     // Always trigger native DOM change event so Alpine.js can capture it
     const changeEvent = new Event('change', { bubbles: true });
@@ -199,6 +211,16 @@ window.load_dateranges = () => {
     }
   });
 };
+
+$(document).on('form-pre-serialize', function (e, $form) {
+  $($form)
+    .find('[data-dateranges][data-default]')
+    .each(function () {
+      if (!$(this).val()) {
+        $(this).val($(this).attr('data-default'));
+      }
+    });
+});
 
 window.load_dates = () => {
   load_dateranges();

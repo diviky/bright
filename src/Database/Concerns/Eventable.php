@@ -53,7 +53,6 @@ trait Eventable
      */
     public function es(bool $event = true)
     {
-        Context::add($this->eventStateContextKey(), $event);
         $this->eventState = $event;
 
         return $this;
@@ -145,47 +144,16 @@ trait Eventable
             return false;
         }
 
-        return $this->requestEventEnabled();
-    }
-
-    /**
-     * Per-request event flag (Swoole/Octane-safe when query builders outlive the request).
-     */
-    protected function requestEventEnabled(): bool
-    {
-        $key = $this->eventStateContextKey();
-
-        if (Context::has($key)) {
-            return (bool) Context::get($key);
-        }
-
         return true;
-    }
-
-    protected function eventStateContextKey(): string
-    {
-        return '__bright.db.event_state.' . spl_object_id($this);
-    }
-
-    protected function eventExecutedContextKey(): string
-    {
-        return '__bright.db.event_executed.' . spl_object_id($this);
     }
 
     protected function wasEventExecuted(): bool
     {
-        $key = $this->eventExecutedContextKey();
-
-        if (Context::has($key)) {
-            return (bool) Context::get($key);
-        }
-
         return false;
     }
 
     protected function markEventExecuted(): void
     {
-        Context::add($this->eventExecutedContextKey(), true);
         $this->executed = true;
     }
 
@@ -271,7 +239,6 @@ trait Eventable
                 $value = $this->setTimeStamps($value);
             }
         }
-
 
         return $values;
     }
