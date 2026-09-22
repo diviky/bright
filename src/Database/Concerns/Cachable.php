@@ -6,6 +6,7 @@ namespace Diviky\Bright\Database\Concerns;
 
 use DateTime;
 use Illuminate\Cache\CacheManager;
+use Illuminate\Cache\Contracts\Repository;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Query\Builder;
@@ -258,6 +259,15 @@ trait Cachable
         self::$cacheKeyModifier = $modifier;
     }
 
+    public static function modifyCacheKey(string $cacheKey): string
+    {
+        if (self::$cacheKeyModifier) {
+            return call_user_func(self::$cacheKeyModifier, $cacheKey);
+        }
+
+        return $cacheKey;
+    }
+
     /**
      * Get a unique cache key for the complete query.
      */
@@ -265,11 +275,17 @@ trait Cachable
     {
         $cache = $this->cachePrefix . ':' . ($this->cacheKey ?: $this->generateCacheKey($appends));
 
-        if (self::$cacheKeyModifier) {
-            $cache = call_user_func(self::$cacheKeyModifier, $cache);
-        }
+        return $this->applyCacheKeyModifier($cache);
+    }
 
-        return $cache;
+    public function namedCacheKey(string $name, string $appends = ''): string
+    {
+        return $this->applyCacheKeyModifier($this->cachePrefix . ':' . $name . $appends);
+    }
+
+    protected function applyCacheKeyModifier(string $cache): string
+    {
+        return self::modifyCacheKey($cache);
     }
 
     /**
@@ -332,7 +348,7 @@ trait Cachable
     /**
      * Get the cache driver.
      *
-     * @return CacheRepository|\Illuminate\Cache\Contracts\Repository
+     * @return CacheRepository|Repository
      */
     protected function getCacheDriver()
     {

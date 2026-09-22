@@ -18,6 +18,21 @@ return [
     |
      */
 
+    'providers' => [
+        'users' => [
+            'driver' => 'access',
+        ],
+        'access_token' => [
+            'driver' => 'access',
+        ],
+        'auth_token' => [
+            'driver' => 'access',
+        ],
+        'credentials' => [
+            'driver' => 'access',
+        ],
+    ],
+
     'guards' => [
         'jwt' => [
             'driver' => 'jwt',

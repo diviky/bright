@@ -6,6 +6,7 @@ namespace Diviky\Bright\Database\Eloquent\Concerns;
 
 use Diviky\Bright\Database\Concerns\BuildsQueries;
 use Diviky\Bright\Database\Concerns\Paging;
+use Diviky\Bright\Database\Eloquent\Builder as BrightEloquentBuilder;
 use Diviky\Bright\Database\Eloquent\Concerns\BuildsQueries as ConcernsBuildsQueries;
 use Illuminate\Contracts\Database\Query\Expression as QueryExpression;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -42,7 +43,7 @@ trait WithBuilder
     {
         $relation = parent::getRelation($name);
 
-        $this->copyQueryCacheSettings($this->getQuery(), $relation->getQuery());
+        $this->copyQueryCacheSettings($this->getQuery(), $relation->getQuery(), $name);
 
         return $relation;
     }
@@ -58,6 +59,10 @@ trait WithBuilder
 
         $this->copyQueryCacheSettings($from->getQuery(), $merged->getQuery());
 
+        if ($from instanceof BrightEloquentBuilder && $merged instanceof BrightEloquentBuilder) {
+            $merged->copyPaginationCountSettings($from);
+        }
+
         return $merged;
     }
 
@@ -67,16 +72,16 @@ trait WithBuilder
      * Accepts either Eloquent or base query builders (MorphTo relations expose
      * the Eloquent builder via getQuery()).
      */
-    protected function copyQueryCacheSettings(mixed $from, mixed $to): void
+    protected function copyQueryCacheSettings(mixed $from, mixed $to, ?string $relationName = null): void
     {
         $fromBase = $from instanceof EloquentBuilder ? $from->getQuery() : $from;
         $toBase = $to instanceof EloquentBuilder ? $to->getQuery() : $to;
 
-        if (! is_object($fromBase) || ! is_object($toBase)) {
+        if (!is_object($fromBase) || !is_object($toBase)) {
             return;
         }
 
-        if (! method_exists($fromBase, 'getCacheTime') || ! method_exists($toBase, 'remember')) {
+        if (!method_exists($fromBase, 'getCacheTime') || !method_exists($toBase, 'remember')) {
             return;
         }
 
@@ -87,6 +92,10 @@ trait WithBuilder
         }
 
         $key = method_exists($fromBase, 'getCacheKeyName') ? $fromBase->getCacheKeyName() : null;
+
+        if ($key !== null && $relationName !== null) {
+            $key = $key . ':' . $relationName;
+        }
 
         $toBase->remember($seconds, $key);
     }

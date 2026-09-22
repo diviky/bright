@@ -193,6 +193,10 @@ class BrightServiceProvider extends ServiceProvider
 
     protected function authGuards(): void
     {
+        Auth::provider('access', function ($app, array $config) {
+            return $app->make(AccessProvider::class);
+        });
+
         Auth::extend('access_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
             $provider = app(AccessProvider::class);

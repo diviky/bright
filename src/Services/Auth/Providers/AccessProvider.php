@@ -11,6 +11,7 @@ use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -38,9 +39,22 @@ class AccessProvider implements UserProvider
     #[\Override]
     public function retrieveById($identifier)
     {
-        return $this->user
+        $contextKey = 'bright.auth.uid.' . (string) $identifier;
+
+        if (Context::hasHidden($contextKey)) {
+            return Context::getHidden($contextKey);
+        }
+
+        $user = $this->user
+            ->with('currentSpace')
             ->remember(null, 'uid:' . $identifier)
             ->find($identifier);
+
+        if ($user !== null) {
+            Context::addHidden([$contextKey => $user]);
+        }
+
+        return $user;
     }
 
     /**
