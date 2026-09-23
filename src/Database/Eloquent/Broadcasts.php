@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Eloquent;
 
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Database\Eloquent\BroadcastsEvents;
 
 trait Broadcasts
@@ -60,14 +61,14 @@ trait Broadcasts
      */
     public function broadcastQueue()
     {
-        return config($this->broadcastAlias() . 'perform_on_queue.events', 'default');
+        return config($this->broadcastAlias() . 'queues.events', 'default');
     }
 
     /**
      * Get the channels that model events should broadcast on.
      *
      * @param  string  $event
-     * @return array|\Illuminate\Broadcasting\Channel
+     * @return array|Channel
      */
     public function broadcastOn($event)
     {

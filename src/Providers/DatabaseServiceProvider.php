@@ -10,6 +10,7 @@ use Diviky\Bright\Database\LostConnectionDetector;
 use Diviky\Bright\Database\MongoDB\Connection as MongoConnection;
 use Diviky\Bright\Database\Octane\DatabaseManager as OctaneDatabaseManager;
 use Diviky\Bright\Database\Octane\MySqlStringBindingConnection;
+use Diviky\Bright\Validation\DatabasePresenceVerifier;
 use Illuminate\Contracts\Database\LostConnectionDetector as LostConnectionDetectorContract;
 use Illuminate\Database\Connection as DatabaseConnection;
 use Illuminate\Support\ServiceProvider;
@@ -45,6 +46,8 @@ class DatabaseServiceProvider extends ServiceProvider
                 return new MongoConnection($config);
             });
         });
+
+        $this->registerValidationPresenceVerifier();
     }
 
     /**
@@ -54,6 +57,21 @@ class DatabaseServiceProvider extends ServiceProvider
     {
         $this->registerOctaneDatabaseManager();
         $this->registerOctaneMySqlConnectionResolver();
+    }
+
+    protected function registerValidationPresenceVerifier(): void
+    {
+        $this->app->singleton(DatabasePresenceVerifier::class, function ($app) {
+            return new DatabasePresenceVerifier($app['db']);
+        });
+
+        $this->app->extend('validation.presence', function ($verifier, $app) {
+            return $app->make(DatabasePresenceVerifier::class);
+        });
+
+        $this->app->resolving('validator', function ($factory, $app): void {
+            $factory->setPresenceVerifier($app->make(DatabasePresenceVerifier::class));
+        });
     }
 
     /**
