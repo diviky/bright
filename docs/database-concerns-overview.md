@@ -100,13 +100,27 @@ $settings = DB::table('settings')
     ->cacheDriver('redis')
     ->remember(7200, 'app-settings')
     ->get();
+
+// Avoid repeated remote cache hits in the same request
+$settings = DB::table('settings')
+    ->rememberMemo(7200, 'app-settings')
+    ->get();
+
+// Stale-while-revalidate caching
+$users = DB::table('users')
+    ->rememberFlexible([300, 600], 'active-users')
+    ->get();
 ```
 
 **Key Methods:**
 - `remember($seconds, $key = null)` - Cache query results
+- `rememberMemo($seconds, $key = null)` - Cache with in-request memoization
+- `rememberFlexible($ttl, $key = null)` - Stale-while-revalidate cache
+- `rememberFlexibleMemo($ttl, $key = null)` - Flexible cache with memoization
 - `rememberForever($key = null, array $tags = [])` - Permanent cache with tags
 - `rememberWithKey($key, $seconds)` - Cache with specific key
 - `cacheDriver($driver)` - Set cache driver
+- `cacheMemo($memo = true)` - Memoize cache reads for the current request/job
 - `cacheTags(array $tags)` - Set cache tags
 - `flushCache($key = null)` - Clear cached results
 

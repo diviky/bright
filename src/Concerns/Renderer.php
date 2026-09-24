@@ -7,6 +7,7 @@ namespace Diviky\Bright\Concerns;
 use Diviky\Bright\Attributes\View as AttributesView;
 use Diviky\Bright\Attributes\ViewNamespace;
 use Diviky\Bright\Attributes\ViewPaths;
+use Diviky\Bright\View\RequestViewPaths;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
@@ -43,9 +44,7 @@ trait Renderer
         $paths = array_filter($paths);
         $paths = array_reverse($paths);
 
-        foreach ($paths as $path) {
-            $finder->addLocation($path);
-        }
+        RequestViewPaths::prependLocations($paths);
 
         return $this;
     }

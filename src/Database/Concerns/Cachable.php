@@ -7,13 +7,94 @@ namespace Diviky\Bright\Database\Concerns;
 use DateTime;
 use Illuminate\Cache\CacheManager;
 use Illuminate\Cache\Contracts\Repository;
+use Illuminate\Contracts\Cache\Factory as CacheFactory;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
+/**
+ * Query result caching for Bright's query builder.
+ *
+ * Enable caching on a connection via `bright.db_cache` or the connection's `cache` config key,
+ * then chain `remember()` / `rememberForever()` before `get()` or `pluck()`.
+ *
+ * ## Basic usage
+ *
+ * ```php
+ * $rows = DB::table('users')
+ *     ->remember(600, 'active-users')
+ *     ->where('active', true)
+ *     ->get();
+ * ```
+ *
+ * ## Request-scoped memoization (Laravel 13+)
+ *
+ * When the same cached query runs multiple times in one HTTP request or queued job, wrap the
+ * underlying cache store with Laravel's memo driver so repeated reads do not hit Redis (or your
+ * default store) again:
+ *
+ * Shorthand: use `rememberMemo()` instead of chaining `cacheMemo()` and `remember()`:
+ *
+ * ```php
+ * $settings = DB::table('settings')
+ *     ->rememberMemo(3600, 'app-settings')
+ *     ->pluck('value', 'key');
+ *
+ * // Later in the same request — served from in-memory memo, not the remote cache store.
+ * $settings = DB::table('settings')
+ *     ->rememberMemo(3600, 'app-settings')
+ *     ->pluck('value', 'key');
+ * ```
+ *
+ * Combine with `cacheDriver()` to memoize a specific store:
+ *
+ * ```php
+ * DB::table('tenants')
+ *     ->cacheDriver('redis')
+ *     ->cacheMemo()
+ *     ->remember(300, 'tenant-list')
+ *     ->get();
+ * ```
+ *
+ * On Eloquent models that use {@see \Diviky\Bright\Database\Eloquent\Concerns\Cachable}, set
+ * `protected bool $rememberCacheMemo = true;` to apply memoization to every query builder
+ * created from that model.
+ *
+ * Call `cacheMemo(false)` or `dontRemember()` to disable memoization for a query.
+ *
+ * ## Stale-while-revalidate (Laravel 13+)
+ *
+ * Use `rememberFlexible()` to serve slightly stale cache while refreshing in the background after
+ * the response is sent (same semantics as `Cache::flexible()`):
+ *
+ * ```php
+ * $users = DB::table('users')
+ *     ->rememberFlexible([300, 600], 'active-users')
+ *     ->where('active', true)
+ *     ->get();
+ *
+ * // Omit TTL for defaults (10 min fresh, 20 min stale — same base as `remember()`).
+ * $users = DB::table('users')->rememberFlexible(null, 'active-users')->get();
+ * ```
+ *
+ * Shorthand with memo: `rememberFlexibleMemo(null, 'active-users')`.
+ *
+ * On Eloquent models, set `protected array $rememberCacheFlexible = [300, 600];` instead of
+ * `$rememberFor` when you want flexible caching on every query.
+ */
 trait Cachable
 {
+    /**
+     * Default fresh window for flexible caching (matches `remember()` when seconds are omitted).
+     */
+    protected static int $defaultFlexibleFreshSeconds = 600;
+
+    /**
+     * Stale window multiplier applied when only the fresh TTL is provided (or when using defaults).
+     */
+    protected static int $defaultFlexibleStaleMultiplier = 2;
+
     /**
      * The key that should be used when caching the query.
      *
@@ -41,6 +122,34 @@ trait Cachable
      * @var string
      */
     protected $cacheDriver;
+
+    /**
+     * Whether resolved cache values should be memoized for the current request/job.
+     *
+     * @var bool
+     */
+    protected $cacheMemo = false;
+
+    /**
+     * Fresh and stale TTL windows for flexible (stale-while-revalidate) caching.
+     *
+     * @var null|array{0: int, 1: int}
+     */
+    protected $cacheFlexibleTtl;
+
+    /**
+     * Optional lock configuration passed to the flexible cache refresher.
+     *
+     * @var null|array{seconds?: int, owner?: string}
+     */
+    protected $cacheFlexibleLock;
+
+    /**
+     * Whether flexible cache refresh should always be deferred.
+     *
+     * @var bool
+     */
+    protected $cacheFlexibleAlwaysDefer = false;
 
     /**
      * A cache prefix.
@@ -119,19 +228,9 @@ trait Cachable
         // that are used on this query, providing great convenience when caching.
         $cacheKey = $this->getCacheKey();
 
-        $seconds = $this->cacheSeconds;
-
-        $cache = $this->getCache();
-
         $callback = $this->getCacheCallback($columns);
-        // If we've been given a DateTime instance or a "seconds" value that is
-        // greater than zero then we'll pass it on to the remember method.
-        // Otherwise we'll cache it indefinitely.
-        if ($seconds instanceof DateTime || $seconds > 0) {
-            return $cache->remember($cacheKey, $seconds, $callback);
-        }
 
-        return $cache->rememberForever($cacheKey, $callback);
+        return $this->resolveCachedValue($cacheKey, $callback);
     }
 
     /**
@@ -145,17 +244,9 @@ trait Cachable
     {
         $cacheKey = $this->getCacheKey();
 
-        $seconds = $this->cacheSeconds;
-
-        $cache = $this->getCache();
-
         $callback = $this->pluckCacheCallback($column, $key);
 
-        if ($seconds instanceof DateTime || $seconds > 0) {
-            return $cache->remember($cacheKey, $seconds, $callback);
-        }
-
-        return $cache->rememberForever($cacheKey, $callback);
+        return $this->resolveCachedValue($cacheKey, $callback);
     }
 
     /**
@@ -174,6 +265,61 @@ trait Cachable
         [$this->cacheSeconds, $this->cacheKey] = [$seconds, $key];
 
         return $this;
+    }
+
+    /**
+     * Cache query results and memoize cache reads for the current request or job.
+     *
+     * Equivalent to `cacheMemo()->remember($seconds, $key)`.
+     *
+     * @param  null|DateTime|int  $seconds
+     * @param  null|string  $key
+     * @return $this
+     */
+    public function rememberMemo($seconds = null, $key = null)
+    {
+        return $this->cacheMemo()->remember($seconds, $key);
+    }
+
+    /**
+     * Cache query results using Laravel's stale-while-revalidate flexible driver.
+     *
+     * Equivalent to `Cache::flexible($key, $ttl, $callback)` for this query.
+     *
+     * @param  null|array{0?: null|int, 1?: null|int}  $ttl  [fresh seconds, max stale seconds]
+     * @param  null|string  $key
+     * @param  null|array{seconds?: int, owner?: string}  $lock
+     * @return $this
+     */
+    public function rememberFlexible(?array $ttl = null, $key = null, ?array $lock = null, bool $alwaysDefer = false)
+    {
+        $this->cacheFlexibleTtl = $this->normalizeFlexibleTtl($ttl);
+        $this->cacheKey = $key;
+        $this->cacheFlexibleLock = $lock;
+        $this->cacheFlexibleAlwaysDefer = $alwaysDefer;
+
+        return $this;
+    }
+
+    /**
+     * Flexible cache with in-request memoization.
+     *
+     * @param  null|array{0?: null|int, 1?: null|int}  $ttl
+     * @param  null|string  $key
+     * @param  null|array{seconds?: int, owner?: string}  $lock
+     * @return $this
+     */
+    public function rememberFlexibleMemo(?array $ttl = null, $key = null, ?array $lock = null, bool $alwaysDefer = false)
+    {
+        return $this->cacheMemo()->rememberFlexible($ttl, $key, $lock, $alwaysDefer);
+    }
+
+    /**
+     * @return null|array{0: int, 1: int}
+     */
+    public function getCacheFlexibleTtl(): ?array
+    {
+        return $this->cacheFlexibleTtl;
     }
 
     /**
@@ -211,6 +357,10 @@ trait Cachable
     public function dontRemember()
     {
         $this->cacheSeconds = $this->cacheKey = $this->cacheTags = null;
+        $this->cacheMemo = false;
+        $this->cacheFlexibleTtl = null;
+        $this->cacheFlexibleLock = null;
+        $this->cacheFlexibleAlwaysDefer = false;
 
         return $this;
     }
@@ -249,6 +399,26 @@ trait Cachable
         $this->cacheDriver = $cacheDriver;
 
         return $this;
+    }
+
+    /**
+     * Memoize cache reads for the current request or job using Laravel's memo cache driver.
+     *
+     * @return $this
+     */
+    public function cacheMemo(bool $memo = true)
+    {
+        $this->cacheMemo = $memo;
+
+        return $this;
+    }
+
+    /**
+     * Determine whether this query uses the memoized cache driver.
+     */
+    public function usesCacheMemo(): bool
+    {
+        return $this->cacheMemo;
     }
 
     /**
@@ -352,7 +522,14 @@ trait Cachable
      */
     protected function getCacheDriver()
     {
-        return app('cache')->store($this->cacheDriver);
+        /** @var CacheFactory&CacheManager $cache */
+        $cache = app('cache');
+
+        if ($this->cacheMemo && method_exists($cache, 'memo')) {
+            return $cache->memo($this->cacheDriver);
+        }
+
+        return $cache->store($this->cacheDriver);
     }
 
     /**
@@ -365,6 +542,7 @@ trait Cachable
     {
         return function () use ($columns) {
             $this->cacheSeconds = null;
+            $this->cacheFlexibleTtl = null;
 
             return $this->get($columns);
         };
@@ -381,9 +559,71 @@ trait Cachable
     {
         return function () use ($column, $key) {
             $this->cacheSeconds = null;
+            $this->cacheFlexibleTtl = null;
 
             return $this->pluck($column, $key);
         };
+    }
+
+    /**
+     * @param  \Closure(): mixed  $callback
+     * @return mixed
+     */
+    /**
+     * @param  null|array{0?: null|int, 1?: null|int}  $ttl
+     * @return array{0: int, 1: int}
+     */
+    protected function normalizeFlexibleTtl(?array $ttl): array
+    {
+        $fresh = static::$defaultFlexibleFreshSeconds;
+        $stale = $fresh * static::$defaultFlexibleStaleMultiplier;
+
+        if ($ttl === null || $ttl === []) {
+            return [$fresh, $stale];
+        }
+
+        if (array_key_exists(0, $ttl) && $ttl[0] !== null) {
+            $fresh = (int) $ttl[0];
+        }
+
+        if (array_key_exists(1, $ttl) && $ttl[1] !== null) {
+            $stale = (int) $ttl[1];
+        } elseif (array_key_exists(0, $ttl) && $ttl[0] !== null) {
+            $stale = $fresh * static::$defaultFlexibleStaleMultiplier;
+        }
+
+        if ($stale <= $fresh) {
+            $stale = $fresh * static::$defaultFlexibleStaleMultiplier;
+        }
+
+        return [$fresh, $stale];
+    }
+
+    protected function resolveCachedValue(string $cacheKey, \Closure $callback)
+    {
+        $cache = $this->getCache();
+
+        if ($this->cacheFlexibleTtl !== null) {
+            if (method_exists($cache, 'flexible')) {
+                return $cache->flexible(
+                    $cacheKey,
+                    $this->cacheFlexibleTtl,
+                    $callback,
+                    $this->cacheFlexibleLock,
+                    $this->cacheFlexibleAlwaysDefer
+                );
+            }
+
+            return $cache->remember($cacheKey, $this->cacheFlexibleTtl[1], $callback);
+        }
+
+        $seconds = $this->cacheSeconds;
+
+        if ($seconds instanceof DateTime || $seconds > 0) {
+            return $cache->remember($cacheKey, $seconds, $callback);
+        }
+
+        return $cache->rememberForever($cacheKey, $callback);
     }
 
     /**
@@ -391,7 +631,7 @@ trait Cachable
      */
     protected function shouldCache(): bool
     {
-        if (\is_null($this->cacheSeconds)) {
+        if (\is_null($this->cacheSeconds) && \is_null($this->cacheFlexibleTtl)) {
             return false;
         }
 

@@ -118,13 +118,31 @@ $users = DB::table('users')
     ->where('role', 'admin')
     ->rememberWithKey('admin-users-' . auth()->id(), 1800)
     ->get();
+
+// Memoize cache reads within the same request (Laravel 13+)
+$settings = DB::table('settings')
+    ->rememberMemo(3600, 'app-settings')
+    ->pluck('value', 'key');
+
+// Stale-while-revalidate: fresh for 5 minutes, serve stale up to 10 minutes
+$users = DB::table('users')
+    ->rememberFlexible([300, 600], 'active-users')
+    ->where('active', true)
+    ->get();
+
+// Default TTL when omitted: 600s fresh, 1200s stale (same 10-minute base as `remember()`)
+$users = DB::table('users')->rememberFlexible(null, 'active-users')->get();
 ```
 
 **Methods:**
 - `remember($seconds, $key = null)` - Cache query results
+- `rememberMemo($seconds, $key = null)` - Cache with in-request memoization (shorthand)
+- `rememberFlexible($ttl, $key = null)` - Stale-while-revalidate cache (`[$fresh, $stale]` seconds)
+- `rememberFlexibleMemo($ttl, $key = null)` - Flexible cache with memoization
 - `rememberForever($key = null, array $tags = [])` - Cache permanently with tags
 - `rememberWithKey($key, $seconds)` - Cache with specific key
 - `cacheDriver($driver)` - Set cache driver
+- `cacheMemo($memo = true)` - Use Laravel's memo cache driver for in-request reads
 - `cacheTags(array $tags)` - Set cache tags
 - `flushCache($key = null)` - Clear cached results
 

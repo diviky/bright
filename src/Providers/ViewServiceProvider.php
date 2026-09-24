@@ -11,6 +11,7 @@ use Diviky\Bright\View\Components\Form;
 use Diviky\Bright\View\Components\Link;
 use Diviky\Bright\View\DynamicComponent;
 use Diviky\Bright\View\Factory;
+use Diviky\Bright\View\RequestViewPathsStore;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\View\Compilers\ComponentTagCompiler as BaseComponentTagCompiler;
@@ -48,6 +49,8 @@ class ViewServiceProvider extends BaseServiceProvider
     #[\Override]
     public function register(): void
     {
+        $this->app->scoped(RequestViewPathsStore::class);
+
         $this->registerFactory();
     }
 

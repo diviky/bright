@@ -32,7 +32,9 @@ trait Cachable
             $builder->es($this->es);
         }
 
-        if (isset($this->rememberFor)) {
+        if (isset($this->rememberCacheFlexible)) {
+            $builder->rememberFlexible($this->rememberCacheFlexible);
+        } elseif (isset($this->rememberFor)) {
             $builder->remember($this->rememberFor);
         }
 
@@ -46,6 +48,10 @@ trait Cachable
 
         if (isset($this->rememberCacheDriver)) {
             $builder->cacheDriver($this->rememberCacheDriver);
+        }
+
+        if (isset($this->rememberCacheMemo) && $this->rememberCacheMemo) {
+            $builder->cacheMemo();
         }
 
         return $builder;
