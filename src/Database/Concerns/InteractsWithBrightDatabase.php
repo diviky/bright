@@ -42,6 +42,21 @@ trait InteractsWithBrightDatabase
     }
 
     /**
+     * Resolve the configured Bright connection name for a table (used by validation routing on Hypervel).
+     */
+    public function resolveConnectionNameForTable(string $table): ?string
+    {
+        if (stripos($table, ' as ') !== false) {
+            $segments = preg_split('/\s+as\s+/i', $table);
+            $table = $segments[0];
+        }
+
+        [$connection] = $this->getConnectionDetails($table);
+
+        return $connection;
+    }
+
+    /**
      * @return Builder
      */
     public function table(string|Expression $name)

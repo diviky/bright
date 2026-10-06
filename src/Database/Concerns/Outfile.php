@@ -29,7 +29,7 @@ trait Outfile
             'ends' => '\n',
         ], $options);
 
-        if ($local) {
+        if ($local && $this->supportsSqlIntoOutfile()) {
             return $this->outFile($path, $options);
         }
 
@@ -55,7 +55,7 @@ trait Outfile
 
         $table = $this->grammar->wrapTable($table);
 
-        if ($path && config('bright.bulk_load', false)) {
+        if ($path && config('bright.bulk_load', false) && $this->supportsSqlIntoOutfile()) {
             $path = $this->outFile($path, $options);
 
             $sql = "LOAD DATA LOCAL INFILE '" . $path . "'";
@@ -87,21 +87,30 @@ trait Outfile
 
         $file = $this->generateFilePath($file);
 
-        $fp = \fopen($file, 'w+');
+        $fp = \fopen($file, 'w');
 
-        $rows = $this->flatChunk($count);
-
-        foreach ($rows as $row) {
-            \fwrite($fp, $options['enclosed'] . \implode('","', (array) $row) . $options['enclosed'] . $options['ends']);
+        if ($fp === false) {
+            throw new \RuntimeException(sprintf('Unable to open export file "%s" for writing.', $file));
         }
 
-        \fclose($fp);
+        $delimiter = (string) $options['separated'];
+        $enclosure = (string) $options['enclosed'];
+        $escape = '\\';
+
+        try {
+            foreach ($this->cursor() as $row) {
+                $values = array_values((array) $row);
+                \fputcsv($fp, $values, $delimiter, $enclosure, $escape);
+            }
+        } finally {
+            \fclose($fp);
+        }
 
         return $file;
     }
 
     /**
-     * Write outfile.
+     * Write outfile using MySQL SELECT … INTO OUTFILE.
      *
      * @param  null|string  $file
      * @param  array  $options
@@ -127,6 +136,11 @@ trait Outfile
         $this->statement($out);
 
         return $file;
+    }
+
+    protected function supportsSqlIntoOutfile(): bool
+    {
+        return $this->connection->getDriverName() === 'mysql';
     }
 
     /**

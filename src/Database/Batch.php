@@ -54,6 +54,8 @@ class Batch
      */
     protected $builder;
 
+    protected bool $enableEvents = true;
+
     /**
      * @param  \Illuminate\Database\Eloquent\Builder  $builder
      */
@@ -74,6 +76,27 @@ class Batch
         return $this;
     }
 
+    public function disableEvents(): self
+    {
+        $this->enableEvents = false;
+
+        return $this;
+    }
+
+    public function enableEvents(): self
+    {
+        $this->enableEvents = true;
+
+        return $this;
+    }
+
+    public function events(bool $enable = true): self
+    {
+        $this->enableEvents = $enable;
+
+        return $this;
+    }
+
     public function add(array $values = []): self
     {
         $this->values[] = $values;
@@ -84,7 +107,7 @@ class Batch
     public function make(array $attributes = []): ?Model
     {
         $model = $this->model->make($attributes);
-        if ($model->fireEvent('creating') === false) {
+        if ($this->enableEvents && $model->fireEvent('creating') === false) {
             return null;
         }
 
@@ -127,7 +150,9 @@ class Batch
                 return false;
             }
 
-            $this->executeModelEvent($models);
+            if ($this->enableEvents) {
+                $this->executeModelEvent($models);
+            }
             unset($models, $attributes);
         }
 
@@ -167,7 +192,9 @@ class Batch
 
         try {
             if ($this->builder->statement($sql)) {
-                $this->executeModelEvent($models);
+                if ($this->enableEvents) {
+                    $this->executeModelEvent($models);
+                }
                 unset($models);
 
                 return true;
