@@ -42,7 +42,7 @@ class Factory extends BaseFactory
      * @return mixed
      */
     #[\Override]
-    public function share($key, $value = null)
+    public function share($key, $value = null): mixed
     {
         $keys = is_array($key) ? $key : [$key => $value];
 

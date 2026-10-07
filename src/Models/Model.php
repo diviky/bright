@@ -13,7 +13,7 @@ class Model extends BaseModel
     use HasFactory;
     use Scopes;
 
-    public $guarded = [];
+    protected $guarded = [];
 
-    protected static $userModel = 'App\Models\User';
+    protected static string $userModel = 'App\Models\User';
 }

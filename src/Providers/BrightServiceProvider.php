@@ -127,12 +127,12 @@ class BrightServiceProvider extends ServiceProvider
         $this->app->bind('Illuminate\Routing\Contracts\ControllerDispatcher', ControllerDispatcher::class);
 
         $this->app->singleton('redirect', function ($app) {
-            $redirector = new Redirector($app['url']);
+            $redirector = new Redirector($app->make('url'));
             // If the session is set on the application instance, we'll inject it into
             // the redirector instance. This allows the redirect responses to allow
             // for the quite convenient "with" methods that flash to the session.
-            if (isset($app['session.store'])) {
-                $redirector->setSession($app['session.store']);
+            if ($app->bound('session.store')) {
+                $redirector->setSession($app->make('session.store'));
             }
 
             return $redirector;
@@ -201,20 +201,20 @@ class BrightServiceProvider extends ServiceProvider
             // automatically build the DI, put it as reference
             $provider = app(AccessProvider::class);
 
-            return new AccessTokenGuard($provider, $app['request'], $config);
+            return new AccessTokenGuard($provider, $app->make('request'), $config);
         });
 
         Auth::extend('auth_token', function ($app, $name, array $config) {
             // automatically build the DI, put it as reference
             $provider = app(AccessProvider::class);
 
-            return new AuthTokenGuard($provider, $app['request'], $config);
+            return new AuthTokenGuard($provider, $app->make('request'), $config);
         });
 
         Auth::extend('credentials', function ($app, $name, array $config) {
             $provider = app(AccessProvider::class);
 
-            return new CredentialsGuard($provider, $app['request'], $config);
+            return new CredentialsGuard($provider, $app->make('request'), $config);
         });
     }
 
@@ -223,7 +223,7 @@ class BrightServiceProvider extends ServiceProvider
      */
     protected function bootEvents(): void
     {
-        $events = $this->app['config']->get('bright.events');
+        $events = $this->app->make('config')->get('bright.events');
 
         if (\is_array($events)) {
             foreach ($events as $event => $listeners) {
@@ -236,9 +236,9 @@ class BrightServiceProvider extends ServiceProvider
 
     protected function bootMiddlewares(): void
     {
-        $router = $this->app['router'];
+        $router = $this->app->make('router');
 
-        $middlewares = $this->app['config']->get('bright.middlewares');
+        $middlewares = $this->app->make('config')->get('bright.middlewares');
 
         if (\is_array($middlewares)) {
             foreach ($middlewares as $name => $value) {
@@ -251,7 +251,7 @@ class BrightServiceProvider extends ServiceProvider
 
         $kernel = app()->make(Kernel::class);
 
-        $middlewares = $this->app['config']->get('bright.priority_middleware');
+        $middlewares = $this->app->make('config')->get('bright.priority_middleware');
         if (\is_array($middlewares)) {
             foreach ($middlewares as $value) {
                 $kernel->prependToMiddlewarePriority($value);

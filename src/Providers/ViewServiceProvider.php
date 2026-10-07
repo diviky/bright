@@ -60,11 +60,11 @@ class ViewServiceProvider extends BaseServiceProvider
             // Next we need to grab the engine resolver instance that will be used by the
             // environment. The resolver will be used by an environment to get each of
             // the various engine implementations such as plain PHP or Blade engine.
-            $resolver = $app['view.engine.resolver'];
+            $resolver = $app->make('view.engine.resolver');
 
-            $finder = $app['view.finder'];
+            $finder = $app->make('view.finder');
 
-            $factory = $this->createFactory($resolver, $finder, $app['events']);
+            $factory = $this->createFactory($resolver, $finder, $app->make('events'));
 
             // We will also set the container instance on this view environment since the
             // view composers may be classes registered in the container, which allows
@@ -95,11 +95,11 @@ class ViewServiceProvider extends BaseServiceProvider
     {
         $this->app->singleton('blade.compiler', function ($app) {
             return tap(new BladeCompiler(
-                $app['files'],
-                $app['config']['view.compiled'],
-                $app['config']->get('view.relative_hash', false) ? $app->basePath() : '',
-                $app['config']->get('view.cache', true),
-                $app['config']->get('view.compiled_extension', 'php'),
+                $app->make('files'),
+                $app->make('config')->get('view.compiled'),
+                $app->make('config')->get('view.relative_hash', false) ? $app->basePath() : '',
+                $app->make('config')->get('view.cache', true),
+                $app->make('config')->get('view.compiled_extension', 'php'),
             ), function ($blade) {
                 $blade->component('dynamic-component', DynamicComponent::class);
             });

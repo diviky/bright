@@ -6,7 +6,6 @@ namespace Diviky\Bright\Validation;
 
 use Diviky\Bright\Database\DatabaseManager;
 use Diviky\Bright\Database\Octane\DatabaseManager as OctaneDatabaseManager;
-use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Validation\DatabasePresenceVerifier as BaseDatabasePresenceVerifier;
 
 class DatabasePresenceVerifier extends BaseDatabasePresenceVerifier
@@ -16,7 +15,7 @@ class DatabasePresenceVerifier extends BaseDatabasePresenceVerifier
      *
      * @param  string  $table
      */
-    protected function table($table): Builder
+    protected function table($table)
     {
         $database = $this->brightDatabaseManager();
 

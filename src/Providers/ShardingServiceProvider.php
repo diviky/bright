@@ -34,7 +34,7 @@ class ShardingServiceProvider extends ServiceProvider
         $this->registerConnectionManager();
         $this->app->bind('bright.shardmanager', function () {
             return new ShardManager(
-                $this->app['bright.shard.mapmanager']
+                $this->app->make('bright.shard.mapmanager')
             );
         });
     }
@@ -50,7 +50,7 @@ class ShardingServiceProvider extends ServiceProvider
     protected function registerConnectionManager(): void
     {
         $this->app->bind('bright.shard.mapmanager', function ($app) {
-            $map = $app['config']->get('sharding.map');
+            $map = $app->make('config')->get('sharding.map');
 
             return new MapManager($map);
         });

@@ -36,7 +36,7 @@ class DatabaseServiceProvider extends ServiceProvider
         // connections might be managed. It also implements the connection resolver
         // interface which may be used by other components requiring connections.
         $this->app->singleton('db', function ($app) {
-            return new DatabaseManager($app, $app['db.factory']);
+            return new DatabaseManager($app, $app->make('db.factory'));
         });
 
         $this->app->resolving('db', function ($db) {
@@ -62,7 +62,7 @@ class DatabaseServiceProvider extends ServiceProvider
     protected function registerValidationPresenceVerifier(): void
     {
         $this->app->singleton(DatabasePresenceVerifier::class, function ($app) {
-            return new DatabasePresenceVerifier($app['db']);
+            return new DatabasePresenceVerifier($app->make('db'));
         });
 
         $this->app->extend('validation.presence', function ($verifier, $app) {
@@ -88,7 +88,7 @@ class DatabaseServiceProvider extends ServiceProvider
                 return $manager;
             }
 
-            return new OctaneDatabaseManager($app, $app['db.factory']);
+            return new OctaneDatabaseManager($app, $app->make('db.factory'));
         });
     }
 

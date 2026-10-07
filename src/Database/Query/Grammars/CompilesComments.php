@@ -4,46 +4,44 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Database\Query\Grammars;
 
-use Illuminate\Database\Query\Builder;
-
 trait CompilesComments
 {
-    public function compileSelect(Builder $query)
+    public function compileSelect($query)
     {
         return $this->prependQueryComments($query, parent::compileSelect($query));
     }
 
-    public function compileExists(Builder $query)
+    public function compileExists($query)
     {
         return $this->prependQueryComments($query, parent::compileExists($query));
     }
 
-    public function compileInsert(Builder $query, array $values)
+    public function compileInsert($query, array $values)
     {
         return $this->prependQueryComments($query, parent::compileInsert($query, $values));
     }
 
-    public function compileInsertGetId(Builder $query, $values, $sequence)
+    public function compileInsertGetId($query, $values, $sequence = null)
     {
         return $this->prependQueryComments($query, parent::compileInsertGetId($query, $values, $sequence));
     }
 
-    public function compileInsertOrIgnore(Builder $query, array $values)
+    public function compileInsertOrIgnore($query, array $values)
     {
         return $this->prependQueryComments($query, parent::compileInsertOrIgnore($query, $values));
     }
 
-    public function compileUpsert(Builder $query, array $values, array $uniqueBy, array $update)
+    public function compileUpsert($query, array $values, array $uniqueBy, array $update)
     {
         return $this->prependQueryComments($query, parent::compileUpsert($query, $values, $uniqueBy, $update));
     }
 
-    public function compileUpdate(Builder $query, array $values)
+    public function compileUpdate($query, array $values)
     {
         return $this->prependQueryComments($query, parent::compileUpdate($query, $values));
     }
 
-    public function compileDelete(Builder $query)
+    public function compileDelete($query)
     {
         return $this->prependQueryComments($query, parent::compileDelete($query));
     }
@@ -51,9 +49,9 @@ trait CompilesComments
     /**
      * Compile query comments into a SQL block comment prefix.
      */
-    public function compileQueryComments(Builder $query): string
+    public function compileQueryComments($query): string
     {
-        if (!method_exists($query, 'getQueryComments')) {
+        if (! method_exists($query, 'getQueryComments')) {
             return '';
         }
 
@@ -70,10 +68,10 @@ trait CompilesComments
             return '';
         }
 
-        return '/* ' . implode(' ', $sanitized) . ' */ ';
+        return '/* '.implode(' ', $sanitized).' */ ';
     }
 
-    protected function prependQueryComments(Builder $query, string $sql): string
+    protected function prependQueryComments($query, string $sql): string
     {
         $comments = $this->compileQueryComments($query);
 
@@ -81,7 +79,7 @@ trait CompilesComments
             return $sql;
         }
 
-        return $comments . $sql;
+        return $comments.$sql;
     }
 
     protected function sanitizeComment(string $comment): string

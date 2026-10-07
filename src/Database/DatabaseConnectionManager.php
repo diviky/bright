@@ -21,7 +21,7 @@ class DatabaseConnectionManager extends LaravelDatabaseManager
     {
         $config = parent::configuration($name);
 
-        $config['bright'] = $this->app['config']['bright'];
+        $config['bright'] = $this->app->make('config')->get('bright');
 
         return $config;
     }

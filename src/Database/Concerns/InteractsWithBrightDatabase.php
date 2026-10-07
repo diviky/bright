@@ -34,7 +34,7 @@ trait InteractsWithBrightDatabase
     }
 
     #[\Override]
-    public function extend($name, callable $resolver, bool $overwrite = false)
+    public function extend($name, callable $resolver, bool $overwrite = false): void
     {
         if (! isset($this->extensions[$name]) || $overwrite) {
             $this->extensions[$name] = $resolver;

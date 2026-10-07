@@ -21,7 +21,8 @@ trait ServiceProviderExtra
     protected function mergeConfigRecursive($path, $key, $force = false): void
     {
         if (!($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
-            $config = $this->app['config']->get($key, []);
+            $repository = $this->app->make('config');
+            $config = $repository->get($key, []);
 
             if ($force) {
                 $config = \array_merge_recursive($config, require $path);
@@ -29,7 +30,7 @@ trait ServiceProviderExtra
                 $config = \array_merge_recursive(require $path, $config);
             }
 
-            $this->app['config']->set($key, $config);
+            $repository->set($key, $config);
         }
     }
 
@@ -43,7 +44,8 @@ trait ServiceProviderExtra
     protected function mergeConfigRecursiveDistinct($path, $key, $force = false): void
     {
         if (!($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
-            $config = $this->app['config']->get($key, []);
+            $repository = $this->app->make('config');
+            $config = $repository->get($key, []);
 
             if ($force) {
                 $config = static::arrayMergeRecursiveDistinct($config, require $path);
@@ -51,7 +53,7 @@ trait ServiceProviderExtra
                 $config = static::arrayMergeRecursiveDistinct(require $path, $config);
             }
 
-            $this->app['config']->set($key, $config);
+            $repository->set($key, $config);
         }
     }
 
@@ -93,7 +95,8 @@ trait ServiceProviderExtra
     protected function replaceConfigRecursive($path, $key, $force = false): void
     {
         if (!($this->app instanceof CachesConfiguration && $this->app->configurationIsCached())) {
-            $config = $this->app['config']->get($key, []);
+            $repository = $this->app->make('config');
+            $config = $repository->get($key, []);
 
             if ($force) {
                 $config = \array_replace_recursive($config, require $path);
@@ -101,7 +104,7 @@ trait ServiceProviderExtra
                 $config = \array_replace_recursive(require $path, $config);
             }
 
-            $this->app['config']->set($key, $config);
+            $repository->set($key, $config);
         }
     }
 
