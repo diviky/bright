@@ -143,8 +143,10 @@ $results = DB::table('logs')
 ```
 
 **Key Methods:**
-- `async($name = null, $queue = null, $connection = null)` - Execute asynchronously
+- `async($name = null, $queue = null, $connection = null, $batch = false)` - Execute asynchronously; `$batch = true` buffers builder inserts/updates in Redis by table and type (`bright.async.batch`)
 - `asyncConfig()` - Get async configuration
+
+**Batch flush:** `DB_ASYNC_BATCH_PROCESSOR=job` (queue `FlushBatchBucket`) or `command` (schedule `bright:batch-process`).
 
 ### Data Management
 

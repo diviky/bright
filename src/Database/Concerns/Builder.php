@@ -2,6 +2,7 @@
 
 namespace Diviky\Bright\Database\Concerns;
 
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Contracts\Database\Query\Expression as QueryExpression;
 
 trait Builder
@@ -31,6 +32,12 @@ trait Builder
     public function insert(array $values)
     {
         $values = $this->insertEvent($values);
+
+        if ($this->isBatchAsyncEnabled()) {
+            return $this->pushBatchRows('insert', [
+                'rows' => $this->normalizeInsertRows($values),
+            ]);
+        }
 
         return parent::insert($values);
     }
@@ -111,7 +118,7 @@ trait Builder
     /**
      * get the value from expression.
      *
-     * @param  float|\Illuminate\Contracts\Database\Query\Expression|int|string  $value
+     * @param  float|Expression|int|string  $value
      */
     protected function getExpressionValue($value): string
     {

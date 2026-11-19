@@ -35,8 +35,10 @@ $results = DB::table('logs')
 ```
 
 **Methods:**
-- `async($name = null, $queue = null, $connection = null)` - Execute query asynchronously
+- `async($name = null, $queue = null, $connection = null, $batch = false)` - Execute query asynchronously; pass `$batch = true` to buffer inserts/updates in Redis by table and operation type
 - `asyncConfig()` - Get async configuration settings
+
+**Batch async (`async(..., batch: true)`):** Row payloads are stored in Redis under `{prefix}:{connection}:{table}:{insert|update}`. They are flushed when `async.batch.max_size` or `async.batch.max_wait_seconds` is reached, using either the `FlushBatchBucket` queue job (`DB_ASYNC_BATCH_PROCESSOR=job`, default) or the `bright:batch-process` Artisan command (`DB_ASYNC_BATCH_PROCESSOR=command`, schedule in the host app). See `bright.async.batch` in `config/bright.php`.
 
 ### 2. Enhanced Building (`Build` trait)
 

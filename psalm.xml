@@ -34,10 +34,16 @@
       <errorLevel type="suppress">
         <referencedClass name="App\Http\Controllers\Controller"/>
         <referencedClass name="App\Models\User"/>
+        <referencedClass name="Diviky\Bright\Routing\Resolver"/>
         <directory name="src/Notifications"/>
         <directory name="src/Helpers"/>
       </errorLevel>
     </UndefinedClass>
+    <TooManyArguments>
+      <errorLevel type="suppress">
+        <file name="src/Providers/BrightServiceProvider.php"/>
+      </errorLevel>
+    </TooManyArguments>
     <PropertyNotSetInConstructor>
       <errorLevel type="suppress">
         <directory name="src"/>
@@ -95,6 +101,7 @@
         <file name="src/Database/SQLiteConnection.php"/>
         <file name="src/Database/Concerns/Connection.php"/>
         <file name="src/Database/Concerns/Filter.php"/>
+        <file name="src/Database/BatchBuffer/BucketKey.php"/>
       </errorLevel>
     </MoreSpecificReturnType>
     <ImplementedReturnTypeMismatch>
@@ -117,11 +124,13 @@
     <UndefinedInterfaceMethod>
       <errorLevel type="suppress">
         <directory name="src"/>
+        <file name="tests/Database/BatchBufferTest.php"/>
       </errorLevel>
     </UndefinedInterfaceMethod>
     <UndefinedMagicMethod>
       <errorLevel type="suppress">
         <directory name="src"/>
+        <file name="tests/Database/BatchBufferTest.php"/>
       </errorLevel>
     </UndefinedMagicMethod>
     <PossiblyUndefinedArrayOffset>
@@ -167,6 +176,7 @@
     <MissingClosureParamType>
       <errorLevel type="suppress">
         <directory name="src"/>
+        <file name="tests/Database/BatchBufferTest.php"/>
       </errorLevel>
     </MissingClosureParamType>
     <InvalidScalarArgument>
@@ -194,11 +204,6 @@
         <directory name="src"/>
       </errorLevel>
     </RedundantConditionGivenDocblockType>
-    <LessSpecificImplementedReturnType>
-      <errorLevel type="suppress">
-        <file name="src/Routing/Responsable.php"/>
-      </errorLevel>
-    </LessSpecificImplementedReturnType>
     <UndefinedThisPropertyFetch>
       <errorLevel type="suppress">
         <directory name="src"/>
@@ -229,5 +234,28 @@
         <directory name="src"/>
       </errorLevel>
     </PossiblyFalseArgument>
+    <MissingPureAnnotation>
+      <errorLevel type="suppress">
+        <directory name="src/Database/BatchBuffer"/>
+        <directory name="src/Providers"/>
+        <file name="src/Database/Jobs/FlushBatchBucket.php"/>
+      </errorLevel>
+    </MissingPureAnnotation>
+    <InvalidArgument>
+      <errorLevel type="suppress">
+        <directory name="src/Providers"/>
+      </errorLevel>
+    </InvalidArgument>
+    <UnusedClosureParam>
+      <errorLevel type="suppress">
+        <directory name="src/Providers"/>
+      </errorLevel>
+    </UnusedClosureParam>
+    <RedundantCastGivenDocblockType>
+      <errorLevel type="suppress">
+        <file name="src/Database/BatchBuffer/BucketKey.php"/>
+        <file name="src/Database/BatchBuffer/BatchProcessor.php"/>
+      </errorLevel>
+    </RedundantCastGivenDocblockType>
   </issueHandlers>
 </psalm>

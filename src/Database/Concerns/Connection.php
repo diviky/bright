@@ -98,9 +98,9 @@ trait Connection
      * @param  string  $queue
      * @param  null|string  $name
      */
-    public function async($connection = null, $queue = null, $name = null): self
+    public function async($connection = null, $queue = null, $name = null, $batch = false): self
     {
-        $this->async = [$connection, $queue, $name];
+        $this->async = [$connection, $queue, $name, (bool) $batch];
 
         return $this;
     }

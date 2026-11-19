@@ -50,6 +50,17 @@ return [
         'all' => env('DB_ASYNC_QUERY_ALL', false),
         'connection' => env('DB_ASYNC_CONNECTION', env('QUEUE_CONNECTION', 'sync')),
         'queue' => env('DB_ASYNC_QUEUE', 'sql'),
+        'batch' => [
+            'redis_connection' => env('DB_ASYNC_BATCH_REDIS', 'default'),
+            'key_prefix' => env('DB_ASYNC_BATCH_PREFIX', 'bright:batch'),
+            'registry_key' => env('DB_ASYNC_BATCH_REGISTRY', 'bright:batch:registry'),
+            'max_size' => (int) env('DB_ASYNC_BATCH_MAX_SIZE', 1000),
+            'max_wait_seconds' => (int) env('DB_ASYNC_BATCH_MAX_WAIT', 5),
+            'processor' => env('DB_ASYNC_BATCH_PROCESSOR', 'job'),
+            'flush_queue_connection' => env('DB_ASYNC_CONNECTION', env('QUEUE_CONNECTION', 'sync')),
+            'flush_queue' => env('DB_ASYNC_QUEUE', 'sql'),
+            'command' => env('DB_ASYNC_BATCH_COMMAND', 'bright:batch-process'),
+        ],
     ],
     /*
     |--------------------------------------------------------------------------
