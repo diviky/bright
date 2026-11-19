@@ -10,9 +10,11 @@ use Diviky\Bright\Database\LostConnectionDetector;
 use Diviky\Bright\Database\MongoDB\Connection as MongoConnection;
 use Diviky\Bright\Database\Octane\DatabaseManager as OctaneDatabaseManager;
 use Diviky\Bright\Database\Octane\MySqlStringBindingConnection;
+use Diviky\Bright\Database\QueryGrammarConfigurator;
 use Diviky\Bright\Validation\DatabasePresenceVerifier;
 use Illuminate\Contracts\Database\LostConnectionDetector as LostConnectionDetectorContract;
 use Illuminate\Database\Connection as DatabaseConnection;
+use Illuminate\Database\Events\ConnectionEstablished;
 use Illuminate\Support\ServiceProvider;
 
 class DatabaseServiceProvider extends ServiceProvider
@@ -55,8 +57,29 @@ class DatabaseServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->registerConnectionEstablishedGrammarRouting();
         $this->registerOctaneDatabaseManager();
         $this->registerOctaneMySqlConnectionResolver();
+    }
+
+    /**
+     * Ensure Bright table/schema routing is on every SQL connection grammar.
+     *
+     * Pooled or alternate database managers may create connections without passing
+     * through Bright's connection factory merge; this listener is idempotent on Laravel.
+     */
+    protected function registerConnectionEstablishedGrammarRouting(): void
+    {
+        if (!$this->app->bound('events')) {
+            return;
+        }
+
+        $this->app->make('events')->listen(
+            ConnectionEstablished::class,
+            static function (ConnectionEstablished $event): void {
+                QueryGrammarConfigurator::applyFromApplicationConfig($event->connection);
+            },
+        );
     }
 
     protected function registerValidationPresenceVerifier(): void

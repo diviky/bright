@@ -20,7 +20,11 @@ trait WrapTrait
      */
     public function setConfig(array $config = []): void
     {
-        $this->config = \array_merge($this->config, $config);
+        if (isset($config['databases']) && \is_array($config['databases'])) {
+            $config = $config['databases'];
+        }
+
+        $this->config['databases'] = \array_merge($this->config['databases'] ?? [], $config);
     }
 
     /**
@@ -46,7 +50,7 @@ trait WrapTrait
             [$database, $table] = \explode('.', $table);
             $table = preg_replace('/^' . $prefix . '/', '', $table);
 
-            return $this->wrap($database) . '.' . $this->wrap($prefix . $table, true);
+            return $this->wrap($this->resolveDatabaseName($database)) . '.' . $this->wrapRoutedTableName($table);
         }
 
         $alias = '';
@@ -61,18 +65,14 @@ trait WrapTrait
         $databases = $this->config['databases'] ?? [];
         if (\is_array($databases)) {
             if (isset($databases['names']) && \is_array($databases['names']) && isset($databases['names'][$table])) {
-                return $this->wrap($databases['names'][$table]) . '.' . $this->wrap($prefix . $table . $alias);
+                return $this->wrap($this->resolveDatabaseName($databases['names'][$table])) . '.' . $this->wrapRoutedTableName($table, $alias);
             }
 
             $patterns = $databases['patterns'] ?? [];
             if (\is_array($patterns)) {
                 foreach ($patterns as $pattern => $database) {
                     if (preg_match('/^' . $pattern . '/', $table)) {
-                        if (\is_array($database)) {
-                            $database = $database[0];
-                        }
-
-                        return $this->wrap($database) . '.' . $this->wrap($prefix . $table . $alias);
+                        return $this->wrap($this->resolveDatabaseName($database)) . '.' . $this->wrapRoutedTableName($table, $alias);
                     }
                 }
             }
@@ -90,10 +90,33 @@ trait WrapTrait
             && $currentDatabase !== ''
             && $defaultDatabase !== $currentDatabase
         ) {
-            return $this->wrap($defaultDatabase) . '.' . $this->wrap($prefix . $table . $alias);
+            return $this->wrap($this->resolveDatabaseName($defaultDatabase)) . '.' . $this->wrapRoutedTableName($table, $alias);
         }
 
         return $this->wrap($prefix . $table . $alias);
+    }
+
+    /**
+     * Wrap a table segment qualified onto a routed database name.
+     *
+     * Connection table prefixes apply to the default database only; routed schemas
+     * already encode tenant/schema naming in the database identifier.
+     */
+    protected function wrapRoutedTableName(string $table, string $alias = ''): string
+    {
+        return $this->wrap($table . $alias);
+    }
+
+    /**
+     * Resolve a configured database name to a string for identifier wrapping.
+     */
+    protected function resolveDatabaseName(mixed $database): string
+    {
+        if (\is_array($database)) {
+            $database = $database[0] ?? '';
+        }
+
+        return (string) $database;
     }
 
     /**

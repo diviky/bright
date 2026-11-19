@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table(config('permission.table_names.permissions'), function (Blueprint $table) {
             $table->string('display_name', 50)->nullable();
-            $table->boolean('status')->default(false);
+            $table->unsignedTinyInteger('status')->default(0);
         });
     }
 

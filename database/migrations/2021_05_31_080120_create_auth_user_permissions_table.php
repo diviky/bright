@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table(config('permission.table_names.permissions'), function (Blueprint $table) {
-            $table->boolean('is_exclude')->default(false);
+            $table->unsignedTinyInteger('is_exclude')->default(0);
         });
     }
 

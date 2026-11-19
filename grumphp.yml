@@ -28,8 +28,11 @@ grumphp:
     #   short_open_tag: false
     #   ignore_patterns: []
     #   triggered_by: ['php']
-    phpunit:
+    shell:
       metadata: { priority: 100 }
+      scripts:
+        - [php, vendor/pestphp/pest/bin/pest, --compact]
+      triggered_by: [php]
     laravel_pint:
       metadata: { priority: 500 }
       config: pint.json

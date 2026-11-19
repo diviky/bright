@@ -27,7 +27,7 @@ return new class extends Migration
             $table->timestamp('last_used_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            $table->boolean('status')->default(1);
+            $table->unsignedTinyInteger('status')->default(1);
         });
     }
 

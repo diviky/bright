@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +22,13 @@ Route::group([
     'middleware' => ['web'],
     'namespace' => '\Diviky\Bright\Http\Controllers',
 ], function (): void {
-    Route::get('signed/{disk}/{path}', function (string $disk, string $path) {
-        return Storage::disk($disk)->download($path);
-    })->middleware('signed')->name('signed.url');
+    Route::get('signed/{disk}/{path}', function (string $disk, string $path): StreamedResponse {
+        /** @var FilesystemAdapter $filesystem */
+        $filesystem = Storage::disk($disk);
+
+        return $filesystem->download($path);
+    })
+        ->where('path', '.*')
+        ->middleware('signed')
+        ->name('signed.url');
 });

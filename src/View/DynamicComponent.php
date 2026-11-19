@@ -10,8 +10,6 @@ class DynamicComponent extends ViewDynamicComponent
 {
     /**
      * Get an instance of the Blade tag compiler.
-     *
-     * @return \Illuminate\View\Compilers\ComponentTagCompiler
      */
     protected function compiler()
     {

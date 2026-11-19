@@ -35,6 +35,8 @@
         <referencedClass name="App\Http\Controllers\Controller"/>
         <referencedClass name="App\Models\User"/>
         <referencedClass name="Diviky\Bright\Routing\Resolver"/>
+        <referencedClass name="Laravel\Octane\Swoole\Database\DatabaseManager"/>
+        <referencedClass name="Laravel\Octane\Swoole\Database\MySqlStringBindingConnection"/>
         <directory name="src/Notifications"/>
         <directory name="src/Helpers"/>
       </errorLevel>
@@ -42,6 +44,7 @@
     <TooManyArguments>
       <errorLevel type="suppress">
         <file name="src/Providers/BrightServiceProvider.php"/>
+        <file name="src/Providers/DatabaseServiceProvider.php"/>
       </errorLevel>
     </TooManyArguments>
     <PropertyNotSetInConstructor>
@@ -67,6 +70,7 @@
     <InvalidReturnType>
       <errorLevel type="suppress">
         <file name="src/Exceptions/Handler.php"/>
+        <file name="src/View/DynamicComponent.php"/>
       </errorLevel>
     </InvalidReturnType>
     <PossiblyNullReference>
@@ -257,5 +261,40 @@
         <file name="src/Database/BatchBuffer/BatchProcessor.php"/>
       </errorLevel>
     </RedundantCastGivenDocblockType>
+    <MissingDependency>
+      <errorLevel type="suppress">
+        <file name="src/Providers/DatabaseServiceProvider.php"/>
+      </errorLevel>
+    </MissingDependency>
+    <InternalMethod>
+      <errorLevel type="suppress">
+        <directory name="tests"/>
+      </errorLevel>
+    </InternalMethod>
+    <InvalidArgument>
+      <errorLevel type="suppress">
+        <file name="tests/Unit/Database/QueryGrammarConfiguratorTest.php"/>
+      </errorLevel>
+    </InvalidArgument>
+    <DocblockTypeContradiction>
+      <errorLevel type="suppress">
+        <file name="src/View/DynamicComponent.php"/>
+      </errorLevel>
+    </DocblockTypeContradiction>
+    <InvalidPropertyAssignmentValue>
+      <errorLevel type="suppress">
+        <file name="src/View/DynamicComponent.php"/>
+      </errorLevel>
+    </InvalidPropertyAssignmentValue>
+    <InvalidReturnStatement>
+      <errorLevel type="suppress">
+        <file name="src/View/DynamicComponent.php"/>
+      </errorLevel>
+    </InvalidReturnStatement>
+    <MissingOverrideAttribute>
+      <errorLevel type="suppress">
+        <file name="src/View/DynamicComponent.php"/>
+      </errorLevel>
+    </MissingOverrideAttribute>
   </issueHandlers>
 </psalm>

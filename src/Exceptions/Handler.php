@@ -7,16 +7,51 @@ namespace Diviky\Bright\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    /**
+     * @psalm-mutation-free
+     */
+    public static function modelNotFoundMessage(ModelNotFoundException $exception): string
+    {
+        $ids = $exception->getIds();
+
+        if ($ids === []) {
+            return 'No query results.';
+        }
+
+        return 'No query results for ' . implode(', ', array_map(strval(...), $ids));
+    }
+
     #[\Override]
     public function register(): void
     {
+        $this->renderable(function (ModelNotFoundException $exception, Request $_request) {
+            return response()->json([
+                'message' => static::modelNotFoundMessage($exception),
+            ], Response::HTTP_NOT_FOUND);
+        });
+
+        $this->renderable(function (NotFoundHttpException $exception, Request $_request) {
+            $previous = $exception->getPrevious();
+
+            if (!$previous instanceof ModelNotFoundException) {
+                return null;
+            }
+
+            return response()->json([
+                'message' => static::modelNotFoundMessage($previous),
+            ], Response::HTTP_NOT_FOUND);
+        });
+
         $this->renderable(function (TokenMismatchException $e, $request) {
             if ($request->expectsJson()) {
                 return response()->json([
@@ -35,7 +70,7 @@ class Handler extends ExceptionHandler
     {
         $format = $request->input('format');
 
-        if ($format == 'json' || $this->shouldReturnJson($request, $exception)) {
+        if ($format === 'json' || $this->shouldReturnJson($request, $exception)) {
             return response()->json([
                 'status' => 'ERROR',
                 'code' => 401,
@@ -58,11 +93,13 @@ class Handler extends ExceptionHandler
     }
 
     #[\Override]
-    protected function convertExceptionToArray(\Throwable $e)
+    protected function convertExceptionToArray(Throwable $e)
     {
+        $modelNotFoundMessage = $this->resolveModelNotFoundMessage($e);
+
         if (config('app.debug')) {
             return [
-                'message' => $e->getMessage(),
+                'message' => $modelNotFoundMessage ?? $e->getMessage(),
                 'exception' => get_class($e),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -70,16 +107,36 @@ class Handler extends ExceptionHandler
             ];
         }
 
-        if ($e->getPrevious() instanceof ModelNotFoundException) {
-            $message = 'No results found';
+        if ($modelNotFoundMessage !== null) {
+            $message = $modelNotFoundMessage;
         } else {
-            $message = $e->getMessage();
+            $message = $this->isHttpException($e) ? $e->getMessage() : 'Server Error';
         }
 
         return [
             'status' => 'ERROR',
             'code' => $this->isHttpException($e) ? $e->getStatusCode() : 500,
-            'message' => $this->isHttpException($e) ? $message : 'Server Error',
+            'message' => $message,
         ];
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    protected function resolveModelNotFoundMessage(Throwable $exception): ?string
+    {
+        if ($exception instanceof ModelNotFoundException) {
+            return static::modelNotFoundMessage($exception);
+        }
+
+        if ($exception instanceof NotFoundHttpException) {
+            $previous = $exception->getPrevious();
+
+            if ($previous instanceof ModelNotFoundException) {
+                return static::modelNotFoundMessage($previous);
+            }
+        }
+
+        return null;
     }
 }

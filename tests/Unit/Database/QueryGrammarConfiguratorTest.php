@@ -3,9 +3,10 @@
 declare(strict_types=1);
 
 use Diviky\Bright\Database\QueryGrammarConfigurator;
+use Diviky\Bright\Tests\TestCase;
 use Illuminate\Database\MySqlConnection;
 
-uses()->group('database');
+uses(TestCase::class)->group('database');
 
 it('applies bright config to extended mysql connections without setConfig on the stock grammar', function () {
     $connection = new MySqlConnection(new stdClass, 'app', '', [
@@ -43,4 +44,24 @@ it('merges bright config when the grammar already supports setConfig', function 
     $wrapped = $connection->getQueryGrammar()->wrapTable('posts');
 
     expect($wrapped)->toContain('blog_db');
+});
+
+it('applies global bright config from the application', function () {
+    config([
+        'bright' => [
+            'databases' => [
+                'patterns' => [
+                    'auth_*' => 'airo_auth',
+                ],
+            ],
+        ],
+    ]);
+
+    $connection = new MySqlConnection(new stdClass, 'airo', '', [
+        'driver' => 'mysql',
+    ]);
+
+    QueryGrammarConfigurator::applyFromApplicationConfig($connection);
+
+    expect($connection->getQueryGrammar()->wrapTable('auth_tokens'))->toContain('airo_auth');
 });

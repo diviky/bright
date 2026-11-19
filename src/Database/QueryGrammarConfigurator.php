@@ -13,6 +13,36 @@ use Illuminate\Database\Connection;
 class QueryGrammarConfigurator
 {
     /**
+     * Apply global Bright config from the application to a connection's query grammar.
+     *
+     * Used when the connection was created without Bright's database manager (for example
+     * Hypervel's pooled resolver). Safe on Laravel: idempotent with factory-time apply.
+     */
+    public static function applyFromApplicationConfig(Connection $connection): void
+    {
+        if (!function_exists('config')) {
+            return;
+        }
+
+        $bright = config('bright');
+
+        if (!is_array($bright) || $bright === []) {
+            return;
+        }
+
+        self::apply($connection, [
+            'databases' => $bright['databases'] ?? [],
+            'tables' => $bright['tables'] ?? [],
+            'connections' => $bright['connections'] ?? [],
+            'async' => $bright['async'] ?? false,
+            'sharding' => $bright['sharding'] ?? false,
+            'timestamps' => $bright['timestamps'] ?? false,
+            'db_events' => $bright['db_events'] ?? false,
+            'db_cache' => $bright['db_cache'] ?? false,
+        ]);
+    }
+
+    /**
      * Apply Bright database routing config to the connection's query grammar.
      *
      * Extended connection resolvers (for example Octane's MySQL connection) may
