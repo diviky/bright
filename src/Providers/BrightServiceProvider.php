@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace Diviky\Bright\Providers;
 
 use Diviky\Bright\Concerns\Provider;
+use Diviky\Bright\Console\Commands\BatchProcess;
 use Diviky\Bright\Console\Commands\Migrate;
 use Diviky\Bright\Console\Commands\Rollback;
 use Diviky\Bright\Console\Commands\Setup;
 use Diviky\Bright\Contracts\UtilInterface;
+use Diviky\Bright\Database\BatchBuffer\BatchProcessor;
+use Diviky\Bright\Database\BatchBuffer\InsertBatcher;
+use Diviky\Bright\Database\BatchBuffer\RedisBatchBuffer;
+use Diviky\Bright\Database\BatchBuffer\RedisPipeline;
+use Diviky\Bright\Database\BatchBuffer\UpdateBatcher;
 use Diviky\Bright\Exceptions\Handler;
 use Diviky\Bright\Models\PersonalAccessToken;
 use Diviky\Bright\Routing\ControllerDispatcher;
@@ -116,6 +122,16 @@ class BrightServiceProvider extends ServiceProvider
         $this->app->singleton('resolver', function ($app) {
             return new Resolver($app);
         });
+
+        $this->app->singleton(RedisPipeline::class, fn () => RedisPipeline::fromConfig());
+        $this->app->singleton(RedisBatchBuffer::class, fn ($app) => new RedisBatchBuffer($app->make(RedisPipeline::class)));
+        $this->app->singleton(InsertBatcher::class);
+        $this->app->singleton(UpdateBatcher::class);
+        $this->app->singleton(BatchProcessor::class, fn ($app) => new BatchProcessor(
+            $app->make(RedisPipeline::class),
+            $app->make(InsertBatcher::class),
+            $app->make(UpdateBatcher::class),
+        ));
     }
 
     public function registerModelBindings(): void
@@ -188,6 +204,7 @@ class BrightServiceProvider extends ServiceProvider
             Setup::class,
             Migrate::class,
             Rollback::class,
+            BatchProcess::class,
         ]);
     }
 

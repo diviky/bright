@@ -21,7 +21,7 @@ trait Async
      * @param  null|string  $name
      * @return static
      */
-    public function async($name = null, $queue = null, $connection = null)
+    public function async($name = null, $queue = null, $connection = null, $batch = false)
     {
         $config = $this->asyncConfig();
 
@@ -29,9 +29,10 @@ trait Async
             $queue = $queue ?? $config['queue'];
             $connection = $connection ?? $config['connection'];
             $name = $name ?? $this->getTableBaseName();
+            $batch = (bool) $batch;
 
-            $this->connection->async($connection, $queue, $name);
-            $this->async = [$connection, $queue, $name];
+            $this->connection->async($connection, $queue, $name, $batch);
+            $this->async = [$connection, $queue, $name, $batch];
         }
 
         return $this;

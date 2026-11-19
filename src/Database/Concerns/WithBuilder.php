@@ -9,6 +9,7 @@ use Diviky\Bright\Database\Concerns\Builder as ConcernsBuilder;
 trait WithBuilder
 {
     use Async;
+    use BatchAsync;
     use Build;
     use BuildsQueries;
     use Cachable;
@@ -29,6 +30,10 @@ trait WithBuilder
     public function update(array $values)
     {
         $values = $this->updateEvent($values);
+
+        if ($this->isBatchAsyncEnabled()) {
+            return $this->pushBatchRows('update', $this->buildUpdateBatchPayload($values)) ? 1 : 0;
+        }
 
         return parent::update($values);
     }

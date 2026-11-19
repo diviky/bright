@@ -14,9 +14,9 @@ trait Async
      * @param  null|string  $name
      * @return static
      */
-    public function async($name = null, $queue = null, $connection = null)
+    public function async($name = null, $queue = null, $connection = null, $batch = false)
     {
-        $this->query->async($name, $queue, $connection);
+        $this->query->async($name, $queue, $connection, $batch);
 
         return $this;
     }
