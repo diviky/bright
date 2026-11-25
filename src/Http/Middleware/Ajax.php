@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Diviky\Bright\Http\Middleware;
 
+use Diviky\Bright\Http\FormRequestFormat;
+
 class Ajax
 {
     /**
@@ -15,8 +17,10 @@ class Ajax
     public function handle($request, \Closure $next)
     {
         if ($request->input('_request') == 'iframe') {
-            $request->headers->add(['Accept' => 'application/json']);
+            $request->headers->set('Accept', 'application/json');
         }
+
+        FormRequestFormat::prepare($request);
 
         return $next($request);
     }

@@ -33,6 +33,7 @@ class RedirectResponse extends BaseRedirectResponse
         }
 
         $this->headers->set('Content-Type', 'application/json');
+        $this->headers->remove('Location');
 
         $this->targetUrl = $url;
         $data = $this->with;

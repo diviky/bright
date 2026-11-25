@@ -16,6 +16,7 @@ use Diviky\Bright\Database\BatchBuffer\RedisBatchBuffer;
 use Diviky\Bright\Database\BatchBuffer\RedisPipeline;
 use Diviky\Bright\Database\BatchBuffer\UpdateBatcher;
 use Diviky\Bright\Exceptions\Handler;
+use Diviky\Bright\Http\Middleware\Ajax;
 use Diviky\Bright\Models\PersonalAccessToken;
 use Diviky\Bright\Routing\ControllerDispatcher;
 use Diviky\Bright\Routing\Redirector;
@@ -274,6 +275,8 @@ class BrightServiceProvider extends ServiceProvider
                 $kernel->prependToMiddlewarePriority($value);
             }
         }
+
+        $router->prependMiddlewareToGroup('web', Ajax::class);
     }
 
     /**
